@@ -1,13 +1,51 @@
-import {  Button } from "flowbite-react";
-import { GiByzantinTemple } from "react-icons/gi";
+import React, { Suspense } from "react";
+import { Spinner } from  "flowbite-react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+const Dashboard = React.lazy(()=> import("./pages/Dashboard"));
+const Signin = React.lazy(()=> import("./pages/Signin"));
+const Signup =  React.lazy(()=> import("./pages/Signup"));
 
 export default function App() {
   return (
     <>
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <GiByzantinTemple size={26} />
+      <BrowserRouter>
+          <Routes>
+               <Route 
+                path="/"
+                element={
+                  <Suspense fallback={
+                    <div className="flex justify-center items-center min-h-screen gap-4" >
+                      <Spinner size={"xl"} />
+                      <div>Loading ...</div>
+                    </div>
+                  } ><Dashboard /></Suspense>
+                }
+              />
+              <Route 
+                path="/signin"
+                element={
+                  <Suspense fallback={
+                    <div className="flex justify-center items-center min-h-screen gap-4" >
+                      <Spinner size={"xl"} />
+                      <div>Loading ...</div>
+                    </div>
+                  } ><Signin /></Suspense>
+                }
+              />
+              <Route 
+                path="/signup"
+                element={
+                  <Suspense fallback={
+                    <div className="flex justify-center items-center min-h-screen gap-4" >
+                      <Spinner size={"xl"} />
+                      <div>Loading ...</div>
+                    </div>
+                  } ><Signup /></Suspense>
+                }
+              />
+          </Routes>
+      </BrowserRouter>
     </>
   )
 }
