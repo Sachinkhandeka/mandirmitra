@@ -11,6 +11,8 @@ const cors = require("cors");
 const path = require("path");
 
 //importing routes 
+const templeRoute = require("./routes/temple");
+const superAdminRoute = require("./routes/superAdmin");
 const daanRoute = require("./routes/daan");
 const userRoute = require("./routes/user");
 
@@ -31,8 +33,10 @@ app.use(express.urlencoded({extended : true}));
 app.use(cors());
 
 //routes 
-app.use("/api/user", userRoute);
-app.use("/api/daan", daanRoute);
+app.use( "/api/temple", templeRoute );
+app.use( "/api/superadmin", superAdminRoute );
+app.use( "/api/user", userRoute );
+app.use( "/api/daan", daanRoute );
 
 //static folder for client side pages 
 app.use(express.static((path.join(__dirname , '../client/dist'))));

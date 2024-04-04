@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router({ mergeParams : true });
-const user = require("../controllers/userController");
+const superAdmin = require("../controllers/superAdminController");
 const wrapAsync = require("../utils/wrapAsync");
 
-//signup route
 router.post(
-    "/signup",
-    wrapAsync(user.signupController),
+    "/create",
+    wrapAsync(superAdmin.createController),
 );
 
 module.exports = router ; 
