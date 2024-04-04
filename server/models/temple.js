@@ -15,7 +15,7 @@ const  templeSchema = new mongoose.Schema({
     },
     superAdmin : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User",
+        ref : "SuperAdmin",
     },
 },{ timestamps : true });
 

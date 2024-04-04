@@ -4,4 +4,4 @@ const User = require("../models/userSchema");
 module.exports.signupController = async(req ,res)=> {
     console.log("signup route");
     res.send("user signup route");
-}
+} 
