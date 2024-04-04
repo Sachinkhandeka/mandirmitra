@@ -12,6 +12,7 @@ const path = require("path");
 
 //importing routes 
 const daanRoute = require("./routes/daan");
+const userRoute = require("./routes/user");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -30,6 +31,7 @@ app.use(express.urlencoded({extended : true}));
 app.use(cors());
 
 //routes 
+app.use("/api/user", userRoute);
 app.use("/api/daan", daanRoute);
 
 //static folder for client side pages 
