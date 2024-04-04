@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const daanShema = new mongoose.Schema({
+    temple : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
+    },
     name : {
         type : String,
         required  : true,
