@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useLocation } from "react-router-dom";
 
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 
@@ -9,7 +9,11 @@ import Header from "../components/Header";
 
 
 export default function Dashboard() {
-    const [showSidebar, setShowSidebar] = useState(false); // State to manage sidebar visibility
+    const location = useLocation();
+    const {  user, templeId } =  location.state ; 
+    console.log(user);
+    console.log(templeId);
+    const [showSidebar, setShowSidebar] = useState(false); 
 
     // Function to toggle sidebar visibility
     const toggleSidebar = () => {
