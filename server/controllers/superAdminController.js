@@ -6,6 +6,7 @@ const salt = bcryptjs.genSaltSync(10);
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET ;
 
+//create route handler
 module.exports.createController = async(req ,res)=> {
     const { templeId, username , email , password } = req.body ; 
 
@@ -43,6 +44,7 @@ module.exports.createController = async(req ,res)=> {
     });
 }
 
+//signin route handler
 module.exports.signinController = async(req ,res)=> {
     const { email , password } = req.body ; 
 
@@ -69,4 +71,60 @@ module.exports.signinController = async(req ,res)=> {
     res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 
         currUser : rest,
     });
+}
+
+//google auth route handler
+module.exports.googleController = async(req ,res)=> {
+    const { email , name , googlePhotoUrl, templeId } = req.body ; 
+
+    const isSuperAdmin = await SuperAdmin.findOne({email});
+    if(isSuperAdmin) {
+        const token = jwt.sign({ 
+            id : isSuperAdmin._id,
+            superAdmin : true, 
+        }, secret );
+
+        const { password , ...rest } = isSuperAdmin._doc ; 
+
+        return res.status(200).cookie("access_token", token, { httpOnly : true }).json(rest);
+    }else {
+        const genRandomPass = Math.random().toString(36).slice(-8) + Math.random().toString().slice(-8);
+        const hashPass = bcryptjs.hashSync(genRandomPass , salt);
+
+        // Check if temple exists
+        const temple = await Temple.findById(templeId);
+        if (!temple) {
+            throw new ExpressError(404, "Temple not found");
+        }
+
+        // Check if a super admin already exists for the temple
+        const isSuperAdmin = await SuperAdmin.findOne({templeId});
+        if(isSuperAdmin) {
+            throw new ExpressError(400, "A super admin already exists for this temple");
+        }
+
+         // Create super admin
+        let superAdmin = new SuperAdmin({
+            username : name.trim().split(' ').join('').toLowerCase() + Math.random().toString(4).slice(-3) ,
+            email,
+            profilePicture : googlePhotoUrl,
+            templeId : temple._id,
+            password : hashPass
+        });
+
+        // Save super admin
+        superAdmin  = await superAdmin.save();
+
+        const token = jwt.sign({
+            id : superAdmin._id,
+            superAdmin : true,
+        }, secret);
+        const { password : pass, ...rest } = superAdmin._doc;
+
+        res.status(200).cookie("access_token", token, { httpOnly : true }).json({
+            currUser : rest,
+        });
+
+    }
+
 }
