@@ -3,10 +3,14 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { FaOm } from "react-icons/fa6";
 import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
+import { useDispatch, useSelector } from "react-redux"
+import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
 
 export default function CreateSuperAdmin() {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch =  useDispatch();
+    const { loading , error } = useSelector(state => state.user);
     const { templeId } = location.state || {};
 
     //if not of user and TempleId
@@ -22,8 +26,6 @@ export default function CreateSuperAdmin() {
         email : "",
         password : "",
     });
-    const [ error , setError ] = useState(null);
-    const [ loading , setLoading ] = useState(false);
     const [ viewPass , setViewPass ] = useState(false);
 
     //handleChange - formData
@@ -36,17 +38,15 @@ export default function CreateSuperAdmin() {
 
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        setLoading(true);
+        dispatch(signinStart());
         if(!formData.templeId) {
-            setLoading(false);
-            return setError("Cannot create super admin without templeId");
+            return dispatch(signinFailure("Cannot create super admin without templeId"));
         }
         if( !formData.username || !formData.email || !formData.password ) {
-            setLoading(false);
-            return setError("Please fill out all the fields");
+            return dispatch(signinFailure("Please fill out all the fields"));
         }
         try{
-            setError(null);
+            dispatch(signinStart());
             const response  = await fetch(
                 "/api/superadmin/create",
                 {
@@ -58,15 +58,13 @@ export default function CreateSuperAdmin() {
             const data = await response.json();
 
             if(!response.ok) {
-                setLoading(false);
-                setError(data.message);
+                dispatch(signinFailure(data.mmessage));
                 return;
             }
+            dispatch(signinSuccess(data));
             navigate("/");
-            setLoading(false);
         }catch(err){
-            setLoading(false);
-            setError(err.message);
+            dispatch(signinFailure(err.message));
         }
     }
     return(
@@ -79,7 +77,7 @@ export default function CreateSuperAdmin() {
             </div>
             <div 
               className="mx-auto p-4 border border-gray-200 shadow-lg rounded-lg w-full max-w-[600px] my-10"  >
-                { error && ( <Alert color={"failure"} onDismiss={() => setError(null)}>{ error }</Alert> ) }
+                { error && ( <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>{ error }</Alert> ) }
                 <div className="flex whitespace-nowrap gap-4 my-4 items-center justify-center" >
                     <FaSuperpowers size={28} />
                     <h1 className="text-2xl font-mono font-bold uppercase" >Create Super Admin</h1>

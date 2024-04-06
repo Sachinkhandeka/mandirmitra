@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { FaOm } from "react-icons/fa6";
 import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
+import { useDispatch, useSelector } from "react-redux";
+import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
 
 export default function SigninSuperAdmin() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading , error } = useSelector(state => state.user);
     
     const [ formData , setFormData ] = useState({
         email : "",
         password : "",
     });
-    const [ error , setError ] = useState(null);
-    const [ loading , setLoading ] = useState(false);
     const [ viewPass , setViewPass ] = useState(false);
 
     //handleChange - formData
@@ -25,14 +27,14 @@ export default function SigninSuperAdmin() {
 
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        setLoading(true);
-        
+        dispatch(signinStart());
+
         if( !formData.email || !formData.password ) {
-            setLoading(false);
-            return setError("Please fill out all the fields");
+            dispatch(signinFailure("Please fill out all the fields"));
+            return 
         }
         try{
-            setError(null);
+            dispatch(signinStart());
             const response  = await fetch(
                 "/api/superadmin/signin",
                 {
@@ -44,15 +46,13 @@ export default function SigninSuperAdmin() {
             const data = await response.json();
 
             if(!response.ok) {
-                setLoading(false);
-                setError(data.message);
+                dispatch(signinFailure(data.message));
                 return;
             }
+            dispatch(signinSuccess(data));
             navigate("/");
-            setLoading(false);
         }catch(err){
-            setLoading(false);
-            setError(err.message);
+            dispatch(signinFailure(err.message));
         }
     }
     return(
@@ -65,7 +65,7 @@ export default function SigninSuperAdmin() {
             </div>
             <div 
               className="mx-auto p-4 border border-gray-200 shadow-lg rounded-lg w-full max-w-[600px] my-10"  >
-                { error && ( <Alert color={"failure"} onDismiss={() => setError(null)}>{ error }</Alert> ) }
+                { error && ( <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>{ error }</Alert> ) }
                 <div className="flex whitespace-nowrap gap-4 my-4 items-center justify-center" >
                     <FaSuperpowers size={28} />
                     <h1 className="text-2xl font-mono font-bold uppercase" >Login with Super Admin</h1>
