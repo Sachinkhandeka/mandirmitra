@@ -5,6 +5,7 @@ import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 export default function SigninSuperAdmin() {
     const navigate = useNavigate();
@@ -99,6 +100,7 @@ export default function SigninSuperAdmin() {
                     >
                         { loading ? <Spinner /> : 'Add Super Admin'}
                     </Button>
+                    <OAuth />
                 </form>
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
                     <p className="whitespace-nowrap" >Don't have an account ?</p>
