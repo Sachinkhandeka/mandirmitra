@@ -4,21 +4,10 @@ import { FaOm } from "react-icons/fa6";
 import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
 
-export default function CreateSuperAdmin() {
-    const location = useLocation();
+export default function SigninSuperAdmin() {
     const navigate = useNavigate();
-    const { templeId } = location.state || {};
-
-    //if not of user and TempleId
-    useEffect(()=>{
-      if(!templeId ) {
-           navigate("/signup");
-      }
-    },[templeId, navigate]);
     
     const [ formData , setFormData ] = useState({
-        templeId : templeId,
-        username : "",
         email : "",
         password : "",
     });
@@ -37,18 +26,15 @@ export default function CreateSuperAdmin() {
     const handleSubmit = async(e)=> {
         e.preventDefault();
         setLoading(true);
-        if(!formData.templeId) {
-            setLoading(false);
-            return setError("Cannot create super admin without templeId");
-        }
-        if( !formData.username || !formData.email || !formData.password ) {
+        
+        if( !formData.email || !formData.password ) {
             setLoading(false);
             return setError("Please fill out all the fields");
         }
         try{
             setError(null);
             const response  = await fetch(
-                "/api/superadmin/create",
+                "/api/superadmin/signin",
                 {
                     method : "POST",
                     headers : { "Content-Type" : "application/json" },
@@ -82,14 +68,10 @@ export default function CreateSuperAdmin() {
                 { error && ( <Alert color={"failure"} onDismiss={() => setError(null)}>{ error }</Alert> ) }
                 <div className="flex whitespace-nowrap gap-4 my-4 items-center justify-center" >
                     <FaSuperpowers size={28} />
-                    <h1 className="text-2xl font-mono font-bold uppercase" >Create Super Admin</h1>
+                    <h1 className="text-2xl font-mono font-bold uppercase" >Login with Super Admin</h1>
                     <FaSuperpowers size={28} />
                 </div>
                 <form className="p-4" onSubmit={handleSubmit} >
-                    <div className="flex flex-col gap-4 my-4" >
-                        <Label htmlFor="username" >username: </Label>
-                        <TextInput type="text" id="username" name="username" placeholder="eg. superAdmin_001" onChange={handleChange} required />
-                    </div>
                     <div className="flex flex-col gap-4 my-4" >
                         <Label htmlFor="email" >email: </Label>
                         <TextInput type="email" id="email" name="email" placeholder="eg. superAdmin@gmail.com" onChange={handleChange} required />
@@ -119,9 +101,9 @@ export default function CreateSuperAdmin() {
                     </Button>
                 </form>
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
-                    <p className="whitespace-nowrap" >Already have account ?</p>
+                    <p className="whitespace-nowrap" >Don't have an account ?</p>
                     <span className="text-blue-600 text-sm" >
-                        <Link to={"/signin"} className="hover:underline" >Super-admin</Link>
+                        <Link to={"/signup"} className="hover:underline" >Super-admin</Link>
                     </span>
                 </div>
                 <div className="p-2 flex gap-2 items-center text-gray-500 text-sm" >

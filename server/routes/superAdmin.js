@@ -7,5 +7,9 @@ router.post(
     "/create",
     wrapAsync(superAdmin.createController),
 );
+router.post(
+    "/signin",
+    wrapAsync(superAdmin.signinController),
+);
 
 module.exports = router ; 
