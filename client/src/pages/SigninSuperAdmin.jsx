@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FaOm } from "react-icons/fa6";
 import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
@@ -98,7 +98,7 @@ export default function SigninSuperAdmin() {
                         type="submit"
                         disabled={loading}
                     >
-                        { loading ? <Spinner /> : 'Add Super Admin'}
+                        { loading ? <Spinner /> : 'Login'}
                     </Button>
                     <OAuth />
                 </form>

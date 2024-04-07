@@ -128,3 +128,29 @@ module.exports.googleController = async(req ,res)=> {
     }
 
 }
+
+module.exports.editController = async(req ,res)=> {
+    const { id, username , email , password } = req.body ; 
+
+    if(!id || !username || !email || !password) {
+        throw new ExpressError(400 , "Cannot update super Admin with empty fields.");
+    }
+
+    const isSuperAdmin = await SuperAdmin.findById(id);
+
+    if(!isSuperAdmin) {
+        throw new ExpressError(404 , "SuperAdmin not found.");
+    }
+
+    const hashPass =  bcryptjs.hashSync(password, salt);
+
+    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(id,{
+        username, email, password : hashPass
+    }, { new : true });
+
+    const { password : pass, ...rest } =  updatedSuperAdmin._doc ;  
+    res.status(200).json({
+        currUser : rest 
+    });
+
+}

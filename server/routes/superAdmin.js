@@ -21,5 +21,11 @@ router.post(
     wrapAsync(superAdmin.googleController),
 );
 
+//edit superAdmin route
+router.put(
+    "/edit",
+    wrapAsync(superAdmin.editController),
+);
+
 
 module.exports = router ; 
