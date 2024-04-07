@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Spinner } from  "flowbite-react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
 
 const Dashboard = React.lazy(()=> import("./pages/Dashboard"));
 const SigninSuperAdmin = React.lazy(()=> import("./pages/SigninSuperAdmin"));
@@ -13,6 +14,16 @@ export default function App() {
     <>
       <BrowserRouter>
           <Routes>
+            <Route 
+                element={
+                  <Suspense fallback={
+                    <div className="flex justify-center items-center min-h-screen gap-4" >
+                      <Spinner size={"xl"} />
+                      <div>Loading ...</div>
+                    </div>
+                  } ><PrivateRoute /></Suspense>
+                }
+              >
                <Route 
                 path="/"
                 element={
@@ -24,6 +35,7 @@ export default function App() {
                   } ><Dashboard /></Suspense>
                 }
               />
+            </Route>
               <Route 
                 path="/signin"
                 element={
