@@ -24,7 +24,7 @@ router.post(
 
 //edit superAdmin route
 router.put(
-    "/edit",
+    "/edit/:id",
     varifyToken ,
     wrapAsync(superAdmin.editController),
 );
