@@ -99,9 +99,6 @@ export default function DashProfile() {
             }
         );
     }
-
-    console.log(uploadProgress);
-    console.log(tempImageUrl);
     useEffect(()=>{
         if(imageFile) {
             uploadImage();
