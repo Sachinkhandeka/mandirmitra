@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const DB_URL = process.env.MONGO_URL ; 
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 //importing routes 
 const templeRoute = require("./routes/temple");
@@ -31,6 +32,7 @@ async function main () {
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(cors());
+app.use(cookieParser());
 
 //routes 
 app.use( "/api/temple", templeRoute );
