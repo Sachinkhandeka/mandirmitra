@@ -131,15 +131,16 @@ module.exports.googleController = async(req ,res)=> {
 
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
-    const { id, username , email , password, profilePicture } = req.body ; 
+    const { username , email , password, profilePicture } = req.body ; 
+    const userId = req.params.userId
 
     console.log(user);
 
-    if(!id || !username || !email || !password || !profilePicture) {
+    if(!userId || !username || !email || !password || !profilePicture) {
         throw new ExpressError(400 , "Cannot update super Admin with empty fields.");
     }
     
-    if(user.id !== id) {
+    if(user.id !== userId) {
         throw new ExpressError(403 , "You are not allowed to update this user.");
     }
     if(password.length < 6) {
@@ -150,7 +151,7 @@ module.exports.editController = async(req ,res)=> {
         throw new ExpressError(400 , "Username must be in between 7 & 20 characters.")
     }
 
-    const isSuperAdmin = await SuperAdmin.findById(id);
+    const isSuperAdmin = await SuperAdmin.findById(userId);
 
     if(!isSuperAdmin) {
         throw new ExpressError(404 , "SuperAdmin not found.");
@@ -158,7 +159,7 @@ module.exports.editController = async(req ,res)=> {
 
     const hashPass =  bcryptjs.hashSync(password, salt);
 
-    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(id,{
+    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(userId,{
         $set : {
             username : username,
             email : email,
