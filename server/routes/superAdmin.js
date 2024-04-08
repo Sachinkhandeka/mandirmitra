@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router({ mergeParams : true });
 const superAdmin = require("../controllers/superAdminController");
 const wrapAsync = require("../utils/wrapAsync");
+const { varifyToken } = require("../utils/varifyUser");
 
 //create superadmin 
 router.post(
@@ -24,6 +25,7 @@ router.post(
 //edit superAdmin route
 router.put(
     "/edit",
+    varifyToken ,
     wrapAsync(superAdmin.editController),
 );
 
