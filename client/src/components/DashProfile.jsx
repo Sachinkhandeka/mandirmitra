@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { HiCheck, HiX } from "react-icons/hi";
 import { useDispatch , useSelector } from "react-redux";
-import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
+import { updateStart, updateSuccess, updateFailure, resetError } from "../redux/user/userSlice";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -20,14 +20,15 @@ export default function DashProfile() {
     const [ uploadProgress , setUploadProgress ] = useState(0);
     const [ uploadError , setUploadError ] = useState(null);
     const [ uploadSuccess , setUploadSuccess ] = useState(null);
+    const [ success , setSuccess ] = useState(null);
     const inputRef = useRef();
     const [ formData , setFormData ] = useState({
-        id :  currUser._id,
+        profilePicture : currUser.profilePicture,
         username : currUser.username,
         email : currUser.email,
         password : "",
     });
-
+    
     //handleChange - formData
     const handleChange = (e)=> {
         setFormData({
@@ -35,14 +36,14 @@ export default function DashProfile() {
             [e.target.id] : e.target.value.trim(),
         });
     }
-
     //update super admin function
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        dispatch(signinStart());
+        dispatch(updateStart());
+        setSuccess(null);
         try {
             const response =  await  fetch(
-                "/api/superadmin/edit",
+                `/api/superadmin/edit/${currUser._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
@@ -53,12 +54,13 @@ export default function DashProfile() {
 
             if(!response.ok) {
                 console.log(data.message);
-                dispatch(signinFailure(data.message));
+                dispatch(updateFailure(data.message));
                 return ;
             }
-            dispatch(signinSuccess(data));
+            setSuccess("Profile updated successfully.");
+            dispatch(updateSuccess(data.currUser));
         } catch(err) {
-            dispatch(signinFailure(err.message));
+            dispatch(updateFailure(err.message));
         }
     }
 
@@ -94,7 +96,8 @@ export default function DashProfile() {
             ()=> {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=> {
                     setTempImageUrl(downloadURL);
-                    setUploadSuccess("Profile picture uploaded Successfully.")
+                    setFormData({ ...formData , profilePicture : downloadURL })
+                    setUploadSuccess("Profile picture uploaded Successfully.Please save Changes by clicking on pencil.")
                 })
             }
         );
@@ -156,12 +159,13 @@ export default function DashProfile() {
                     <div className="p-4 md:absolute md:right-8 md:top-28 rounded-full w-14 h-14 hover:bg-gray-300 cursor-pointer" >
                         <FaPencil size={20} onClick={()=> setShowModal(true)} />
                     </div>
+                    <form className="p-4" onSubmit={handleSubmit} >
                     <Modal show={showModal} onClose={() => setShowModal(false)}>
                        <Modal.Header>Edit Details</Modal.Header>
                        <Modal.Body>
                        { error && ( <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>{ error }</Alert> ) }
+                       { success && ( <Alert color={"success"} onDismiss={() => setSuccess(null)}>{ success }</Alert> ) }
                          <div className="space-y-6">
-                            <form className="p-4" onSubmit={handleSubmit} >
                                 <div className="flex flex-col gap-4 my-4" >
                                     <Label htmlFor="username" >username: </Label>
                                     <TextInput 
@@ -193,7 +197,6 @@ export default function DashProfile() {
                                         {viewPass ? <FaRegEye /> : <FaRegEyeSlash /> }
                                     </span>
                                 </div>
-                            </form>
                          </div>
                        </Modal.Body>
                        <Modal.Footer>
@@ -205,6 +208,7 @@ export default function DashProfile() {
                             </Button>
                        </Modal.Footer>
                      </Modal>
+                     </form>
                 </div>
             ) }
         </div>

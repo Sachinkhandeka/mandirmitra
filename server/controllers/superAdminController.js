@@ -69,7 +69,7 @@ module.exports.signinController = async(req ,res)=> {
     }, secret);
     const { password : pass, ...rest } = validUser._doc;
     res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 
-        currUser : rest,
+        rest,
     });
 }
 
@@ -132,23 +132,25 @@ module.exports.googleController = async(req ,res)=> {
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
     const { username , email , password, profilePicture } = req.body ; 
-    const userId = req.params.userId
-
-    console.log(user);
-
-    if(!userId || !username || !email || !password || !profilePicture) {
-        throw new ExpressError(400 , "Cannot update super Admin with empty fields.");
-    }
+    const userId   = req.params.id ; 
+    
+    // if(!userId || !username || !email || !password || !profilePicture) {
+    //     throw new ExpressError(400 , "Cannot update super Admin with empty fields.");
+    // }
     
     if(user.id !== userId) {
         throw new ExpressError(403 , "You are not allowed to update this user.");
     }
-    if(password.length < 6) {
-        throw new ExpressError(400 , "Password atleast have 6 characters.")
+    if(password) {
+        if(password.length < 6) {
+            throw new ExpressError(400 , "Password atleast have 6 characters.")
+        }
     }
 
-    if(username.length < 7 || username.length > 20) {
-        throw new ExpressError(400 , "Username must be in between 7 & 20 characters.")
+    if(username) {
+        if(username.length < 7 || username.length > 20) {
+            throw new ExpressError(400 , "Username must be in between 7 & 20 characters.")
+        }
     }
 
     const isSuperAdmin = await SuperAdmin.findById(userId);

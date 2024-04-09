@@ -50,7 +50,7 @@ export default function SigninSuperAdmin() {
                 dispatch(signinFailure(data.message));
                 return;
             }
-            dispatch(signinSuccess(data));
+            dispatch(signinSuccess(data.rest));
             navigate("/");
         }catch(err){
             dispatch(signinFailure(err.message));
