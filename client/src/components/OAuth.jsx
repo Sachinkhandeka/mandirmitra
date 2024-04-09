@@ -37,7 +37,7 @@ export default function OAuth({ templeId }) {
                 dispatch(signinFailure(data.message));
                 return ;
             }
-            dispatch(signinSuccess(data));
+            dispatch(signinSuccess(data.currUser));
             navigate("/");
 
         }catch(err) {
@@ -53,5 +53,5 @@ export default function OAuth({ templeId }) {
                 <AiFillGoogleCircle className="w-6 h-6 mr-3" />
                 Continue with Google
         </Button>
-    )
+    );
 }

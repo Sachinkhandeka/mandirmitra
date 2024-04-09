@@ -1,11 +1,9 @@
 import { Sidebar } from "flowbite-react";
-import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 export default function DashSidebar() {
-    const { currUser } = useSelector(state => state.user);
     const location = useLocation();
     const [ tab , setTab ] = useState();
 

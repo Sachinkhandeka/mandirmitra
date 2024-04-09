@@ -7,7 +7,6 @@ import { toggleTheme } from "../redux/theme/themeSlice";
 
 export default function Header() {
     const dispatch = useDispatch();
-    const { currUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme);
     return(
         <Navbar className="border border-b-2 sticky top-0 z-20" >
