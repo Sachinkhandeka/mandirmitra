@@ -176,3 +176,8 @@ module.exports.editController = async(req ,res)=> {
     });
 
 }
+
+//signout route handler
+module.exports.signoutController = (req ,res)=> {
+    res.clearCookie('access_token').status(200).json('User signout successfully.');
+}
