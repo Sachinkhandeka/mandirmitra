@@ -29,5 +29,11 @@ router.put(
     wrapAsync(superAdmin.editController),
 );
 
+//signout  route
+router.post(
+    "/signout",
+    superAdmin.signoutController,
+);
+
 
 module.exports = router ; 
