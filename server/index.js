@@ -16,6 +16,8 @@ const templeRoute = require("./routes/temple");
 const superAdminRoute = require("./routes/superAdmin");
 const daanRoute = require("./routes/daan");
 const userRoute = require("./routes/user");
+const roleRoute = require("./routes/role");
+const permissionRoute = require("./routes/permission");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -39,6 +41,8 @@ app.use( "/api/temple", templeRoute );
 app.use( "/api/superadmin", superAdminRoute );
 app.use( "/api/user", userRoute );
 app.use( "/api/daan", daanRoute );
+app.use( "/api/role", roleRoute );
+app.use( "/api/permission", permissionRoute );
 
 //static folder for client side pages 
 app.use(express.static((path.join(__dirname , '../client/dist'))));

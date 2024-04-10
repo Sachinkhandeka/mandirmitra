@@ -9,6 +9,9 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from "../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import CreateUser from "./CreateUser";
+import CreateRoles from "./CreateRoles";
+import CreatePermissions from "./CreatePermissions";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -160,7 +163,7 @@ export default function DashProfile() {
                         <FaPencil size={20} onClick={()=> setShowModal(true)} />
                     </div>
                     <form className="p-4" onSubmit={handleSubmit} >
-                    <Modal show={showModal} onClose={() => setShowModal(false)}>
+                    <Modal show={showModal} onClose={() => setShowModal(false)} position={"top-right"} >
                        <Modal.Header>Edit Details</Modal.Header>
                        <Modal.Body>
                        { error && ( <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>{ error }</Alert> ) }
@@ -209,6 +212,13 @@ export default function DashProfile() {
                        </Modal.Footer>
                      </Modal>
                      </form>
+                     <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10" >
+                        <div className="flex flex-col md:flex-row gap-4 w-full" >
+                           <CreateUser />
+                           <CreateRoles />
+                           <CreatePermissions />
+                        </div>
+                     </div>
                 </div>
             ) }
         </div>

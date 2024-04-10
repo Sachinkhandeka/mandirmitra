@@ -48,7 +48,7 @@ export default function DashSidebar() {
                             as={"div"}
                         >Profile</Sidebar.Item>
                     </Link>
-                    <Sidebar.Item active={tab === 'signout'} icon={FaSignOutAlt} className="cursor-pointer" ><span onClick={handleSignout}>Signout</span></Sidebar.Item>
+                    <Sidebar.Item active={tab === 'signout'} icon={FaSignOutAlt} className="cursor-pointer" onClick={handleSignout}>Signout</Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
           </Sidebar>

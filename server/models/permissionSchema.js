@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const permissionSchema = new mongoose.Schema({
-    role : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : Role,
-    },
-    resource  : {
+    permissionName : {
         type : String,
         required : true,
+    },
+    templeId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Temple',
     },
     actions : [String],
 }, { timestamps : true });
