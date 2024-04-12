@@ -47,7 +47,13 @@ module.exports.getController =  async(req ,res)=> {
         throw new ExpressError(400 , "Access denied.");
     }
 
-    const allUser = await User.find({ templeId });
+    const allUser = await User.find({ templeId }).populate({
+        path : "role",
+        populate : {
+            path : "permission",
+            model : "permission",
+        }
+    });
 
     res.status(200).json({ allUser })
 }
