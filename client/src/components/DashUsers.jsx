@@ -12,8 +12,7 @@ export  default  function DashUsers() {
     const [ success , setSuccess ] = useState(null);
 
     //get-fetch all users data
-    const getUsers = async(e)=> {
-        e.preventDefault();
+    const getUsers = async()=> {
         try {
             setError(null);
             setSuccess(null);
@@ -24,7 +23,8 @@ export  default  function DashUsers() {
             if(!response.ok) {
                 return setError(data.message);
             }
-            setSuccess(data);
+            setUsers(data.allUser);
+            setSuccess(`Welcome ${currUser.username} we have fatched users data for you🤗🫡.`);
         }catch(err) {
             setError(err.message);
         }
@@ -32,6 +32,7 @@ export  default  function DashUsers() {
     useEffect(()=> {
         getUsers();
     },[currUser])
+    console.log(users);
     return (
         <>
             { success && (
@@ -64,22 +65,24 @@ export  default  function DashUsers() {
                     {
                         users && Array.isArray(users) && users.length > 0 && (
                             users.map((user)=> {
-                                <Table.Body className="divide-y" key={user._id} >
-                                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
-                                        <Table.Cell>
-                                            <img src={user.profilePicture} alt={user.username} className="h-10 w-10 rounded-full" />
-                                        </Table.Cell>
-                                        <Table.Cell>{ user.username }</Table.Cell>
-                                        <Table.Cell>{ user.email }</Table.Cell>
-                                        <Table.Cell>{ user.roles }</Table.Cell>
-                                        <Table>
-                                            <div className="flex items-center gap-4" >
-                                                <Link to={"#"} > <MdOutlineEdit size={20} />  </Link>
-                                                <Link to={"#"} > <MdDeleteOutline size={20}/> </Link>
-                                            </div>
-                                        </Table>
-                                    </Table.Row>
-                                </Table.Body>
+                                return (
+                                    <Table.Body className="divide-y" key={user._id} >
+                                        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
+                                            <Table.Cell>
+                                                <img src={user.profilePicture} alt={user.username} className="h-10 w-10 rounded-full" />
+                                            </Table.Cell>
+                                            <Table.Cell>{ user.username }</Table.Cell>
+                                            <Table.Cell>{ user.email }</Table.Cell>
+                                            <Table.Cell>{ user.roles }</Table.Cell>
+                                            <Table.Cell>
+                                                <div className="flex items-center gap-4" >
+                                                    <Link to={"#"} > <MdOutlineEdit size={20} />  </Link>
+                                                    <Link to={"#"} > <MdDeleteOutline size={20}/> </Link>
+                                                </div>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    </Table.Body>
+                                );
                             })
                         )
                     }
