@@ -10,14 +10,14 @@ module.exports.createController = async(req ,res)=> {
     const templeId = req.params.templeId ; 
 
     if(!user) {
-        throw new ExpressError(400 , "permission not granted.");
+        throw new ExpressError(400 , "Admin not found.");
     }
 
     if(!formData.username || !formData.email || !formData.password || !Array.isArray(formData.roles)) {
         throw new ExpressError(400 , "Invalid data formate.");
     }
     if(!templeId) {
-        throw new ExpressError(400 , "permission not granted.");
+        throw new ExpressError(400 , "Access denied.");
     }
 
     const hashPass = bcryptjs.hashSync(formData.password , salt);
@@ -32,4 +32,22 @@ module.exports.createController = async(req ,res)=> {
 
     await newUser.save();
     res.status(200).json("New user created successfully.");
+}
+
+//get users route handler
+module.exports.getController =  async(req ,res)=> {
+    const user = req.user ; 
+    const templeId =  req.params.templeId ; 
+
+    if(!user) {
+        throw new ExpressError(400 , "Admin not found.");
+    }
+
+    if(!templeId) {
+        throw new ExpressError(400 , "Access denied.");
+    }
+
+    const allUser = await User.find({ templeId });
+
+    res.status(200).json({ allUser })
 }
