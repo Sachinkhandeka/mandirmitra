@@ -20,7 +20,7 @@ const userSchema =  new mongoose.Schema({
         type : String,
         default : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXNChij9NGxfXhZQeEwg0TG9WAK6vm4vVm-e0EncJcCQ&s',
     },
-    temple : {
+    templeId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Temple",
     },

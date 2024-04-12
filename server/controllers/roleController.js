@@ -6,7 +6,11 @@ module.exports.createController = async(req ,res)=> {
     const formData  = req.body ; 
     const templeId = req.params.templeId ; 
 
-    if(!formData.name || !formData.permissions || !Array.isArray(formData.permissions)) {
+    if(!user) {
+        throw new ExpressError(400 , "permission not granted.");
+    }
+
+    if(!formData.name || !formData.permissions || !templeId || !Array.isArray(formData.permissions)) {
         throw new ExpressError(400 , "Invalid data formate.");
     }
     // Create a new role
@@ -19,4 +23,23 @@ module.exports.createController = async(req ,res)=> {
     await newRole.save();
     res.status(200).json("New role created successfully.");
     
+}
+
+//get  roles route handler
+module.exports.getController = async(req ,res)=> {
+    const templeId = req.params.templeId ; 
+    const user = req.user ; 
+
+    if(!templeId) {
+        throw new ExpressError("Cannot found valid roles for this templeId.");
+    }
+    if(!user) {
+        throw new ExpressError(403 , "Forbiden.");
+    }
+
+    const roles = await Role.find({ templeId });
+
+    res.status(200).json({
+        roles,
+    });
 }

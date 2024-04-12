@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Alert, Button, Card, Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import { Alert, Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
 import { useState } from "react";
 
 export default function CreatePermissions() {
@@ -65,7 +65,15 @@ export default function CreatePermissions() {
                             <div className="mb-2 block">
                              <Label htmlFor="permissionName" value="Add permission name" />
                         </div>
-                          <TextInput id="permissionName" placeholder="eg.create,update daan" required onChange={(e)=> setPermissionName(e.target.value)} />
+                          <Select id="permissionName" required onChange={(e)=> setPermissionName(e.target.value)}>
+                                <option value="donation-creator">Donation Creator</option>
+                                <option value="donation-viewer">Donation Viewer</option>
+                                <option value="donation-editor">Donation Editor</option>
+                                <option value="donation-deleter">Donation Deleter</option>
+                                <option value="donation-contributor">Donation Contributor</option>
+                                <option value="donation-manager">Donation Manager</option>
+                                <option value="donation-supervisor">Donation Supervisor</option>
+                          </Select>
                          </div>
                          <div className="flex justify-between">
                             <div className="flex items-center gap-2">

@@ -102,7 +102,7 @@ export default function CreateRoles() {
                                 <div className="mb-2 block">
                                     <Label htmlFor="name" value="Add role name" />
                                 </div>
-                                <TextInput id="name" placeholder="eg. Create,read manager" required onChange={handleChange} />
+                                <TextInput id="name" placeholder="eg. editor, creator" required onChange={handleChange} />
                             </div>
                             {permissions && Array.isArray(permissions) && permissions.length > 0 && (
                                 <div className="mb-2 block">
@@ -122,7 +122,7 @@ export default function CreateRoles() {
                                     ))}
                                 </div>
                             )}
-                            <div className="w-full">
+                            <div className="w-full mt-3 ">
                                 <Button onClick={handleSubmit} >Add Role</Button>
                             </div>
                             </form>
