@@ -103,7 +103,7 @@ export default function CreateSuperAdmin() {
                             onChange={handleChange} required 
                         />
                         <span className="absolute right-4 top-12 cursor-pointer" onClick={() => setViewPass(!viewPass)}>
-                                {viewPass ? <FaRegEye /> : <FaRegEyeSlash /> }
+                                {viewPass ? <FaRegEyeSlash /> : <FaRegEye />  }
                         </span>
                     </div>
                     <Button 

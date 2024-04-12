@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams : true });
 const permission = require("../controllers/permissions");
 const wrapAsync = require("../utils/wrapAsync");
 const { verifyAdmin } = require("../utils/verifyAdmin");
@@ -10,6 +10,13 @@ router.post(
     "/create",
     verifyAdmin,
     wrapAsync(permission.createController),
+);
+
+//get route
+router.get(
+    "/get/:templeId",
+    verifyAdmin,
+    wrapAsync(permission.getController)
 );
 
 module.exports = router ; 
