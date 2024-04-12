@@ -48,10 +48,10 @@ module.exports.getController =  async(req ,res)=> {
     }
 
     const allUser = await User.find({ templeId }).populate({
-        path : "role",
+        path : "roles",
         populate : {
-            path : "permission",
-            model : "permission",
+            path : "permissions",
+            model : "Permission",
         }
     });
 
