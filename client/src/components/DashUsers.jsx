@@ -32,7 +32,6 @@ export  default  function DashUsers() {
     useEffect(()=> {
         getUsers();
     },[currUser])
-    console.log(users);
     return (
         <>
             { success && (
@@ -64,7 +63,7 @@ export  default  function DashUsers() {
                     </Table.Head>
                     {
                         users && Array.isArray(users) && users.length > 0 && (
-                            users.map((user)=> {
+                            users.map((user, indx)=> {
                                 return (
                                     <Table.Body className="divide-y" key={user._id} >
                                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
@@ -73,7 +72,10 @@ export  default  function DashUsers() {
                                             </Table.Cell>
                                             <Table.Cell>{ user.username }</Table.Cell>
                                             <Table.Cell>{ user.email }</Table.Cell>
-                                            <Table.Cell>{ user.roles }</Table.Cell>
+                                            <Table.Cell>
+                                                { user.roles[indx].name }
+                                                <span className="block text-xs" >[{ user.roles[indx].permissions.map(permission => permission.actions.join(", ")) }]</span>
+                                            </Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex items-center gap-4" >
                                                     <Link to={"#"} > <MdOutlineEdit size={20} />  </Link>

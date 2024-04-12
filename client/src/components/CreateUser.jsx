@@ -95,7 +95,7 @@ export default function CreateUser() {
                     <Modal.Header />
                     <Modal.Body>
                         <div className="space-y-6">
-                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
+                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create user with roles</h3>
                             { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
                             { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } >{ success }</Alert> ) }
                             <form className="my-3" onSubmit={handleSubmit} >
