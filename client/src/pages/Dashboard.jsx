@@ -5,6 +5,7 @@ import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { Spinner } from "flowbite-react";
 
 const DashProfile = React.lazy(()=> import("../components/DashProfile"));
+const DashUsers = React.lazy(()=> import("../components/DashUsers"));
 
 import DashSidebar from "../components/DashSidebar";
 import Header from "../components/Header";
@@ -59,8 +60,14 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     } ><DashProfile /></Suspense> }
+                     {/* users ... */}
+                     { tab === "users" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    } ><DashUsers /></Suspense> }
                 </div>
-
             </div>
         </>
     );
