@@ -1,11 +1,49 @@
 import { useSelector } from "react-redux";
 import { Button, Card, Checkbox, Label, Modal, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
 export default function CreateUser() {
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
+    const [ viewPass , setViewPass ] = useState(false);
+    const [ error ,  setError ] =  useState(null);
+    const [ success ,  setSuccess ] =  useState(null);
+    const [ roles , setRoles ] = useState()
+    const [ formData , setFormdata ] = useState({
+        username : '',
+        email : '',
+        password : '',
+    });
 
+    const  getRolesData = async()=> {
+        try {
+            setError(null);
+
+            const  response = await fetch(`/api/role/get/${currUser.templeId}`);
+            const data = await response.json();
+
+            if(!response.ok) {
+                return setError(data.message);
+            }
+            setRoles(data.roles);
+        }catch(err){
+            setError(err.message);
+        }
+    }
+
+    useEffect(()=> {
+        getRolesData();
+    }, [ currUser ]);
+    console.log(roles);
+    //handle change
+    const handleChange = (e)=> {
+        const { id , value }  =  e.target ; 
+        setFormdata({
+            ...formData,
+            [id] : value,
+        });
+    }
     const handleSubmit = async(e, formData)=> {
         e.preventDefault();
         try {
@@ -39,38 +77,32 @@ export default function CreateUser() {
                     <Modal.Header />
                     <Modal.Body>
                         <div className="space-y-6">
-                         <h3 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
-                        <div>
-                            <div className="mb-2 block">
-                             <Label htmlFor="email" value="Your email" />
-                         </div>
-                          <TextInput id="email" placeholder="name@company.com" required />
-                         </div>
-                         <div>
-                         <div className="mb-2 block">
-                             <Label htmlFor="password" value="Your password" />
-                         </div>
-                         <TextInput id="password" type="password" required />
-                         </div>
-                         <div className="flex justify-between">
-                            <div className="flex items-center gap-2">
-                              <Checkbox id="remember" />
-                             <Label htmlFor="remember">Remember me</Label>
-                         </div>
-                            <a href="#" className="text-sm text-cyan-700 hover:underline dark:text-cyan-500">
-                             Lost Password?
-                         </a>
-                         </div>
-                         <div className="w-full">
-                            <Button>Log in to your account</Button>
-                         </div>
-                         <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
-                          Not registered?&nbsp;
-                         <a href="#" className="text-cyan-700 hover:underline dark:text-cyan-500">
-                           Create account
-                         </a>
-                          </div>
-                     </div>
+                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
+                            <form className="my-3" onSubmit={handleSubmit} >
+                                <div className="flex flex-col gap-3 mt-2" >
+                                    <Label htmlFor="username">username</Label>
+                                    <TextInput type="text" id="username" name="username" placeholder="add username" onChange={handleChange} required />
+                                </div>
+                                <div className="flex flex-col gap-3 mt-2" >
+                                    <Label htmlFor="email">email</Label>
+                                    <TextInput type="email" id="email" name="email" placeholder="company.@gmail.com" onChange={handleChange} required />
+                                </div>
+                                <div className="flex flex-col gap-3 mt-2 relative" >
+                                    <Label htmlFor="password" >password: </Label>
+                                    <TextInput 
+                                        type={`${ viewPass ? 'text' : 'password' }`} 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="************" 
+                                        onChange={handleChange} required 
+                                    />
+                                    <span className="absolute right-4 top-12 cursor-pointer" onClick={() => setViewPass(!viewPass)}>
+                                        {viewPass ? <FaRegEyeSlash /> : <FaRegEye /> }
+                                    </span>
+                                </div>
+                                <Button onClick={handleSubmit} className="mt-4" outline>Create new user</Button>
+                            </form>
+                        </div>
                      </Modal.Body>
                  </Modal>
                 </>

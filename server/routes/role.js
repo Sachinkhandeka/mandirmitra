@@ -10,4 +10,10 @@ router.post(
     wrapAsync(role.createController),
 );
 
+router.get(
+    "/get/:templeId",
+    verifyAdmin,
+    wrapAsync(role.getController),
+);
+
 module.exports = router ; 

@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const roleSchema = new mongoose.Schema({
+    templeId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Temple',
+    },
     name : {
         type : String,
         required : true,
