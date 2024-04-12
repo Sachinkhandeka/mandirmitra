@@ -65,7 +65,7 @@ export default function CreatePermissions() {
                             <div className="mb-2 block">
                              <Label htmlFor="permissionName" value="Add permission name" />
                         </div>
-                          <TextInput id="permissionName" placeholder="Update taluka" required onChange={(e)=> setPermissionName(e.target.value)} />
+                          <TextInput id="permissionName" placeholder="eg.create,update daan" required onChange={(e)=> setPermissionName(e.target.value)} />
                          </div>
                          <div className="flex justify-between">
                             <div className="flex items-center gap-2">

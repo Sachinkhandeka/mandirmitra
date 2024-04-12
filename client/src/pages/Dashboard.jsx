@@ -8,6 +8,7 @@ const DashProfile = React.lazy(()=> import("../components/DashProfile"));
 
 import DashSidebar from "../components/DashSidebar";
 import Header from "../components/Header";
+import DashSidebarIcons from "../components/DashSidebarIcons";
 
 
 export default function Dashboard() {
@@ -43,6 +44,10 @@ export default function Dashboard() {
                     <div className="fixed h-full w-10 dark:bg-gray-700 overflow-y-auto z-10">
                         <div className="absolute right-2 top-2" onClick={toggleSidebar} >
                             { showSidebar ? <IoIosArrowDropleft size={26} className="text-gray-500 cursor-pointer hover:text-black"  /> : <IoIosArrowDropright size={26} className="text-gray-500 cursor-pointer hover:text-black "  />  }
+                        </div>
+                        <div className="flex flex-col mt-8 items-center" >
+                            {/* sidebar with icons */}
+                            <DashSidebarIcons />
                         </div>
                     </div>
                 ) }

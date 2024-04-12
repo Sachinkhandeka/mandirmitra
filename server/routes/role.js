@@ -5,7 +5,7 @@ const wrapAsync = require("../utils/wrapAsync");
 const { verifyAdmin } = require("../utils/verifyAdmin");
 
 router.post(
-    "/create",
+    "/create/:templeId",
     verifyAdmin,
     wrapAsync(role.createController),
 );
