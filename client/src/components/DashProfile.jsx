@@ -214,9 +214,9 @@ export default function DashProfile() {
                      </form>
                      <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10" >
                         <div className="flex flex-col md:flex-row gap-4 w-full" >
-                           <CreateUser />
-                           <CreateRoles />
-                           <CreatePermissions />
+                            <CreateUser />
+                            <CreateRoles />
+                            <CreatePermissions />
                         </div>
                      </div>
                 </div>

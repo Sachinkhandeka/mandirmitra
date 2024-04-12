@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Button, Card, Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
@@ -9,11 +9,12 @@ export default function CreateUser() {
     const [ viewPass , setViewPass ] = useState(false);
     const [ error ,  setError ] =  useState(null);
     const [ success ,  setSuccess ] =  useState(null);
-    const [ roles , setRoles ] = useState()
+    const [ roles , setRoles ] = useState([]);
     const [ formData , setFormdata ] = useState({
         username : '',
         email : '',
         password : '',
+        roles : [],
     });
 
     const  getRolesData = async()=> {
@@ -35,7 +36,7 @@ export default function CreateUser() {
     useEffect(()=> {
         getRolesData();
     }, [ currUser ]);
-    console.log(roles);
+    
     //handle change
     const handleChange = (e)=> {
         const { id , value }  =  e.target ; 
@@ -44,26 +45,43 @@ export default function CreateUser() {
             [id] : value,
         });
     }
-    const handleSubmit = async(e, formData)=> {
-        e.preventDefault();
-        try {
-            const  response = await fetch(
-                "/api/user/create",
-                {
-                    method : "POST",
-                    headers : { "Content-Type" : "application/json" },
-                    body : JSON.stringify(formData),
-                }
-            );
-            const data =  await response.json();
 
-            if(!response.ok) {
-
-            }
-        }catch(err) {
-            console.log(err.message);
+     //handle onChange for permissions
+     const handleRoleSelection = (e , role)=> {
+        const { checked } = e.target ; 
+        if(checked) {
+            setFormdata((prev)=> ({
+                ...prev ,
+                roles : [ ...prev.roles , role._id ]
+            }));
+        }else {
+            setFormdata((prev)=> ({
+                ...prev,
+                roles : prev.roles.filter(rId => rId !== role._id)
+            }));
         }
     }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(
+                `/api/user/create/${currUser.templeId}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                }
+            );
+            const data = await response.json();
+    
+            if (!response.ok) {
+                return setError(data.message);
+            }
+            setSuccess(data);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
     return (
         <>
         {
@@ -78,6 +96,8 @@ export default function CreateUser() {
                     <Modal.Body>
                         <div className="space-y-6">
                             <h3 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
+                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
+                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } >{ success }</Alert> ) }
                             <form className="my-3" onSubmit={handleSubmit} >
                                 <div className="flex flex-col gap-3 mt-2" >
                                     <Label htmlFor="username">username</Label>
@@ -100,6 +120,28 @@ export default function CreateUser() {
                                         {viewPass ? <FaRegEyeSlash /> : <FaRegEye /> }
                                     </span>
                                 </div>
+                                {
+                                    roles && Array.isArray(roles) && roles.length > 0 && (
+                                        <div className="my-2 block">
+                                            <Label value="Add Roles" />
+                                            <div className="grid grid-cols-2 gap-3" >
+                                                {roles.map(role => (
+                                                    <div key={role._id} className="flex gap-3 mt-2 items-center" >
+                                                        <Checkbox
+                                                            type="checkbox"
+                                                            id={role._id}
+                                                            value={role.name}
+                                                            onChange={(e) => handleRoleSelection(e, role)}
+                                                        />
+                                                        <Label htmlFor={role._id}>
+                                                            {role.name}
+                                                        </Label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )
+                                }
                                 <Button onClick={handleSubmit} className="mt-4" outline>Create new user</Button>
                             </form>
                         </div>
