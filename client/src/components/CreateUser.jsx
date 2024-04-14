@@ -20,7 +20,6 @@ export default function CreateUser() {
     const  getRolesData = async()=> {
         try {
             setError(null);
-
             const  response = await fetch(`/api/role/get/${currUser.templeId}`);
             const data = await response.json();
 
@@ -46,7 +45,7 @@ export default function CreateUser() {
         });
     }
 
-     //handle onChange for permissions
+     //handle onChange for roles
      const handleRoleSelection = (e , role)=> {
         const { checked } = e.target ; 
         if(checked) {
