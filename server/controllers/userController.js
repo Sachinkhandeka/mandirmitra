@@ -57,3 +57,51 @@ module.exports.getController =  async(req ,res)=> {
 
     res.status(200).json({ allUser })
 }
+
+//edit user roure handler
+module.exports.editController = async(req ,res)=> {
+    const user = req.user ; 
+    const formData = req.body ; 
+    const userId = req.params.userId ; 
+
+    const userToUpdate = await User.findById(userId);
+
+    if(!userToUpdate) {
+        throw new ExpressError(400 , "User not found.");
+    }
+
+    if(!user.superAdmin || userToUpdate.id !== user.id) {
+        throw new ExpressError(401 , "Permission not granted to update this user.");
+    }
+
+    if(!formData) {
+        throw new ExpressError(400 , "Invalid form data.");
+    }
+
+    // preparing fields to  be updated 
+    const updateObj = {};
+    if (formData.username) {
+        updateObj.username = formData.username;
+    }
+    if (formData.email) {
+        updateObj.email = formData.email;
+    }
+    if (formData.profilePicture) {
+        updateObj.profilePicture = formData.profilePicture;
+    }
+    if (formData.password) {
+        if (formData.password.length < 6) {
+            throw new ExpressError(400, "Password must contain atleast 6 characters.");
+        }
+        const hashPass = bcryptjs.hashSync(formData.password, salt);
+        updateObj.password = hashPass;
+    }
+    if (formData.roles) {
+        updateObj.roles = formData.roles;
+    }
+
+    // Update the user with the provided fields
+    const updatedUser = await User.findByIdAndUpdate(userId, updateObj, { new: true });
+
+    res.status(200).json({ updatedUser });
+}
