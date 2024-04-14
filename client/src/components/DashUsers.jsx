@@ -1,15 +1,21 @@
-import { Table, Toast } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { HiCheck, HiExclamation, HiX } from "react-icons/hi";
+import { Alert, Avatar, Badge, Button, Checkbox, Label, Modal, Table, TextInput, Toast } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { HiCheck, HiX } from "react-icons/hi";
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
-import { Link } from "react-router-dom";
+
+const  EditUserModal = React.lazy(()=> import("./EditUserModal"));
 
 export  default  function DashUsers() {
     const { currUser } = useSelector(state => state.user);
     const [ users, setUsers ] = useState([]);
     const [ error , setError ] = useState(null);
     const [ success , setSuccess ] = useState(null);
+    const [ userData , setUserData ] = useState({});
+    const [ showModalEdit , setShowModalEdit ] = useState(false);
+    const [ showModalDelete , setShowModalDelete ] = useState(false);
+    const [ viewPass , setViewPass ] = useState(false);
 
     //get-fetch all users data
     const getUsers = async()=> {
@@ -24,14 +30,20 @@ export  default  function DashUsers() {
                 return setError(data.message);
             }
             setUsers(data.allUser);
-            setSuccess(`Welcome ${currUser.username} we have fatched users data for you🤗🫡.`);
+            setSuccess(`Welcome ${currUser.username} we have fetched users data for you🤗🫡.`);
         }catch(err) {
             setError(err.message);
         }
     }
     useEffect(()=> {
         getUsers();
-    },[currUser])
+    },[currUser]);
+
+    //handle Edit user function
+    const handleEdit = (user) => {
+        setShowModalEdit(true);
+        setUserData(user);
+    }
     return (
         <>
             { success && (
@@ -63,7 +75,7 @@ export  default  function DashUsers() {
                     </Table.Head>
                     {
                         users && Array.isArray(users) && users.length > 0 && (
-                            users.map((user, indx)=> {
+                            users.map((user)=> {
                                 return (
                                     <Table.Body className="divide-y" key={user._id} >
                                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
@@ -73,13 +85,21 @@ export  default  function DashUsers() {
                                             <Table.Cell>{ user.username }</Table.Cell>
                                             <Table.Cell>{ user.email }</Table.Cell>
                                             <Table.Cell>
-                                                { user.roles[indx].name }
-                                                <span className="block text-xs" >[{ user.roles[indx].permissions.map(permission => permission.actions.join(", ")) }]</span>
+                                                { user.roles && user.roles.length > 0 && user.roles.map((role)=>(
+                                                    <div key={role._id} >
+                                                        <p>{ role.name }</p>
+                                                        <span className="block text-xs" >[{ role.permissions.map(permission => permission.actions.join(", ")) }]</span>
+                                                    </div>
+                                                )) }
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex items-center gap-4" >
-                                                    <Link to={"#"} > <MdOutlineEdit size={20} />  </Link>
-                                                    <Link to={"#"} > <MdDeleteOutline size={20}/> </Link>
+                                                    <span onClick={()=> handleEdit(user)} className="cursor-pointer" >
+                                                        <MdOutlineEdit size={20} color="teal"/>
+                                                    </span>
+                                                    <span onClick={()=> setShowModalDelete(true)} className="cursor-pointer" >
+                                                        <MdDeleteOutline size={20} color="red"/>
+                                                    </span>
                                                 </div>
                                             </Table.Cell>
                                         </Table.Row>
@@ -90,6 +110,17 @@ export  default  function DashUsers() {
                     }
                 </Table>
             )}
+            {/* EditUserModal */}
+            <EditUserModal 
+                showModalEdit={showModalEdit} 
+                setShowModalEdit={setShowModalEdit} 
+                userData={userData}
+                setUserData={setUserData}
+                error={error}
+                setError={setError}
+                success={success} 
+                setSuccess={setSuccess}
+            />
         </>
-    )
+    );
 }
