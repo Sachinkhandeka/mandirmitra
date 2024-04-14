@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const ExpressError = require("./ExpressError");
 const secret = process.env.JWT_SECRET ; 
 
-module.exports.varifyToken = (req ,res , next)=> {
+module.exports.verifyToken = (req ,res , next)=> {
     const token = req.cookies.access_token ; 
     if(!token) {
         throw new ExpressError(401 , "Unauthorized.");
