@@ -1,3 +1,4 @@
+const { model } = require("mongoose");
 const User = require("../models/userSchema");
 const ExpressError = require("../utils/ExpressError");
 const bcryptjs = require("bcryptjs");
@@ -101,7 +102,13 @@ module.exports.editController = async(req ,res)=> {
     }
 
     // Update the user with the provided fields
-    const updatedUser = await User.findByIdAndUpdate(userId, updateObj, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(userId, updateObj, { new: true }).populate({
+        path : "roles",
+        populate : {
+            path : "permissions",
+            model : "Permission",
+        }
+    });
 
     res.status(200).json({ updatedUser });
 }
