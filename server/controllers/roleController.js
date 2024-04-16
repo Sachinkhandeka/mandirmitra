@@ -1,3 +1,4 @@
+const { model } = require("mongoose");
 const Role = require("../models/roleSchema");
 const ExpressError = require("../utils/ExpressError");
 
@@ -37,7 +38,15 @@ module.exports.getController = async(req ,res)=> {
         throw new ExpressError(403 , "Forbiden.");
     }
 
-    const roles = await Role.find({ templeId });
+    const roles = await Role.find({ templeId }).populate(
+        {
+            "path" : "roles",
+            populate : {
+                path : "permissions",
+                model : "Permission",
+            }
+        }
+    );
 
     res.status(200).json({
         roles,
