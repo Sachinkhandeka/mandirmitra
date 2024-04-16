@@ -71,6 +71,7 @@ import { useSelector } from "react-redux";
         });
         setIsFormUpdated(true);
     }
+    console.log(formData);
     //handle submit function  
     const handleSubmit =  async(e)=> {
         e.preventDefault();
@@ -176,13 +177,12 @@ import { useSelector } from "react-redux";
                 <div className="flex-1 flex flex-col gap-4 my-4">
                     <h3>Current Roles</h3>
                     <div className="grid grid-cols-2 gap-3" >
-                        {userData && userData.roles && userData.roles.length > 0 &&
-                            userData.roles.map((role) => (
+                        {formData && formData.roles && formData.roles.length > 0 &&
+                            formData.roles.map((role) => (
                                 <div key={role._id} className="flex items-center gap-3">
                                     <Checkbox 
-                                        checked 
-                                        onChange={handleChange} 
-                                        disabled 
+                                        checked={formData.roles.some(r => r._id === role._id)}
+                                        onChange={(e) => handleRoleSelection(e, role)} 
                                         id={role.name}
                                         value={role.name}
                                     />
@@ -204,15 +204,16 @@ import { useSelector } from "react-redux";
                 {
                     roles && Array.isArray(roles) && roles.length > 0 && (
                         <div className="my-2 block">
-                            <Label value="Add Roles" />
+                            <Label value="Update Roles" />
                             <div className="grid grid-cols-2 gap-3" >
-                                {roles.map(role => (
+                                {roles.filter(role => formData && !formData.roles.includes(role._id)).map(role => (
                                     <div key={role._id} className="flex gap-3 mt-2 items-center" >
                                         <Checkbox
                                             type="checkbox"
                                             id={role._id}
                                             value={role.name}
                                             onChange={(e) => handleRoleSelection(e, role)}
+                                            className="cursor-pointer"
                                         />
                                         <Label htmlFor={role._id}>
                                             {role.name}
