@@ -112,3 +112,25 @@ module.exports.editController = async(req ,res)=> {
 
     res.status(200).json({ updatedUser });
 }
+
+//delete user route handler
+module.exports.deleteController = async(req ,res)=> {
+    const user = req.user ; 
+    const userId = req.params.userId ; 
+
+    if(!userId) {
+        throw new ExpressError("Id not found.");
+    }
+    const  userToDelete = await User.findById(userId);
+
+    if(!userToDelete) {
+        throw new ExpressError(400 , "User not found.");
+    }
+
+    if(!user.superAdmin || !userToDelete.equals(userId)) {
+        throw new ExpressError(401 , "Permission not granted to update this user.");
+    }
+
+    await User.findByIdAndDelete(userId);
+    res.status(200).json("User delete Successfully.");
+}

@@ -2,13 +2,13 @@ import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setError , setSuccess }) {
+export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setError , setSuccess , setUserDataUpdated }) {
     const [ loading , setLoading ] = useState(false);
     
     const handleDelete = async()=> {
         try {
             setLoading(true);
-            const response = await fetch(`/api/user/delete/${userId}`);
+            const response = await fetch(`/api/user/delete/${userId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {
@@ -19,6 +19,7 @@ export default function DeleteUserModal({ showModalDelete, setShowModalDelete , 
             setLoading(false);
             setShowModalDelete(false);
             setSuccess("User delete successfully.");
+            setUserDataUpdated(true);
         }catch(err) {
             setLoading(true);
             setShowModalDelete(false);
@@ -36,7 +37,7 @@ export default function DeleteUserModal({ showModalDelete, setShowModalDelete , 
                    </h3>
                    <div className="flex justify-center gap-4">
                      <Button color="failure" onClick={handleDelete}>
-                       { loading ? ( <Spinner color={"red"} /> ) : "Yes, I'm sure"}
+                       { loading ? ( <Spinner color={"failure"} /> ) : "Yes, I'm sure"}
                      </Button>
                      <Button color="gray" onClick={() => setShowModalDelete(false)}>
                        No, cancel
