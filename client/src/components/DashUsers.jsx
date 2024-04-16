@@ -1,11 +1,11 @@
-import { Alert, Avatar, Badge, Button, Checkbox, Label, Modal, Table, TextInput, Toast } from "flowbite-react";
+import { Table, Toast } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { HiCheck, HiX } from "react-icons/hi";
-import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 
 const  EditUserModal = React.lazy(()=> import("./EditUserModal"));
+const DeleteUserModal = React.lazy(()=> import("./DeleteUserModal"));
 
 export  default  function DashUsers() {
     const { currUser } = useSelector(state => state.user);
@@ -50,6 +50,12 @@ export  default  function DashUsers() {
     //handle Edit user function
     const handleEdit = (user) => {
         setShowModalEdit(true);
+        setUserData(user);
+    }
+
+    //handle Delete user function
+    const  handleDelete = (user) => {
+        setShowModalDelete(true);
         setUserData(user);
     }
     return (
@@ -105,7 +111,7 @@ export  default  function DashUsers() {
                                                     <span onClick={()=> handleEdit(user)} className="cursor-pointer" >
                                                         <MdOutlineEdit size={20} color="teal"/>
                                                     </span>
-                                                    <span onClick={()=> setShowModalDelete(true)} className="cursor-pointer" >
+                                                    <span onClick={()=> handleDelete(user)} className="cursor-pointer" >
                                                         <MdDeleteOutline size={20} color="red"/>
                                                     </span>
                                                 </div>
@@ -125,6 +131,14 @@ export  default  function DashUsers() {
                 userData={userData}
                 setUserData={setUserData}
                 setUserDataUpdated={setUserDataUpdated}
+            />
+            {/* DeleteUserModal */}
+            <DeleteUserModal 
+                showModalDelete={showModalDelete}
+                setShowModalDelete={setShowModalDelete}
+                userId={ userData && userData._id}
+                setError={setError}
+                setSuccess={setSuccess}
             />
         </>
     );
