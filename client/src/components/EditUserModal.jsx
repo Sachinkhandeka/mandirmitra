@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { Alert, Avatar, Badge, Button, Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import { Alert, Avatar, Badge, Button, Checkbox, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
- export default function EditUserModal ({ showModalEdit, setShowModalEdit, userData, setUserData, error, setError, success, setSuccess }) {
+ export default function EditUserModal ({ showModalEdit, setShowModalEdit, userData, setUserData, setUserDataUpdated }) {
     const { currUser } = useSelector(state => state.user);
     const [ viewPass , setViewPass ] = useState(false);
+    const [ success , setSuccess ] = useState(null);
+    const [ error  , setError ] = useState(null);
+    const [ loading , setLoading ] = useState(false);
     const [ formData , setFormData ] = useState({
         username:  '',
         email:  '',
@@ -40,12 +43,12 @@ import { useSelector } from "react-redux";
         if(checked) {
             setFormData((prev)=> ({
                 ...prev ,
-                roles : [ ...prev.roles , role._id ]
+                roles : [ ...prev.roles , role ]
             }));
         }else {
             setFormData((prev)=> ({
                 ...prev,
-                roles : prev.roles.filter(rId => rId !== role._id)
+                roles : prev.roles.filter( r => r._id !== role._id)
             }));
         }
         setIsFormUpdated(true);
@@ -53,7 +56,7 @@ import { useSelector } from "react-redux";
 
      // Update formData when userData changes
      useEffect(() => {
-        if (userData && userData.username !== undefined && userData.email !== undefined && userData.roles && userData.roles.length > 0) {
+        if (userData && userData.username !== undefined && userData.email !== undefined) {
             setFormData(prevFormData => ({
                 ...prevFormData,
                 username: userData.username,
@@ -71,19 +74,19 @@ import { useSelector } from "react-redux";
         });
         setIsFormUpdated(true);
     }
-    console.log(formData);
     //handle submit function  
     const handleSubmit =  async(e)=> {
         e.preventDefault();
+        setLoading(true);
 
         if(!isFormUpdated) {
+            setLoading(false);
             return setError("No changes detected to update user");
         }
 
         try {
             setError(null);
             setSuccess(null);
-
             const response =  await fetch(
                 `/api/user/edit/${userData._id}`,
                 {
@@ -95,11 +98,16 @@ import { useSelector } from "react-redux";
             const data = await response.json();
 
             if(!response.ok) {
+                setLoading(false);
                 return setError(data.message);
             }
             setUserData(data.updatedUser);
+            setLoading(false);
+            setSuccess("User updated successfully.");
+            setUserDataUpdated(true);
             setIsFormUpdated(false);
         } catch(err) {
+            setLoading(false);
             setError(err.message);
         }
     }
@@ -185,6 +193,7 @@ import { useSelector } from "react-redux";
                                         onChange={(e) => handleRoleSelection(e, role)} 
                                         id={role.name}
                                         value={role.name}
+                                        disabled
                                     />
                                     <Label htmlFor={role.name}>
                                         <div>
@@ -209,6 +218,7 @@ import { useSelector } from "react-redux";
                                 {roles.filter(role => formData && !formData.roles.includes(role._id)).map(role => (
                                     <div key={role._id} className="flex gap-3 mt-2 items-center" >
                                         <Checkbox
+                                            checked={formData.roles.some(r => r._id === role._id)}
                                             type="checkbox"
                                             id={role._id}
                                             value={role.name}
@@ -230,7 +240,9 @@ import { useSelector } from "react-redux";
         <Modal.Footer>
             <div className="flex gap-4">
                 <Button onClick={() => setShowModalEdit(false)} color={"gray"}>Cancel</Button>
-                <Button onClick={handleSubmit} outline gradientMonochrome="purple">Save Changes</Button>
+                <Button onClick={handleSubmit} outline gradientMonochrome="purple" disabled={loading}>
+                    { loading ? ( <Spinner color={"purple"} /> ) : 'Save Changes' }
+                </Button>
             </div>
         </Modal.Footer>
     </Modal>
