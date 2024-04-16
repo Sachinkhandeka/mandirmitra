@@ -15,7 +15,15 @@ export  default  function DashUsers() {
     const [ userData , setUserData ] = useState({});
     const [ showModalEdit , setShowModalEdit ] = useState(false);
     const [ showModalDelete , setShowModalDelete ] = useState(false);
-    const [ viewPass , setViewPass ] = useState(false);
+    const [userDataUpdated, setUserDataUpdated] = useState(false);
+
+
+    useEffect(() => {
+        if (userDataUpdated) {
+            getUsers(); // Re-fetch user data
+            setUserDataUpdated(false); // Reset userDataUpdated state
+        }
+    }, [userDataUpdated]);
 
     //get-fetch all users data
     const getUsers = async()=> {
@@ -85,12 +93,12 @@ export  default  function DashUsers() {
                                             <Table.Cell>{ user.username }</Table.Cell>
                                             <Table.Cell>{ user.email }</Table.Cell>
                                             <Table.Cell>
-                                                { user.roles && user.roles.length > 0 && user.roles.map((role)=>(
+                                                { user.roles && user.roles.length > 0 ? user.roles.map((role)=>(
                                                     <div key={role._id} >
                                                         <p>{ role.name }</p>
                                                         <span className="block text-xs" >[{ role.permissions.map(permission => permission.actions.join(", ")) }]</span>
                                                     </div>
-                                                )) }
+                                                )) : '-' }
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex items-center gap-4" >
@@ -116,10 +124,7 @@ export  default  function DashUsers() {
                 setShowModalEdit={setShowModalEdit} 
                 userData={userData}
                 setUserData={setUserData}
-                error={error}
-                setError={setError}
-                success={success} 
-                setSuccess={setSuccess}
+                setUserDataUpdated={setUserDataUpdated}
             />
         </>
     );
