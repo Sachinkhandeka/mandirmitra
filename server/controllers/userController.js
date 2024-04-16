@@ -70,7 +70,7 @@ module.exports.editController = async(req ,res)=> {
         throw new ExpressError(400 , "User not found.");
     }
 
-    if(!user.superAdmin || userToUpdate.id !== user.id) {
+    if(!user.superAdmin || !userToUpdate._id.equals(userId)) {
         throw new ExpressError(401 , "Permission not granted to update this user.");
     }
 
