@@ -38,7 +38,7 @@ module.exports.getController = async(req ,res)=> {
         throw new ExpressError(403 , "Forbiden.");
     }
 
-    const roles = await Role.find({ templeId }).populate("Permission");
+    const roles = await Role.find({ templeId }).populate("permissions");
 
     res.status(200).json({
         roles,
