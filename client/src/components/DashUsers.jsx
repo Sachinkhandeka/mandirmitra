@@ -139,6 +139,7 @@ export  default  function DashUsers() {
                 userId={ userData && userData._id}
                 setError={setError}
                 setSuccess={setSuccess}
+                setUserDataUpdated={setUserDataUpdated}
             />
         </>
     );
