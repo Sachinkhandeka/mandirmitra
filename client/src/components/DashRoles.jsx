@@ -15,6 +15,14 @@ export default function DashRoles() {
     const [ roleData , setRoleData ] = useState({});
     const [ roleUpdated , setRoleUpdated ] = useState(false);
 
+    
+    useEffect(() => {
+        if (roleUpdated) {
+            getRolesData(); // Re-fetch user data
+            setRoleUpdated(false); // Reset userDataUpdated state
+        }
+    }, [roleUpdated]);
+
     // Function to fetch roles data
     const getRolesData = async () => {
         try {
@@ -113,6 +121,7 @@ export default function DashRoles() {
             {/* edit role component */}
             <EditRoleModal 
                 roleData={roleData}
+                setRoleData={setRoleData}
                 showModal={showModal}
                 setShowModal={setShowModal}
                 setRoleUpdated={setRoleUpdated}
