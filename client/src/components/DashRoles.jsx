@@ -5,6 +5,7 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 
 const EditRoleModal = React.lazy(()=> import("./EditRoleModal"));
+const DeleteRoleModal = React.lazy(()=> import("./DeleteRoleModal"));
 
 export default function DashRoles() {
     const { currUser } = useSelector(state => state.user);
@@ -12,6 +13,7 @@ export default function DashRoles() {
     const [success, setSuccess] = useState(null);
     const [roles, setRoles] = useState([]);
     const [ showModal , setShowModal ] = useState(false);
+    const [ deleteModal , setDeleteModal ] = useState(false);
     const [ roleData , setRoleData ] = useState({});
     const [ roleUpdated , setRoleUpdated ] = useState(false);
 
@@ -52,8 +54,9 @@ export default function DashRoles() {
     }
 
     //function to delete roles
-    const handleDelete = async()=> {
-        console.log("Delete funtion triggered!")
+    const handleDelete = async(role)=> {
+        setDeleteModal(true);
+        setRoleData(role);
     }
 
     return (
@@ -125,6 +128,14 @@ export default function DashRoles() {
                 showModal={showModal}
                 setShowModal={setShowModal}
                 setRoleUpdated={setRoleUpdated}
+            />
+            {/* delete role component */}
+            <DeleteRoleModal 
+                deleteModal={deleteModal}
+                setDeleteModal={setDeleteModal}
+                setError={setError}
+                setRoleUpdated={setRoleUpdated}
+                userId={ roleData && roleData._id }
             />
         </>
     );

@@ -70,3 +70,23 @@ module.exports.editController = async(req ,res)=> {
 
 
 }
+
+//delete role route handler
+module.exports.deleteController = async(req ,res)=> {
+    const user = req.user ; 
+    const roleId = req.params.roleId ; 
+    
+    const roleToDelete = await Role.findById(roleId);
+
+    if(!user.superAdmin) {
+        throw new ExpressError(400 , "Permission not granted.");
+    }
+
+    if(!roleToDelete) {
+        throw new ExpressError(400 , "Role not found.");
+    }
+
+    await Role.findByIdAndDelete(roleId);
+
+    res.status(200).json("Role deleted successfully.");
+}

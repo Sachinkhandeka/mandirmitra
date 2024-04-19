@@ -25,4 +25,11 @@ router.put(
     wrapAsync(role.editController),
 );
 
+//delete role
+router.delete(
+    "/delete/:roleId",
+    verifyAdmin,
+    wrapAsync(role.deleteController),
+);
+
 module.exports = router ; 
