@@ -109,7 +109,7 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
     }
 
     return (
-        <Modal show={showModal} dismissible onClose={() => setShowModal(false)} >
+        <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"center-right"} >
             <Modal.Header>
                 <div>
                     <Badge icon={HiCheck} className="py-1 px-3" >
