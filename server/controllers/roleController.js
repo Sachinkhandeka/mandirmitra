@@ -44,3 +44,29 @@ module.exports.getController = async(req ,res)=> {
         roles,
     });
 }
+
+//edit role route handler 
+module.exports.editController = async(req ,res)=> {
+    const user = req.user ; 
+    const roleId = req.params.roleId ;
+    const formData = req.body; 
+
+    const role = await Role.findById(roleId);
+
+    if(!user.superAdmin) {
+        throw new ExpressError(400 , "Permission not granted.");
+    }
+
+    if(!role) {
+        throw new ExpressError(400 , "Role not found.");
+    }
+    if(!formData.name || !formData.permissions) {
+        throw new ExpressError(400 , "Please enter valid data.");
+    }
+
+    await Role.findByIdAndUpdate(roleId , formData , { new : true });
+
+    res.status(200).json("Role updated successfully.");
+
+
+}

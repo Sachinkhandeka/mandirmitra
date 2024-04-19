@@ -1,11 +1,13 @@
-import { Modal, TextInput , Label , Badge, Checkbox } from "flowbite-react";
+import { Modal, TextInput , Label , Badge, Checkbox, Button, Alert, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
-export default function EditRoleModal({ roleData , showModal , setShowModal ,  setRoleUpdated }) {
+export default function EditRoleModal({ roleData , setRoleData ,  showModal , setShowModal ,  setRoleUpdated }) {
     const {  currUser } = useSelector(state => state.user);
     const [ error , setError ] = useState(null);
+    const [ success , setSuccess ] = useState(null);
+    const [ loading , setLoading ] = useState(false);
     const [ permissions , setPermissions ] = useState([]);
     const [ formData , setFormData ] = useState({
         name : '',
@@ -75,7 +77,36 @@ export default function EditRoleModal({ roleData , showModal , setShowModal ,  s
         }
     }
 
-    console.log(formData);
+    //upddate function 
+    const handleUpdate = async(e)=> {
+        e.preventDefault();
+        try {
+            setError(null);
+            setLoading(true);
+
+            const response = await fetch(
+                `/api/role/edit/${roleData._id}`,
+                {
+                    method : "PUT",
+                    headers : { "Content-Type" : "application/json" },
+                    body : JSON.stringify(formData),
+                }
+            );
+            const data = await response.json();
+
+            if(!response.ok) {
+                setLoading(false);
+                return setError(data.message);
+            }
+            setLoading(false);
+            setSuccess("Role Updated Successfully.");
+            setRoleData(data.updatedRole);
+            setRoleUpdated(true);
+            setShowModal(false);
+        }catch(err) {
+            setError(err.message);
+        }
+    }
 
     return (
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} >
@@ -88,37 +119,50 @@ export default function EditRoleModal({ roleData , showModal , setShowModal ,  s
                 </div>
             </Modal.Header>
             <Modal.Body>
+                { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
+                { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null)} >{ success }</Alert> ) }
                 <div className="space-y-6" >
                     <h3 className="text-xl font-medium text-gray-900 dark:text-white">Edit Role</h3>
-                    <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="name">Role Name</Label>
+                    <form onSubmit={handleUpdate}>
+                        <div>
+                            <div className="mb-2 block">
+                                <Label htmlFor="name">Role Name</Label>
+                            </div>
+                            <TextInput
+                                id="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
+                            {/* Permissions section */}
+                            <div className="my-2 block">
+                                <p>Permissions</p>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                {permissions && permissions.length > 0 && permissions.map(permission => (
+                                    <div key={permission._id} className="flex items-center gap-3">
+                                        <Checkbox
+                                            checked={formData.permissions.some(p => p._id === permission._id)}
+                                            onChange={() => handlePermissionChange(permission)}
+                                            value={permission.permissionName}
+                                            key={permission._id}
+                                            id={permission._id}
+                                        />
+                                        <Label htmlFor={ permission._id }>{permission.permissionName}</Label>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <TextInput
-                            id="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
-                        {/* Permissions section */}
-                        <div className="my-2 block">
-                            <p>Permissions</p>
+                        <div className="my-4 flex items-center gap-3" >
+                            <Button onClick={()=> setShowModal(false)} color={"gray"} >Cancel</Button>
+                            <Button 
+                                onClick={handleUpdate} 
+                                gradientMonochrome={"lime"} outline 
+                            >
+                                { loading ? <Spinner  /> : 'Save Changes' }
+                            </Button>
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            {permissions && permissions.length > 0 && permissions.map(permission => (
-                                <div key={permission._id} className="flex items-center gap-3">
-                                    <Checkbox
-                                        checked={formData.permissions.some(p => p._id === permission._id)}
-                                        onChange={() => handlePermissionChange(permission)}
-                                        value={permission.permissionName}
-                                        key={permission._id}
-                                        id={permission._id}
-                                    />
-                                    <Label htmlFor={ permission._id }>{permission.permissionName}</Label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </Modal.Body>
         </Modal>
