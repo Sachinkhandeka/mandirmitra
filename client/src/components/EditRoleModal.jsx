@@ -159,7 +159,7 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
                                 onClick={handleUpdate} 
                                 gradientMonochrome={"lime"} outline 
                             >
-                                { loading ? <Spinner  /> : 'Save Changes' }
+                                { loading ? <Spinner color={"success"} /> : 'Save Changes' }
                             </Button>
                         </div>
                     </form>
