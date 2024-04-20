@@ -7,6 +7,7 @@ import { Spinner } from "flowbite-react";
 const DashProfile = React.lazy(()=> import("../components/DashProfile"));
 const DashUsers = React.lazy(()=> import("../components/DashUsers"));
 const DashRoles = React.lazy(()=> import("../components/DashRoles"));
+const DashPermissions = React.lazy(()=> import("../components/DashPermissions"));
 
 import DashSidebar from "../components/DashSidebar";
 import Header from "../components/Header";
@@ -75,6 +76,13 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashRoles /></Suspense> }
+                     {/* permissions */}
+                     { tab === "permissions" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><DashPermissions /></Suspense> }
                 </div>
             </div>
         </>
