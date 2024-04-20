@@ -16,7 +16,14 @@ router.post(
 router.get(
     "/get/:templeId",
     verifyAdmin,
-    wrapAsync(permission.getController)
+    wrapAsync(permission.getController),
+);
+
+//edit route
+router.put(
+    "/edit/:permissionId",
+    verifyAdmin,
+    wrapAsync(permission.editController),
 );
 
 module.exports = router ; 
