@@ -1,9 +1,10 @@
-import { Modal, Label , Select, Checkbox } from "flowbite-react";
+import { Button, Modal, Label , Select, Checkbox, Spinner, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 
-export default  function EditPermissionsModal({ showModal , setShowModal , permissionData }) {
+export default  function EditPermissionsModal({ showModal , setShowModal , setSuccess, permissionData , setPermissionUpdated }) {
     const [ error , setError ] = useState(null);
-    const [ success , setSuccess ] = useState(null);
+    const [ loading ,  setLoading ] =  useState(false);
+    const [ isPermissionUpdated , setIsPermissionUpdate ] = useState(false);
     const [ formData , setFormData ] = useState({
         permissionName : '',
         actions : [],
@@ -39,14 +40,50 @@ export default  function EditPermissionsModal({ showModal , setShowModal , permi
                 });
             }
         }
+        setIsPermissionUpdate(true);
     }
-    console.log(formData);
+    
+    //function to update permission
+    const handleUpdate = async(e)=> {
+        e.preventDefault();
+        if(!isPermissionUpdated) {
+            setLoading(false);
+           return setError("Changes not detected to update.");
+        }
+        try {
+            setLoading(true);
+            setError(null);
+
+            const response = await fetch(
+                `/api/permission/edit/${permissionData._id}`,
+                {
+                    method : "PUT",
+                    headers : { "Content-Type" : "application/json" },
+                    body : JSON.stringify(formData),
+                }
+            );
+            const data = await response.json();
+
+            if(!response.ok) {
+                setLoading(false);
+                return setError(data.message);    
+            }
+            setLoading(false);
+            setPermissionUpdated(true);
+            setShowModal(false);
+            setIsPermissionUpdate(false);
+            setSuccess("Permission updated successfully.");
+        } catch(err) {
+            setError(err.message);
+        }
+    }
     return (
         <>
             <Modal show={showModal} dismissible onClose={()=> setShowModal(false)} size={"md"} position={"top-right"} >
                 <Modal.Header>
                     <p>Edit Permission</p>
                 </Modal.Header>
+                { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="m-4" >{ error }</Alert> ) }
                 <Modal.Body>
                     <form>
                         <div >
@@ -103,6 +140,15 @@ export default  function EditPermissionsModal({ showModal , setShowModal , permi
                                     <Label htmlFor="delete">Delete</Label>
                                 </div>
                             </div>
+                        </div>
+                        <div className="my-4 flex items-center gap-3" >
+                            <Button onClick={()=> setShowModal(false)} color={"gray"} >Cancel</Button>
+                            <Button 
+                                onClick={handleUpdate} 
+                                gradientMonochrome={"lime"} outline 
+                            >
+                                { loading ? <Spinner color={"success"} /> : 'Save Changes' }
+                            </Button>
                         </div>
                     </form>
                 </Modal.Body>

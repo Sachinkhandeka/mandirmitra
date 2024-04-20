@@ -9,10 +9,10 @@ export default function DashPermissions() {
     const { currUser } = useSelector(state => state.user);
     const [ error , setError ] = useState(null);
     const [  success , setSuccess ] = useState(null);
-    const [ loading , setLoading ] = useState(false);
     const [ permissions, setPermissions ] = useState({});
     const [ showModal , setShowModal ] = useState(false);
     const [ permissionData , setPermissionData ] = useState({});
+    const [ permissionUpdated , setPermissionUpdated ] = useState(false);
 
     const getPermissionsData = async()=> {
         try {
@@ -37,7 +37,8 @@ export default function DashPermissions() {
 
     useEffect(()=> {
         getPermissionsData();
-    },[ currUser ]);
+        setPermissionUpdated(false);
+    },[ currUser , permissionUpdated ]);
 
     //function to edit permission
     const handleEdit = (permission)=> {
@@ -53,8 +54,8 @@ export default function DashPermissions() {
 
     return (
         <>
-            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null) } >{ error }</Alert> ) }
-            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null)} >{ success }</Alert> ) }
+            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null) } className="mb-3" >{ error }</Alert> ) }
+            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null)} className="mb-3" >{ success }</Alert> ) }
             {/* Displaying permissions table if isAdmin and permissions array has length > 0 */}
             {currUser.isAdmin && permissions.length > 0 ? (
                 <Table striped>
@@ -98,7 +99,9 @@ export default function DashPermissions() {
             <EditPermissionsModal 
                 showModal={showModal}
                 setShowModal={setShowModal}
+                setSuccess={setSuccess}
                 permissionData={permissionData}
+                setPermissionUpdated={setPermissionUpdated}
             />
         </>
     );
