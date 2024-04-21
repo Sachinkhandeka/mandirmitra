@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Table, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import { TbFaceIdError } from "react-icons/tb";
 
 const EditRoleModal = React.lazy(()=> import("./EditRoleModal"));
 const DeleteRoleModal = React.lazy(()=> import("./DeleteRoleModal"));
@@ -119,7 +120,12 @@ export default function DashRoles() {
                 </Table>
             ) : (
                 // Displaying message if there are no roles
-                <p>No Roles Created Yet!</p>
+                <div className="flex justify-center items-center h-screen">
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <TbFaceIdError size={50} className="animate-bounce" />
+                        <p>No Roles Created Yet!</p>
+                    </div>
+                </div>
             )}
             {/* edit role component */}
             <EditRoleModal 

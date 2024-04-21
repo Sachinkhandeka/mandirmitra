@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import { TbFaceIdError } from "react-icons/tb";
 
 const  EditUserModal = React.lazy(()=> import("./EditUserModal"));
 const DeleteUserModal = React.lazy(()=> import("./DeleteUserModal"));
@@ -78,7 +79,7 @@ export  default  function DashUsers() {
                     <Toast.Toggle onDismiss={()=> setError(null)} />
                 </Toast>
             ) }
-            { currUser.isAdmin && ( 
+            { currUser.isAdmin && users.length > 0 ? ( 
                 <Table striped >
                     <Table.Head>
                         <Table.HeadCell>Profile</Table.HeadCell>
@@ -123,7 +124,15 @@ export  default  function DashUsers() {
                         )
                     }
                 </Table>
-            )}
+            ) : (
+                 // Displaying message if there are no users
+                 <div className="flex justify-center items-center h-screen">
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <TbFaceIdError size={50} className=" animate-bounce " />
+                        <p>No Users Created Yet!</p>
+                    </div>
+                </div>
+            ) }
             {/* EditUserModal */}
             <EditUserModal 
                 showModalEdit={showModalEdit} 
