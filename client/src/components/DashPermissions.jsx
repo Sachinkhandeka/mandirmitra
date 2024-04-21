@@ -1,16 +1,19 @@
 import { Alert , Table ,  } from "flowbite-react";
 import React, { useState , useEffect } from "react";
 import { useSelector } from "react-redux";
-import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md"
+import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
+import { TbFaceIdError } from "react-icons/tb";
 
 const EditPermissionsModal = React.lazy(()=> import("./EditPermissionsModal"));
+const DeletePermissionModal = React.lazy(()=> import("./DeletePermissionModal"));
 
 export default function DashPermissions() {
     const { currUser } = useSelector(state => state.user);
     const [ error , setError ] = useState(null);
-    const [  success , setSuccess ] = useState(null);
+    const [ success , setSuccess ] = useState(null);
     const [ permissions, setPermissions ] = useState({});
     const [ showModal , setShowModal ] = useState(false);
+    const [ deleteModal , setDeleteModal ] = useState(false);
     const [ permissionData , setPermissionData ] = useState({});
     const [ permissionUpdated , setPermissionUpdated ] = useState(false);
 
@@ -93,7 +96,12 @@ export default function DashPermissions() {
                 </Table>
             ) : (
                 // Displaying message if there are no permissions
-                <p>No Permissions Created Yet!</p>
+                <div className="flex justify-center items-center h-screen">
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <TbFaceIdError size={50} className="animate-bounce" />
+                        <p>No Permissions Created Yet!</p>
+                    </div>
+                </div>
             )}
             {/* Edit permission modal */}
             <EditPermissionsModal 
@@ -103,6 +111,13 @@ export default function DashPermissions() {
                 permissionData={permissionData}
                 setPermissionUpdated={setPermissionUpdated}
             />
+            {/* Delete permission modal */}
+            <DeletePermissionModal 
+                deleteModal={deleteModal}
+                setDeleteModal={setDeleteModal}
+                permissionId={ permissionData && permissionData._id }
+            />
+
         </>
     );
 }
