@@ -5,6 +5,11 @@ const wrapAsync = require("../utils/wrapAsync");
 const { verifyAdmin } = require("../utils/verifyAdmin");
 const { verifyToken } = require("../utils/verifyUser");
 
+//signin route
+router.post(
+    "/signin",
+    wrapAsync(user.signinController),
+);
 
 //create route
 router.post(

@@ -2,7 +2,46 @@ const { model } = require("mongoose");
 const User = require("../models/userSchema");
 const ExpressError = require("../utils/ExpressError");
 const bcryptjs = require("bcryptjs");
-const salt = 10 ; 
+const salt = 10 ;
+const jwt = require("jsonwebtoken");
+const secret = process.env.JWT_SECRET ;
+
+
+//signin controller
+module.exports.signinController = async(req ,res)=> {
+    const { email , password } = req.body ; 
+    if(!email || !password  || email === '' || password === '') {
+        throw new ExpressError(400 , "All fields are required.");
+    }
+
+    const validUser = await User.findOne({email}).populate({
+        path : "roles",
+        populate : {
+            path : "permissions",
+            model : "Permission"
+        }
+    });
+
+    if(!validUser) {
+        throw new ExpressError(404 , "User not found.");
+    }
+    const validPass = bcryptjs.compareSync( password , validUser.password );
+
+    if(!validPass) {
+        throw new ExpressError(400 , "Invalid Password.");
+    }
+
+    const token = jwt.sign({
+        id : validUser._id,
+        superAdmin : false,
+        permissions : validUser.roles.map(role => role.permissions.map(p => p.actions.join(","))).flat(),
+    }, secret);
+    const { password : pass, ...rest } = validUser._doc;
+    res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 
+        rest,
+    });
+}
+
 
 //create user route  handler 
 module.exports.createController = async(req ,res)=> {
@@ -66,15 +105,15 @@ module.exports.editController = async(req ,res)=> {
     const userId = req.params.userId ; 
 
     const userToUpdate = await User.findById(userId);
-
     if(!userToUpdate) {
         throw new ExpressError(400 , "User not found.");
     }
 
-    if(!user.superAdmin || !userToUpdate._id.equals(userId)) {
+    if(!userToUpdate._id.equals(userId)) {
+        if(!user.superAdmin) {
         throw new ExpressError(401 , "Permission not granted to update this user.");
+        }
     }
-
     if(!formData) {
         throw new ExpressError(400 , "Invalid form data.");
     }
