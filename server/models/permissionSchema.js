@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Role = require("./roleSchema");
 
 const permissionSchema = new mongoose.Schema({
     permissionName : {
@@ -22,6 +23,12 @@ const permissionSchema = new mongoose.Schema({
         enum : ['create', 'read', 'update', 'delete'],
     },
 }, { timestamps : true });
+
+permissionSchema.post("findOneAndDelete" , async(permission)=> {
+    const permissionId =  permission._id ; 
+
+    await Role.updateMany({ permissions : permissionId }, { $pull : { permissions : permissionId } } );
+});
 
 const Permission = mongoose.model("Permission", permissionSchema);
 

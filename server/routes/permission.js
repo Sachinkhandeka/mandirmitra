@@ -26,4 +26,11 @@ router.put(
     wrapAsync(permission.editController),
 );
 
+//delete route
+router.delete(
+    "/delete/:permissionId",
+    verifyAdmin,
+    wrapAsync(permission.deleteController),
+);
+
 module.exports = router ; 

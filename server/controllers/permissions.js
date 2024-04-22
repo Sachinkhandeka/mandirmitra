@@ -71,3 +71,23 @@ module.exports.editController = async(req ,res)=> {
     });
 
 }
+
+//delete permission route handler
+module.exports.deleteController = async(req ,res)=> {
+    const user = req.user ; 
+    const permissionId = req.params.permissionId ; 
+    
+    const permissionToDelete = await Permission.findById(permissionId);
+
+    if(!user.superAdmin) {
+        throw new ExpressError(400 , "Permission not granted.");
+    }
+
+    if(!permissionToDelete) {
+        throw new ExpressError(400 , "Permission not found.");
+    }
+
+    await Permission.findByIdAndDelete(permissionId);
+
+    res.status(200).json("Permission deleted successfully.");
+}
