@@ -39,6 +39,7 @@ export default function DashProfile() {
             [e.target.id] : e.target.value.trim(),
         });
     }
+
     //update super admin function
     const handleSubmit = async(e)=> {
         e.preventDefault();
@@ -46,7 +47,7 @@ export default function DashProfile() {
         setSuccess(null);
         try {
             const response =  await  fetch(
-                `/api/superadmin/edit/${currUser._id}`,
+                currUser && currUser.isAdmin ? `/api/superadmin/edit/${currUser._id}` : `/api/user/edit/${currUser._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
@@ -60,7 +61,7 @@ export default function DashProfile() {
                 return ;
             }
             setSuccess("Profile updated successfully.");
-            dispatch(updateSuccess(data.currUser));
+            dispatch(updateSuccess( currUser && currUser.isAdmin ? data.currUser : data.updatedUser));
         } catch(err) {
             dispatch(updateFailure(err.message));
         }
@@ -211,13 +212,15 @@ export default function DashProfile() {
                        </Modal.Footer>
                      </Modal>
                      </form>
-                     <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10" >
-                        <div className="flex flex-col md:flex-row gap-4 w-full" >
-                            <CreateUser />
-                            <CreateRoles />
-                            <CreatePermissions />
+                     {currUser.isAdmin && (
+                        <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10">
+                            <div className="flex flex-col md:flex-row gap-4 w-full">
+                                <CreateUser />
+                                <CreateRoles />
+                                <CreatePermissions />
+                            </div>
                         </div>
-                     </div>
+                    )}
                 </div>
             ) }
         </div>
