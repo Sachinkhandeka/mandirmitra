@@ -12,6 +12,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import CreateUser from "./CreateUser";
 import CreateRoles from "./CreateRoles";
 import CreatePermissions from "./CreatePermissions";
+import UserRoles from "./UserRoles";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -212,6 +213,9 @@ export default function DashProfile() {
                        </Modal.Footer>
                      </Modal>
                      </form>
+                     { !currUser.isAdmin && (
+                        <UserRoles />
+                     ) }
                      {currUser.isAdmin && (
                         <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10">
                             <div className="flex flex-col md:flex-row gap-4 w-full">
