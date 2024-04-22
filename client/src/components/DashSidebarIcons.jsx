@@ -20,7 +20,7 @@ export default function DashSidebarIcon() {
 
   const handleSignout = async () => {
     try {
-      const response = await fetch("/api/superadmin/signout", { method: "POST" });
+      const response = await fetch(`/api/superadmin/signout`,{ method: "POST" });
       const data = await response.json();
 
       if (!response.ok) {
