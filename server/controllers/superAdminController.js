@@ -47,7 +47,6 @@ module.exports.createController = async(req ,res)=> {
 //signin route handler
 module.exports.signinController = async(req ,res)=> {
     const { email , password } = req.body ; 
-
     if(!email || !password  || email === '' || password === '') {
         throw new ExpressError(400 , "All fields are required.");
     }
@@ -131,14 +130,11 @@ module.exports.googleController = async(req ,res)=> {
 
 }
 
+//edit superAdmin rooute handler
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
     const { username , email , password, profilePicture } = req.body ; 
     const userId   = req.params.id ; 
-    
-    // if(!userId || !username || !email || !password || !profilePicture) {
-    //     throw new ExpressError(400 , "Cannot update super Admin with empty fields.");
-    // }
     
     if(user.id !== userId) {
         throw new ExpressError(403 , "You are not allowed to update this user.");
@@ -161,16 +157,21 @@ module.exports.editController = async(req ,res)=> {
         throw new ExpressError(404 , "SuperAdmin not found.");
     }
 
-    const hashPass =  bcryptjs.hashSync(password, salt);
+    // Update only the fields that are present and not empty
+    const updateFields = {};
+    if (username && username !== isSuperAdmin.username) updateFields.username = username;
+    if (email && email !== isSuperAdmin.email) updateFields.email = email;
+    if (password) {
+        const hashPass = bcryptjs.hashSync(password, salt);
+        if (hashPass !== isSuperAdmin.password) updateFields.password = hashPass;
+    }
+    if (profilePicture && profilePicture !== isSuperAdmin.profilePicture) updateFields.profilePicture = profilePicture;
 
-    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(userId,{
-        $set : {
-            username : username,
-            email : email,
-            password : hashPass,
-            profilePicture : profilePicture,
-        }
-    }, { new : true });
+    if (Object.keys(updateFields).length === 0) {
+        throw new ExpressError(400 ,"No fields to update." );
+    }
+
+    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(userId,{ $set: updateFields }, { new : true });
 
     const { password : pass, ...rest } =  updatedSuperAdmin._doc ;  
     res.status(200).json({

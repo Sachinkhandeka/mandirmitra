@@ -56,7 +56,6 @@ export default function DashProfile() {
             const  data = await response.json();
 
             if(!response.ok) {
-                console.log(data.message);
                 dispatch(updateFailure(data.message));
                 return ;
             }
@@ -67,7 +66,7 @@ export default function DashProfile() {
         }
     }
 
-    //handle imagechhange functionality
+    //handle imagechange functionality
     const handleImageChange = (e)=> {
         const file = e.target.files[0];
         if(file) {
@@ -131,7 +130,7 @@ export default function DashProfile() {
                             <Toast.Toggle />
                         </Toast>
                     ) }
-                    <div className="w-full bg-gray-400 h-16 relative" >
+                    <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 h-16 relative" >
                         <input type="file" accept="image/*" onChange={handleImageChange} ref={inputRef} hidden/>
                         <div className="h-14 w-14 absolute bottom-[-10px] left-4 rounded-full cursor-pointer" onClick={()=> inputRef.current.click()} >
                             { uploadProgress !== null && uploadProgress !== 0 &&  (
