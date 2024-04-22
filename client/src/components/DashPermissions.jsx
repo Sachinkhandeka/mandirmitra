@@ -116,6 +116,7 @@ export default function DashPermissions() {
                 deleteModal={deleteModal}
                 setDeleteModal={setDeleteModal}
                 permissionId={ permissionData && permissionData._id }
+                setPermissionUpdated={setPermissionUpdated}
             />
 
         </>

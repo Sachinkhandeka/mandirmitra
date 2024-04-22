@@ -141,7 +141,7 @@ export default function DashRoles() {
                 setDeleteModal={setDeleteModal}
                 setError={setError}
                 setRoleUpdated={setRoleUpdated}
-                userId={ roleData && roleData._id }
+                roleId={ roleData && roleData._id }
             />
         </>
     );
