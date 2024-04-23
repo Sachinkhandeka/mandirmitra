@@ -13,6 +13,7 @@ import CreateUser from "./CreateUser";
 import CreateRoles from "./CreateRoles";
 import CreatePermissions from "./CreatePermissions";
 import UserRoles from "./UserRoles";
+import AddTehsilGaam from "./AddTehsilGaam";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -214,8 +215,16 @@ export default function DashProfile() {
                      </Modal>
                      </form>
                      { !currUser.isAdmin && (
-                        <UserRoles />
+                        <UserRoles />  
                      ) }
+                    { 
+                        !currUser.isAdmin && 
+                        currUser.roles && 
+                        currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))) &&
+                         (
+                            <AddTehsilGaam />
+                         )
+                    }
                      {currUser.isAdmin && (
                         <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10">
                             <div className="flex flex-col md:flex-row gap-4 w-full">

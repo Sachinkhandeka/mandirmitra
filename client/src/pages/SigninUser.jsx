@@ -101,13 +101,13 @@ export default function SigninUser() {
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
                     <p className="whitespace-nowrap" >Don't have an account ?</p>
                     <span className="text-blue-600 text-sm" >
-                        <Link to={"/signup"} className="hover:underline" >Super-admin</Link>
+                        <Link to={"/signup"} className="hover:underline" >Signup</Link>
                     </span>
                 </div>
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
                     <p className="whitespace-nowrap" >Login with superadmin. </p>
                     <span className="text-blue-600 text-sm" >
-                        <Link to={"/signin"} className="hover:underline" >Super-admin</Link>
+                        <Link to={"/signin"} className="hover:underline" >Signin</Link>
                     </span>
                 </div>
                 <div className="p-2 flex gap-2 items-center text-gray-500 text-sm" >

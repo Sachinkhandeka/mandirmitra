@@ -34,7 +34,7 @@ module.exports.signinController = async(req ,res)=> {
     const token = jwt.sign({
         id : validUser._id,
         superAdmin : false,
-        permissions : validUser.roles.map(role => role.permissions.map(p => p.actions.join(","))).flat(),
+        permissions :  validUser.roles.flatMap(role => role.permissions.flatMap(permission => permission.actions)),
     }, secret);
     const { password : pass, ...rest } = validUser._doc;
     res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 

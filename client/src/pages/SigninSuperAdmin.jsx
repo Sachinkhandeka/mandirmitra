@@ -105,7 +105,7 @@ export default function SigninSuperAdmin() {
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
                     <p className="whitespace-nowrap" >Don't have an account ?</p>
                     <span className="text-blue-600 text-sm" >
-                        <Link to={"/signup"} className="hover:underline" >Super-admin</Link>
+                        <Link to={"/signup"} className="hover:underline" >Signup</Link>
                     </span>
                 </div>
                 <div className="flex items-center flex-wrap gap-2 text-sm p-2" >
