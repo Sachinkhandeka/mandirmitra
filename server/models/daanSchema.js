@@ -9,11 +9,23 @@ const daanShema = new mongoose.Schema({
         type : String,
         required  : true,
     },
-    gaam : {
+    village : {
         type : String,
         required : true,
     },
-    taluko : {
+    tehsil : {
+        type : String,
+        required : true,
+    },
+    district : {
+        type : String,
+        required : true,
+    },
+    state : {
+        type : String,
+        required : true,
+    },
+    country : {
         type : String,
         required : true,
     },
