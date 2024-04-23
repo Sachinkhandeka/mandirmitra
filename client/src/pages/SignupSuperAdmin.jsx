@@ -59,7 +59,7 @@ export default function SignupSuperAdmin() {
     }
     return(
         <div className="w-full p-10 min-h-screen" style={{backgroundImage: `url(${image})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}} >
-            <div className="border-2 border-blue-400 shadow-lg rounded-lg p-10 w-full max-w-[600px] mx-auto relative bg-blue-50" >
+            <div className="border-2 border-blue-400 shadow-lg rounded-lg p-10 w-full max-w-[600px] mx-auto relative bg-blue-50 dark:bg-gradient-to-br from-gray-800 to-gray-400" >
                 <div className="absolute top-4 left-4 text-red-500 bg-white rounded-full p-2 md:p-4" >
                     <GiPrayer size={30} />
                 </div>
