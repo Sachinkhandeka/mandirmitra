@@ -1,7 +1,9 @@
 import { FloatingLabel, Button, Alert, Spinner } from "flowbite-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function AddTehsilGaam() {
+export default function AddTehsilGaam({ setLocationAdded }) {
+    const { currUser } = useSelector(state => state.user);
     const [ error ,  setError ] =  useState(null);
     const [ success , setSuccess ] =  useState(null);
     const [ loading , setLoading ] = useState(false);
@@ -50,7 +52,7 @@ export default function AddTehsilGaam() {
             setSuccess(null);
 
             const response = await fetch(
-                "/api/location/add",
+                `/api/location/add/${currUser.templeId}`,
                 {
                     method : "POST",
                     headers : { "Content-Type" : "application/json" },
@@ -65,6 +67,7 @@ export default function AddTehsilGaam() {
                 return ; 
             }
             setSuccess(data.message);
+            setLocationAdded(true);
             setLoading(false);
         }catch(err) {
             setLoading(false);

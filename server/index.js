@@ -41,7 +41,7 @@ app.use(cookieParser());
 app.use( "/api/temple", templeRoute );
 app.use( "/api/superadmin", superAdminRoute );
 app.use( "/api/user", userRoute );
-app.use( "/api/daan", daanRoute );
+app.use( "/api/donation", daanRoute );
 app.use( "/api/role", roleRoute );
 app.use( "/api/permission", permissionRoute );
 app.use( "/api/location", locationRoute );

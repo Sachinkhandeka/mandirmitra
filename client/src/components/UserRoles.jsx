@@ -25,7 +25,7 @@ export default  function  UserRoles() {
     return (
         <>
         { currUser && !currUser.isAdmin && (
-            <div  className="w-full bg-gradient-to-tr from-green-400 to-yellow-100" >
+            <div  className="w-full bg-gradient-to-tr from-green-400 to-yellow-100 dark:bg-gradient-to-tr dark:from-gray-800 dark:to-gray-600" >
                 <div className="p-4" > 
                     { currUser.roles.map((role)=> (
                         role.permissions.map((p)=> (
