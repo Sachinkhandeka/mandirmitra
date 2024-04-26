@@ -5,7 +5,7 @@ const daanShema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "Temple",
     },
-    name : {
+    donorName : {
         type : String,
         required  : true,
     },
@@ -29,11 +29,11 @@ const daanShema = new mongoose.Schema({
         type : String,
         required : true,
     },
-    seva : {
+    sevaName : {
         type : String,
         required : true,
     },
-    mobileNumber : {
+    contactInfo : {
         type : String,
         required : true,
         validate : {
@@ -47,7 +47,7 @@ const daanShema = new mongoose.Schema({
         type : String,
         enum : ["cash", "bank", "upi"],
     },
-    amount : {
+    donationAmount : {
         type : Number,
         required : true,
     }

@@ -4,6 +4,10 @@ const countrySchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
+    },
+    temple: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
     }
 });
 
@@ -18,6 +22,10 @@ const stateSchema = new mongoose.Schema({
         type : String,
         required : true,
     },
+    temple: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
+    }
 });
 
 const State = mongoose.model("State", stateSchema);
@@ -30,6 +38,10 @@ const districtSchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
+    },
+    temple: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
     }
 });
 const District  = mongoose.model("District", districtSchema);
@@ -42,6 +54,10 @@ const tehsilSchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
+    },
+    temple: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
     }
 });
 const Tehsil = mongoose.model("Tehsil" , tehsilSchema);
@@ -54,6 +70,10 @@ const villageSchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
+    },
+    temple: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Temple",
     }
 });
 const Village = mongoose.model("Village", villageSchema);

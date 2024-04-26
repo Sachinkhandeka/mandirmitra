@@ -14,6 +14,7 @@ import CreateRoles from "./CreateRoles";
 import CreatePermissions from "./CreatePermissions";
 import UserRoles from "./UserRoles";
 import AddTehsilGaam from "./AddTehsilGaam";
+import DonationForm from "./DonationForm";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ export default function DashProfile() {
         email : currUser.email,
         password : "",
     });
+    const [ locationAdded , setLocationAdded ] = useState(false);
     
     //handleChange - formData
     const handleChange = (e)=> {
@@ -161,7 +163,7 @@ export default function DashProfile() {
                         <h1 className="text-2xl font-mono font-bold pl-4" >{  currUser.username }</h1>
                         <p className="text-sm pl-4" >{ currUser.email }</p>
                     </div>
-                    <div className="p-4 md:absolute md:right-8 md:top-28 rounded-full w-14 h-14 hover:bg-gray-300 cursor-pointer" >
+                    <div className="p-4 md:absolute md:right-8 md:top-28 rounded-full w-14 h-14 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer" >
                         <FaPencil size={20} onClick={()=> setShowModal(true)} />
                     </div>
                     <form className="p-4" onSubmit={handleSubmit} >
@@ -218,11 +220,14 @@ export default function DashProfile() {
                         <UserRoles />  
                      ) }
                     { 
-                        !currUser.isAdmin && 
-                        currUser.roles && 
-                        currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))) &&
+                        (currUser.isAdmin || 
+                        (currUser.roles && 
+                        currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))))) &&
                          (
-                            <AddTehsilGaam />
+                            <>
+                                <AddTehsilGaam setLocationAdded={setLocationAdded} />
+                                <DonationForm locationAdded={locationAdded} />
+                            </>
                          )
                     }
                      {currUser.isAdmin && (

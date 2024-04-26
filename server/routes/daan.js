@@ -3,10 +3,12 @@ const router = express.Router({ mergeParams : true });
 const daan = require("../controllers/daanController");
 const wrapAsync = require("../utils/wrapAsync");
 const {  validateDaanSchema } = require("../middleware");
+const { verifyCreatePermission } = require("../utils/verifyPermissions");
 
 //create new  Daan 
 router.post(
-    "/create",
+    "/create/:templeId",
+    verifyCreatePermission,
     validateDaanSchema,
     wrapAsync(daan.createDaanController),
 ); 

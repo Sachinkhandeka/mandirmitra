@@ -2,7 +2,7 @@ const ExpressError = require("./utils/ExpressError");
 const { daanSchema } = require("./schemaValidation");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
-    let { error } = daanSchema.validate(req.body);
+    let { error } = daanSchema.validate(req.body.donation);
 
     if(error) {
         //if error is of joi but not related to field validation

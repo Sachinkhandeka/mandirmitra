@@ -1,19 +1,27 @@
 const Daan = require("../models/daanSchema");
+const Temple = require("../models/temple");
 const ExpressError = require("../utils/ExpressError");
 
 //create daan route handler
 module.exports.createDaanController = async(req ,res)=> {
-    const data = req.body.daan ; 
+    const formData = req.body;
+    const templeId = req.params.templeId ; 
 
-    if(!data) {
-        throw new ExpressError(400 , "data fields cant be empty!");
+    const isTemple = await Temple.findById(templeId);
+    if(!isTemple) {
+        throw new ExpressError(400 , "Caanot add donation without temple.")
     }
 
-    const newDaan = new Daan(data);
+    if(!formData) {
+        throw new ExpressError(400 , "Donation fields cant be empty!");
+    }
+
+    const newDaan = new Daan({...formData ,  temple : templeId });
     await newDaan.save();
 
+    const populatedDaan = await Daan.findById(newDaan._id).populate("temple");
     res.status(200).json({
-        newDaan,
+        newDaan: populatedDaan,
     });
 }
 
