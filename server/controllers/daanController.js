@@ -28,31 +28,41 @@ module.exports.createDaanController = async(req ,res)=> {
 
 //get all daan data route handler
 module.exports.getDataController = async(req ,res)=> {
+    const templeId = req.params.templeId ;  
     const startIndx = parseInt(req.query.startIndx) || 0 ; 
     const sortDirection = req.query.sortDirection === "asc"? 1 : -1 ; 
 
+    //check if templeId not present
+    if(!templeId) {
+        throw new  ExpressError(400 , "Cannot get donation without temple");
+    }
+
     const daans = await Daan.find({
-        ...(req.query.paymentMethod && { paymentMethod : req.query.paymentMethod }),
-        ...(req.query.taluko && { taluko : req.query.taluko }),
+        temple: templeId,
+        ...(req.query.paymentMethod && { paymentMethod: req.query.paymentMethod }),
+        ...(req.query.tehsil && { taluko: req.query.tehsil }),
         ...(req.query.searchTerm && {
-            $or : [
-                {name : { $regex : req.query.searchTerm , $options : 'i' }},
-                { seva : { $regex : req.query.searchTerm , $options : 'i' } },
-                { gaam : { $regex : req.query.searchTerm , $options : 'i' } },
+            $or: [
+                { donorName: { $regex: req.query.searchTerm, $options: 'i' } },
+                { sevaName: { $regex: req.query.searchTerm, $options: 'i' } },
+                { village: { $regex: req.query.searchTerm, $options: 'i' } },
             ],
         })
-    }).skip(startIndx).sort({ updatedAt: sortDirection });
+    }).skip(startIndx).sort({ updatedAt: sortDirection }).populate("temple");
 
-    const total = await Daan.countDocuments();
+    const total = await Daan.countDocuments({ temple: templeId });
 
     const now = new Date();
     const oneMonthAgo = new Date(
         now.getFullYear(),
-        now.getMonth()-1,
+        now.getMonth() - 1,
         now.getDate(),
     );
 
-    const lastMonthDaan = await Daan.countDocuments({ createdAt : { $gte : oneMonthAgo } });
+    const lastMonthDaan = await Daan.countDocuments({
+        temple: templeId,
+        createdAt: { $gte: oneMonthAgo }
+    });
 
     res.status(200).json({
         daans,
@@ -63,13 +73,13 @@ module.exports.getDataController = async(req ,res)=> {
 
 //get one daan route handler
 module.exports.getOneDaanController = async(req ,res)=> {
-    const id = req.params.id ; 
+    const { templeId, id } = req.params; 
 
-    if(!id) {
+    if( !templeId && !id) {
         throw new ExpressError(400 , "Id not found");
     }
 
-    const daan = await Daan.findById(id);
+    const daan = await Daan.findOne({_id : id , temple : templeId});
 
     res.status(200).json({
         daan,
@@ -78,31 +88,27 @@ module.exports.getOneDaanController = async(req ,res)=> {
 
 //update daan route handler
 module.exports.updateDaanController = async(req ,res)=> {
-    const data = req.body.daan ; 
-    const id = req.params.id ; 
-
-    if(!id) {
+    const data = req.body; 
+    const { templeId, id } = req.params ; 
+    if(!templeId && !id) {
         throw new ExpressError(404 , "id not found");
     }
     if(!data) {
         throw new ExpressError(400 , "Please provide data to update this daan");
     }
 
-    const updatedDaan = await Daan.findByIdAndUpdate(id , {
-        $set : {
-            name : data.name,
-            gaam : data.gaam,
-            taluko : data.taluko,
-            seva : data.seva,
-            paymentMethod : data.paymentMethod,
-            mobileNumber : data.mobileNumber,
-            amount : data.amount,
+    //remove empty feilds from data
+    Object.keys(data).map( key => {
+        if(!data[key]) {
+            delete data[key];
         }
-    }, { new : true });
+    });
+
+    const updatedDonation = await Daan.findOneAndUpdate({ _id : id , temple : templeId }, { $set : data }, { new : true }).populate("temple");
 
     res.status(200).json({
         message : "Daan update successfully",
-        updatedDaan,
+        updatedDonation,
     });
 }
 
