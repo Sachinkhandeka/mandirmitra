@@ -3,7 +3,7 @@ const router = express.Router({ mergeParams : true });
 const daan = require("../controllers/daanController");
 const wrapAsync = require("../utils/wrapAsync");
 const {  validateDaanSchema } = require("../middleware");
-const { verifyCreatePermission } = require("../utils/verifyPermissions");
+const { verifyCreatePermission, verifyReadPermission, verifyUpdatePermission, verifyDeletePermission } = require("../utils/verifyPermissions");
 
 //create new  Daan 
 router.post(
@@ -15,25 +15,29 @@ router.post(
 
 //get all daan data
 router.get(
-    "/",
+    "/get/:templeId",
+    verifyReadPermission,
     wrapAsync(daan.getDataController),
 );
 //get one daan data
 router.get(
-    "/:id",
+    "/:templeId/:id",
+    verifyReadPermission,
     wrapAsync(daan.getOneDaanController),
 );
 
 //update daan data
 router.put(
-    "/edit/:id",
+    "/edit/:templeId/:id",
+    verifyUpdatePermission,
     validateDaanSchema,
     wrapAsync(daan.updateDaanController),
 );
 
 //delete daan data
 router.delete(
-    "/delete/:id",
+    "/delete/:templeId/:id",
+    verifyDeletePermission,
     wrapAsync(daan.deleteDaanController),
 );
 
