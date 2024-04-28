@@ -49,6 +49,19 @@ export default function DashSidebar() {
                             as={"div"}
                         >Profile</Sidebar.Item>
                     </Link>
+                    {
+                        (currUser && currUser.isAdmin || 
+                            (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read","update","delete"))))) && (
+                                <Link to={"/?tab=daans"} >
+                                    <Sidebar.Item
+                                        active={tab === "daans"}
+                                        className="mt-6 cursor-pointer"
+                                        icon={FaDonate} 
+                                        as={"div"}
+                                    >Donations</Sidebar.Item>
+                                </Link>
+                            )                
+                    }
                     { 
                         currUser.isAdmin && 
                         (
@@ -60,14 +73,6 @@ export default function DashSidebar() {
                                     icon={FaUsers} 
                                     as={"div"}
                                 >Users</Sidebar.Item>
-                              </Link>
-                              <Link to={"/?tab=daans"} >
-                                <Sidebar.Item
-                                    active={tab === "daans"}
-                                    className="mt-6 cursor-pointer"
-                                    icon={FaDonate} 
-                                    as={"div"}
-                                >Daans</Sidebar.Item>
                               </Link>
                               <Link to={"/?tab=roles"}>
                                 <Sidebar.Item 

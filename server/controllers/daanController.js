@@ -114,13 +114,13 @@ module.exports.updateDaanController = async(req ,res)=> {
 
 //delete daan route handler
 module.exports.deleteDaanController = async(req ,res)=> {
-    const id = req.params.id ; 
+    const{ templeId, id }= req.params; 
 
-    if(!id) {
+    if(!templeId && !id) {
         throw new ExpressError(400 , "Invalid id or id not found");
     }
 
-    await Daan.findByIdAndDelete(id);
+    await Daan.findOneAndDelete({ _id : id , temple : templeId });
 
     res.status(200).json("The daan has been delete successfully");
 }
