@@ -1,11 +1,13 @@
-import { Table } from "flowbite-react";
+import { Table, Toast } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
+import { TbFaceIdError } from "react-icons/tb";
+import { HiCheck, HiX } from "react-icons/hi";
 
 const EditDonationModal = React.lazy(()=> import("./EditDonationModal"));
+const DeleteDonation = React.lazy(()=> import("./DeleteDonation"));
 
 export default function DashDonations() {
     const { currUser } = useSelector(state => state.user);
@@ -61,9 +63,33 @@ export default function DashDonations() {
         setShowEditModal(true);
         setDonation(donation)
     }
+
+    //function to  handle the  delete functionality 
+    const handleDelete = (donation)=> {
+        setShowDeleteModal(true);
+        setDonation(donation);
+    }
     return (
         <>
-        { 
+        { success && (
+            <Toast className="my-4" >
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                    <HiCheck className="h-5 w-5" />
+                </div>
+                <div className="ml-3 text-sm font-normal">{ success }</div>
+                <Toast.Toggle />
+            </Toast> 
+        ) }
+        { error && (
+            <Toast className="my-4" >
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+                    <HiX className="h-5 w-5" />
+                </div>
+                <div className="ml-3 text-sm font-normal">{ error }</div>
+                <Toast.Toggle />
+            </Toast> 
+        ) }
+        { donations && donations.length > 0 ? 
             // Render the table if user is an admin or has permission to read donations
             (currUser && currUser.isAdmin || 
             (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
@@ -85,13 +111,13 @@ export default function DashDonations() {
                         {
                             (
                                 (currUser && currUser.isAdmin ||
-                                currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("edit","delete")))) && (
+                                currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                     <Table.HeadCell>Actions</Table.HeadCell>
                                 )
                             )
                         }
                     </Table.Head>
-                    { donations && donations.map((donation)=> (
+                    { donations && donations.length > 0 && donations.map((donation)=> (
                         <Table.Body className="divide-y" key={donation._id} >
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation._id }</Table.Cell>
@@ -116,13 +142,13 @@ export default function DashDonations() {
                                 {/* Render edit and delete icons if user is an admin or has permission to edit or delete donations */}
                                 {
                                     ( currUser && currUser.isAdmin ||
-                                    ( currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("edit","delete"))) ) ) && (
+                                    ( currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete") )) ) ) && (
                                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                             <div className="flex justify-between items-center gap-4" >
                                                 { 
                                                     // Render edit icon if user is admin or has permission to edit donations
                                                     ( currUser && currUser.isAdmin ||
-                                                    ( currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("edit"))))) && (
+                                                    ( currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("update"))))) && (
                                                         <span className="cursor-pointer" >
                                                             <FaPencil onClick={()=> handleEdit(donation)} size={16} color="teal"/>
                                                         </span>
@@ -145,7 +171,15 @@ export default function DashDonations() {
                         </Table.Body>
                     )) }
                 </Table>
-        ) }
+        )
+        : (
+            <div className="flex justify-center items-center h-screen">
+                <div className="text-center flex flex-col items-center justify-center">
+                    <TbFaceIdError size={50} className="animate-bounce" />
+                    <p>No Donation Created Yet!</p>
+                </div>
+            </div>
+        )}
         {/* Edit Donation Modal */}
         { showEditModal && (
             <EditDonationModal 
@@ -159,6 +193,17 @@ export default function DashDonations() {
                 setSuccess={setSuccess}
             />
         )}
+        {/* Delete Donation Modal */}
+        { showDeleteModal && (
+            <DeleteDonation 
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
+                setIsDonationUpdated={setIsDonationUpdated}
+                donationId={donation._id}
+                setError={setError}
+                setSuccess={setSuccess}
+            />
+        ) }
         </>
     );
 }

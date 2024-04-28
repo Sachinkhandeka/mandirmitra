@@ -8,7 +8,6 @@ import Receipt from "../pdf/Receipt";
 import AddressForm from "./AddressForm";
 
 export default function EditDonationModal({ showEditModal, setShowEditModal, donation, setIsDonationUpdated}) {
-    console.log(donation);
     const [ selectedCountry , setSelectedCountry ] = useState({});
     const [ selectedState , setSelectedState ] = useState({});
     const [ selectedDistrict , setSelectedDistrict ] = useState({});

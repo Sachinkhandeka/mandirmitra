@@ -83,7 +83,14 @@ export default function Receipt({ receiptData }) {
                     </View>
                     <View style={styles.normalContainer}>
                         <Text style={styles.title}>Amount</Text>
-                        <Text style={styles.text}>{donationAmount}</Text>
+                        <Text style={styles.text}>
+                            { typeof donationAmount === 'number' ? 
+                                donationAmount.toLocaleString('en-IN', {
+                                    maximumFractionDigits: 2,
+                                    style: 'currency',
+                                    currency: 'INR'
+                            }).slice(1) : ''}
+                        </Text>
                     </View>
                 </View>
             </Page>

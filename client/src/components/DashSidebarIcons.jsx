@@ -38,13 +38,18 @@ export default function DashSidebarIcon() {
       <Link to={"/?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
         <FaUser/>
       </Link>
+      {
+          (currUser && currUser.isAdmin || 
+              (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read","update","delete"))))) && (
+                <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                    <FaDonate />
+                </Link>
+              )
+      }
       {currUser.isAdmin && (
         <>
           <Link to={"/?tab=users"} className={`${tab === 'users' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
             <FaUsers/>
-          </Link>
-          <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-            <FaDonate />
           </Link>
           <Link to={"/?tab=roles"} className={`${tab === 'roles' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
             <FaAddressCard />
