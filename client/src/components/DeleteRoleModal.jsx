@@ -1,8 +1,10 @@
 import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 export default function DeleteRoleModal({ deleteModal , setDeleteModal , setError , setRoleUpdated , roleId }) {
+    const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
 
     //function to delete role
@@ -10,7 +12,7 @@ export default function DeleteRoleModal({ deleteModal , setDeleteModal , setErro
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`/api/role/delete/${roleId}`, { method : "DELETE" });
+            const response = await fetch(`/api/role/delete/${currUser.templeId}/${roleId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {

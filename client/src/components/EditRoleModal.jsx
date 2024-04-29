@@ -85,7 +85,7 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
             setLoading(true);
 
             const response = await fetch(
-                `/api/role/edit/${roleData._id}`,
+                `/api/role/edit/${currUser.templeId}/${roleData._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },

@@ -4,6 +4,7 @@ const user = require("../controllers/userController");
 const wrapAsync = require("../utils/wrapAsync");
 const { verifyAdmin } = require("../utils/verifyAdmin");
 const { verifyToken } = require("../utils/verifyUser");
+const { validateUserSchema } = require("../middleware");
 
 //signin route
 router.post(
@@ -15,6 +16,7 @@ router.post(
 router.post(
     "/create/:templeId",
     verifyAdmin,
+    validateUserSchema,
     wrapAsync(user.createController),
 );
 
@@ -27,14 +29,15 @@ router.get(
 
 // edit route
 router.put(
-    "/edit/:userId",
+    "/edit/:templeId/:userId",
     verifyToken,
+    validateUserSchema,
     wrapAsync(user.editController),
 );
 
 //delete route
 router.delete(
-    "/delete/:userId",
+    "/delete/:templeId/:userId",
     verifyToken,
     wrapAsync(user.deleteController),
 );

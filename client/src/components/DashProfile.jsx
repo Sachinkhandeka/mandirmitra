@@ -51,7 +51,7 @@ export default function DashProfile() {
         setSuccess(null);
         try {
             const response =  await  fetch(
-                currUser && currUser.isAdmin ? `/api/superadmin/edit/${currUser._id}` : `/api/user/edit/${currUser._id}`,
+                currUser && currUser.isAdmin ? `/api/superadmin/edit/${currUser.templeId}/${currUser._id}` : `/api/user/edit/${currUser.templeId}/${currUser._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },

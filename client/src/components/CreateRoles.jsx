@@ -74,7 +74,7 @@ export default function CreateRoles() {
             const data =  await response.json();
 
             if(!response.ok) {
-                setError(data.message);
+                return setError(data.message);
             }
             setSuccess(data);
         }catch(err) {

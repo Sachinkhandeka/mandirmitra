@@ -1,4 +1,3 @@
-const { model } = require("mongoose");
 const Role = require("../models/roleSchema");
 const ExpressError = require("../utils/ExpressError");
 
@@ -6,7 +5,6 @@ module.exports.createController = async(req ,res)=> {
     const user = req.user ; 
     const formData  = req.body ; 
     const templeId = req.params.templeId ; 
-
     if(!user) {
         throw new ExpressError(400 , "permission not granted.");
     }
@@ -48,10 +46,10 @@ module.exports.getController = async(req ,res)=> {
 //edit role route handler 
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
-    const roleId = req.params.roleId ;
+    const { templeId, roleId } = req.params ;
     const formData = req.body; 
 
-    const role = await Role.findById(roleId);
+    const role = await Role.findOne({_id : roleId , templeId : templeId});
 
     if(!user.superAdmin) {
         throw new ExpressError(400 , "Permission not granted.");
@@ -64,7 +62,7 @@ module.exports.editController = async(req ,res)=> {
         throw new ExpressError(400 , "Please enter valid data.");
     }
 
-    await Role.findByIdAndUpdate(roleId , formData , { new : true });
+    await Role.findOneAndUpdate({ _id: roleId, templeId : templeId }, formData , { new : true });
 
     res.status(200).json("Role updated successfully.");
 
@@ -74,9 +72,9 @@ module.exports.editController = async(req ,res)=> {
 //delete role route handler
 module.exports.deleteController = async(req ,res)=> {
     const user = req.user ; 
-    const roleId = req.params.roleId ; 
+    const { templeId, roleId } = req.params; 
     
-    const roleToDelete = await Role.findById(roleId);
+    const roleToDelete = await Role.findOne({ _id : roleId , templeId : templeId });
 
     if(!user.superAdmin) {
         throw new ExpressError(400 , "Permission not granted.");
@@ -86,7 +84,7 @@ module.exports.deleteController = async(req ,res)=> {
         throw new ExpressError(400 , "Role not found.");
     }
 
-    await Role.findByIdAndDelete(roleId);
+    await Role.findOneAndDelete({_id : roleId , templeId : templeId });
 
     res.status(200).json("Role deleted successfully.");
 }

@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function CreatePermissions() {
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
-    const [ permissionName , setPermissionName ] = useState('');
+    const [ permissionName , setPermissionName ] = useState('donation-creator');
     const [ actions , setActions ] = useState([]);
     const [ success , setSuccess ] = useState(null);
     const [ error , setError ] = useState(null);
@@ -67,6 +67,7 @@ export default function CreatePermissions() {
                              <Label htmlFor="permissionName" value="Add permission name" />
                         </div>
                           <Select id="permissionName" required onChange={(e)=> setPermissionName(e.target.value)}>
+                                <option value="select" disabled>Select</option>
                                 <option value="donation-creator">Donation Creator</option>
                                 <option value="donation-viewer">Donation Viewer</option>
                                 <option value="donation-editor">Donation Editor</option>

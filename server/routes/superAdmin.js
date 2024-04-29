@@ -3,10 +3,12 @@ const router = express.Router({ mergeParams : true });
 const superAdmin = require("../controllers/superAdminController");
 const wrapAsync = require("../utils/wrapAsync");
 const { verifyToken } = require("../utils/verifyUser");
+const { validateSuperAdminSchema } = require("../middleware");
 
 //create superadmin 
 router.post(
     "/create",
+    validateSuperAdminSchema,
     wrapAsync(superAdmin.createController),
 );
 
@@ -24,8 +26,9 @@ router.post(
 
 //edit superAdmin route
 router.put(
-    "/edit/:id",
+    "/edit/:templeId/:id",
     verifyToken ,
+    validateSuperAdminSchema,
     wrapAsync(superAdmin.editController),
 );
 

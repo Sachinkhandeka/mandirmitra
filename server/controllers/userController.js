@@ -56,6 +56,12 @@ module.exports.createController = async(req ,res)=> {
     if(!formData.username || !formData.email || !formData.password || !Array.isArray(formData.roles)) {
         throw new ExpressError(400 , "Invalid data formate.");
     }
+
+    const  isUserDuplicate = await User.findOne({  username : formData.username, email : formData.email });
+
+    if(isUserDuplicate) {
+        throw new ExpressError(400, "Username or Email already taken.Try with new one.")
+    }
     if(!templeId) {
         throw new ExpressError(400 , "Access denied.");
     }
@@ -70,8 +76,18 @@ module.exports.createController = async(req ,res)=> {
         templeId : templeId ,
     });
 
-    await newUser.save();
-    res.status(200).json("New user created successfully.");
+    try {
+        await newUser.save();
+        res.status(200).json("New user created successfully.");
+    } catch (error) {
+        if (error.code === 11000) {
+            // Duplicate key error, indicating that username or email is already taken
+            throw new ExpressError(400, "Username or Email already taken.");
+        } else {
+            // Other Mongoose errors
+            throw new ExpressError(500, "Internal Server Error");
+        }
+    }
 }
 
 //get users route handler
@@ -102,9 +118,9 @@ module.exports.getController =  async(req ,res)=> {
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
     const formData = req.body ; 
-    const userId = req.params.userId ; 
+    const { templeId, userId } = req.params ; 
 
-    const userToUpdate = await User.findById(userId);
+    const userToUpdate = await User.findOne({ _id: userId, templeId : templeId });
     if(!userToUpdate) {
         throw new ExpressError(400 , "User not found.");
     }
@@ -141,7 +157,7 @@ module.exports.editController = async(req ,res)=> {
     }
 
     // Update the user with the provided fields
-    const updatedUser = await User.findByIdAndUpdate(userId, updateObj, { new: true }).populate({
+    const updatedUser = await User.findByIdAndUpdate( { _id: userId , templeId : templeId }, updateObj, { new: true }).populate({
         path : "roles",
         populate : {
             path : "permissions",
@@ -155,12 +171,12 @@ module.exports.editController = async(req ,res)=> {
 //delete user route handler
 module.exports.deleteController = async(req ,res)=> {
     const user = req.user ; 
-    const userId = req.params.userId ; 
+    const { templeId, userId } = req.params; 
 
-    if(!userId) {
+    if(!userId && !templeId) {
         throw new ExpressError("Id not found.");
     }
-    const  userToDelete = await User.findById(userId);
+    const  userToDelete = await User.findOne({ _id : userId , templeId : templeId });
 
     if(!userToDelete) {
         throw new ExpressError(400 , "User not found.");
@@ -170,6 +186,6 @@ module.exports.deleteController = async(req ,res)=> {
         throw new ExpressError(401 , "Permission not granted to update this user.");
     }
 
-    await User.findByIdAndDelete(userId);
+    await User.findOneAndDelete({_id : userId , templeId : templeId });
     res.status(200).json("User delete Successfully.");
 }

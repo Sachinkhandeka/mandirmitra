@@ -3,11 +3,13 @@ const router = express.Router();
 const role = require("../controllers/roleController");
 const wrapAsync = require("../utils/wrapAsync");
 const { verifyAdmin } = require("../utils/verifyAdmin");
+const { validateRoleSchema } = require("../middleware");
 
 //create role
 router.post(
     "/create/:templeId",
     verifyAdmin,
+    validateRoleSchema,
     wrapAsync(role.createController),
 );
 
@@ -20,14 +22,15 @@ router.get(
 
 //edit role
 router.put(
-    "/edit/:roleId",
+    "/edit/:templeId/:roleId",
     verifyAdmin,
+    validateRoleSchema,
     wrapAsync(role.editController),
 );
 
 //delete role
 router.delete(
-    "/delete/:roleId",
+    "/delete/:templeId/:roleId",
     verifyAdmin,
     wrapAsync(role.deleteController),
 );

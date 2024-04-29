@@ -42,10 +42,10 @@ module.exports.getController = async(req ,res)=> {
 //edit permission route handler
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
-    const permissionId = req.params.permissionId ; 
+    const { templeId, permissionId } = req.params; 
     const formData = req.body ; 
 
-    const permissionToUpdate = await Permission.findById(permissionId);
+    const permissionToUpdate = await Permission.findOne({ _id:permissionId, templeId : templeId });
 
     if(!user.superAdmin) {
         throw new ExpressError(403 , "Permission not granted.");
@@ -64,7 +64,7 @@ module.exports.editController = async(req ,res)=> {
         }
     }
 
-    await Permission.findByIdAndUpdate(permissionId , formData , { new : true });
+    await Permission.findOneAndUpdate({_id : permissionId, templeId : templeId} , formData , { new : true });
 
     res.status(200).json({
         message : "Permission updated successfully.",
@@ -75,9 +75,9 @@ module.exports.editController = async(req ,res)=> {
 //delete permission route handler
 module.exports.deleteController = async(req ,res)=> {
     const user = req.user ; 
-    const permissionId = req.params.permissionId ; 
+    const { templeId ,  permissionId } = req.params; 
     
-    const permissionToDelete = await Permission.findById(permissionId);
+    const permissionToDelete = await Permission.findOne({ _id: permissionId , templeId : templeId });
 
     if(!user.superAdmin) {
         throw new ExpressError(400 , "Permission not granted.");
@@ -87,7 +87,7 @@ module.exports.deleteController = async(req ,res)=> {
         throw new ExpressError(400 , "Permission not found.");
     }
 
-    await Permission.findByIdAndDelete(permissionId);
+    await Permission.findOneAndDelete({ _id: permissionId , templeId : templeId });
 
     res.status(200).json("Permission deleted successfully.");
 }

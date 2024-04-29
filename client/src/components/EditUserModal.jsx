@@ -88,7 +88,7 @@ import { useSelector } from "react-redux";
             setError(null);
             setSuccess(null);
             const response =  await fetch(
-                `/api/user/edit/${userData._id}`,
+                `/api/user/edit/${currUser.templeId}/${userData._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
