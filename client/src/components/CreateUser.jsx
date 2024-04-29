@@ -86,9 +86,9 @@ export default function CreateUser() {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className=" w-full max-w-sm">
-                        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Create User</h5>
-                        <Button onClick={()=> setOpenModal(true)} >Create</Button>
+                   <Card className="w-full max-w-sm bg-gradient-to-t from-lime-200 to-lime-600">
+                        <h5 className="text-2xl font-bold tracking-tight">Create User</h5>
+                        <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"lime"} className="text-white" >Create</Button>
                     </Card>
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} position={"left-top"}>
                     <Modal.Header />

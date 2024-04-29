@@ -76,7 +76,7 @@ export default function AddTehsilGaam({ setLocationAdded }) {
     }
 
     return (
-        <div className="w-full md:max-w-[50%] mt-10 border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4" >
+        <div className="w-full mt-10 border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4" >
             <h1 className="text-xl font-mono uppercase text-center" >Add Location</h1>
             { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} >{ error }</Alert> ) }
             { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} >{ success }</Alert> ) }
