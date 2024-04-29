@@ -9,6 +9,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from "../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
 import CreateUser from "./CreateUser";
 import CreateRoles from "./CreateRoles";
 import CreatePermissions from "./CreatePermissions";
@@ -231,8 +232,8 @@ export default function DashProfile() {
                          )
                     }
                      {currUser.isAdmin && (
-                        <div className="w-full h-64 bg-teal-300 dark:bg-gray-700 p-10">
-                            <div className="flex flex-col md:flex-row gap-4 w-full">
+                        <div className="w-full bg-gradient-to-t from-orange-200 to-orange-500 dark:bg-gray-700 p-10">
+                            <div className="flex flex-col md:flex-row gap-5 w-full">
                                 <CreateUser />
                                 <CreateRoles />
                                 <CreatePermissions />

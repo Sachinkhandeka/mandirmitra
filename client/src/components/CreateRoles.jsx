@@ -86,9 +86,9 @@ export default function CreateRoles() {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className=" w-full max-w-sm">
-                        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Add Roles</h5>
-                        <Button onClick={()=> setOpenModal(true)} >Add</Button>
+                   <Card className=" w-full max-w-sm bg-gradient-to-t from-rose-200 to-rose-600">
+                        <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
+                        <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"failure"} >Add</Button>
                     </Card>
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)}>
                     <Modal.Header />
