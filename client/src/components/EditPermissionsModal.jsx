@@ -1,12 +1,14 @@
 import { Button, Modal, Label , Select, Checkbox, Spinner, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default  function EditPermissionsModal({ showModal , setShowModal , setSuccess, permissionData , setPermissionUpdated }) {
+    const { currUser } = useSelector(state => state.user);
     const [ error , setError ] = useState(null);
     const [ loading ,  setLoading ] =  useState(false);
     const [ isPermissionUpdated , setIsPermissionUpdate ] = useState(false);
     const [ formData , setFormData ] = useState({
-        permissionName : '',
+        permissionName : 'donation-creator',
         actions : [],
     });
     
@@ -55,7 +57,7 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
             setError(null);
 
             const response = await fetch(
-                `/api/permission/edit/${permissionData._id}`,
+                `/api/permission/edit/${currUser.templeId}/${permissionData._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
@@ -91,6 +93,7 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
                                 <Label htmlFor="permissionName" value="Add permission name" />
                             </div>
                             <Select id="permissionName" required onChange={handleChange} value={formData.permissionName} >
+                                <option value="select" disabled >Select</option>
                                 <option value="donation-creator">Donation Creator</option>
                                 <option value="donation-viewer">Donation Viewer</option>
                                 <option value="donation-editor">Donation Editor</option>

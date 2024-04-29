@@ -1,14 +1,16 @@
 import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setError , setSuccess , setUserDataUpdated }) {
+  const { currUser } = useSelector(state  => state.user);
     const [ loading , setLoading ] = useState(false);
     
     const handleDelete = async()=> {
         try {
             setLoading(true);
-            const response = await fetch(`/api/user/delete/${userId}`, { method : "DELETE" });
+            const response = await fetch(`/api/user/delete/${currUser.templeId}/${userId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {

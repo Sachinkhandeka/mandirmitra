@@ -10,38 +10,52 @@ const secret = process.env.JWT_SECRET ;
 module.exports.createController = async(req ,res)=> {
     const { templeId, username , email , password } = req.body ; 
 
-    // Check if temple exists
-    const temple = await Temple.findById(templeId);
-    if (!temple) {
-        throw new ExpressError(404, "Temple not found");
+    try {
+        // Check if temple exists
+        const temple = await Temple.findById(templeId);
+        if (!temple) {
+            throw new ExpressError(404, "Temple not found");
+        }
+
+        // Check if a super admin already exists for the temple
+        const isSuperAdmin = await SuperAdmin.findOne({ templeId });
+        if (isSuperAdmin) {
+            throw new ExpressError(400, "A super admin already exists for this temple");
+        }
+
+        // Create super admin
+        let superAdmin = new SuperAdmin({
+            username,
+            email,
+            templeId: temple._id,
+            password: bcryptjs.hashSync(password, salt),
+        });
+
+        // Save super admin
+        superAdmin = await superAdmin.save();
+
+        // Generate JWT token
+        const token = jwt.sign({
+            id: superAdmin._id,
+            superAdmin: true,
+        }, secret);
+
+        // Omit password field from response
+        const { password: pass, ...rest } = superAdmin._doc;
+
+        // Set token in cookie and send response
+        res.status(200).cookie("access_token", token, { httpOnly: true }).json({
+            currUser: rest,
+        });
+    } catch (error) {
+        if (error.code === 11000) {
+            // Duplicate key error, indicating that username or email is already taken
+            throw new ExpressError(400, "Username or Email already taken. Please try with a new one.");
+        } else {
+            // Other errors
+            throw new ExpressError(500, "Internal Server Error");
+        }
     }
-
-    // Check if a super admin already exists for the temple
-    const isSuperAdmin = await SuperAdmin.findOne({templeId});
-    if(isSuperAdmin) {
-        throw new ExpressError(400, "A super admin already exists for this temple");
-    }
-
-    // Create super admin
-    let superAdmin = new SuperAdmin({
-        username,
-        email,
-        templeId : temple._id,
-        password :  bcryptjs.hashSync(password, salt),
-    });
-
-    // Save super admin
-    superAdmin  = await superAdmin.save();
-
-    const token = jwt.sign({
-        id : superAdmin._id,
-        superAdmin : true,
-    }, secret);
-    const { password : pass, ...rest } = superAdmin._doc;
-
-    res.status(200).cookie("access_token", token, { httpOnly : true }).json({
-        currUser : rest,
-    });
 }
 
 //signin route handler
@@ -134,9 +148,9 @@ module.exports.googleController = async(req ,res)=> {
 module.exports.editController = async(req ,res)=> {
     const user = req.user ; 
     const { username , email , password, profilePicture } = req.body ; 
-    const userId   = req.params.id ; 
+    const { templeId, id }   = req.params; 
     
-    if(user.id !== userId) {
+    if(user.id !== id && !templeId ) {
         throw new ExpressError(403 , "You are not allowed to update this user.");
     }
     if(password) {
@@ -151,7 +165,7 @@ module.exports.editController = async(req ,res)=> {
         }
     }
 
-    const isSuperAdmin = await SuperAdmin.findById(userId);
+    const isSuperAdmin = await SuperAdmin.findOne({_id: id, templeId : templeId });
 
     if(!isSuperAdmin) {
         throw new ExpressError(404 , "SuperAdmin not found.");
@@ -171,7 +185,7 @@ module.exports.editController = async(req ,res)=> {
         throw new ExpressError(400 ,"No fields to update." );
     }
 
-    const updatedSuperAdmin = await SuperAdmin.findByIdAndUpdate(userId,{ $set: updateFields }, { new : true });
+    const updatedSuperAdmin = await SuperAdmin.findOneAndUpdate({_id:id , templeId : templeId },{ $set: updateFields }, { new : true });
 
     const { password : pass, ...rest } =  updatedSuperAdmin._doc ;  
     res.status(200).json({

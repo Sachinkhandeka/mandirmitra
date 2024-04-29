@@ -1,8 +1,10 @@
 import { Alert, Button, Modal, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 export default function DeletePermissionModal({ deleteModal , setDeleteModal , permissionId , setPermissionUpdated }) {
+    const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
     const [ error , setError ] = useState(null);
 
@@ -12,7 +14,7 @@ export default function DeletePermissionModal({ deleteModal , setDeleteModal , p
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`/api/permission/delete/${permissionId}`, { method : "DELETE" });
+            const response = await fetch(`/api/permission/delete/${currUser.templeId}/${permissionId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {

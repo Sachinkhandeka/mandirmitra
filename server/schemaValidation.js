@@ -1,5 +1,6 @@
 const Joi = require("joi");
 
+//donation schema validation 
 const daanSchema = Joi.object({
     donation: Joi.object({
         _id: Joi.string(),
@@ -20,4 +21,61 @@ const daanSchema = Joi.object({
     }).required().options({ abortEarly: false })
 });
 
-module.exports = {daanSchema}
+//permissions schema validation 
+const permissionSchema = Joi.object({
+    permissionName: Joi.string().valid(
+        'donation-creator',
+        'donation-viewer',
+        'donation-editor',
+        'donation-deleter',
+        'donation-contributor',
+        'donation-manager',
+        'donation-supervisor'
+    ).required().error(new Error('Invalid permission name')),
+    templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    actions: Joi.array().items(Joi.string().valid('create', 'read', 'update', 'delete')).required().error(new Error('Invalid actions')),
+}).required().options({ abortEarly: false });
+
+//role schema validations
+const roleSchema = Joi.object({
+    templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    name: Joi.string().required().error(new Error('Role name is required')),
+    permissions: Joi.array().required().error(new Error('Invalid permissions')),
+}).required().options({ abortEarly: false });
+
+//superAdmin schema validations
+const superAdminSchema = Joi.object({
+    username: Joi.string().required().error(new Error('Username is required')),
+    email: Joi.string().email().required().error(new Error('Invalid email')),
+    password: Joi.string().required().error(new Error('Password is required')),
+    isAdmin: Joi.boolean().default(true),
+    profilePicture: Joi.string().default('https://www.clipartmax.com/png/middle/82-820644_author-image-admin-icon.png'),
+    templeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().error(new Error('Invalid temple ID')),
+}).required().options({ abortEarly: false });
+
+//temple schema validations
+const templeSchema = Joi.object({
+    name: Joi.string().required().error(new Error('Temple name is required')),
+    location: Joi.string().required().error(new Error('Location is required')),
+    image: Joi.string().default('https://png.pngtree.com/png-vector/20230207/ourmid/pngtree-om-logo-design-with-flower-mandala-png-image_6590267.png')
+}).required().options({ abortEarly: false });
+
+//user schema validations
+const userSchema = Joi.object({
+    username: Joi.string().required().error(new Error('Username is required')),
+    email: Joi.string().email().required().error(new Error('Valid email is required')),
+    password: Joi.string().required().error(new Error('Password is required')),
+    profilePicture: Joi.string().default('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXNChij9NGxfXhZQeEwg0TG9WAK6vm4vVm-e0EncJcCQ&s'),
+    isAdmin: Joi.boolean().default(false),
+    templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    roles: Joi.array().items().error(new Error('Roles must be an array of strings'))
+}).required().options({ abortEarly: false });
+
+module.exports = {
+    daanSchema,
+    permissionSchema,
+    roleSchema,
+    superAdminSchema,
+    templeSchema,
+    userSchema,
+}
