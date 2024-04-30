@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { Spinner } from "flowbite-react";
 
+const Home = React.lazy(()=> import("../components/Home"));
 const DashProfile = React.lazy(()=> import("../components/DashProfile"));
 const DashUsers = React.lazy(()=> import("../components/DashUsers"));
 const DashRoles = React.lazy(()=> import("../components/DashRoles"));
@@ -19,6 +20,10 @@ export default function Dashboard() {
     const location = useLocation();
     const [ tab , setTab ] = useState('');
     const [showSidebar, setShowSidebar] = useState(false); 
+     
+    // Check if the URL is exactly "/"
+    const isHomePage = location.pathname === "/";
+
     // Function to toggle sidebar visibility
     const toggleSidebar = () => {
         setShowSidebar(!showSidebar);
@@ -56,6 +61,13 @@ export default function Dashboard() {
                     </div>
                 ) }
                 <div className={`${showSidebar ? ' ml-64': 'ml-12' } flex-1 overflow-x-auto relative z-0 p-3 h-full min-h-screen`}>
+                    {/* Home Page ... */}
+                    { isHomePage && !tab && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    } ><Home /></Suspense> }
                     {/* profile ... */}
                     { tab === "profile" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4" >
