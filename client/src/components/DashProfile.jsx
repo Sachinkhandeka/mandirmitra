@@ -136,7 +136,7 @@ export default function DashProfile() {
                             <Toast.Toggle />
                         </Toast>
                     ) }
-                    <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 h-16 relative" >
+                    <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 rounded-lg h-16 relative" >
                         <input type="file" accept="image/*" onChange={handleImageChange} ref={inputRef} hidden/>
                         <div className="h-14 w-14 absolute bottom-[-10px] left-4 rounded-full cursor-pointer" onClick={()=> inputRef.current.click()} >
                             { uploadProgress !== null && uploadProgress !== 0 &&  (
@@ -232,7 +232,7 @@ export default function DashProfile() {
                          )
                     }
                      {currUser.isAdmin && (
-                        <div className="w-full bg-gradient-to-t from-orange-200 to-orange-500 dark:bg-gray-700 p-10">
+                        <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-10">
                             <div className="flex flex-col md:flex-row gap-5 w-full">
                                 <CreateUser />
                                 <CreateRoles />

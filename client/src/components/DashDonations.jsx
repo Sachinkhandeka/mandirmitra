@@ -1,4 +1,4 @@
-import { Table, Toast } from "flowbite-react";
+import { Table, Toast, Pagination } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
@@ -18,7 +18,11 @@ export default function DashDonations() {
     const [ showEditModal , setShowEditModal ] = useState(false);
     const [ showDeleteModal , setShowDeleteModal ] = useState(false);
     const [ donation , setDonation ] = useState({});
+    const [ totalDonations, setTotalDonations ] = useState(0);
     const [ isDonationUpdated, setIsDonationUpdated ] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const onPageChange = (page) => setCurrentPage(page);
 
     // Function to fetch all donations from the API
     const  getAllDonations = async()=> {
@@ -38,6 +42,7 @@ export default function DashDonations() {
 
             setLoading(false);
             setSuccess("Donation data fetched successfully.");
+            setTotalDonations(data.total);
             setDonations(data.daans);
             
         }catch(err) {
@@ -89,6 +94,11 @@ export default function DashDonations() {
                 <Toast.Toggle />
             </Toast> 
         ) }
+        { totalDonations && totalDonations > 20 && (
+            <div className="flex overflow-x-auto sm:justify-center mb-5">
+                <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
+            </div>
+        ) }
         { donations && donations.length > 0 ? 
             // Render the table if user is an admin or has permission to read donations
             (currUser && currUser.isAdmin || 
@@ -117,7 +127,7 @@ export default function DashDonations() {
                             )
                         }
                     </Table.Head>
-                    { donations && donations.length > 0 && donations.map((donation)=> (
+                    { donations && donations.length > 0 && donations.slice((currentPage - 1) * 20, currentPage * 20 ).map((donation)=> (
                         <Table.Body className="divide-y" key={donation._id} >
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation._id }</Table.Cell>
@@ -203,6 +213,11 @@ export default function DashDonations() {
                 setError={setError}
                 setSuccess={setSuccess}
             />
+        ) }
+        { totalDonations && totalDonations > 20 && (
+            <div className="flex overflow-x-auto sm:justify-center mt-5">
+                <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
+            </div>
         ) }
         </>
     );
