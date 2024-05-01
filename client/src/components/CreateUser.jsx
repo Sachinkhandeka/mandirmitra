@@ -3,7 +3,7 @@ import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
-export default function CreateUser() {
+export default function CreateUser({ roleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ viewPass , setViewPass ] = useState(false);
@@ -34,7 +34,7 @@ export default function CreateUser() {
 
     useEffect(()=> {
         getRolesData();
-    }, [ currUser ]);
+    }, [ currUser, roleUpdated ]);
     
     //handle change
     const handleChange = (e)=> {
