@@ -37,30 +37,52 @@ module.exports.getDataController = async(req ,res)=> {
         throw new  ExpressError(400 , "Cannot get donation without temple");
     }
 
-    const daans = await Daan.find({
+    // Define search criteria based on query parameters
+    const searchCriteria = {
         temple: templeId,
-        ...(req.query.paymentMethod && { paymentMethod: req.query.paymentMethod }),
-        ...(req.query.tehsil && { taluko: req.query.tehsil }),
-        ...(req.query.searchTerm && {
-            $or: [
-                { donorName: { $regex: req.query.searchTerm, $options: 'i' } },
-                { sevaName: { $regex: req.query.searchTerm, $options: 'i' } },
-                { village: { $regex: req.query.searchTerm, $options: 'i' } },
-            ],
-        })
-    }).skip(startIndx).sort({ updatedAt: sortDirection }).populate("temple");
+    };  
 
-    const total = await Daan.countDocuments({ temple: templeId });
+    // Add optional search criteria if present in query parameters
+    if (req.query.paymentMethod) searchCriteria.paymentMethod = req.query.paymentMethod;
+    if (req.query.village) searchCriteria.village = { $regex: req.query.village, $options: 'i' };
+    if (req.query.tehsil) searchCriteria.tehsil = { $regex: req.query.tehsil, $options: 'i' };
+    if (req.query.district) searchCriteria.district = { $regex: req.query.district, $options: 'i' };
+    if (req.query.state) searchCriteria.state = { $regex: req.query.state, $options: 'i' };
+    if (req.query.country) searchCriteria.country = { $regex: req.query.country, $options: 'i' };
+    if (req.query.searchTerm) {
+        searchCriteria.$or = [
+            { donorName: { $regex: req.query.searchTerm, $options: 'i' } },
+            { sevaName: { $regex: req.query.searchTerm, $options: 'i' } },
+            { village: { $regex: req.query.searchTerm, $options: 'i' } },
+        ];
+    }
 
-    const now = new Date();
-    const oneMonthAgo = new Date(
+    // Add range search for donationAmount if minAmnt and maxAmnt parameters are present
+    if (req.query.minAmnt || req.query.maxAmnt) {
+        searchCriteria.donationAmount = {};
+        if (req.query.minAmnt) searchCriteria.donationAmount.$gte = parseFloat(req.query.minAmnt);
+        if (req.query.maxAmnt) searchCriteria.donationAmount.$lte = parseFloat(req.query.maxAmnt);
+    }
+
+    // Fetch daans based on search criteria
+    const daans = await Daan.find(searchCriteria)
+    .skip(startIndx)
+    .sort({ updatedAt: sortDirection })
+    .populate("temple");
+
+   // Fetch total count of daans based on search criteria
+   const total = await Daan.countDocuments(searchCriteria);
+
+   // Fetch count of daans from last month based on search criteria
+   const now = new Date();
+   const oneMonthAgo = new Date(
         now.getFullYear(),
         now.getMonth() - 1,
         now.getDate(),
     );
 
     const lastMonthDaan = await Daan.countDocuments({
-        temple: templeId,
+        ...searchCriteria,
         createdAt: { $gte: oneMonthAgo }
     });
 
