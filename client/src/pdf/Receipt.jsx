@@ -48,6 +48,13 @@ export default function Receipt({ receiptData }) {
             borderRadius: "50%",
             marginBottom: "10px",
         },
+        thanksNote: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#32a1ce',
+            textAlign: 'center',
+            marginTop: '20px',
+        },
     });
 
     return (
@@ -92,6 +99,7 @@ export default function Receipt({ receiptData }) {
                             }).slice(1) : ''}
                         </Text>
                     </View>
+                    <Text style={styles.thanksNote}>Thank you for your generous donation, {donorName}!</Text>
                 </View>
             </Page>
         </Document>
