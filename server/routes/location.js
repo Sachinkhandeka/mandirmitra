@@ -37,13 +37,22 @@ router.get(
 //get tehsils
 router.get(
     "/tehsils/:templeId/:districtId",
+    verifyToken,
     wrapAsyn(location.getTehsilsByDistrict),
 );
 
 //get villages
 router.get(
     "/villages/:templeId/:tehsilId",
+    verifyToken,
     wrapAsyn(location.getVillagesByTehsil),
+);
+
+//get all data
+router.get(
+    "/get/:templeId",
+    verifyToken,
+    wrapAsyn(location.getAllController),
 );
 
 module.exports = router; 

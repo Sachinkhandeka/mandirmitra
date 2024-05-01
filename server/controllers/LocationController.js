@@ -113,3 +113,35 @@ module.exports.getVillagesByTehsil = async (req, res) => {
     }
     res.status(200).json({ villages });
 };
+
+//get rounte handler for all 
+module.exports.getAllController = async(req ,res)=> {
+    const templeId = req.params.templeId ; 
+
+    if(!templeId) {
+        throw new ExpressError(400, "Connot get address data.");
+    }
+
+    //get village
+    const villages = await Village.find({temple : templeId});
+    //get tehsils
+    const tehsils = await Tehsil.find({temple : templeId});
+    //get districts
+    const  districts = await District.find({temple: templeId});
+    //get state
+    const states = await State.find({temple : templeId});
+    //get country
+    const countries = await Country.find({temple : templeId});
+
+    if(!villages || !tehsils || !districts || !states || !countries) {
+        throw new ExpressError(400, "Some error occured while fetchin data.");
+    }
+
+    res.status(200).json({
+        villages,
+        tehsils,
+        districts,
+        states,
+        countries,
+    });
+}

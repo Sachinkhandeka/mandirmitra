@@ -1,16 +1,21 @@
-import { Table, Toast, Pagination } from "flowbite-react";
+import { Table, Toast, Pagination, Button, Tooltip } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { TbFaceIdError } from "react-icons/tb";
 import { HiCheck, HiX } from "react-icons/hi";
+import { IoFilterCircleOutline } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
 
+// importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("./EditDonationModal"));
 const DeleteDonation = React.lazy(()=> import("./DeleteDonation"));
+const FilterDrawer = React.lazy(()=> import("./FilterDrawer"));
 
 export default function DashDonations() {
     const { currUser } = useSelector(state => state.user);
+    const location = useLocation();
     const [ loading , setLoading ] =  useState(false);
     const [ success , setSuccess ] =  useState(null);
     const [ error ,  setError ] = useState(null);
@@ -20,9 +25,12 @@ export default function DashDonations() {
     const [ donation , setDonation ] = useState({});
     const [ totalDonations, setTotalDonations ] = useState(0);
     const [ isDonationUpdated, setIsDonationUpdated ] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [ currentPage, setCurrentPage] = useState(1);
+    const [ isDrawerOpen , setIsDrawerOpen ] = useState(false);
+    const [ filterCount, setFilterCount ] = useState(0);
 
     const onPageChange = (page) => setCurrentPage(page);
+    const queryParams = new URLSearchParams(location.search);
 
     // Function to fetch all donations from the API
     const  getAllDonations = async()=> {
@@ -32,7 +40,7 @@ export default function DashDonations() {
             setSuccess(null);
 
             // Fetch donation data from the API endpoint
-            const response = await fetch(`/api/donation/get/${currUser.templeId}`);
+            const response = await fetch(`/api/donation/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}`);
             const data = await response.json();
 
             if(!response.ok) {
@@ -56,12 +64,12 @@ export default function DashDonations() {
             getAllDonations();
             setIsDonationUpdated(false);
         }
-    },[isDonationUpdated])
+    },[isDonationUpdated]);
 
     // Effect hook to fetch donations when the component mounts or currUser changes
     useEffect(()=> {
         getAllDonations();
-    },[currUser]);
+    },[currUser, location.search ]);
 
     //function  to handle the edit functionality
     const handleEdit = (donation)=> {
@@ -94,10 +102,39 @@ export default function DashDonations() {
                 <Toast.Toggle />
             </Toast> 
         ) }
-        { totalDonations && totalDonations > 20 && (
-            <div className="flex overflow-x-auto sm:justify-center mb-5">
-                <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
-            </div>
+        {/* Drawer toggler */}
+        {
+            (currUser && currUser.isAdmin || 
+                (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
+                    <div className="mb-3 flex flex-row-reverse">
+                        <Tooltip content={`${filterCount} filters applied`}>
+                            <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
+                                <IoFilterCircleOutline className="mr-2 h-5 w-5" />
+                                Filters
+                            </Button>
+                        </Tooltip>
+                    </div>
+            )}
+        {/* Drawer */}
+        { isDrawerOpen &&
+        (currUser && currUser.isAdmin || 
+            (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) &&
+            (
+                <FilterDrawer 
+                    isDrawerOpen={isDrawerOpen}
+                    setIsDrawerOpen={setIsDrawerOpen}
+                    filterCount={filterCount}
+                    setFilterCount={setFilterCount}
+                />
+        ) }
+
+        {/* pagination */}
+        { totalDonations && totalDonations > 20 &&
+            (currUser && currUser.isAdmin || 
+               (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
+                    <div className="flex overflow-x-auto sm:justify-center mb-5">
+                        <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
+                    </div>
         ) }
         { donations && donations.length > 0 ? 
             // Render the table if user is an admin or has permission to read donations
