@@ -28,6 +28,8 @@ export default function DashProfile() {
     const [ uploadError , setUploadError ] = useState(null);
     const [ uploadSuccess , setUploadSuccess ] = useState(null);
     const [ success , setSuccess ] = useState(null);
+    const [ updated, setUpdated ] = useState(false);
+    const [ roleUpdated, setRoleUpdated ] = useState(false);
     const inputRef = useRef();
     const [ formData , setFormData ] = useState({
         profilePicture : currUser.profilePicture,
@@ -234,9 +236,16 @@ export default function DashProfile() {
                      {currUser.isAdmin && (
                         <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-10">
                             <div className="flex flex-col md:flex-row gap-5 w-full">
-                                <CreateUser />
-                                <CreateRoles />
-                                <CreatePermissions />
+                                <CreateUser
+                                    roleUpdated={roleUpdated} 
+                                />
+                                <CreateRoles  
+                                    updated={updated}
+                                    setRoleUpdated={setRoleUpdated}
+                                />
+                                <CreatePermissions 
+                                    setUpdated={setUpdated}
+                                />
                             </div>
                         </div>
                     )}

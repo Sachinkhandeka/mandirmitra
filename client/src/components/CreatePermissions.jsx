@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Alert, Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
 import { useState } from "react";
 
-export default function CreatePermissions() {
+export default function CreatePermissions({ setUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ permissionName , setPermissionName ] = useState('donation-creator');
@@ -39,6 +39,7 @@ export default function CreatePermissions() {
             if(!response.ok) {
                 return  setError(data.message);
             }
+            setUpdated(true);
             setSuccess(data);
         }catch(err) {
             setError(err.message);

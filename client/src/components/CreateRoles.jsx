@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Button, Card, Label, Modal, TextInput, Select, Checkbox, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 
-export default function CreateRoles() {
+export default function CreateRoles({ updated, setRoleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ permissions , setPermissions ]  = useState({});
@@ -36,7 +36,7 @@ export default function CreateRoles() {
 
     useEffect(()=> {
         getPermissionsData();
-    },[ currUser ]);
+    },[ currUser, updated ]);
 
     //handleChaange  for rolle name  
     const  handleChange = (e)=> {
@@ -76,6 +76,7 @@ export default function CreateRoles() {
             if(!response.ok) {
                 return setError(data.message);
             }
+            setRoleUpdated(true);
             setSuccess(data);
         }catch(err) {
             setError(err.message);
