@@ -23,7 +23,7 @@ export default function DashDonations() {
     const [ showEditModal , setShowEditModal ] = useState(false);
     const [ showDeleteModal , setShowDeleteModal ] = useState(false);
     const [ donation , setDonation ] = useState({});
-    const [ totalDonations, setTotalDonations ] = useState(0);
+    const [ totalDonations, setTotalDonations ] = useState(null);
     const [ isDonationUpdated, setIsDonationUpdated ] = useState(false);
     const [ currentPage, setCurrentPage] = useState(1);
     const [ isDrawerOpen , setIsDrawerOpen ] = useState(false);
