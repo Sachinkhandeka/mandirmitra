@@ -17,6 +17,13 @@ router.get(
     "/get/:templeId",
     verifyToken,
     wrapAsync(temple.getController),
-)
+);
+
+//analytics route
+router.get(
+    "/analytics/:templeId",
+    verifyToken,
+    wrapAsync(temple.analyticalController),
+);
 
 module.exports = router ;   
