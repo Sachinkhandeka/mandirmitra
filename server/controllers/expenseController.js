@@ -26,3 +26,16 @@ module.exports.createController = async(req, res)=> {
     await newExpense.save();
     res.status(200).json( "Expense added successfully.");
 }
+
+//get all expenses for temple
+module.exports.getController = async(req ,res)=> {
+    const templeId = req.params.templeId ; 
+
+    if(!templeId) {
+        throw new ExpressError(400, "Temple id not found.");
+    }
+
+    const allExpenses = await Expense.find({ temple : templeId });
+
+    res.status(200).json({allExpenses});
+}
