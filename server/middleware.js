@@ -1,5 +1,5 @@
 const ExpressError = require("./utils/ExpressError");
-const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema } = require("./schemaValidation");
+const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema } = require("./schemaValidation");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
     let { error } = daanSchema.validate(req.body.donation);
@@ -134,6 +134,29 @@ module.exports.validateTempleSchema = (req ,res , next)=> {
 module.exports.validateUserSchema = (req ,res ,next)=> {
     const user =  {...req.body, templeId : req.params.templeId } ;
     let { error } = userSchema.validate(user);
+
+    if(error) {
+        //if error is of joi but not related to field validation
+        if(error instanceof Error && error.isJoi) {
+            let errMsg = error.details.map(el => {
+                return el.message ; 
+            }).join(",");
+
+            throw new ExpressError(400 , errMsg);
+        } else {
+            //if error is related to field validation
+            let erroMsg = error.message ; 
+            throw new ExpressError(400, erroMsg);
+        }
+
+    }
+    next();
+}
+
+//validate expenseSchema
+module.exports.validateExpenseSchema = (req ,res ,next)=> {
+    const formData =  {...req.body, templeId : req.params.templeId } ;
+    let { error } = expenseSchema.validate(formData);
 
     if(error) {
         //if error is of joi but not related to field validation

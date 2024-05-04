@@ -71,6 +71,17 @@ const userSchema = Joi.object({
     roles: Joi.array().items().error(new Error('Roles must be an array of strings'))
 }).required().options({ abortEarly: false });
 
+//expense schema validations
+const expenseSchema = Joi.object({
+    title: Joi.string().required().error(new Error('Title is required')),
+    description: Joi.string().required().error(new Error('Description is required')),
+    amount: Joi.number().required().error(new Error('Amount is required')),
+    date: Joi.date().default(Date.now),
+    category: Joi.string().required().error(new Error('Category is required')),
+    status: Joi.string().valid('pending', 'approved', 'completed', 'rejected').default('pending'),
+    templeId: Joi.string().required().error(new Error('Temple ID is required'))
+}).options({ abortEarly: false });
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -78,4 +89,5 @@ module.exports = {
     superAdminSchema,
     templeSchema,
     userSchema,
+    expenseSchema,
 }

@@ -19,6 +19,7 @@ const userRoute = require("./routes/user");
 const roleRoute = require("./routes/role");
 const permissionRoute = require("./routes/permission");
 const locationRoute = require("./routes/location");
+const expenseRoute = require("./routes/expense");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -45,6 +46,8 @@ app.use( "/api/donation", daanRoute );
 app.use( "/api/role", roleRoute );
 app.use( "/api/permission", permissionRoute );
 app.use( "/api/location", locationRoute );
+app.use( "/api/expense", expenseRoute );
+
 
 //static folder for client side pages 
 app.use(express.static((path.join(__dirname , '../client/dist'))));

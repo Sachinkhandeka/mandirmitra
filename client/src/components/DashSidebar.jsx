@@ -1,6 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,15 +52,27 @@ export default function DashSidebar() {
                     </Link>
                     {
                         (currUser && currUser.isAdmin || 
-                            (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read","update","delete"))))) && (
-                                <Link to={"/?tab=daans"} >
-                                    <Sidebar.Item
-                                        active={tab === "daans"}
-                                        className="mt-6 cursor-pointer"
-                                        icon={FaDonate} 
-                                        as={"div"}
-                                    >Donations</Sidebar.Item>
-                                </Link>
+                            (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> 
+                                p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
+                            )))) && (
+                                <>
+                                    <Link to={"/?tab=daans"} >
+                                        <Sidebar.Item
+                                            active={tab === "daans"}
+                                            className="mt-6 cursor-pointer"
+                                            icon={FaDonate} 
+                                            as={"div"}
+                                        >Donations</Sidebar.Item>
+                                    </Link>
+                                    <Link to={"/?tab=expenses"} >
+                                        <Sidebar.Item
+                                            active={tab === "expenses"}
+                                            className="mt-6 cursor-pointer"
+                                            icon={FaMoneyBillTrendUp}
+                                            as={"div"} 
+                                        >Expenses</Sidebar.Item>
+                                    </Link>
+                                </>
                             )                
                     }
                     { 
