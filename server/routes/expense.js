@@ -13,4 +13,11 @@ router.post(
     wrapAsyn(expense.createController),
 );
 
+//get all expenses for temple
+router.get(
+    "/get/:templeId",
+    verifyReadPermission,
+    wrapAsyn(expense.getController),
+);
+
 module.exports = router ; 

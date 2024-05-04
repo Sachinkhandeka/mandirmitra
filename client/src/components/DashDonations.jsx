@@ -118,7 +118,8 @@ export default function DashDonations() {
         {/* Drawer */}
         { isDrawerOpen &&
         (currUser && currUser.isAdmin || 
-            (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) &&
+            (currUser.roles && currUser.roles.some(role=> 
+                role.permissions.some(p=> p.actions.includes("read"))))) &&
             (
                 <FilterDrawer 
                     isDrawerOpen={isDrawerOpen}
@@ -131,7 +132,8 @@ export default function DashDonations() {
         {/* pagination */}
         { totalDonations && totalDonations > 20 &&
             (currUser && currUser.isAdmin || 
-               (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
+               (currUser.roles && currUser.roles.some(role=> 
+                role.permissions.some(p=> p.actions.includes("read"))))) && (
                     <div className="flex overflow-x-auto sm:justify-center mb-5">
                         <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
                     </div>
@@ -158,7 +160,8 @@ export default function DashDonations() {
                         {
                             (
                                 (currUser && currUser.isAdmin ||
-                                currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
+                                currUser.roles && currUser.roles.some(role => 
+                                    role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                     <Table.HeadCell>Actions</Table.HeadCell>
                                 )
                             )
