@@ -16,6 +16,7 @@ import CreatePermissions from "./CreatePermissions";
 import UserRoles from "./UserRoles";
 import AddTehsilGaam from "./AddTehsilGaam";
 import DonationForm from "./DonationForm";
+import CreateExpense from "./CreateExpense";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -230,6 +231,7 @@ export default function DashProfile() {
                             <>
                                 <AddTehsilGaam setLocationAdded={setLocationAdded} />
                                 <DonationForm locationAdded={locationAdded} />
+                                <CreateExpense />
                             </>
                          )
                     }

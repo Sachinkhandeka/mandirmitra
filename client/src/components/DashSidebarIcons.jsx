@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,10 +41,17 @@ export default function DashSidebarIcon() {
       </Link>
       {
           (currUser && currUser.isAdmin || 
-              (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read","update","delete"))))) && (
-                <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-                    <FaDonate />
-                </Link>
+              (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> 
+                p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
+              )))) && (
+                <>
+                    <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <FaDonate />
+                    </Link>
+                    <Link to={"/?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <FaMoneyBillTrendUp />
+                    </Link>
+                </>
               )
       }
       {currUser.isAdmin && (
