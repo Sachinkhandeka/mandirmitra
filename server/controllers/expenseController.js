@@ -39,3 +39,40 @@ module.exports.getController = async(req ,res)=> {
 
     res.status(200).json({allExpenses});
 }
+
+// edit expense 
+module.exports.editController = async (req, res) => {
+    const { expenseId, templeId } = req.params; 
+    const formData = req.body; 
+
+    if (!templeId) {
+        throw new ExpressError(400, "Temple ID not found.");
+    }
+
+    if (!expenseId) {
+        throw new ExpressError(400, "Expense ID not found.");
+    }
+
+    // Find and update the expense
+    const updatedExpense = await Expense.findOneAndUpdate(
+        { _id: expenseId, temple: templeId },
+        formData,
+        { new: true }
+    );
+
+    if (!updatedExpense) {
+        throw new ExpressError(404, "Expense not found.");
+    }
+
+    res.status(200).json("Expense updated successfully.");
+};
+
+//delete expense
+module.exports.deleteController = async(req ,res)=> {
+    const { expenseId, templeId } = req.params ; 
+
+    console.log(expenseId);
+    console.log(templeId);
+
+    res.status(200).json("Delete expense on the mark.");
+}

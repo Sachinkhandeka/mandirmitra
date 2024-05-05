@@ -20,4 +20,19 @@ router.get(
     wrapAsyn(expense.getController),
 );
 
+//edit expense for  temple
+router.put(
+    "/edit/:expenseId/:templeId",
+    verifyUpdatePermission,
+    validateExpenseSchema,
+    wrapAsyn(expense.editController),
+);
+
+//edit expense for  temple
+router.delete(
+    "/delete/:expenseId/:templeId",
+    verifyDeletePermission,
+    wrapAsyn(expense.deleteController),
+);
+
 module.exports = router ; 

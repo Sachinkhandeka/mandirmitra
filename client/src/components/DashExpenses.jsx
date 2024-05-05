@@ -1,13 +1,19 @@
 import { Table } from "flowbite-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TbFaceIdError } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 
+const EditExpense = React.lazy(()=> import("./EditExpense"));
+
 export default function DashExpenses() {
     const { currUser } = useSelector(state => state.user);
     const [expenses, setExpenses] = useState([]);
+    const [ isUpdated, setIsUpdated ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ showDeleteModal, setShowDeleteModal ] = useState(false);
+    const [ expense, setExpense ] = useState({});
 
     const getExpenses = async () => {
         try {
@@ -28,14 +34,32 @@ export default function DashExpenses() {
         getExpenses();
     }, [currUser]);
 
+    useEffect(() => {
+        setIsUpdated(false);
+        getExpenses();
+    }, [isUpdated]);
+
     //handle edit functionality
     const handleEdit = (expense) => {
-        console.log(expense);
+        setExpense(expense);
+        setShowModal(true);
     }
 
     //handle delete functionality
     const handleDelete = (expense)=> {
-        console.log(expense);
+        setExpense(expense);
+        setShowDeleteModal(true);
+    }
+
+    //functionality to appply color to status dynamically
+    const getStatusColor  = (status)=> {
+        switch(status) {
+            case "pending" :  return "text-yellow-500"
+            case "approved" : return  "text-green-500"
+            case "completed" : return  "text-blue-500"
+            case "rejected" :  return "text-red-500"
+            default : return ; 
+        }
     }
 
     return (
@@ -70,7 +94,7 @@ export default function DashExpenses() {
                                 <Table.Cell>{expense.description}</Table.Cell>
                                 <Table.Cell>{expense.category}</Table.Cell>
                                 <Table.Cell>{expense.amount}</Table.Cell>
-                                <Table.Cell>{expense.status}</Table.Cell>
+                                <Table.Cell className={`${getStatusColor(expense.status)}`} >{expense.status}</Table.Cell>
                                 {/* Render actions if user is an admin or has permission to edit or delete expenses */}
                                 {(currUser && currUser.isAdmin ||
                                     (currUser.roles &&
@@ -114,6 +138,12 @@ export default function DashExpenses() {
                     </div>
                 </div>
             )}
+            <EditExpense
+               showModal={showModal} 
+               setShowModal={setShowModal}
+               setIsUpdated={setIsUpdated}
+               expense={expense}
+            />
         </>
     );
 }
