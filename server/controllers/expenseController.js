@@ -71,8 +71,20 @@ module.exports.editController = async (req, res) => {
 module.exports.deleteController = async(req ,res)=> {
     const { expenseId, templeId } = req.params ; 
 
-    console.log(expenseId);
-    console.log(templeId);
+    if (!templeId) {
+        throw new ExpressError(400, "Temple ID not found.");
+    }
 
-    res.status(200).json("Delete expense on the mark.");
+    if (!expenseId) {
+        throw new ExpressError(400, "Expense ID not found.");
+    }
+
+    // Find the expense and delete it
+    const deletedExpense = await Expense.findOneAndDelete({ _id: expenseId, temple: templeId });
+
+    if (!deletedExpense) {
+        throw new ExpressError(404, "Expense not found.");
+    }
+
+    res.status(200).json("Expense deleted successfully.");
 }

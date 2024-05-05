@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 
 const EditExpense = React.lazy(()=> import("./EditExpense"));
+const DeleteExpense = React.lazy(()=> import("./DeleteExpense"));
 
 export default function DashExpenses() {
     const { currUser } = useSelector(state => state.user);
@@ -14,6 +15,7 @@ export default function DashExpenses() {
     const [ showModal, setShowModal ] = useState(false);
     const [ showDeleteModal, setShowDeleteModal ] = useState(false);
     const [ expense, setExpense ] = useState({});
+    const [ expenseId, setExpenseId ] = useState("");
 
     const getExpenses = async () => {
         try {
@@ -47,7 +49,7 @@ export default function DashExpenses() {
 
     //handle delete functionality
     const handleDelete = (expense)=> {
-        setExpense(expense);
+        setExpenseId(expense._id);
         setShowDeleteModal(true);
     }
 
@@ -93,7 +95,13 @@ export default function DashExpenses() {
                                 <Table.Cell>{expense.title}</Table.Cell>
                                 <Table.Cell>{expense.description}</Table.Cell>
                                 <Table.Cell>{expense.category}</Table.Cell>
-                                <Table.Cell>{expense.amount}</Table.Cell>
+                                <Table.Cell>
+                                    { expense.amount ? parseFloat(expense.amount).toLocaleString('en-IN', {
+                                        maximumFractionDigits: 2,
+                                        style: 'currency',
+                                        currency: 'INR'
+                                    }) : ''}
+                                </Table.Cell>
                                 <Table.Cell className={`${getStatusColor(expense.status)}`} >{expense.status}</Table.Cell>
                                 {/* Render actions if user is an admin or has permission to edit or delete expenses */}
                                 {(currUser && currUser.isAdmin ||
@@ -139,11 +147,18 @@ export default function DashExpenses() {
                 </div>
             )}
             <EditExpense
-               showModal={showModal} 
-               setShowModal={setShowModal}
-               setIsUpdated={setIsUpdated}
-               expense={expense}
+                showModal={showModal} 
+                setShowModal={setShowModal}
+                setIsUpdated={setIsUpdated}
+                expense={expense}
             />
+            <DeleteExpense 
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
+                setIsUpdated={setIsUpdated}
+                expenseId={expenseId}
+            />
+
         </>
     );
 }
