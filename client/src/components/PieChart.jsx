@@ -28,9 +28,9 @@ const borderColor = [
     'rgba(255, 159, 64, 1)'
 ];
 
-const DonationPieChart = ({ donationCounts }) => {
+const DonationPieChart = ({ counts, title }) => {
     let count = [];
-    donationCounts.map((el)=> {
+    counts.map((el)=> {
         return count.unshift(el.count);
     });
     const chartData = {
@@ -45,7 +45,7 @@ const DonationPieChart = ({ donationCounts }) => {
 
     return (
         <div>
-            <h2>Monthly Donation Counts</h2>
+            <h2>{ title }</h2>
             <Pie data={chartData} />
         </div>
     );

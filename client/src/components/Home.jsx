@@ -3,25 +3,34 @@ import { useSelector } from "react-redux";
 import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
+import { FaRupeeSign } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { GiCash } from "react-icons/gi";
 
 import "../App.css";
-import DonationBarChart from "./DonationBarChart";
+import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
-import DonationPieChart from "./DonationPieChart";
+import PieChart from "./PieChart";
 
 export default function Home() {
-    const { currUser } = useSelector(state=> state.user);
-    const [ temple, setTemple ] =  useState({});
-    const [ loading ,  setLoading ] = useState(false);
-    const [ error , setError ] =  useState(null);
-    const [ success, setSuccess ] = useState(null);
+    const {currUser} = useSelector(state=> state.user);
+    const [temple, setTemple] =  useState({});
+    const [loading ,  setLoading] = useState(false);
+    const [error , setError] =  useState(null);
+    const [success, setSuccess] = useState(null);
     const [donationAmnt, setDonationAmnt] = useState([]);
+    const [expenseAmnt, setExpenseAmnt] = useState([]);
     const [donationCounts, setDonationCounts] = useState([]);
+    const [expenseCounts, setExpenseCounts] = useState([]);
     const [totalDonationCount, setTotalDonationCount] = useState(0);
+    const [totalExpenseCount, setTotalExpenseCount] = useState(0);
     const [totalUserCount, setTotalUserCount] = useState(0);
     const [totalRoleCount, setTotalRoleCount] = useState(0);
     const [totalPermissionCount, setTotalPermissionCount] = useState(0);
+    const [income, setIncome] = useState(0);
+    const [expense, setExpense] = useState(0);
+    const [balance, setBalance] = useState(0);
 
     //function to get  templeData
     const getTempleData = async()=> {
@@ -59,8 +68,11 @@ export default function Home() {
                 return ; 
             }
             setDonationAmnt(data.donationData);
+            setExpenseAmnt(data.expenseData);
             setDonationCounts(data.donationCounts);
+            setExpenseCounts(data.expenseCounts);
             setTotalDonationCount(data.totalDonationCount);
+            setTotalExpenseCount(data.totalExpenseCount);
             setTotalUserCount(data.totalUserCount);
             setTotalRoleCount(data.totalRoleCount);
             setTotalPermissionCount(data.totalPermissionCount);
@@ -71,6 +83,38 @@ export default function Home() {
     useEffect(()=> {
         getAnalyticsData();
     },[currUser.templeId]);
+
+    //calculate the total donation amnt/income
+    useEffect(() => {
+        if (donationAmnt && donationAmnt.length > 0) {
+            let totalAmount = 0;
+            donationAmnt.forEach(el => {
+                totalAmount += el.amount;
+            });
+            setIncome(totalAmount);
+        }
+    }, [donationAmnt]);
+    
+    //calculate the total expense amnt/expenses
+    useEffect(() => {
+        if (expenseAmnt && expenseAmnt.length > 0) {
+            let totalExpense = 0;
+            expenseAmnt.forEach(el => {
+                totalExpense += el.amount;
+            });
+            setExpense(totalExpense);
+        }
+    }, [expenseAmnt]);
+    
+    //calculate  the balance available
+    useEffect(() => {
+        // Calculate the balance
+        const netProfit = income - expense;
+    
+        // Update state for balance 
+        setBalance(netProfit);
+    }, [income, expense]);
+
     return (
         <div className="w-full min-w-[375px]" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
@@ -136,16 +180,65 @@ export default function Home() {
             </div>
             <div className="flex flex-col md:flex-row gap-4 my-4 p-4" >
                 <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >  
-                    <DonationBarChart 
-                        donationAmnt={donationAmnt}
+                    <BarChart 
+                        amnt={donationAmnt}
+                        title={"Monthly Donation Amounts"}
+                        label={"Donation Amount"}
                     />
                 </div>
                 <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >
-                    <DonationPieChart
-                        donationCounts={donationCounts} 
+                    <PieChart
+                        counts={donationCounts}
+                        title={"Monthly Donation Counts"} 
+                    />
+                </div>
+            </div>
+            <h1 className="my-4 text-2xl font-serif font-bold uppercase" >Expenses</h1>
+            <div className="flex flex-col lg:flex-row items-center gap-4 my-8 w-full" >
+                <CardComponent 
+                    total={income.toLocaleString("en-IN")}
+                    label="Income"
+                    compStyle="border-b border-orange-400"
+                    IconComponent={FaRupeeSign}
+                    progressColor={"#fb923c"}
+                />
+                <CardComponent 
+                    total={expense.toLocaleString("en-IN")}
+                    label="Expenses"
+                    compStyle="border-b border-indigo-400"
+                    IconComponent={FaRupeeSign}
+                    progressColor={"#818cf8"}
+                />
+                <CardComponent 
+                    total={totalExpenseCount}
+                    label="Total Expenses"
+                    compStyle="border-b border-red-400"
+                    IconComponent={FaMoneyBillTrendUp}
+                    progressColor={"#f87171"}
+                />
+                <CardComponent 
+                    total={balance.toLocaleString("en-IN")}
+                    label="Balance Available"
+                    compStyle={balance > 0 ?`border-b border-green-400` : `border-b border-red-400` }
+                    IconComponent={GiCash}
+                    progressColor={balance > 0 ? "#4ade80" : "#f87171"}
+                />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4 my-4 p-4" >
+                <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >  
+                    <BarChart 
+                        amnt={expenseAmnt}
+                        title={"Monthly Expense Amounts"}
+                        label={"Expense Amount"}
+                    />
+                </div>
+                <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >
+                    <PieChart
+                        counts={expenseCounts} 
+                        title={"Monthly Expense Counts"}
                     />
                 </div>
             </div>
         </div>
-    )
+    );
 }

@@ -4,7 +4,7 @@ const Daan  = require("../models/daanSchema");
 const Role = require("../models/roleSchema");
 const User = require("../models/userSchema");
 const Permission = require("../models/permissionSchema");
-const SuperAdmin = require("../models/superAdmin");
+const Expense = require("../models/expenseSchema");
 const ExpressError = require("../utils/ExpressError");
 
 
@@ -59,6 +59,7 @@ module.exports.analyticalController = async (req, res) => {
             throw new ExpressError(400, "TempleId not found.");
         }
         const totalDonationCount  =  await Daan.countDocuments({temple : templeId});
+        const totalExpenseCount = await Expense.countDocuments({ temple : templeId });
         const totalUserCount = await User.countDocuments({templeId : templeId});
         const totalRoleCount = await Role.countDocuments({templeId : templeId});
         const totalPermissionCount = await Permission.countDocuments({templeId : templeId});
@@ -66,13 +67,18 @@ module.exports.analyticalController = async (req, res) => {
         const pastSevenMonthsData = generatePastSevenMonthsData();
 
         const donationCounts = await calculateDonationCounts(templeId, pastSevenMonthsData);
-
         const donationData = await calculateDonationData(templeId, pastSevenMonthsData);
+
+        const expenseCounts =  await calculateExpenseCounts(templeId, pastSevenMonthsData);
+        const expenseData = await calculateExpenseData(templeId, pastSevenMonthsData);
 
         res.status(200).json({ message: "Analytics on the way.", 
             donationCounts, 
-            donationData, 
+            expenseCounts,
+            donationData,
+            expenseData, 
             totalDonationCount,
+            totalExpenseCount,
             totalUserCount,
             totalRoleCount,
             totalPermissionCount, 
@@ -143,9 +149,52 @@ const calculateDonationData = async (templeId, pastSevenMonthsData) => {
         const totalDonationAmount = totalAmntCount.length > 0 ? totalAmntCount[0].totalDonationAmount : 0;
 
         // Push month and total donation amount to donationData array
-        donationData.push({ month: start, donationAmount: totalDonationAmount });
+        donationData.push({ month: start, amount: totalDonationAmount });
     }
     // Return the donationData array after processing all months
     return donationData;
+};
+
+// Function to calculate expense counts for each of the past seven months
+const calculateExpenseCounts = async (templeId, pastSevenMonthsData) => {
+    const expenseCounts = [];
+    for (const monthData of pastSevenMonthsData) {
+        const count = await Expense.countDocuments({
+            temple: templeId,
+            date: { $gte: monthData.start, $lte: monthData.end }
+        });
+        expenseCounts.push({ month: monthData.start, count });
+    }
+    return expenseCounts;
+};
+
+// Function to calculate total expense amount for each of the past seven months
+const calculateExpenseData = async (templeId, pastSevenMonthsData) => {
+    const expenseData = [];
+
+    for (const monthData of pastSevenMonthsData) {
+        // Extract start and end dates for the current month
+        const { start, end } = monthData;
+
+        const totalAmountCount = await Expense.aggregate([
+            { $match: { 
+                temple : new mongoose.Types.ObjectId(templeId),
+                date: { $gte: start, $lte: end },
+                status: { $ne: "rejected" }
+            }},
+            { $group : { 
+                _id : null,
+                totalExpenseAmount  : {$sum : '$amount'} 
+            } }
+        ]);
+
+        // Get total expense amount for the current month
+        const totalExpenseAmount = totalAmountCount.length > 0 ? totalAmountCount[0].totalExpenseAmount : 0;
+
+        // Push month and total expense amount to expenseData array
+        expenseData.push({ month: start, amount: totalExpenseAmount });
+    }
+    // Return the expenseData array after processing all months
+    return expenseData;
 };
 
