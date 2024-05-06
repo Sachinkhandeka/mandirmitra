@@ -115,7 +115,7 @@ import { useSelector } from "react-redux";
     <Modal show={showModalEdit} dismissible onClose={() => setShowModalEdit(false)} position={"top-right"}>
         <Modal.Header>
             {/* Modal header content */}
-            <div className="flex gap-8" >
+            <div className="flex flex-col md:flex-row justify-start items-start gap-8" >
                         <Avatar 
                             img={userData.profilePicture} 
                             rounded 
