@@ -151,7 +151,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                     <hr className="gray-400 my-3" />
                     <div className="flex flex-col gap-4" >
                         <h2 className="text-xl font-serif uppercase font-semibold" >Address</h2>
-                        <div className="flex items-center justify-evenly gap-2" >
+                        <div className="grid grid-cols-2 md:flex md:items-center md:justify-evenly gap-2" >
                             {/* Village */}
                             <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >Village</h2>
