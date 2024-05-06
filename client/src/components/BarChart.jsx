@@ -24,17 +24,15 @@ const chartOptions = {
     },
 };
 
-const DonationBarChart = ({ donationAmnt }) => {
+const DonationBarChart = ({ amnt, title, label }) => {
     let amount = [];
-    let total = 0 ; 
-    donationAmnt.map((el)=> {
-        total += el.donationAmount;
-        return amount.unshift(el.donationAmount);
+    amnt.map((el)=> {
+        return amount.unshift(el.amount);
     });
     const data = {
         labels: labels,
         datasets: [{
-            label: 'Donation Amount',
+            label: label,
             data: amount,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -58,7 +56,7 @@ const DonationBarChart = ({ donationAmnt }) => {
     };
     return (
         <div>
-            <h2>Monthly Donation Amounts</h2>
+            <h2>{ title }</h2>
             <Bar data={data} options={chartOptions} />
         </div>
     );
