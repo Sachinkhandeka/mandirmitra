@@ -5,8 +5,8 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
-const EditRoleModal = React.lazy(()=> import("./EditRoleModal"));
-const DeleteRoleModal = React.lazy(()=> import("./DeleteRoleModal"));
+const EditRoleModal = React.lazy(()=> import("../edit/EditRoleModal"));
+const DeleteRoleModal = React.lazy(()=> import("../delete/DeleteRoleModal"));
 
 export default function DashRoles() {
     const { currUser } = useSelector(state => state.user);

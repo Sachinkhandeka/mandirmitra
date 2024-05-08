@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
-const EditPermissionsModal = React.lazy(()=> import("./EditPermissionsModal"));
-const DeletePermissionModal = React.lazy(()=> import("./DeletePermissionModal"));
+const EditPermissionsModal = React.lazy(()=> import("../edit/EditPermissionsModal"));
+const DeletePermissionModal = React.lazy(()=> import("../delete/DeletePermissionModal"));
 
 export default function DashPermissions() {
     const { currUser } = useSelector(state => state.user);

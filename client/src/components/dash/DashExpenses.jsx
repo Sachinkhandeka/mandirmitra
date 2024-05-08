@@ -5,8 +5,8 @@ import { TbFaceIdError } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 
-const EditExpense = React.lazy(()=> import("./EditExpense"));
-const DeleteExpense = React.lazy(()=> import("./DeleteExpense"));
+const EditExpense = React.lazy(()=> import("../edit/EditExpense"));
+const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
 
 export default function DashExpenses() {
     const { currUser } = useSelector(state => state.user);

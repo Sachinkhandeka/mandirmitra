@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { signoutSuccess } from "../redux/user/userSlice";
+import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function DashSidebarIcon() {

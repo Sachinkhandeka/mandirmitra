@@ -6,8 +6,8 @@ import { FaFilePdf } from "react-icons/fa6";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import Receipt from "../pdf/Receipt";
-import AddressForm from "./AddressForm";
+import Receipt from "../../pdf/Receipt";
+import AddressForm from "../AddressForm";
 
 export default function DonationForm({locationAdded}) {
     const [ selectedCountry , setSelectedCountry ] = useState({});
