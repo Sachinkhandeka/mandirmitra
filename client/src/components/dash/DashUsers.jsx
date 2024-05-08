@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
-const  EditUserModal = React.lazy(()=> import("./EditUserModal"));
-const DeleteUserModal = React.lazy(()=> import("./DeleteUserModal"));
+const  EditUserModal = React.lazy(()=> import("../edit/EditUserModal"));
+const DeleteUserModal = React.lazy(()=> import("../delete/DeleteUserModal"));
 
 export  default  function DashUsers() {
     const { currUser } = useSelector(state => state.user);

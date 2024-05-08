@@ -4,8 +4,8 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { FaFilePdf } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import Receipt from "../pdf/Receipt";
-import AddressForm from "./AddressForm";
+import Receipt from "../../pdf/Receipt";
+import AddressForm from "../AddressForm";
 
 export default function EditDonationModal({ showEditModal, setShowEditModal, donation, setIsDonationUpdated}) {
     const [ selectedCountry , setSelectedCountry ] = useState({});

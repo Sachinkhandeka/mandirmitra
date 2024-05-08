@@ -9,9 +9,9 @@ import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 
 // importing components when needed or used
-const EditDonationModal = React.lazy(()=> import("./EditDonationModal"));
-const DeleteDonation = React.lazy(()=> import("./DeleteDonation"));
-const FilterDrawer = React.lazy(()=> import("./FilterDrawer"));
+const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
+const DeleteDonation = React.lazy(()=> import("../delete/DeleteDonation"));
+const FilterDrawer = React.lazy(()=> import("../FilterDrawer"));
 
 export default function DashDonations() {
     const { currUser } = useSelector(state => state.user);
@@ -106,7 +106,7 @@ export default function DashDonations() {
         {
             (currUser && currUser.isAdmin || 
                 (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
-                    <div className="mb-3 flex flex-row-reverse">
+                    <div className="mb-3 flex flex-row-reverse sticky right-0">
                         <Tooltip content={`${filterCount} filters applied`}>
                             <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
                                 <IoFilterCircleOutline className="mr-2 h-5 w-5" />

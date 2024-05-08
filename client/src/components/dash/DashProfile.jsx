@@ -4,19 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { HiCheck, HiX } from "react-icons/hi";
 import { useDispatch , useSelector } from "react-redux";
-import { updateStart, updateSuccess, updateFailure, resetError } from "../redux/user/userSlice";
+import { updateStart, updateSuccess, updateFailure, resetError } from "../../redux/user/userSlice";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "../firebase";
+import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-import CreateUser from "./CreateUser";
-import CreateRoles from "./CreateRoles";
-import CreatePermissions from "./CreatePermissions";
-import UserRoles from "./UserRoles";
-import AddTehsilGaam from "./AddTehsilGaam";
-import DonationForm from "./DonationForm";
-import CreateExpense from "./CreateExpense";
+import CreateUser from "../create/CreateUser";
+import CreateRoles from "../create/CreateRoles";
+import CreatePermissions from "../create/CreatePermissions";
+import UserRoles from "../UserRoles";
+import AddTehsilGaam from "../AddTehsilGaam";
+import DonationForm from "../create/DonationForm";
+import CreateExpense from "../create/CreateExpense";
 
 export default function DashProfile() {
     const dispatch = useDispatch();

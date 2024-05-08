@@ -5,16 +5,20 @@ import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { Spinner } from "flowbite-react";
 
 const Home = React.lazy(()=> import("../components/Home"));
-const DashProfile = React.lazy(()=> import("../components/DashProfile"));
-const DashUsers = React.lazy(()=> import("../components/DashUsers"));
-const DashRoles = React.lazy(()=> import("../components/DashRoles"));
-const DashPermissions = React.lazy(()=> import("../components/DashPermissions"));
-const DashDonations = React.lazy(()=> import("../components/DashDonations"));
-const DashExpenses = React.lazy(()=> import("../components/DashExpenses"));
+const DashProfile = React.lazy(()=> import("../components/dash/DashProfile"));
+const DashUsers = React.lazy(()=> import("../components/dash/DashUsers"));
+const DashRoles = React.lazy(()=> import("../components/dash/DashRoles"));
+const DashPermissions = React.lazy(()=> import("../components/dash/DashPermissions"));
+const DashDonations = React.lazy(()=> import("../components/dash/DashDonations"));
+const DashExpenses = React.lazy(()=> import("../components/dash/DashExpenses"));
 
-import DashSidebar from "../components/DashSidebar";
+import DashSidebar from "../components/dash/DashSidebar";
 import Header from "../components/Header";
-import DashSidebarIcons from "../components/DashSidebarIcons";
+import DashSidebarIcons from "../components/dash/DashSidebarIcons";
+import FooterComp from "../components/FooterComp";
+import About from "../components/About";
+import PrivacyPolicy from "../components/ProvacyPolicy";
+import Terms from "../components/Terms";
 
 
 export default function Dashboard() {
@@ -111,6 +115,29 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashPermissions /></Suspense> }
+                    {/* About */}
+                    { tab === "about" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><About /></Suspense> }
+                    {/* Privacy Policy  */}
+                    { tab === "privacy" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><PrivacyPolicy /></Suspense> }
+                    {/* Terms  & conditions */}
+                    { tab === "terms" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><Terms /></Suspense> }
+                    {/* Footer */}
+                    <FooterComp />
                 </div>
             </div>
         </>
