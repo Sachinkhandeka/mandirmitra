@@ -1,7 +1,15 @@
+import brand from "../assets/brand.jpg";
+
 export default function About() {
     return (
         <>
             <div className="flex flex-col gap-4 mt-2" >
+                <div className="flex justify-center items-center" >
+                    <img src={brand} alt="MandirMitra" className="h-32 w-32 rounded-lg border border-teal-200 shadow-md" />
+                </div>
+                <div className="text-center flex items-center justify-center" >
+                    <div className="px-4 py-2 bg-gradient-to-tr from-rose-300 to-rose-600 rounded-full font-mono text-2xl font-bold uppercase" >MandirMitra</div>
+                </div>
                 <h1 className="text-2xl font-bold" >About Our Temple Management Solution:</h1>
                 <p className="text-lg" >
                     Welcome to MandirMitra, a comprehensive temple management solution designed to empower medium and small temples to efficiently

@@ -6,13 +6,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { Link } from "react-router-dom";
 
+import brand from "../assets/brand.jpg";
+
 export default function Header() {
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
     return(
         <Navbar className="border border-b-2 sticky top-0 z-20" >
             <Link to={"/"} className="cursor-pointer">
-                <GiByzantinTemple size={26} />
+                <img src={brand} alt="MandirMitra" className="w-8 h-8 rounded-full object-cover object-center border border-gray-300"/>
             </Link>
             <form>
                 <div className="flex items-center gap-2" >
