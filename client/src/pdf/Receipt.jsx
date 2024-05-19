@@ -5,10 +5,10 @@ export default function Receipt({ receiptData }) {
     const {
         contactInfo, country, createdAt, district,
         donationAmount, donorName, paymentMethod,
-        sevaName, state, tehsil, temple, updatedAt,
+        sevaName, state, tehsil, temple,
         village, _id
     } = receiptData;
-
+    
     const styles = StyleSheet.create({
         page: {
             backgroundColor: '#f2f2f2',
