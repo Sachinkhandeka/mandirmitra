@@ -12,6 +12,7 @@ const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
 const ExpenseFilter = React.lazy(()=> import("../ExpenseFilter"));
 
 export default function DashExpenses() {
+    const { searchTerm } = useSelector(state=> state.searchTerm);
     const { currUser } = useSelector(state => state.user);
     const location = useLocation();
     const [ expenses, setExpenses] = useState([]);
@@ -29,8 +30,14 @@ export default function DashExpenses() {
     const queryParams = new URLSearchParams(location.search);
 
     const getExpenses = async () => {
+        const tab  = queryParams.get("tab");
+
+        // Conditionally include searchTerm only when tab is 'daans'
+        const searchParam = tab === 'expenses' ? `&searchTerm=${searchTerm}` : '';
         try {
-            const response = await fetch(`/api/expense/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}`);
+            const response = await fetch(
+                `/api/expense/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`
+            );
             const data = await response.json();
 
             if (!response.ok) {
@@ -46,7 +53,7 @@ export default function DashExpenses() {
 
     useEffect(() => {
         getExpenses();
-    }, [currUser, location.search]);
+    }, [currUser, location.search, searchTerm ]);
 
     useEffect(() => {
         setIsUpdated(false);
