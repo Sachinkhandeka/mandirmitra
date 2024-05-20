@@ -214,7 +214,7 @@ export default function Home() {
                     label="Total Expenses"
                     compStyle="border-b border-red-400"
                     IconComponent={FaMoneyBillTrendUp}
-                    progressColor={"#818cf8"}
+                    progressColor={"#f87171"}
                 />
                 <CardComponent 
                     total={balance.toLocaleString("en-IN")}
