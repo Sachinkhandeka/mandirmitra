@@ -43,6 +43,14 @@ export default function CreateExpense() {
             }
             setLoading(false);
             setSuccess("Expense added successfully.");
+            setFormData({
+                title: "",
+                description: "",
+                amount: "",
+                date: "",
+                category: "",
+                status: "pending"
+            });
         } catch (err) {
             setError(err.message);
         }
