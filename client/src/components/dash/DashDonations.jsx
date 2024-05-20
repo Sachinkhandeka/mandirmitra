@@ -144,7 +144,6 @@ export default function DashDonations() {
             (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
                 <Table>
                     <Table.Head>
-                        <Table.HeadCell>Id</Table.HeadCell>
                         <Table.HeadCell>Donor Name</Table.HeadCell>
                         <Table.HeadCell>Contact</Table.HeadCell>
                         <Table.HeadCell>Temple</Table.HeadCell>
@@ -170,7 +169,6 @@ export default function DashDonations() {
                     { donations && donations.length > 0 && donations.slice((currentPage - 1) * 20, currentPage * 20 ).map((donation)=> (
                         <Table.Body className="divide-y" key={donation._id} >
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation._id }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.donorName }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.contactInfo }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.temple.name }</Table.Cell>
