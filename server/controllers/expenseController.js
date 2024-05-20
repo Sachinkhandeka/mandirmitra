@@ -27,17 +27,56 @@ module.exports.createController = async(req, res)=> {
     res.status(200).json( "Expense added successfully.");
 }
 
-//get all expenses for temple
-module.exports.getController = async(req ,res)=> {
-    const templeId = req.params.templeId ; 
-
-    if(!templeId) {
+//get  all expense data
+module.exports.getController = async (req, res) => {
+    const templeId = req.params.templeId;
+    const startIndx = parseInt(req.query.startIndx) || 0;
+    const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
+    
+    if (!templeId) {
         throw new ExpressError(400, "Temple id not found.");
     }
 
-    const allExpenses = await Expense.find({ temple : templeId });
+    // Define search criteria based on query parameters
+    const searchCriteria = {
+        temple: templeId,
+    };
 
-    res.status(200).json({allExpenses});
+    // Add optional search criteria if present in query parameters
+    if (req.query.category) searchCriteria.category = { $regex: req.query.category, $options: 'i' };
+    if (req.query.searchTerm) {
+        searchCriteria.$or = [
+            { title: { $regex: req.query.searchTerm, $options: 'i' } },
+            { description: { $regex: req.query.searchTerm, $options: 'i' } },
+        ];
+    }
+
+    // Add range search for amount if minAmount and maxAmount parameters are present
+    if (req.query.minAmount || req.query.maxAmount) {
+        searchCriteria.amount = {};
+        if (req.query.minAmount) searchCriteria.amount.$gte = parseFloat(req.query.minAmount);
+        if (req.query.maxAmount) searchCriteria.amount.$lte = parseFloat(req.query.maxAmount);
+    }
+
+    // Add status filter if present in query parameters
+    if (req.query.status) searchCriteria.status = req.query.status;
+    
+    try {
+        // Fetch filtered expenses with pagination and sorting
+        const allExpenses = await Expense.find(searchCriteria)
+            .skip(startIndx)
+            .sort({ updatedAt: sortDirection });
+
+        // Count total expenses for the given temple with filters
+        const totalExpenses = await Expense.countDocuments(searchCriteria);
+
+        res.status(200).json({
+            allExpenses,
+            totalExpenses
+        });
+    } catch (err) {
+        throw new ExpressError(500, "Failed to fetch expenses.");
+    }
 }
 
 // edit expense 
