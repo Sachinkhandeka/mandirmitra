@@ -62,7 +62,9 @@ export default function Receipt({ receiptData }) {
             <Page style={styles.page}>
                 <View style={styles.container} >
                     <View style={styles.normalContainer}>
-                        <Image src={temple.image} style={styles.logo} />
+                        { temple.image && (
+                            <Image src={temple.image} style={styles.logo} />
+                        ) }
                         <View>
                             <Text style={styles.text}>Receipt Id : { _id } </Text>
                             <Text style={styles.text}>{new Date(createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</Text>
