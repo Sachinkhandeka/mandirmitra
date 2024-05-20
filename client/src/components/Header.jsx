@@ -4,6 +4,7 @@ import { BsSearchHeart } from "react-icons/bs";
 import { RxMoon,  RxSun } from "react-icons/rx";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { setSearchTerm } from "../redux/search/searchSlice";
 import { Link } from "react-router-dom";
 
 import brand from "../assets/brand.jpg";
@@ -11,6 +12,13 @@ import brand from "../assets/brand.jpg";
 export default function Header() {
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
+
+    const handleSearchInputChange = (e) => {
+        const searchTermValue = e.target.value ; 
+        dispatch(setSearchTerm(searchTermValue));
+        
+    };
+
     return(
         <Navbar className="border border-b-2 sticky top-0 z-20" >
             <Link to={"/"} className="cursor-pointer">
@@ -21,8 +29,9 @@ export default function Header() {
                     <TextInput 
                         type="text"
                         placeholder="Search."
+                        onChange={handleSearchInputChange}
                     />
-                    <Button> <BsSearchHeart size={20} /> </Button>
+                    <Button onClick={handleSearchInputChange} > <BsSearchHeart size={20} /> </Button>
                 </div>
             </form>
             <div>

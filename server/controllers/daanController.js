@@ -31,7 +31,7 @@ module.exports.getDataController = async(req ,res)=> {
     const templeId = req.params.templeId ;  
     const startIndx = parseInt(req.query.startIndx) || 0 ; 
     const sortDirection = req.query.sortDirection === "asc"? 1 : -1 ; 
-
+    
     //check if templeId not present
     if(!templeId) {
         throw new  ExpressError(400 , "Cannot get donation without temple");

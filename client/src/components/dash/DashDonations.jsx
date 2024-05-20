@@ -15,6 +15,7 @@ const FilterDrawer = React.lazy(()=> import("../FilterDrawer"));
 
 export default function DashDonations() {
     const { currUser } = useSelector(state => state.user);
+    const { searchTerm } =  useSelector(state => state.searchTerm);
     const location = useLocation();
     const [ loading , setLoading ] =  useState(false);
     const [ success , setSuccess ] =  useState(null);
@@ -39,8 +40,16 @@ export default function DashDonations() {
             setError(null);
             setSuccess(null);
 
+            const tab = queryParams.get("tab");
+
+            // Conditionally include searchTerm only when tab is 'daans'
+            const searchParam = tab === 'daans' ? `&searchTerm=${searchTerm}` : '';
+            
             // Fetch donation data from the API endpoint
-            const response = await fetch(`/api/donation/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}`);
+            const response = await fetch(
+                `/api/donation/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`
+            );
+            
             const data = await response.json();
 
             if(!response.ok) {
@@ -69,7 +78,7 @@ export default function DashDonations() {
     // Effect hook to fetch donations when the component mounts or currUser changes
     useEffect(()=> {
         getAllDonations();
-    },[currUser, location.search ]);
+    },[ currUser, location.search, searchTerm ]);
 
     //function  to handle the edit functionality
     const handleEdit = (donation)=> {
@@ -84,15 +93,6 @@ export default function DashDonations() {
     }
     return (
         <>
-        { success && (
-            <Toast className="my-4" >
-                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                    <HiCheck className="h-5 w-5" />
-                </div>
-                <div className="ml-3 text-sm font-normal">{ success }</div>
-                <Toast.Toggle />
-            </Toast> 
-        ) }
         { error && (
             <Toast className="my-4" >
                 <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">

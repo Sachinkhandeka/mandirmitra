@@ -32,7 +32,7 @@ module.exports.getController = async (req, res) => {
     const templeId = req.params.templeId;
     const startIndx = parseInt(req.query.startIndx) || 0;
     const sortDirection = req.query.sortDirection === "asc" ? 1 : -1;
-    
+
     if (!templeId) {
         throw new ExpressError(400, "Temple id not found.");
     }
