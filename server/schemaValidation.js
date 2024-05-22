@@ -82,6 +82,15 @@ const expenseSchema = Joi.object({
     templeId: Joi.string().required().error(new Error('Temple ID is required'))
 }).options({ abortEarly: false });
 
+//event shcema validations
+const eventSchema = Joi.object({
+    name : Joi.string().required().error(new Error('Name is required')),
+    date : Joi.date().default(Date.now),
+    location : Joi.string().required().error(new Error("Location is required")),
+    status : Joi.string().valid('pending', 'completed').default('pending'),
+    templeId : Joi.string().required().error(new Error('Temple ID is required'))
+}).options({ abortEarly : false });
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -90,4 +99,5 @@ module.exports = {
     templeSchema,
     userSchema,
     expenseSchema,
+    eventSchema,
 }

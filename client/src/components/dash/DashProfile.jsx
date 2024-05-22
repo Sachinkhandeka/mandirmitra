@@ -17,6 +17,7 @@ import UserRoles from "../UserRoles";
 import AddTehsilGaam from "../AddTehsilGaam";
 import DonationForm from "../create/DonationForm";
 import CreateExpense from "../create/CreateExpense";
+import Event from "../Event";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -223,19 +224,7 @@ export default function DashProfile() {
                      { !currUser.isAdmin && (
                         <UserRoles />  
                      ) }
-                    { 
-                        (currUser.isAdmin || 
-                        (currUser.roles && 
-                        currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))))) &&
-                         (
-                            <>
-                                <AddTehsilGaam setLocationAdded={setLocationAdded} />
-                                <DonationForm locationAdded={locationAdded} />
-                                <CreateExpense />
-                            </>
-                         )
-                    }
-                     {currUser.isAdmin && (
+                    {currUser.isAdmin && (
                         <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-10">
                             <div className="flex flex-col md:flex-row gap-5 w-full">
                                 <CreateUser
@@ -251,6 +240,19 @@ export default function DashProfile() {
                             </div>
                         </div>
                     )}
+                    { 
+                        (currUser.isAdmin || 
+                        (currUser.roles && 
+                        currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))))) &&
+                         (
+                            <>
+                                <AddTehsilGaam setLocationAdded={setLocationAdded} />
+                                <DonationForm locationAdded={locationAdded} />
+                                <CreateExpense />
+                                <Event />
+                            </>
+                         )
+                    }
                 </div>
             ) }
         </div>
