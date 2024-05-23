@@ -1,10 +1,38 @@
-import React from 'react';
+import { Spinner } from 'flowbite-react';
+import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import { SiEventbrite } from "react-icons/si";
 import { useSelector } from 'react-redux';
 
-export default function EventCard({ name, date, location, status, id }) {
+const EditEvent = React.lazy(()=> import("../components/edit/EditEvent"));
+
+export default function EventCard({ name, date, location, status, id, setIsEventUpdated }) {
     const { currUser } = useSelector(state=> state.user);
+    const [ editModal, setEditModal ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
+    
+    const handleDelete = async()=> {
+        setLoading(true);
+        try {
+            const response = await fetch(
+                `/api/event/delete/${id}/${currUser.templeId}`,
+                {
+                    method : "DELETE",
+                }
+            );
+            const data = await response.json();
+
+            if(!response.ok) {
+                setLoading(false);
+                return console.log(data.message);   
+            }
+            setLoading(false);
+            setIsEventUpdated(true);
+        } catch(err) {
+            setLoading(false);
+            console.log(err.message);
+        }
+    }
   return (
     <div className={`max-w-sm rounded overflow-hidden hover:shadow-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 m-4 min-w-72`} key={id}>
         <div className="font-bold text-xl mb-4 flex items-center gap-3">
@@ -25,32 +53,44 @@ export default function EventCard({ name, date, location, status, id }) {
             </span>
         </div>
         <hr className='my-6' />
-        {/* Render edit and delete icons if user is an admin or has permission to edit or delete donations */}
+        {/* Render edit and delete icons if user is an admin or has permission to edit or delete event */}
         {
             ( currUser && currUser.isAdmin ||
             ( currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete") )) ) ) && (
                 <div className="flex mt-4 items-center gap-4" >
                     { 
-                        // Render edit icon if user is admin or has permission to edit donations
+                        // Render edit icon if user is admin or has permission to edit event
                         ( currUser && currUser.isAdmin ||
                         ( currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("update"))))) && (
-                            <span className="cursor-pointer px-2 py-1 text-sm hover:text-blue-800 hover:bg-blue-100 hover:rounded-lg">
+                            <span className="cursor-pointer px-2 py-1 text-sm hover:text-blue-800 hover:bg-blue-100 hover:rounded-lg" onClick={()=> setEditModal(true)}>
                                 Edit
                             </span>
                         )
                     }
                     { 
-                        // Render delete icon if user is admin or has permission to delete donations
+                        // Render delete icon if user is admin or has permission to delete events
                         ( currUser && currUser.isAdmin ||
                         ( currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("delete"))))) && (
-                            <span className="cursor-pointer text-sm px-2 py-1 hover:text-red-800 hover:bg-red-100 hover:rounded-lg"  >
-                                Delete
+                            <span className="cursor-pointer text-sm px-2 py-1 hover:text-red-800 hover:bg-red-100 hover:rounded-lg"  onClick={handleDelete} >
+                                { loading ? <Spinner color={"failure"} /> : "Delete" }
                             </span>
                         )
                     }
                 </div>
             )
         }
+        { editModal && (
+            <EditEvent
+                editModal={editModal}
+                setEditModal={setEditModal} 
+                setIsEventUpdated={setIsEventUpdated}
+                name={name}
+                date={date}
+                location={location}
+                status={status}
+                id={id}
+            />
+        ) }
     </div>
   );
 }

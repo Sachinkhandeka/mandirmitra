@@ -33,6 +33,7 @@ export default function Home() {
     const [expense, setExpense] = useState(0);
     const [balance, setBalance] = useState(0);
     const [events, setEvents] = useState([]);
+    const [ isEventUpdated, setIsEventUpdated ] = useState(false);
 
     const scrollRef = useRef(null);
 
@@ -146,6 +147,13 @@ export default function Home() {
     useEffect(()=>{
         getEvents();
     },[currUser]);
+
+    useEffect(()=>{
+        if(isEventUpdated) {
+            getEvents();
+            setIsEventUpdated(false);
+        }
+    },[isEventUpdated]);
     return (
         <div className="w-full min-w-[375px]" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
@@ -291,6 +299,7 @@ export default function Home() {
                                 date={event.date}
                                 location={event.location}
                                 status={event.status}
+                                setIsEventUpdated={setIsEventUpdated}
                             />
                         ))}
                     </div>
