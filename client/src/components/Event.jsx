@@ -134,7 +134,7 @@ export default function Event() {
                                         className="px-6 py-2"
                                         disabled={loading}
                                     >
-                                        { loading ? <Spinner />  : "Create" }
+                                        { loading ? <Spinner color={"warning"} />  : "Create" }
                                     </Button>
                                 </div>
                             </form>
