@@ -90,7 +90,11 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                         weekStart={1}
                                         id="date"
                                         name="date"
-                                        selected={formData.date}
+                                        value={new Date(formData.date).toLocaleDateString('en-US', {
+                                            month: 'long',
+                                            day: '2-digit',
+                                            year: 'numeric',
+                                        })}
                                         onSelectedDateChanged={handleDatePickerChange}
                                     />
                                 </div>
