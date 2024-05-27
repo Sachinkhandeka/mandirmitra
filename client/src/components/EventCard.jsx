@@ -5,11 +5,13 @@ import { SiEventbrite } from "react-icons/si";
 import { useSelector } from 'react-redux';
 
 const EditEvent = React.lazy(()=> import("../components/edit/EditEvent"));
+const Invite = React.lazy(()=> import("./Invite"));
 
 export default function EventCard({ name, date, location, status, id, setIsEventUpdated }) {
     const { currUser } = useSelector(state=> state.user);
     const [ editModal, setEditModal ] = useState(false);
     const [ loading, setLoading ] = useState(false);
+    const [ inviteModal, setInviteModal ] = useState(false);
     
     const handleDelete = async()=> {
         setLoading(true);
@@ -62,9 +64,16 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
                         // Render edit icon if user is admin or has permission to edit event
                         ( currUser && currUser.isAdmin ||
                         ( currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("update"))))) && (
-                            <span className="cursor-pointer px-2 py-1 text-sm hover:text-blue-800 hover:bg-blue-100 hover:rounded-lg" onClick={()=> setEditModal(true)}>
-                                Edit
-                            </span>
+                            <>
+                                <span className="cursor-pointer px-2 py-1 text-sm hover:text-blue-800 hover:bg-blue-100 hover:rounded-lg" onClick={()=> setEditModal(true)}>
+                                    Edit
+                                </span>
+                                { status === "pending" && (
+                                    <span className="cursor-pointer px-2 py-1 text-sm hover:text-yellow-800 hover:bg-yellow-100 hover:rounded-lg" onClick={()=> setInviteModal(true)}>
+                                        Invite
+                                    </span>
+                                ) }
+                            </>
                         )
                     }
                     { 
@@ -88,6 +97,16 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
                 date={date}
                 location={location}
                 status={status}
+                id={id}
+            />
+        ) }
+        { inviteModal && (
+            <Invite 
+                inviteModal={inviteModal}
+                setInviteModal={setInviteModal}
+                name={name}
+                location={location}
+                date={date}
                 id={id}
             />
         ) }

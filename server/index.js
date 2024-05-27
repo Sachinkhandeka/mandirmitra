@@ -21,7 +21,7 @@ const permissionRoute = require("./routes/permission");
 const locationRoute = require("./routes/location");
 const expenseRoute = require("./routes/expense");
 const eventRoute = require("./routes/event");
-
+const invitationRoute = require("./routes/invitation");
 main().then(()=> {
     console.log("connection to mongo successfull!");
 }).catch((err)=> {
@@ -49,6 +49,7 @@ app.use( "/api/permission", permissionRoute );
 app.use( "/api/location", locationRoute );
 app.use( "/api/expense", expenseRoute );
 app.use( "/api/event", eventRoute );
+app.use( "/api/invitation", invitationRoute );
 
 
 //static folder for client side pages 

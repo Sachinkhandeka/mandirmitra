@@ -91,6 +91,16 @@ const eventSchema = Joi.object({
     templeId : Joi.string().required().error(new Error('Temple ID is required'))
 }).options({ abortEarly : false });
 
+// Invitation validation schema
+const invitationSchema = Joi.object({
+    donorName: Joi.string().required().error(new Error('Donor Name is required')),
+    passCode: Joi.string().required().error(new Error('PassCode is required')),
+    invited: Joi.boolean().default(false),
+    attended: Joi.boolean().default(false),
+    temple: Joi.string().required().error(new Error('Temple ID is required')),
+    event: Joi.string().required().error(new Error('Event ID is required'))
+}).options({ abortEarly: false });
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -100,4 +110,5 @@ module.exports = {
     userSchema,
     expenseSchema,
     eventSchema,
+    invitationSchema,
 }

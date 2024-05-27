@@ -100,7 +100,7 @@ export default function SignupSuperAdmin() {
                 </div>
                 <div className="p-2 flex gap-2 items-center text-black text-sm font-bold" >
                     <FaCopyright size={18} />
-                    <p>All copyright reserved by PrayasiTrack.</p>
+                    <p>All copyright reserved by MandirMitra.</p>
                 </div>
             </div>
         </div>

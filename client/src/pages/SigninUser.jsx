@@ -112,7 +112,7 @@ export default function SigninUser() {
                 </div>
                 <div className="p-2 flex gap-2 items-center text-gray-500 text-sm" >
                     <FaCopyright size={18} />
-                    <p>All copyright reserved by PrayasiTrack.</p>
+                    <p>All copyright reserved by MandirMitra.</p>
                 </div>
             </div>
         </div>

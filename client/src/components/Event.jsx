@@ -1,6 +1,9 @@
 import { Button, Label, TextInput, Select, Datepicker, Alert, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { FaFilePdf } from "react-icons/fa6";
+import Invitation from "../pdf/Invitation";
 
 export default function Event() {
     const { currUser } = useSelector((state) => state.user);
@@ -48,6 +51,12 @@ export default function Event() {
             }
             setSuccess("Event created successfully!");
             setLoading(false);
+            setEventData({
+                name: "",
+                date: "",
+                location: "",
+                status: "pending",
+            });
         } catch (err) {
             setLoading(false);
             setError(err.message);
@@ -126,7 +135,7 @@ export default function Event() {
                                         </Select>
                                     </div>
                                 </div>
-                                <div className="flex justify-end mt-6">
+                                <div className="flex justify-end mt-6 gap-4">
                                     <Button
                                         type="submit"
                                         color={"warning"}
