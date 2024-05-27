@@ -101,7 +101,7 @@ module.exports.getOneDaanController = async(req ,res)=> {
         throw new ExpressError(400 , "Id not found");
     }
 
-    const daan = await Daan.findOne({_id : id , temple : templeId});
+    const daan = await Daan.find({_id : id , temple : templeId});
 
     res.status(200).json({
         daan,
