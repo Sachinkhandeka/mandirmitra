@@ -10,5 +10,20 @@ export default {
   },
   plugins: [
     require("flowbite/plugin"),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-hidden::-webkit-scrollbar': {
+          display: 'none',
+        },
+        '.scrollbar-hidden': {
+          '-ms-overflow-style': 'none', /* for Internet Explorer, Edge */
+          'scrollbar-width': 'none', /* for Firefox */
+        },
+      };
+
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
   ],
-}
+};
+
+

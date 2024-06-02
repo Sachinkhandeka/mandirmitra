@@ -105,8 +105,10 @@ export default function DashDonations() {
         {/* Drawer toggler */}
         {
             (currUser && currUser.isAdmin || 
-                (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
-                    <div className="mb-3 flex flex-row-reverse sticky right-0">
+                (currUser.roles && currUser.roles.some(role=> 
+                    role.permissions.some(p=> 
+                        p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete"))))) && (
+                    <div className="mb-3 flex flex-row-reverse sticky left-0">
                         <Tooltip content={`${filterCount} filters applied`}>
                             <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
                                 <IoFilterCircleOutline className="mr-2 h-5 w-5" />
@@ -134,7 +136,7 @@ export default function DashDonations() {
             (currUser && currUser.isAdmin || 
                (currUser.roles && currUser.roles.some(role=> 
                 role.permissions.some(p=> p.actions.includes("read"))))) && (
-                    <div className="flex overflow-x-auto sm:justify-center mb-5">
+                    <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
                         <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
                     </div>
         ) }
@@ -253,7 +255,7 @@ export default function DashDonations() {
             />
         ) }
         { totalDonations && totalDonations > 20 && (
-            <div className="flex overflow-x-auto sm:justify-center mt-5">
+            <div className="flex overflow-x-auto sm:justify-center mt-5  sticky left-0">
                 <Pagination currentPage={currentPage} totalPages={Math.ceil(totalDonations / 20)} onPageChange={onPageChange} showIcons />
             </div>
         ) }

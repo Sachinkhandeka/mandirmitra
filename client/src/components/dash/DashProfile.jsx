@@ -120,7 +120,7 @@ export default function DashProfile() {
         }
     },[imageFile]);
     return (
-        <div className="w-full min-w-[375px]" >
+        <div className="w-full" >
             { currUser && (
                 <div className="w-full" >
                     { uploadError && (
@@ -225,7 +225,7 @@ export default function DashProfile() {
                         <UserRoles />  
                      ) }
                     {currUser.isAdmin && (
-                        <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-10">
+                        <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-2 md:p-10">
                             <div className="flex flex-col md:flex-row gap-5 w-full">
                                 <CreateUser
                                     roleUpdated={roleUpdated} 

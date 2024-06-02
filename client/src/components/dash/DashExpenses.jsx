@@ -85,20 +85,11 @@ export default function DashExpenses() {
 
     return (
         <>
-            {/* pagination */}
-            { totalExpenses && totalExpenses > 20 &&
-                (currUser && currUser.isAdmin || 
-                   (currUser.roles && currUser.roles.some(role=> 
-                    role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="flex overflow-x-auto sm:justify-center mb-5">
-                            <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
-                        </div>
-            ) }
             {/* Drawer toggler */}
             {
                 (currUser && currUser.isAdmin || 
                     (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="mb-3 flex flex-row-reverse sticky right-0 my-4 z-20">
+                        <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20">
                             <Tooltip content={`${filterCount} filters applied`}>
                                 <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
                                     <IoFilterCircleOutline className="mr-2 h-5 w-5" />
@@ -120,11 +111,21 @@ export default function DashExpenses() {
                         setFilterCount={setFilterCount}
                     />
             ) }
-
+            {/* pagination */}
+            { totalExpenses && totalExpenses > 20 &&
+                (currUser && currUser.isAdmin || 
+                   (currUser.roles && currUser.roles.some(role=> 
+                    role.permissions.some(p=> p.actions.includes("read"))))) && (
+                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
+                            <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
+                        </div>
+            ) }
             {expenses && expenses.length > 0 && (
                 // Render the table if user is an admin or has permission to read expenses
                 (currUser && currUser.isAdmin) ||
-                (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read"))))
+                (currUser.roles && currUser.roles.some(role => 
+                    role.permissions.some(p => 
+                        p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete"))))
             ) && (
                 <Table striped>
                     <Table.Head>
@@ -195,7 +196,7 @@ export default function DashExpenses() {
                 (currUser && currUser.isAdmin || 
                    (currUser.roles && currUser.roles.some(role=> 
                     role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="flex overflow-x-auto sm:justify-center mb-5">
+                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
                             <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
                         </div>
             ) }

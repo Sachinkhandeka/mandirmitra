@@ -10,22 +10,22 @@ module.exports.save = async (req, res, next) => {
 
     // Check if templeId and eventId are valid MongoDB ObjectIds
     if (!mongoose.Types.ObjectId.isValid(templeId)) {
-        throw new ExpressError('Invalid Temple ID', 400);
+        throw new ExpressError(400, 'Invalid Temple ID');
     }
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-        throw new ExpressError('Invalid Event ID', 400);
+        throw new ExpressError(400, 'Invalid Event ID');
     }
 
     // Check if the temple exists
     const temple = await Temple.findById(templeId);
     if (!temple) {
-        throw new ExpressError('Temple not found', 404);
+        throw new ExpressError(404, 'Temple not found');
     }
 
     // Check if the event exists
     const event = await Event.findById(eventId);
     if (!event) {
-        throw new ExpressError('Event not found', 404);
+        throw new ExpressError(404, 'Event not found' );
     }
 
     // Check if the invitation already exists for the donor and event
@@ -49,4 +49,66 @@ module.exports.save = async (req, res, next) => {
     await newInvitation.save();
 
     res.status(201).json({ message: 'Invitation saved successfully.' });
+};
+
+module.exports.getInvitations = async(req ,res)=> {
+    const { templeId, eventId } = req.params;
+    const { searchTerm } = req.query;
+
+    // Check if templeId and eventId are valid MongoDB ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(templeId)) {
+        throw new ExpressError(400, 'Invalid Temple ID');
+    }
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        throw new ExpressError(400, 'Invalid Event ID');
+    }
+
+    // Check if the temple exists
+    const temple = await Temple.findById(templeId);
+    if (!temple) {
+        throw new ExpressError(404, 'Temple not found');
+    }
+
+    // Check if the event exists
+    const event = await Event.findById(eventId);
+    if (!event) {
+        throw new ExpressError(404, 'Event not found');
+    }
+
+    // Build the query object
+    const query = { temple: templeId, event: eventId };
+
+    // Add searchTerm filtering
+    if (searchTerm) {
+        query.$or = [
+            { passCode: { $regex: searchTerm, $options: 'i' } },
+            { donorName: { $regex: searchTerm, $options: 'i' } }
+        ];
+    }
+
+    // Get invitations
+    const guests = await Invitation.find(query).populate('event');
+
+    if(!guests) {
+        throw new ExpressError(400, "Guests not found.");
+    }
+
+    res.status(200).json({ guests });
+}
+
+module.exports.editInvitation = async (req, res) => {
+    const { templeId, eventId } = req.params;
+    const { guestId, attended } = req.body;
+
+    const invitation = await Invitation.findOneAndUpdate(
+        { _id: guestId, temple: templeId, event: eventId },
+        { attended },
+        { new: true }
+    );
+
+    if (!invitation) {
+        throw new ExpressError(404 ,"Invitation not found");
+    }
+
+    res.status(200).json({ message: "Invitation updated successfully", invitation });
 };
