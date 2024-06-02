@@ -2,6 +2,7 @@ import { Sidebar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { SiEventbrite } from "react-icons/si";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,6 +72,14 @@ export default function DashSidebar() {
                                             icon={FaMoneyBillTrendUp}
                                             as={"div"} 
                                         >Expenses</Sidebar.Item>
+                                    </Link>
+                                    <Link to={"/?tab=events"} >
+                                        <Sidebar.Item
+                                            active={tab === "events"}
+                                            className="mt-6 cursor-pointer"
+                                            icon={SiEventbrite}
+                                            as={"div"} 
+                                        >Events</Sidebar.Item>
                                     </Link>
                                 </>
                             )                

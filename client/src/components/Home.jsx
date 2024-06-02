@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Avatar } from "flowbite-react";
-import { IoIosArrowUp, IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
 import { FaRupeeSign } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
@@ -12,7 +12,6 @@ import "../App.css";
 import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
 import PieChart from "./PieChart";
-import EventCard from "./EventCard";
 
 export default function Home() {
     const {currUser} = useSelector(state=> state.user);
@@ -32,18 +31,6 @@ export default function Home() {
     const [income, setIncome] = useState(0);
     const [expense, setExpense] = useState(0);
     const [balance, setBalance] = useState(0);
-    const [events, setEvents] = useState([]);
-    const [ isEventUpdated, setIsEventUpdated ] = useState(false);
-
-    const scrollRef = useRef(null);
-
-    const scrollLeft = () => {
-        scrollRef.current.scrollBy({ left: -400, behavior: 'smooth' });
-    };
-
-    const scrollRight = () => {
-        scrollRef.current.scrollBy({ left: 400, behavior: 'smooth' });
-    };
 
     //function to get  templeData
     const getTempleData = async()=> {
@@ -127,35 +114,8 @@ export default function Home() {
         // Update state for balance 
         setBalance(netProfit);
     }, [income, expense]);
-
-    //get events
-    const getEvents = async()=> {
-        try {
-            const response = await fetch(`/api/event/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if(!response.ok) {
-                return console.log(data.message);
-            }
-
-            setEvents(data.events);
-        }catch(err) {
-            console.log(err.message);
-        }
-    }
-
-    useEffect(()=>{
-        getEvents();
-    },[currUser]);
-
-    useEffect(()=>{
-        if(isEventUpdated) {
-            getEvents();
-            setIsEventUpdated(false);
-        }
-    },[isEventUpdated]);
     return (
-        <div className="w-full min-w-[375px]" >  
+        <div className="w-full" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
                 <h1 
                     className="absolute bottom-0 right-[32px] px-4 py-2 rounded-full 
@@ -278,39 +238,6 @@ export default function Home() {
                     />
                 </div>
             </div>
-            { events && events.length > 0 && (
-            <div>
-                <h1 className="my-4 text-2xl font-serif font-bold uppercase">Events</h1>
-                <div className="relative">
-                    <IoIosArrowBack
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
-                        size={36}
-                        onClick={scrollLeft}
-                    />
-                    <div
-                        ref={scrollRef}
-                        className="flex overflow-x-scroll space-x-4"
-                    >
-                        {events && events.map(event => (
-                            <EventCard
-                                key={event._id}
-                                id={event._id}
-                                name={event.name}
-                                date={event.date}
-                                location={event.location}
-                                status={event.status}
-                                setIsEventUpdated={setIsEventUpdated}
-                            />
-                        ))}
-                    </div>
-                    <IoIosArrowForward
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
-                        size={36}
-                        onClick={scrollRight}
-                    />
-                </div>
-            </div>
-            ) }
         </div>
     );
 }

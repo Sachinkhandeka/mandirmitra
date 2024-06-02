@@ -88,58 +88,56 @@ const styles = StyleSheet.create({
 export default function Invitation({ name, location, date, donor, temple, passCode }) {
     return (
         <Document>
-            <Page size="A4" style={styles.container}>
-                {/* Passcode Section */}
-                <View style={styles.passcode}>
-                    <Text>{passCode ? passCode : "passcode"}</Text>
+        <Page size="A4" style={styles.container}>
+            <View style={styles.passcode}>
+                <Text>{passCode ? passCode : "passcode"}</Text>
+            </View>
+            <View>
+                <View style={styles.headingContainer}>
+                    <Text style={styles.heading}>{ name }</Text>
+                    <Text style={styles.inviteQuote}>
+                        "Let’s gather at &nbsp;
+                        <Text style={styles.highlight}>{ temple ? temple.name : '____Temple_Name___' }</Text> 
+                        &nbsp;to celebrate this sacred event. 
+                        Your presence will enrich our festivities."
+                    </Text>
                 </View>
-                {/* Invitation Content */}
+            </View>
+            <View style={styles.inviteBody}>
+                <View style={styles.horizontalLine} />
+                <View style={styles.greet}>
+                    <Text style={styles.highlight}>Dear '{ donor }',</Text>
+                </View>
                 <View>
-                    <View style={styles.headingContainer}>
-                        <Text style={styles.heading}>{ name }</Text>
-                        <Text style={styles.inviteQuote}>
-                            "Heartfelt welcome to all devotees on this auspicious occasion 
-                            at <Text style={styles.highlight}>{ temple ? temple.name : '____Temple_Name___' }</Text>. 
-                            Your presence will make our event even more sacred and joyous. 
-                            Please join us in this religious celebration and make it a success."
-                        </Text>
-                    </View>
+                    <Text>
+                        We warmly invite you to the event &nbsp; 
+                        <Text style={styles.highlight}> 
+                            { name }
+                        </Text> at &nbsp; 
+                        <Text style={styles.highlight}>{ temple ? temple.name : '___Temple_Name' }</Text>. 
+                        Join us on &nbsp; 
+                        <Text style={styles.highlight}>
+                            { date ? new Date(date).toLocaleDateString('en-US', {
+                                month: 'long',
+                                day: '2-digit',
+                                year: 'numeric',
+                            }) : 'MM/DD/YY' }
+                        </Text>, at &nbsp;<Text style={styles.highlight}>{ location }</Text>,
+                        {"\n\n"}
+                        Your participation will be deeply appreciated.
+                    </Text>
                 </View>
-                <View style={styles.inviteBody}>
-                    <View style={styles.horizontalLine} />
-                    <View style={styles.greet}>
-                        <Text style={styles.highlight}>Dear '{ donor }',</Text>
-                    </View>
-                    <View>
-                        <Text>
-                            You are cordially invited to the special event &nbsp; 
-                            <Text style={styles.highlight}> 
-                                { name }
-                            </Text> at &nbsp; 
-                            <Text style={styles.highlight}>{ temple ? temple.name : '___Temple_Name' }</Text>. 
-                            This event will be held on &nbsp; 
-                            <Text style={styles.highlight}>
-                                { date ? new Date(date).toLocaleDateString('en-US', {
-                                    month: 'long',
-                                    day: '2-digit',
-                                    year: 'numeric',
-                                }) : 'MM/DD/YY' }
-                            </Text>, at &nbsp;<Text style={styles.highlight}>{ location }</Text>,
-                            {"\n\n"}
-                            Your presence will make our religious celebration even more sacred and joyous.
-                        </Text>
-                    </View>
-                    <View style={styles.thnksNote}>
-                        <Text>Thank you!</Text>
-                    </View>
-                    <View style={styles.horizontalLine} />
+                <View style={styles.thnksNote}>
+                    <Text>Thank you!</Text>
                 </View>
-                <View style={styles.outerCircle}>
-                    <View style={styles.innerCircle}>
-                        <Text style={styles.templeNameText}>{temple ? temple.name : '__Temple Name__'}</Text>
-                    </View>
+                <View style={styles.horizontalLine} />
+            </View>
+            <View style={styles.outerCircle}>
+                <View style={styles.innerCircle}>
+                    <Text style={styles.templeNameText}>{temple ? temple.name : '__Temple Name__'}</Text>
                 </View>
-            </Page>
-        </Document>
+            </View>
+        </Page>
+    </Document>
     );
 }

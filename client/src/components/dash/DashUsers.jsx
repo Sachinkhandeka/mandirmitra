@@ -39,7 +39,6 @@ export  default  function DashUsers() {
                 return setError(data.message);
             }
             setUsers(data.allUser);
-            setSuccess(`Welcome ${currUser.username} we have fetched users data for you🤗🫡.`);
         }catch(err) {
             setError(err.message);
         }
@@ -62,7 +61,7 @@ export  default  function DashUsers() {
     return (
         <>
             { success && (
-                <Toast className="mb-3" >
+                <Toast className="mb-3 min-w-36" >
                     <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
                         <HiCheck className="h-5 w-5" />
                     </div>

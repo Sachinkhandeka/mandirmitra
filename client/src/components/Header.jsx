@@ -1,6 +1,5 @@
 import { Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { GiByzantinTemple } from "react-icons/gi";
-import { BsSearchHeart } from "react-icons/bs";
+import { FaSearch } from "react-icons/fa";
 import { RxMoon,  RxSun } from "react-icons/rx";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
@@ -12,6 +11,7 @@ import brand from "../assets/brand.jpg";
 export default function Header() {
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
+    const { searchTerm } = useSelector(state => state.searchTerm);
 
     const handleSearchInputChange = (e) => {
         const searchTermValue = e.target.value ; 
@@ -29,9 +29,10 @@ export default function Header() {
                     <TextInput 
                         type="text"
                         placeholder="Search."
+                        value={searchTerm}
                         onChange={handleSearchInputChange}
+                        rightIcon={FaSearch}
                     />
-                    <Button onClick={handleSearchInputChange} > <BsSearchHeart size={20} /> </Button>
                 </div>
             </form>
             <div>

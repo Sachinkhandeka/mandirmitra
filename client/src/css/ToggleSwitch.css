@@ -1,0 +1,43 @@
+.toggle-switch {
+    width: 50px;
+    height: 25px;
+    border-radius: 15px;
+    background-color: #ccc;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-switch.checked {
+    background-color: #4caf50;
+}
+
+.toggle-switch-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 5px;
+    transition: transform 1s;
+}
+
+.toggle-switch.checked .toggle-switch-inner {
+    transform: translateX(25px);
+}
+
+.toggle-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.checked-icon {
+    color: white;
+}
+
+.unchecked-icon {
+    color: white;
+}

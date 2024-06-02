@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { Button, Label, Select, Spinner, TextInput, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { FcDonate } from "react-icons/fc";
@@ -9,17 +9,17 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 
-export default function DonationForm({locationAdded}) {
-    const [ selectedCountry , setSelectedCountry ] = useState({});
-    const [ selectedState , setSelectedState ] = useState({});
-    const [ selectedDistrict , setSelectedDistrict ] = useState({});
-    const [ selectedTehsil , setSelectedTehsil ] = useState({});
-    const [ selectedVillage , setSelectedVillage ] =  useState({});
-    const { currUser } = useSelector(state => state.user);
-    const [ error , setError ] =  useState(null);
-    const [ success , setSuccess ] =  useState(null);
-    const [ loading , setLoading ] = useState(false);
-    const [ donation , setDonation ] = useState({
+export default function DonationForm({ locationAdded }) {
+    const [selectedCountry, setSelectedCountry] = useState({});
+    const [selectedState, setSelectedState] = useState({});
+    const [selectedDistrict, setSelectedDistrict] = useState({});
+    const [selectedTehsil, setSelectedTehsil] = useState({});
+    const [selectedVillage, setSelectedVillage] = useState({});
+    const { currUser } = useSelector((state) => state.user);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [donation, setDonation] = useState({
         donorName: "",
         sevaName: "",
         country: "",
@@ -29,87 +29,74 @@ export default function DonationForm({locationAdded}) {
         village: "",
         contactInfo: "",
         paymentMethod: "cash",
-        donationAmount: ""
+        donationAmount: "",
     });
-    const [ receiptData , setReceiptData ] = useState({});
+    const [receiptData, setReceiptData] = useState({});
 
-    const handleChange = (e)=> {
-        const { value, id } = e.target ;
+    const handleChange = (e) => {
+        const { value, id } = e.target;
         const selectedOption = e.target.options ? e.target.options[e.target.selectedIndex] : null;
 
-        //country
-        if(id === "country") {
-            setSelectedCountry(value);
-            setDonation({
-                ...donation,
-                [id] : selectedOption.text,
-            });
+        if (selectedOption) {
+            if (id === "country") {
+                setSelectedCountry(value);
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: selectedOption.text,
+                }));
+            } else if (id === "state") {
+                setSelectedState(value);
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: selectedOption.text,
+                }));
+            } else if (id === "district") {
+                setSelectedDistrict(value);
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: selectedOption.text,
+                }));
+            } else if (id === "tehsil") {
+                setSelectedTehsil(value);
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: selectedOption.text,
+                }));
+            } else if (id === "village") {
+                setSelectedVillage(value);
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: selectedOption.text,
+                }));
+            } else {
+                setDonation((prevDonation) => ({
+                    ...prevDonation,
+                    [id]: value,
+                }));
+            }
+        } else {
+            setDonation((prevDonation) => ({
+                ...prevDonation,
+                [id]: value,
+            }));
         }
+    };
 
-        //state
-        if(id === "state") {
-            setSelectedState(value);
-            setDonation({
-                ...donation,
-                [id] : selectedOption.text,
-            })
-        }
-
-        //district
-        if(id === "district") {
-            setSelectedDistrict(value);
-            setDonation({
-                ...donation,
-                [id] : selectedOption.text,
-            });
-        }
-
-        //tehsil
-        if(id === "tehsil") {
-            setSelectedTehsil(value);
-            setDonation({
-                ...donation,
-                [id] : selectedOption.text,
-            });
-        }
-
-        //village
-        if(id === "village") {
-            setSelectedVillage(value);
-            setDonation({
-                ...donation,
-                [id] : selectedOption.text,
-            });
-        }
-
-        // For other inputs
-        if(!selectedOption) {
-            setDonation({
-                ...donation,
-                [id]: value
-            });
-        }
-    }
-
-    //handle Donation Creation
-    const handleSubmit = async(e)=> {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
+        try {
             setLoading(true);
             setError(null);
             setSuccess(null);
 
-            const response = await fetch(
-                `/api/donation/create/${currUser.templeId}`,
-                {
-                    method : "POST",
-                    headers : { "Content-Type" : "application/json" },
-                    body : JSON.stringify(donation),
-                }
-            );
+            const response = await fetch(`/api/donation/create/${currUser.templeId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(donation),
+            });
             const data = await response.json();
 
-            if(!response.ok) {
+            if (!response.ok) {
                 setLoading(false);
                 return setError(data.message);
             }
@@ -127,25 +114,26 @@ export default function DonationForm({locationAdded}) {
                 village: "",
                 contactInfo: "",
                 paymentMethod: "cash",
-                donationAmount: ""
+                donationAmount: "",
             });
             setSelectedCountry({});
             setSelectedState({});
             setSelectedDistrict({});
             setSelectedTehsil({});
             setSelectedVillage({});
-        }catch(err) {
+        } catch (err) {
             setError(err.message);
         }
-    }
+    };
 
-    return(
-        <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative" >
-            <div 
+    return (
+        <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
+            <div
                 className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 
                 justify-around items-center bg-gradient-to-bl from-blue-600 to-blue-300 
                 dark:bg-gradient-to-bl dark:from-gray-600 dark:to-gray-800 rounded-tr-md 
-                md:rounded-tr-none rounded-tl-md md:rounded-bl-md" >
+                md:rounded-tr-none rounded-tl-md md:rounded-bl-md"
+            >
                 <div>
                     <FcDonate size={30} />
                 </div>
@@ -155,58 +143,40 @@ export default function DonationForm({locationAdded}) {
                 <div>
                     <FcDonate size={30} />
                 </div>
-            </div>  
-            <div className="flex-1 p-10" >
-                <h2 className="text-blue-400 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl" >Add Donation</h2>
-                <form onSubmit={handleSubmit} >
-                    <div className="flex flex-col md:flex-row flex-wrap gap-4" >  
-                        <div className="flex-1 flex flex-col gap-4" >
-                            <Label htmlFor="donorName">Name of Donar</Label>
-                            <TextInput 
-                                id="donorName" 
-                                name="donorName" 
-                                placeholder="@firstName @lastName" 
-                                onChange={handleChange} 
-                                value={donation.donorName} 
-                            />
+            </div>
+            <div className="flex-1 p-4 md:p-10">
+                <h2 className="text-blue-400 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl">Add Donation</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="flex flex-col md:flex-row flex-wrap gap-4">
+                        <div className="flex-1 flex flex-col gap-4">
+                            <Label htmlFor="donorName">Name of Donor</Label>
+                            <TextInput id="donorName" name="donorName" placeholder="@firstName @lastName" onChange={handleChange} value={donation.donorName} />
                         </div>
-                        <div className="flex-1 flex flex-col gap-4" >
+                        <div className="flex-1 flex flex-col gap-4">
                             <Label htmlFor="sevaName">Name of Seva</Label>
-                            <TextInput 
-                                id="sevaName" 
-                                name="sevaName" 
-                                placeholder="Dhaja no chadavo" 
-                                onChange={handleChange}  
-                                value={donation.sevaName}
-                            />
+                            <TextInput id="sevaName" name="sevaName" placeholder="Dhaja no chadavo" onChange={handleChange} value={donation.sevaName} />
                         </div>
                     </div>
-                    <h2 className="my-3 font-bold" >Address</h2>
-                    <AddressForm 
+                    <h2 className="my-3 font-bold">Address</h2>
+                    <AddressForm
                         selectedCountry={selectedCountry}
                         selectedState={selectedState}
-                        selectedDistrict={selectedDistrict} 
+                        selectedDistrict={selectedDistrict}
                         selectedTehsil={selectedTehsil}
                         selectedVillage={selectedVillage}
                         currUser={currUser}
                         locationAdded={locationAdded}
                         handleChange={handleChange}
                     />
-                    <div className="flex flex-col md:flex-row flex-wrap gap-4 my-8" >  
-                        <div className="flex-1 flex flex-col gap-4"  >
-                            <Label htmlFor="contactInfo" >Add Contact Info</Label>
-                            <TextInput 
-                                id="contactInfo" 
-                                name="contactInfo" 
-                                placeholder="Mo. 7834XXXXXX" 
-                                onChange={handleChange} 
-                                value={donation.contactInfo}
-                            />
+                    <div className="flex flex-col md:flex-row flex-wrap gap-4 my-8">
+                        <div className="flex-1 flex flex-col gap-4">
+                            <Label htmlFor="contactInfo">Add Contact Info</Label>
+                            <TextInput id="contactInfo" name="contactInfo" placeholder="Mo. 7834XXXXXX" onChange={handleChange} value={donation.contactInfo} />
                         </div>
                     </div>
-                    <div className="flex flex-col md:flex-row flex-wrap gap-4" >  
-                        <div className="flex-1 flex flex-col gap-4" >
-                            <Label htmlFor="paymentMethod" >Payment Method</Label>
+                    <div className="flex flex-col md:flex-row flex-wrap gap-4">
+                        <div className="flex-1 flex flex-col gap-4">
+                            <Label htmlFor="paymentMethod">Payment Method</Label>
                             <Select id="paymentMethod" onChange={handleChange} value={donation.paymentMethod}>
                                 <option value="select" disabled>Select</option>
                                 <option value="cash">Cash</option>
@@ -214,28 +184,20 @@ export default function DonationForm({locationAdded}) {
                                 <option value="upi">Upi</option>
                             </Select>
                         </div>
-                        <div className="flex-1 flex flex-col gap-4" >
-                            <Label htmlFor="donationAmount" >Donation Amount</Label>
-                            <TextInput 
-                                type="number" 
-                                id="donationAmount" 
-                                name="donationAmount" 
-                                placeholder="Rs. 2300" 
-                                onChange={handleChange} 
-                                value={donation.donationAmount}
-                            />
+                        <div className="flex-1 flex flex-col gap-4">
+                            <Label htmlFor="donationAmount">Donation Amount</Label>
+                            <TextInput type="number" id="donationAmount" name="donationAmount" placeholder="Rs. 2300" onChange={handleChange} value={donation.donationAmount} />
                         </div>
                     </div>
-                    <div className="flex flex-row-reverse my-4 gap-3" >
-                        <Button gradientMonochrome={"cyan"} pill disabled={loading} onClick={handleSubmit} >
-                            {loading ? <Spinner color="info" />:'Add Donation'}
+                    <div className="flex flex-row-reverse my-4 gap-3">
+                        <Button gradientMonochrome={"cyan"} pill disabled={loading} onClick={handleSubmit}>
+                            {loading ? <Spinner color="info" /> : 'Add Donation'}
                         </Button>
                         {receiptData && Object.keys(receiptData).length > 0 && (
                             <PDFDownloadLink
-                                document={<Receipt receiptData={receiptData} />} // Passing donationData as props
+                                document={<Receipt receiptData={receiptData} />}
                                 fileName='Donation.pdf'
                             >
-                                {/* Render a button that shows "Receipt icon" */}
                                 {({ loading }) => (
                                     <Button color="failure" pill disabled={loading}>
                                         {loading ? 'Loading document...' : 'Receipt'}
@@ -245,26 +207,26 @@ export default function DonationForm({locationAdded}) {
                             </PDFDownloadLink>
                         )}
                     </div>
-                </form>   
+                </form>
             </div>
-            { success && (
-                <Toast className="absolute bottom-[-10px] md:bottom-4 left-4 md:left-48" >
+            {success && (
+                <Toast className="fixed bottom-4 right-4 z-50">
                     <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
                         <HiCheck className="h-5 w-5" />
                     </div>
-                    <div className="ml-3 text-sm font-normal">{ success }</div>
+                    <div className="ml-3 text-sm font-normal">{success}</div>
                     <Toast.Toggle />
-                </Toast> 
-            ) }
-            { error && (
-                <Toast className="absolute bottom-[-10px] md:bottom-4 left-4 md:left-48" >
+                </Toast>
+            )}
+            {error && (
+                <Toast className="fixed bottom-4 right-4 z-40">
                     <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
                         <HiX className="h-5 w-5" />
                     </div>
-                    <div className="ml-3 text-sm font-normal">{ error }</div>
+                    <div className="ml-3 text-sm font-normal">{error}</div>
                     <Toast.Toggle />
-                </Toast> 
-            ) }
+                </Toast>
+            )}
         </div>
     );
 }

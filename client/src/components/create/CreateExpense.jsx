@@ -56,11 +56,11 @@ export default function CreateExpense() {
         }
     };
     return (
-        <div className="w-full border rounded-md p-4 my-4 flex gap-4">
+        <div className="w-full border rounded-md p-2 md:p-4 my-4 flex gap-4">
             <div className="w-10 bg-yellow-300 dark:bg-gray-700 hidden md:block"></div>
-            <div className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 mx-4 p-4 flex-1">
-                { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4">{error}</Alert> ) }
-                { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="my-4">{success}</Alert> ) }
+            <div className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 mx-1 md:mx-4 p-4 flex-1">
+                { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4 fixed bottom-4 right-4 z-40">{error}</Alert> ) }
+                { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="my-4 fixed bottom-4 right-4 z-40">{success}</Alert> ) }
                 <h1 className="text-2xl font-serif uppercase font-bold text-indigo-800 dark:text-white">Add Expense</h1>
                 <form className="my-3" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-4">

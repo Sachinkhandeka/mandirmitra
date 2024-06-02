@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { SiEventbrite } from "react-icons/si";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +51,9 @@ export default function DashSidebarIcon() {
                     </Link>
                     <Link to={"/?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                         <FaMoneyBillTrendUp />
+                    </Link>
+                    <Link to={"/?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <SiEventbrite />
                     </Link>
                 </>
               )
