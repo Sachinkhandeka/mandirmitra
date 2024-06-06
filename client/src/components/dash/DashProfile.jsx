@@ -89,7 +89,7 @@ export default function DashProfile() {
         setUploadError(null);
         setUploadSuccess(null);
         const storage = getStorage(app);
-        const fileName = new Date().getTime() + imageFile.name ; 
+        const fileName = `${ currUser.isAdmin ? 'adminProfiles': 'userProfiles'}/${new Date().getTime()}_${imageFile.name}` ; 
         const storageRef = ref(storage , fileName);
 
         const uploadTask = uploadBytesResumable( storageRef, imageFile );

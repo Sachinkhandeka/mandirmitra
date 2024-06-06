@@ -4,6 +4,7 @@ import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
 import { FaRupeeSign } from "react-icons/fa";
+import { CiEdit } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiCash } from "react-icons/gi";
@@ -12,6 +13,7 @@ import "../App.css";
 import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
 import PieChart from "./PieChart";
+import EditTemple from "./edit/EditTemple";
 
 export default function Home() {
     const {currUser} = useSelector(state=> state.user);
@@ -31,6 +33,8 @@ export default function Home() {
     const [income, setIncome] = useState(0);
     const [expense, setExpense] = useState(0);
     const [balance, setBalance] = useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const [isTemplUpdted, setIsTempleUpdted] = useState(false);
 
     //function to get  templeData
     const getTempleData = async()=> {
@@ -56,6 +60,13 @@ export default function Home() {
     useEffect(()=>{
         getTempleData();
     },[currUser]);
+
+    useEffect(()=>{
+        if(isTemplUpdted) {
+            getTempleData();
+            setIsTempleUpdted(false);
+        }
+    },[isTemplUpdted]);
 
     //get analytics data
     const getAnalyticsData = async()=> {
@@ -135,7 +146,7 @@ export default function Home() {
                 <h1 
                     className="absolute bottom-0 right-[82px] px-4 py-2 rounded-full 
                   bg-amber-500 font-mono font-bold text-xl text-center animated-text" >T</h1>
-                <div className="absolute bottom-[-15px]  left-3 bg-white rounded-full">
+                <div className={`absolute bottom-[-15px]  left-3 bg-white rounded-full`}>
                     {temple && Object.keys(temple).length > 0 ? (
                         <Avatar img={temple.image} rounded bordered color="light" size="lg" />
                     ) : (
@@ -144,8 +155,13 @@ export default function Home() {
                 </div>
             </div>
             <div className="mt-8 ml-4" >
-                <h3 className="text-xl font-serif uppercase font-semibold" >{ temple.name }</h3>
-                <p className="text-xs font-light" >{ temple.location }</p>
+                <div>
+                    <h3 className="text-xl font-serif uppercase font-semibold" >{ temple.name }</h3>
+                    <p className="text-xs font-light" >{ temple.location }</p>
+                </div>
+                <div className="inline-block mt-2 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 p-2" >
+                    <CiEdit size={20} onClick={()=> setShowModal(true)}/>
+                </div>
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-4 my-8 w-full" >
                 <CardComponent 
@@ -238,6 +254,12 @@ export default function Home() {
                     />
                 </div>
             </div>
+            <EditTemple 
+               showModal={showModal}
+               setShowModal={setShowModal}
+               temple={temple}
+               setIsTempleUpdted={setIsTempleUpdted}
+            />
         </div>
     );
 }

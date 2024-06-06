@@ -4,6 +4,7 @@ const temple = require("../controllers/templeController");
 const wrapAsync = require("../utils/wrapAsync");
 const { validateTempleSchema } = require("../middleware");
 const { verifyToken } = require("../utils/verifyUser");
+const { verifyAdmin } = require("../utils/verifyAdmin");
 
 //create temple
 router.post(
@@ -17,6 +18,13 @@ router.get(
     "/get/:templeId",
     verifyToken,
     wrapAsync(temple.getController),
+);
+
+//edit temple 
+router.put(
+    "/edit/:templeId",
+    verifyAdmin,
+    wrapAsync(temple.editController),
 );
 
 //analytics route

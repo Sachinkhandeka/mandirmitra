@@ -44,6 +44,41 @@ module.exports.getController = async(req , res)=> {
 
 }
 
+//edit controller 
+module.exports.editController = async(req ,res)=> {
+    const { templeData } = req.body;
+    const { templeId } = req.params;
+    
+    if (!templeId) {
+        throw new ExpressError(400, "Temple id required.");
+    }
+    
+    const updateObject = {};
+    if (templeData.name) updateObject.name = templeData.name;
+    if (templeData.location) updateObject.location = templeData.location;
+    if (templeData.image) updateObject.image = templeData.image;
+    if(templeData.foundedYear) updateObject.foundedYear = templeData.foundedYear;
+    if(templeData.description) updateObject.description = templeData.description;
+    if (templeData.godsAndGoddesses) updateObject.godsAndGoddesses = templeData.godsAndGoddesses;
+
+
+    const updatedTemple = await Temple.findByIdAndUpdate(
+        templeId,
+        updateObject,
+        { new: true } 
+    );
+
+    if (!updatedTemple) {
+        throw new ExpressError(404, "Temple not found.");
+    }
+
+    res.status(200).json({
+        message: "Temple updated successfully",
+        temple: updatedTemple
+    });
+
+}
+
 module.exports.analyticalController = async (req, res) => {
     try {
         const { templeId } = req.params;
