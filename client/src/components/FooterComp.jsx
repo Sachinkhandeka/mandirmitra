@@ -8,13 +8,12 @@ export default function FooterComp() {
             <Footer container className="z-50 sticky left-0 mt-6" >
                 <div className="w-full">
                     <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-                        <div>
+                        <div className=" object-cover rounded-md" >
                             <Footer.Brand
                                 href="/"
                                 src={brand}
                                 alt="MandirMitra Logo"
                                 name="MandirMitra"
-                                className="w-20 h-20 rounded-full"
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">

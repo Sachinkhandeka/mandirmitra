@@ -22,7 +22,7 @@ export default function Header() {
     return(
         <Navbar className="border border-b-2 sticky top-0 z-20" >
             <Link to={"/"} className="cursor-pointer">
-                <img src={brand} alt="MandirMitra" className="w-8 h-8 rounded-full object-cover object-center border border-gray-300"/>
+                <img src={brand} alt="MandirMitra" className="w-8 h-8 rounded-md object-cover object-center border border-gray-300"/>
             </Link>
             <form>
                 <div className="flex items-center gap-2" >
