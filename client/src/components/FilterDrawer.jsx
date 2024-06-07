@@ -1,5 +1,5 @@
 import { Modal, Button, FloatingLabel, Select } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { BsCashCoin, BsBank } from "react-icons/bs";
 import { MdMobileFriendly } from "react-icons/md";
 import { GoDash } from "react-icons/go";
@@ -19,6 +19,25 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
     const [ minAmount, setMinAmount ] = useState('');
     const [ maxAmount, setMaxAmount ] = useState('');
     const [ locationParams, setLocationParams ] = useState('');
+    const [ seva, setSeva ] = useState([]);
+
+    const getSeva = useCallback(async () => {
+        try {
+            const response = await fetch(`/api/seva/get/${currUser.templeId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                return ;
+            }
+            setSeva(data.seva);
+        } catch (err) {
+            return ;
+        }
+    }, [currUser.templeId]);
+
+    useEffect(() => {
+        getSeva();
+    }, [getSeva]);
 
     //get address data
     const getlocationData = async()=> {
@@ -27,7 +46,6 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
             const data = await response.json();
 
             if(!response.ok) {
-                console.log(data.message);
                 return ; 
             }
             setVillages(data.villages);
@@ -36,7 +54,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
             setStates(data.states);
             setCountries(data.countries);
         } catch(err) {
-            console.log(err.message);
+            return ;
         }
     }
     useEffect(()=> {
@@ -58,6 +76,10 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
             setMaxAmount(amount);
         }
     }
+    // Handle Seva selection
+    const handleSevaChange = (e) => {
+        setLocationParams({ ...locationParams, seva: e.target.value });  
+    };
 
 
     //handle apply filter functionality
@@ -95,6 +117,10 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
         }
         if(locationParams.country) {
             params.set("country", locationParams.country);
+            filterCount++
+        }
+        if(locationParams.seva) {
+            params.set("seva", locationParams.seva);
             filterCount++
         }
         const searchQuery = params.toString();
@@ -147,6 +173,19 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                             </Button>
                         </Button.Group>
                     </div>
+                    <hr className="gray-400 my-3" />
+                    {/* Seva filter section */}
+                    <div className="flex flex-col gap-4">
+                        <h2 className="text-xl font-serif uppercase font-semibold">Seva</h2>
+                        <Select id="seva" defaultValue="" onChange={handleSevaChange}>
+                            <option value="" disabled>Select</option>
+                            {seva.map((sevaItem) => (
+                                <option key={sevaItem._id} value={sevaItem.sevaName}>
+                                    {sevaItem.sevaName}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
                     {/* Address Fields */}
                     <hr className="gray-400 my-3" />
                     <div className="flex flex-col gap-4" >
@@ -193,7 +232,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                                 </Select>
                             </div> 
                             {/* country */}
-                             <div className="flex flex-col gap-3" >
+                            <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >Country</h2>
                                 <Select id="country" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } >
                                     <option value="Select" disabled>Select</option>

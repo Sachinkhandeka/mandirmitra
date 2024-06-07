@@ -109,7 +109,7 @@ export default function DashDonations() {
                     role.permissions.some(p=> 
                         p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete"))))) && (
                     <div className="mb-3 flex flex-row-reverse sticky left-0">
-                        <Tooltip content={`${filterCount} filters applied`}>
+                        <Tooltip content={`${filterCount} filters applied`} placement="left">
                             <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
                                 <IoFilterCircleOutline className="mr-2 h-5 w-5" />
                                 Filters

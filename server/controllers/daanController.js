@@ -41,8 +41,8 @@ module.exports.getDataController = async(req ,res)=> {
     const searchCriteria = {
         temple: templeId,
     };  
-
     // Add optional search criteria if present in query parameters
+    if(req.query.seva) searchCriteria.sevaName = req.query.seva ;
     if (req.query.paymentMethod) searchCriteria.paymentMethod = req.query.paymentMethod;
     if (req.query.village) searchCriteria.village = { $regex: req.query.village, $options: 'i' };
     if (req.query.tehsil) searchCriteria.tehsil = { $regex: req.query.tehsil, $options: 'i' };
