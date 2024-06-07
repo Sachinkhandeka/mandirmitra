@@ -89,11 +89,20 @@ module.exports.getInvitations = async(req ,res)=> {
     // Get invitations
     const guests = await Invitation.find(query).populate('event');
 
+    const guestCount = await Invitation.countDocuments({ temple : templeId, event : eventId, invited : true });
+    const attendedCount = await Invitation.countDocuments({ temple : templeId, event : eventId, attended : true });
+    const notAttendedCount = await Invitation.countDocuments({ temple : templeId, event : eventId, attended : false });
+
     if(!guests) {
         throw new ExpressError(400, "Guests not found.");
     }
 
-    res.status(200).json({ guests });
+    res.status(200).json({ 
+        guests, 
+        guestCount,
+        attendedCount,
+        notAttendedCount,
+    });
 }
 
 module.exports.editInvitation = async (req, res) => {

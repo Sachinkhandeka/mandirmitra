@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
@@ -14,6 +14,8 @@ import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
 import PieChart from "./PieChart";
 import EditTemple from "./edit/EditTemple";
+
+const GodCard = React.lazy(()=> import("./GodCard"));
 
 export default function Home() {
     const {currUser} = useSelector(state=> state.user);
@@ -155,9 +157,20 @@ export default function Home() {
                 </div>
             </div>
             <div className="mt-8 ml-4" >
-                <div>
-                    <h3 className="text-xl font-serif uppercase font-semibold" >{ temple.name }</h3>
-                    <p className="text-xs font-light" >{ temple.location }</p>
+                <div className="font-serif" >
+                    <h3 className="text-xl uppercase font-semibold" >{ temple.name }</h3>
+                    <p className="text-xs font-light mb-2" >{ temple.location }</p>
+                    { temple.foundedYear && (
+                        <span className="text-xs font-bold px-2 py-1 rounded-md bg-gradient-to-tr from-sky-500 to-sky-300" > Founded-In:{ temple.foundedYear }</span>
+                    ) }
+                    { temple.description && (
+                        <div className="mt-2 tracking-wide border-2 rounded-lg py-2 px-4 border-t-orange-500 border-x-orange-400 border-b-orange-300" >
+                            { temple.description }
+                        </div>
+                    ) }
+                        { temple.godsAndGoddesses && temple.godsAndGoddesses.length > 0 && (
+                             <GodCard godsAndGoddesses={temple.godsAndGoddesses} />
+                        ) }
                 </div>
                 <div className="inline-block mt-2 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 p-2" >
                     <CiEdit size={20} onClick={()=> setShowModal(true)}/>

@@ -183,6 +183,7 @@ export default function DashEvents() {
                                                 <ToggleSwitch
                                                     checked={guest.attended}
                                                     onChange={(checked) => handleVerificationToggle(guest._id, checked)}
+                                                    isDisabled={guest.event.status === "completed"}
                                                 />
                                             </Table.Cell>
                                         )}

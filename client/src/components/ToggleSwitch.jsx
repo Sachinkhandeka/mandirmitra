@@ -2,10 +2,12 @@ import { useState } from "react";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 import "../css/ToggleSwitch.css";
 
-export default function ToggleSwitch({ checked, onChange }) {
+export default function ToggleSwitch({ checked, onChange, isDisabled }) {
     const [isChecked, setIsChecked] = useState(checked);
-
     const handleToggle = () => {
+        if (isDisabled) {
+            return;
+        }
         const newChecked = !isChecked;
         setIsChecked(newChecked);
         onChange(newChecked);
