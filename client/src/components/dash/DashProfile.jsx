@@ -18,6 +18,7 @@ import AddTehsilGaam from "../AddTehsilGaam";
 import DonationForm from "../create/DonationForm";
 import CreateExpense from "../create/CreateExpense";
 import Event from "../Event";
+import CreateSeva from "../create/CreateSeva";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -40,6 +41,7 @@ export default function DashProfile() {
         password : "",
     });
     const [ locationAdded , setLocationAdded ] = useState(false);
+    const [sevaUpdated, setSevaUpdated] = useState(false);
     
     //handleChange - formData
     const handleChange = (e)=> {
@@ -246,8 +248,11 @@ export default function DashProfile() {
                         currUser.roles.some(role => role.permissions.some(p => p.actions.includes("create"))))) &&
                          (
                             <>
-                                <AddTehsilGaam setLocationAdded={setLocationAdded} />
-                                <DonationForm locationAdded={locationAdded} />
+                                <div className="w-full flex flex-col md:flex-row flex-wrap gap-4 mt-10" >
+                                    <AddTehsilGaam setLocationAdded={setLocationAdded} />
+                                    <CreateSeva setSevaUpdated={setSevaUpdated} />
+                                </div>
+                                <DonationForm locationAdded={locationAdded} sevaUpdated={sevaUpdated} setSevaUpdated={setSevaUpdated} />
                                 <CreateExpense />
                                 <Event />
                             </>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Button, Label, Select, Spinner, TextInput, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { FcDonate } from "react-icons/fc";
@@ -9,12 +9,13 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 
-export default function DonationForm({ locationAdded }) {
+export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdated }) {
     const [selectedCountry, setSelectedCountry] = useState({});
     const [selectedState, setSelectedState] = useState({});
     const [selectedDistrict, setSelectedDistrict] = useState({});
     const [selectedTehsil, setSelectedTehsil] = useState({});
     const [selectedVillage, setSelectedVillage] = useState({});
+    const [seva, setSeva] = useState([]);
     const { currUser } = useSelector((state) => state.user);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
@@ -33,7 +34,32 @@ export default function DonationForm({ locationAdded }) {
     });
     const [receiptData, setReceiptData] = useState({});
 
-    const handleChange = (e) => {
+    const getSeva = useCallback(async () => {
+        try {
+            const response = await fetch(`/api/seva/get/${currUser.templeId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                return setError(data.message);
+            }
+            setSeva(data.seva);
+        } catch (err) {
+            setError(err.message);
+        }
+    }, [currUser.templeId]);
+
+    useEffect(() => {
+        getSeva();
+    }, [getSeva]);
+
+    useEffect(()=> {
+        if(sevaUpdated) {
+            getSeva();
+            setSevaUpdated(false);
+        }
+    },[sevaUpdated]);
+
+    const handleChange = useCallback((e) => {
         const { value, id } = e.target;
         const selectedOption = e.target.options ? e.target.options[e.target.selectedIndex] : null;
 
@@ -80,9 +106,9 @@ export default function DonationForm({ locationAdded }) {
                 [id]: value,
             }));
         }
-    };
+    }, []);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         try {
             setLoading(true);
@@ -124,7 +150,7 @@ export default function DonationForm({ locationAdded }) {
         } catch (err) {
             setError(err.message);
         }
-    };
+    }, [currUser.templeId, donation]);
 
     return (
         <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
@@ -154,7 +180,14 @@ export default function DonationForm({ locationAdded }) {
                         </div>
                         <div className="flex-1 flex flex-col gap-4">
                             <Label htmlFor="sevaName">Name of Seva</Label>
-                            <TextInput id="sevaName" name="sevaName" placeholder="Dhaja no chadavo" onChange={handleChange} value={donation.sevaName} />
+                            <Select id="sevaName" name="sevaName" onChange={handleChange} value={donation.sevaName}>
+                                <option value="" disabled>Select Seva</option>
+                                {seva.map((item) => (
+                                    <option key={item._id} value={item.sevaName}>
+                                        {item.sevaName}
+                                    </option>
+                                ))}
+                            </Select>
                         </div>
                     </div>
                     <h2 className="my-3 font-bold">Address</h2>
