@@ -164,7 +164,7 @@ export default function Home() {
                         <span className="text-xs font-bold px-2 py-1 rounded-md bg-gradient-to-tr from-sky-500 to-sky-300" > Founded-In:{ temple.foundedYear }</span>
                     ) }
                     { temple.description && (
-                        <div className="mt-2 tracking-wide text-xl font-bold border-2 rounded-lg py-6 px-4 bg-gradient-to-t from-rose-400 to-orange-400 border-none" >
+                        <div className="mt-2 tracking-wide text-sm italic font-bold border-2 rounded-lg py-6 px-4 bg-gradient-to-t from-rose-400 to-orange-400 border-none" >
                             { temple.description }
                         </div>
                     ) }

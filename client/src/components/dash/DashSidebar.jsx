@@ -6,12 +6,19 @@ import { SiEventbrite } from "react-icons/si";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { getQuoteOfTheDay } from "../../quotes";
 
 export default function DashSidebar() {
     const { currUser } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const location = useLocation();
     const [ tab , setTab ] = useState();
+    const [dayQuote, setDayQuote] = useState(null);
+
+    useEffect(() => {
+        const quoteOfTheDay = getQuoteOfTheDay();
+        setDayQuote(quoteOfTheDay);
+    }, []);
 
     useEffect(()=>{
         const urlParams = new URLSearchParams(location.search);
@@ -119,9 +126,11 @@ export default function DashSidebar() {
                     <Sidebar.Item active={tab === 'signout'} icon={FaSignOutAlt} className="cursor-pointer" onClick={handleSignout}>Signout</Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
-            <div className="p-4 bg-gradient-to-tr from-indigo-400 to-purple-500 rounded-md text-center my-2">
+            <div className="p-4 bg-gradient-to-tr text-white from-indigo-400 to-purple-500 rounded-md text-center my-2">
                 <h3 className="text-sm font-semibold mb-2">Quote of the Day</h3>
-                <p className="italic text-xs">"You have the right to perform your duty, but not to the fruits of your actions." - Bhagavat Gita</p>
+                    {dayQuote && (
+                        <p className="italic text-xs">"{dayQuote.quote}"<span>- {dayQuote.source}</span></p>
+                    )}
             </div>
             </div>
         </Sidebar>
