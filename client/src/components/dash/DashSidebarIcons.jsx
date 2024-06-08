@@ -36,44 +36,44 @@ export default function DashSidebarIcon() {
   };
 
   return (
-    <>
-      <Link to={"/?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-        <FaUser/>
-      </Link>
-      {
-          (currUser && currUser.isAdmin || 
-              (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> 
-                p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
-              )))) && (
+      <div className="h-[80%] overflow-y-auto scrollbar-hidden flex flex-col mt-6 items-center">
+            <Link to={"/?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                <FaUser />
+            </Link>
+            {
+                (currUser && currUser.isAdmin || 
+                    (currUser.roles && currUser.roles.some(role => role.permissions.some(p => 
+                    p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
+                    )))) && (
+                        <>
+                            <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                <FaDonate />
+                            </Link>
+                            <Link to={"/?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                <FaMoneyBillTrendUp />
+                            </Link>
+                            <Link to={"/?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                <SiEventbrite />
+                            </Link>
+                        </>
+                    )
+            }
+            {currUser.isAdmin && (
                 <>
-                    <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-                        <FaDonate />
+                    <Link to={"/?tab=users"} className={`${tab === 'users' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <FaUsers />
                     </Link>
-                    <Link to={"/?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-                        <FaMoneyBillTrendUp />
+                    <Link to={"/?tab=roles"} className={`${tab === 'roles' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <FaAddressCard />
                     </Link>
-                    <Link to={"/?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-                        <SiEventbrite />
+                    <Link to={"/?tab=permissions"} className={`${tab === 'permissions' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                        <FaEdit />
                     </Link>
                 </>
-              )
-      }
-      {currUser.isAdmin && (
-        <>
-          <Link to={"/?tab=users"} className={`${tab === 'users' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-            <FaUsers/>
-          </Link>
-          <Link to={"/?tab=roles"} className={`${tab === 'roles' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-            <FaAddressCard />
-          </Link>
-          <Link to={"/?tab=permissions"} className={`${tab === 'permissions' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
-            <FaEdit  />
-          </Link>
-        </>
-      )}
-      <div onClick={handleSignout} className="flex items-center my-6 cursor-pointer">
-        <FaSignOutAlt className="mr-2" />
+            )}
+            <div onClick={handleSignout} className="flex items-center mt-6 mb-8 ml-2 cursor-pointer">
+                <FaSignOutAlt className="mr-2" />
+            </div>
       </div>
-    </>
   );
 }
