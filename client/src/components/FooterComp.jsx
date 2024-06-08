@@ -14,20 +14,14 @@ export default function FooterComp() {
                                 src={brand}
                                 alt="MandirMitra Logo"
                                 name="MandirMitra"
+                                className="rounded-md"
                             />
                         </div>
-                        <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
+                        <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:gap-6">
                             <div>
                                 <Footer.Title title="about" />
                                 <Footer.LinkGroup col>
                                     <Footer.Link href="/?tab=about">About Us</Footer.Link>
-                                </Footer.LinkGroup>
-                            </div>
-                            <div>
-                                <Footer.Title title="Follow us" />
-                                <Footer.LinkGroup col>
-                                    <Footer.Link href="#">Github</Footer.Link>
-                                    <Footer.Link href="#">Discord</Footer.Link>
                                 </Footer.LinkGroup>
                             </div>
                             <div>
@@ -46,8 +40,6 @@ export default function FooterComp() {
                             <Footer.Icon href="#" icon={BsFacebook} />
                             <Footer.Icon href="#" icon={BsInstagram} />
                             <Footer.Icon href="#" icon={BsTwitter} />
-                            <Footer.Icon href="#" icon={BsGithub} />
-                            <Footer.Icon href="#" icon={BsDribbble} />
                         </div>
                     </div>
                 </div>

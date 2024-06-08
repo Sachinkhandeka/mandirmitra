@@ -38,7 +38,8 @@ export default function DashSidebar() {
     }
     return(
         <>
-          <Sidebar className="w-full h-full" >
+        <Sidebar className="w-full h-full" >
+            <div className="h-[70%] md:h-[80%] overflow-y-auto scrollbar-hidden">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
                     <Link to={"/?tab=profile"} >
@@ -118,7 +119,12 @@ export default function DashSidebar() {
                     <Sidebar.Item active={tab === 'signout'} icon={FaSignOutAlt} className="cursor-pointer" onClick={handleSignout}>Signout</Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
-          </Sidebar>
+            <div className="p-4 bg-gradient-to-tr from-indigo-400 to-purple-500 rounded-md text-center my-2">
+                <h3 className="text-sm font-semibold mb-2">Quote of the Day</h3>
+                <p className="italic text-xs">"You have the right to perform your duty, but not to the fruits of your actions." - Bhagavat Gita</p>
+            </div>
+            </div>
+        </Sidebar>
         </>
     );
 }

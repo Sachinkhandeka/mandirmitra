@@ -164,7 +164,7 @@ export default function Home() {
                         <span className="text-xs font-bold px-2 py-1 rounded-md bg-gradient-to-tr from-sky-500 to-sky-300" > Founded-In:{ temple.foundedYear }</span>
                     ) }
                     { temple.description && (
-                        <div className="mt-2 tracking-wide border-2 rounded-lg py-2 px-4 border-t-orange-500 border-x-orange-400 border-b-orange-300" >
+                        <div className="mt-2 tracking-wide text-xl font-bold border-2 rounded-lg py-6 px-4 bg-gradient-to-t from-rose-400 to-orange-400 border-none" >
                             { temple.description }
                         </div>
                     ) }
@@ -172,9 +172,11 @@ export default function Home() {
                              <GodCard godsAndGoddesses={temple.godsAndGoddesses} />
                         ) }
                 </div>
-                <div className="inline-block mt-2 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 p-2" >
-                    <CiEdit size={20} onClick={()=> setShowModal(true)}/>
-                </div>
+                { currUser.isAdmin && (
+                    <div className="inline-block mt-2 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 p-2" >
+                        <CiEdit size={20} onClick={()=> setShowModal(true)}/>
+                    </div>
+                ) }
             </div>
             <div className="flex flex-col lg:flex-row items-center gap-4 my-8 w-full" >
                 <CardComponent 
