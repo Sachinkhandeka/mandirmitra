@@ -1,5 +1,7 @@
 import React from "react";
 import { Document, Page, Text, StyleSheet, View, Image } from "@react-pdf/renderer";
+import receipt_Top from "../assets/receipt_T.png";
+import receipt_Bottom from  "../assets/receipt_B.png";
 
 export default function Receipt({ receiptData }) {
     const {
@@ -8,11 +10,12 @@ export default function Receipt({ receiptData }) {
         sevaName, state, tehsil, temple,
         village, _id
     } = receiptData;
-    
+
     const styles = StyleSheet.create({
         page: {
-            backgroundColor: '#f2f2f2',
+            position: 'relative',
             padding: 20,
+            zIndex: 1,
         },
         container: {
             padding: "10px",
@@ -23,6 +26,8 @@ export default function Receipt({ receiptData }) {
             border: "2px solid #32a1ce",
             borderRadius: "10px",
             marginBottom: "20px",
+            position: 'relative',
+            zIndex: 1,
         },
         normalContainer: {
             display: "flex",
@@ -55,11 +60,26 @@ export default function Receipt({ receiptData }) {
             textAlign: 'center',
             marginTop: '20px',
         },
+        topImage: {
+            width: '100%',
+            height: '25%',
+        },
+        bottomImage: {
+            width: '100%',
+            height: '25%',
+        },
+        bottomHeader : {
+            textAlign: 'center',
+            color: '#6b6b6a',
+            padding: 10,
+            fontSize: 10,
+        }
     });
 
     return (
         <Document>
-            <Page style={styles.page}>
+            <Page size={"A4"} style={styles.page}>
+                <Image src={receipt_Top} style={styles.topImage} />
                 <View style={styles.container} >
                     <View style={styles.normalContainer}>
                         { temple.image && (
@@ -103,6 +123,10 @@ export default function Receipt({ receiptData }) {
                     </View>
                     <Text style={styles.thanksNote}>Thank you for your generous donation, {donorName}!</Text>
                 </View>
+                <Image src={receipt_Bottom} style={styles.bottomImage} />
+                <Text style={styles.bottomHeader} fixed>
+                    ~ Created By MandirMitra ~
+                </Text>
             </Page>
         </Document>
     );
