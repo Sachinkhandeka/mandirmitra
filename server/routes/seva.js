@@ -2,7 +2,7 @@ const express = require("express");
 const router  = express.Router({ mergeParams : true });
 const seva = require("../controllers/sevaController");
 const wrapAsyn = require("../utils/wrapAsync");
-const { verifyCreatePermission } = require("../utils/verifyPermissions");
+const { verifyCreatePermission, verifyUpdatePermission, verifyDeletePermission } = require("../utils/verifyPermissions");
 
 router.post(
     "/create/:templeId",
@@ -14,6 +14,18 @@ router.get(
     "/get/:templeId",
     verifyCreatePermission,
     wrapAsyn(seva.getSeva),
+);
+
+router.put(
+    "/edit/:sevaId/:templeId",
+    verifyUpdatePermission,
+    wrapAsyn(seva.editSeva),
+);
+
+router.delete(
+    "/delete/:sevaId/:templeId",
+    verifyDeletePermission,
+    wrapAsyn(seva.deleteSeva),
 );
 
 module.exports = router ; 
