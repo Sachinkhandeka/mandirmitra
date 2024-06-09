@@ -12,6 +12,7 @@ const DashPermissions = React.lazy(()=> import("../components/dash/DashPermissio
 const DashDonations = React.lazy(()=> import("../components/dash/DashDonations"));
 const DashExpenses = React.lazy(()=> import("../components/dash/DashExpenses"));
 const DashEvents = React.lazy(()=> import("../components/dash/DashEvents"));
+const DashSeva = React.lazy(()=> import("../components/dash/DashSeva"));
 
 import DashSidebar from "../components/dash/DashSidebar";
 import Header from "../components/Header";
@@ -115,13 +116,20 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashRoles /></Suspense> }
-                     {/* permissions */}
-                     { tab === "permissions" && <Suspense fallback={
+                    {/* permissions */}
+                    { tab === "permissions" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4" >
                             <Spinner size={"xl"} />
                             <div>Loading ...</div>
                         </div>
                     }><DashPermissions /></Suspense> }
+                    {/* seva */}
+                    { tab === "seva" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4" >
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><DashSeva /></Suspense> }
                     {/* About */}
                     { tab === "about" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4" >

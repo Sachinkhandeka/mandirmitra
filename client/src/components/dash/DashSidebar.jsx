@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { SiEventbrite } from "react-icons/si";
+import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import { signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,6 +90,14 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Events</Sidebar.Item>
                                     </Link>
+                                    <Link to={"/?tab=seva"}>
+                                        <Sidebar.Item
+                                            active={tab === "seva"}
+                                            className="my-6 cursor-pointer"
+                                            icon={RiHandHeartFill}
+                                            as={"div"}
+                                        >Seva</Sidebar.Item>
+                                    </Link>
                                 </>
                             )                
                     }
@@ -96,30 +105,30 @@ export default function DashSidebar() {
                         currUser.isAdmin && 
                         (
                             <>
-                              <Link to={"/?tab=users"} >
+                            <Link to={"/?tab=users"} >
                                 <Sidebar.Item
                                     active={tab === "users"}
                                     className="mt-6 cursor-pointer"
                                     icon={FaUsers} 
                                     as={"div"}
                                 >Users</Sidebar.Item>
-                              </Link>
-                              <Link to={"/?tab=roles"}>
+                            </Link>
+                            <Link to={"/?tab=roles"}>
                                 <Sidebar.Item 
                                     active={tab === "roles"}
                                     className="mt-6 cursor-pointer"
                                     icon={FaAddressCard} 
                                     as={"div"}
                                 >Roles</Sidebar.Item>
-                              </Link>
-                              <Link to={"/?tab=permissions"}>
+                            </Link>
+                            <Link to={"/?tab=permissions"}>
                                 <Sidebar.Item
                                     active={tab === "permissions"}
                                     className="my-6 cursor-pointer"
                                     icon={FaEdit}
                                     as={"div"}
                                 >Permissions</Sidebar.Item>
-                              </Link>
+                            </Link>
                             </>
                         ) 
                     }
