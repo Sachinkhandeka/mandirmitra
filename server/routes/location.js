@@ -2,7 +2,7 @@ const express = require("express");
 const  router = express.Router({ mergeParams : true });
 const location = require("../controllers/LocationController");
 const wrapAsyn = require("../utils/wrapAsync");
-const { verifyCreatePermission } = require("../utils/verifyPermissions");
+const { verifyCreatePermission, verifyUpdatePermission, verifyDeletePermission } = require("../utils/verifyPermissions");
 const { route } = require("./temple");
 const { verifyToken } = require("../utils/verifyUser");
 
@@ -11,6 +11,27 @@ router.post(
     "/add/:templeId",
     verifyCreatePermission,
     wrapAsyn(location.addController),
+);
+
+//get all 
+router.get(
+    "/get/:templeId",
+    verifyToken,
+    wrapAsyn(location.getAll),
+);
+
+//edit all 
+router.put(
+    "/edit/:entityId/:templeId",
+    verifyUpdatePermission,
+    wrapAsyn(location.editEntity),
+);
+
+//delete all
+router.delete(
+    "/delete/:entityId/:templeId",
+    verifyDeletePermission,
+    wrapAsyn(location.deleteEntity),
 );
 
 //get countries

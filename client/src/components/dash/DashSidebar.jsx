@@ -1,7 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
-import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaMoneyBillTrendUp, FaMapLocationDot } from "react-icons/fa6";
 import { SiEventbrite } from "react-icons/si";
 import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
@@ -97,6 +97,14 @@ export default function DashSidebar() {
                                             icon={RiHandHeartFill}
                                             as={"div"}
                                         >Seva</Sidebar.Item>
+                                    </Link>
+                                    <Link to={"/?tab=address"}>
+                                        <Sidebar.Item
+                                            active={tab === "address"}
+                                            className="my-6 cursor-pointer"
+                                            icon={FaMapLocationDot}
+                                            as={"div"}
+                                        >Address</Sidebar.Item>
                                     </Link>
                                 </>
                             )                

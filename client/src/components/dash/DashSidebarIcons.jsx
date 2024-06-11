@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit } from "react-icons/fa";
-import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { FaMoneyBillTrendUp, FaMapLocationDot  } from "react-icons/fa6";
 import { SiEventbrite } from "react-icons/si";
 import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
@@ -58,6 +58,9 @@ export default function DashSidebarIcon() {
                             </Link>
                             <Link to={"/?tab=seva"} className={`${tab === 'seva' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                  <RiHandHeartFill />
+                            </Link>
+                            <Link to={"/?tab=address"} className={`${tab === 'address' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                 <FaMapLocationDot />
                             </Link>
                         </>
                     )
