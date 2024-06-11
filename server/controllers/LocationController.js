@@ -64,6 +64,108 @@ module.exports.addController = async (req, res) => {
         });
 }
 
+//get route handler for all 
+module.exports.getAll = async(req ,res)=> {
+    const { templeId } = req.params ; 
+
+    if(!templeId) {
+        throw new ExpressError(400, "Temple id not found.");
+    }
+
+    const countries = await Country.find({ temple : templeId });
+    const states = await State.find({ temple : templeId });
+    const districts = await District.find({ temple : templeId });
+    const tehsils = await Tehsil.find({ temple : templeId });
+    const villages = await Village.find({ temple : templeId });
+
+    res.status(200).json({
+        countries,
+        states,
+        districts,
+        tehsils,
+        villages,
+    });
+}
+
+//edit route handler for all
+module.exports.editEntity = async (req, res) => {
+    const { templeId, entityId } = req.params;
+    const { entityType, data } = req.body;
+
+    if (!templeId || !entityId || !entityType) {
+        throw new ExpressError(400, "Temple ID, entity ID, or entity type not found.");
+    }
+
+    let Model;
+    switch (entityType) {
+        case 'countries':
+            Model = Country;
+            break;
+        case 'states':
+            Model = State;
+            break;
+        case 'districts':
+            Model = District;
+            break;
+        case 'tehsils':
+            Model = Tehsil;
+            break;
+        case 'villages':
+            Model = Village;
+            break;
+        default:
+            throw new ExpressError(400, "Invalid entity type.");
+    }
+
+    const entity = await Model.findOneAndUpdate({ _id: entityId, temple: templeId }, data, { new: true });
+
+    if (!entity) {
+        throw new ExpressError(404, "Entity not found.");
+    }
+
+    res.status(200).json({entity});
+};
+
+//delete route handler for all
+module.exports.deleteEntity = async (req, res) => {
+    const { templeId, entityId } = req.params;
+    const { entityType } = req.body;
+
+    if (!templeId || !entityId || !entityType) {
+        throw new ExpressError(400, "Temple ID, entity ID, or entity type not found.");
+    }
+
+    let Model;
+    switch (entityType) {
+        case 'countries':
+            Model = Country;
+            break;
+        case 'states':
+            Model = State;
+            break;
+        case 'districts':
+            Model = District;
+            break;
+        case 'tehsils':
+            Model = Tehsil;
+            break;
+        case 'villages':
+            Model = Village;
+            break;
+        default:
+            throw new ExpressError(400, "Invalid entity type.");
+    }
+
+    const entity = await Model.findOneAndDelete({ _id: entityId, temple: templeId });
+
+    if (!entity) {
+        throw new ExpressError(404, "Entity not found.");
+    }
+
+    res.status(200).json({ message: "Entity deleted successfully." });
+};
+
+
 //get route handler for country
 module.exports.getAllCountry = async(req ,res)=> {
     const { templeId } = req.params ; 
