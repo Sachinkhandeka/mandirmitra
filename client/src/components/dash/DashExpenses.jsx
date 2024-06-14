@@ -6,6 +6,7 @@ import { TbFaceIdError } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { IoFilterCircleOutline } from "react-icons/io5";
+import { Helmet } from "react-helmet-async";
 
 const EditExpense = React.lazy(()=> import("../edit/EditExpense"));
 const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
@@ -85,6 +86,10 @@ export default function DashExpenses() {
 
     return (
         <>
+            <Helmet>
+                <title>Manage Temple Expenses - Dashboard</title>
+                <meta name="description" content="View and manage expenses for your temple. Edit or delete expenses as needed." />
+            </Helmet>
             {/* Drawer toggler */}
             {
                 (currUser && currUser.isAdmin || 

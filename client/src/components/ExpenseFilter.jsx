@@ -4,6 +4,7 @@ import { FaFilter } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCount, setFilterCount }) {
     const { currUser } = useSelector(state => state.user);
@@ -70,6 +71,11 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCou
     }
 
     return (
+        <>
+        <Helmet>
+            <title>Expense Filters</title>
+            <meta name="description" content="Apply filters to manage expenses based on category, amount, and status." />
+        </Helmet>
         <Modal show={isDrawerOpen} dismissible onClose={() => setIsDrawerOpen(false)} position="top-right">
             <Modal.Header>
                 <div className="flex gap-4 items-center">
@@ -82,13 +88,21 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCou
                     {/* Category Field */}
                     <div className="flex flex-col gap-4">
                         <h2 className="text-xl font-serif uppercase font-semibold">Category</h2>
-                        <FloatingLabel type="text" id="category" value={category} variant="outlined" label="Category" onChange={(e)=> setCategory(e.target.value)} />
+                        <FloatingLabel 
+                            type="text" 
+                            id="category" 
+                            value={category} 
+                            variant="outlined" 
+                            label="Category" 
+                            onChange={(e)=> setCategory(e.target.value)} 
+                            aria-labelledby="category-label" 
+                        />
                     </div>
                     {/* Status Field */}
                     <hr className="gray-400 my-3" />
                     <div className="flex flex-col gap-4">
                         <h2 className="text-xl font-serif uppercase font-semibold">Status</h2>
-                        <Select id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                        <Select id="status" value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Select Expense Status" >
                             <option value="">Select</option>
                             <option value="pending">Pending</option>
                             <option value="approved">Approved</option>
@@ -101,9 +115,9 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCou
                     <div className="flex flex-col gap-4">
                         <h2 className="text-xl font-serif uppercase font-semibold">Price Range</h2>
                         <div className="flex items-center justify-evenly gap-2">
-                            <FloatingLabel type="number" id="minAmount" value={minAmount} variant="outlined" label="Minimum" onChange={handleMinAmountChange} />
+                            <FloatingLabel type="number" id="minAmount" value={minAmount} variant="outlined" label="Minimum" onChange={handleMinAmountChange} aria-labelledby="min-amount-label" />
                             <GoDash size={20} />
-                            <FloatingLabel type="number" id="maxAmount" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} />
+                            <FloatingLabel type="number" id="maxAmount" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} aria-labelledby="max-amount-label" />
                         </div>
                     </div>
                 </form>
@@ -113,5 +127,6 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCou
                 <Button onClick={handleSubmit} color={"dark"}>Apply Filters</Button>
             </Modal.Footer>
         </Modal>
+        </>
     );
 }

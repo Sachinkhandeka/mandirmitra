@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button, Label, Select, Spinner, TextInput, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { FcDonate } from "react-icons/fc";
@@ -6,6 +6,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 
@@ -52,59 +53,45 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
         getSeva();
     }, [getSeva]);
 
-    useEffect(()=> {
-        if(sevaUpdated) {
+    useEffect(() => {
+        if (sevaUpdated) {
             getSeva();
             setSevaUpdated(false);
         }
-    },[sevaUpdated]);
+    }, [sevaUpdated, getSeva, setSevaUpdated]);
 
     const handleChange = useCallback((e) => {
         const { value, id } = e.target;
         const selectedOption = e.target.options ? e.target.options[e.target.selectedIndex] : null;
 
         if (selectedOption) {
-            if (id === "country") {
-                setSelectedCountry(value);
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: selectedOption.text,
-                }));
-            } else if (id === "state") {
-                setSelectedState(value);
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: selectedOption.text,
-                }));
-            } else if (id === "district") {
-                setSelectedDistrict(value);
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: selectedOption.text,
-                }));
-            } else if (id === "tehsil") {
-                setSelectedTehsil(value);
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: selectedOption.text,
-                }));
-            } else if (id === "village") {
-                setSelectedVillage(value);
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: selectedOption.text,
-                }));
-            } else {
-                setDonation((prevDonation) => ({
-                    ...prevDonation,
-                    [id]: value,
-                }));
+            const text = selectedOption.text;
+            switch (id) {
+                case "country":
+                    setSelectedCountry(value);
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: text }));
+                    break;
+                case "state":
+                    setSelectedState(value);
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: text }));
+                    break;
+                case "district":
+                    setSelectedDistrict(value);
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: text }));
+                    break;
+                case "tehsil":
+                    setSelectedTehsil(value);
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: text }));
+                    break;
+                case "village":
+                    setSelectedVillage(value);
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: text }));
+                    break;
+                default:
+                    setDonation((prevDonation) => ({ ...prevDonation, [id]: value }));
             }
         } else {
-            setDonation((prevDonation) => ({
-                ...prevDonation,
-                [id]: value,
-            }));
+            setDonation((prevDonation) => ({ ...prevDonation, [id]: value }));
         }
     }, []);
 
@@ -149,11 +136,17 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
             setSelectedVillage({});
         } catch (err) {
             setError(err.message);
+            setLoading(false);
         }
     }, [currUser.templeId, donation]);
 
     return (
         <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
+            <Helmet>
+                <title>Add Donation - MandirMitra</title>
+                <meta name="description" content="Add a new donation to MandirMitra. Fill out donor details, select Seva, and enter donation amount." />
+                <meta name="keywords" content="MandirMitra, Donation, Seva, Temple Donation" />
+            </Helmet>
             <div
                 className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 
                 justify-around items-center bg-gradient-to-bl from-blue-600 to-blue-300 
@@ -214,7 +207,7 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
                                 <option value="select" disabled>Select</option>
                                 <option value="cash">Cash</option>
                                 <option value="bank">Bank</option>
-                                <option value="upi">Upi</option>
+                                <option value="upi">UPI</option>
                             </Select>
                         </div>
                         <div className="flex-1 flex flex-col gap-4">

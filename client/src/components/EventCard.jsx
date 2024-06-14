@@ -4,6 +4,7 @@ import { FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import { SiEventbrite } from 'react-icons/si';
 import { useSelector } from 'react-redux';
 import AttendanceStats from './AttendenceStats';
+import { Helmet } from 'react-helmet-async';
 
 // Function to get a random gradient color
 function getRandomGradient() {
@@ -81,7 +82,12 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
     }
 
     return (
-        <div
+        <>
+        <Helmet>
+            <title>{name} - Event Details</title>
+            <meta name="description" content={`Event details for ${name}, happening on ${new Date(date).toLocaleDateString()} at ${location}.`} />
+        </Helmet>
+        <article
             className={`max-w-72 rounded-xl overflow-hidden hover:shadow-lg border 
             border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 
             m-4 min-w-72 cursor-pointer flex flex-col justify-between
@@ -176,6 +182,7 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
                     id={id}
                 />
             )}
-        </div>
+        </article>
+        </>
     );
 }

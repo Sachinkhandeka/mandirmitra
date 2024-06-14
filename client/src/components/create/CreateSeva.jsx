@@ -1,6 +1,8 @@
 import { Alert, Button, FloatingLabel, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
+
 export default function CreateSeva({ setSevaUpdated }) {
     const { currUser } = useSelector(state => state.user);
     const [seva, setSeva] = useState('');
@@ -40,6 +42,10 @@ export default function CreateSeva({ setSevaUpdated }) {
 
     return (
         <>
+            <Helmet>
+                <title>Create Seva - Your Dashboard</title>
+                <meta name="description" content="Add a new seva to your temple's offerings. Fill out the form to add a seva." />
+            </Helmet>
             <div className="flex-1 border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4" >
                 { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} >{ error }</Alert> ) }
                 { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} >{ success }</Alert> ) }  

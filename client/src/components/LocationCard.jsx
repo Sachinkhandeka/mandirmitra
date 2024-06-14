@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
 import { MdWrongLocation } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function LocationCard({ label, data, getLocation }) {
     const { currUser } = useSelector((state) => state.user);
@@ -89,6 +90,11 @@ export default function LocationCard({ label, data, getLocation }) {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>{label} Management</title>
+            <meta name="description" content={`Manage ${label.toLowerCase()} efficiently.`} />
+        </Helmet>
         <div className="overflow-x-auto scrollbar-hidden max-h-72 overflow-y-auto">
             <h2 className="text-lg font-serif uppercase mb-2 z-10 text-center">
                 {label}
@@ -202,5 +208,6 @@ export default function LocationCard({ label, data, getLocation }) {
                 </>
             )}
         </div>
+        </>
     );
 }

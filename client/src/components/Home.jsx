@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
@@ -128,6 +129,20 @@ export default function Home() {
         setBalance(netProfit);
     }, [income, expense]);
     return (
+        <>
+        <Helmet>
+            <title>MandirMitra - Home</title>
+            <meta
+                name="description"
+                content="MandirMitra is your ultimate devotional companion, providing detailed information about temples, deities, and spiritual practices. Manage donations, expenses, and analytics with ease."
+            />
+            <meta
+                name="keywords"
+                content="MandirMitra, temples, Hinduism, deities, donations, expenses, analytics, spirituality, religious management"
+            />
+            <meta name="author" content="MandirMitra" />
+            <link rel="canonical" href="https://www.mandirmitra.com/home" />
+        </Helmet>
         <div className="w-full" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
                 <h1 
@@ -276,5 +291,6 @@ export default function Home() {
                setIsTempleUpdted={setIsTempleUpdted}
             />
         </div>
+        </>
     );
 }

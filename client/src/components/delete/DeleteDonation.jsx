@@ -2,6 +2,7 @@ import { Button, Modal, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function DeleteDonation({ showDeleteModal, setShowDeleteModal, setIsDonationUpdated, donationId, setError, setSuccess }) {
     const { currUser } = useSelector(state => state.user);
@@ -34,6 +35,10 @@ export default function DeleteDonation({ showDeleteModal, setShowDeleteModal, se
     }
     return (
         <>
+            <Helmet>
+                <title>Delete Donation Confirmation - Temple Management</title>
+                <meta name="description" content="Confirm deletion of a donation in the temple management system. Ensure your actions before proceeding." />
+            </Helmet>
             <Modal show={showDeleteModal} dismissible onClose={()=> setShowDeleteModal(false)} popup >
                 <Modal.Header />
                 <Modal.Body>

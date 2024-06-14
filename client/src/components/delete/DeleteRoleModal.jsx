@@ -2,6 +2,7 @@ import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function DeleteRoleModal({ deleteModal , setDeleteModal , setError , setRoleUpdated , roleId }) {
     const { currUser } = useSelector(state => state.user);
@@ -29,6 +30,10 @@ export default function DeleteRoleModal({ deleteModal , setDeleteModal , setErro
     }
     return (
         <>
+            <Helmet>
+                <title>Delete Roles Confirmation - Temple Management</title>
+                <meta name="description" content="Confirm deletion of a role in the temple management system. Ensure your actions before proceeding." />
+            </Helmet>
            <Modal show={deleteModal} popup dismissible onClose={()=> setDeleteModal(false)} size="md" >
                 <Modal.Header />
                 <Modal.Body>

@@ -8,6 +8,7 @@ import { updateStart, updateSuccess, updateFailure, resetError } from "../../red
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { Helmet } from "react-helmet-async";
 import 'react-circular-progressbar/dist/styles.css';
 
 import CreateUser from "../create/CreateUser";
@@ -17,7 +18,7 @@ import UserRoles from "../UserRoles";
 import AddTehsilGaam from "../AddTehsilGaam";
 import DonationForm from "../create/DonationForm";
 import CreateExpense from "../create/CreateExpense";
-import Event from "../Event";
+import CreateEvent from "../create/CreateEvent";
 import CreateSeva from "../create/CreateSeva";
 
 export default function DashProfile() {
@@ -122,6 +123,12 @@ export default function DashProfile() {
         }
     },[imageFile]);
     return (
+        <>
+        <Helmet>
+            <title>Profile - {currUser.username}</title>
+            <meta name="description" content="Manage your profile details including username, email, and profile picture." />
+            <meta name="keywords" content="profile, user, settings, admin" />
+        </Helmet>
         <div className="w-full" >
             { currUser && (
                 <div className="w-full" >
@@ -254,12 +261,13 @@ export default function DashProfile() {
                                 </div>
                                 <DonationForm locationAdded={locationAdded} sevaUpdated={sevaUpdated} setSevaUpdated={setSevaUpdated} />
                                 <CreateExpense />
-                                <Event />
+                                <CreateEvent />
                             </>
                          )
                     }
                 </div>
             ) }
         </div>
+        </>
     );
 }

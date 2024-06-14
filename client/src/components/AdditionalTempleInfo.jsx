@@ -1,11 +1,12 @@
+import React, { useEffect, useState } from "react";
 import { Label, TextInput, Button, Textarea, Spinner, Toast } from "flowbite-react";
 import { HiUpload, HiX, HiCheck } from "react-icons/hi";
 import { FaCircleCheck } from "react-icons/fa6";
-import { useEffect, useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { app } from "../firebase";
+import { Helmet } from "react-helmet-async";
 import "react-circular-progressbar/dist/styles.css";
 
 export default function AdditionalTempleInfo({ temple }) {
@@ -64,7 +65,7 @@ export default function AdditionalTempleInfo({ temple }) {
                 (error) => {
                     console.error("Upload failed:", error);
                     setUploading(false);
-                    setError("Image upload failed.File must be less than 2KB");
+                    setError("Image upload failed. File must be less than 2KB");
                 }, 
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -139,10 +140,17 @@ export default function AdditionalTempleInfo({ temple }) {
     };
 
     return (
-        <div className="bg-gray-100 p-4 rounded-md shadow-md">
-            <h2 className="text-lg font-semibold mb-4">Additional Information</h2>
+        <section className="bg-gray-100 p-4 rounded-md shadow-md">
+            <Helmet>
+                <title>Additional Temple Information</title>
+                <meta name="description" content="Add or edit additional information about the temple including founded year, description, and god-goddesses or deities(devi-devtas and sant-mahant)." />
+            </Helmet>
 
-            <div className="mb-4">
+            <header>
+                <h2 className="text-lg font-semibold mb-4">Additional Information</h2>
+            </header>
+
+            <article className="mb-4">
                 <Label htmlFor="foundedYear" className="block mb-1">Founded Year</Label>
                 <TextInput
                     name="foundedYear"
@@ -153,9 +161,9 @@ export default function AdditionalTempleInfo({ temple }) {
                     value={templeData.foundedYear === 0 ? '' : templeData.foundedYear}
                     onChange={handleChange}
                 />
-            </div>
+            </article>
 
-            <div className="mb-4">
+            <article className="mb-4">
                 <Label htmlFor="description" className="block mb-1">Description</Label>
                 <Textarea
                     name="description"
@@ -166,9 +174,9 @@ export default function AdditionalTempleInfo({ temple }) {
                     value={templeData.description}
                     onChange={handleChange}
                 />
-            </div>
+            </article>
 
-            <div className="w-full mb-4">
+            <article className="w-full mb-4">
                 <h3 className="text-lg font-semibold mb-2">Gods and Goddesses (Devi-Devta)</h3>
                 <div className="bg-white p-4 rounded-md shadow-md mb-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,33 +225,36 @@ export default function AdditionalTempleInfo({ temple }) {
                     </div>
                     <Button color="gray" className="w-full mt-4" onClick={addGodOrGoddess} disabled={uploading}>Add God/Goddess</Button>
                 </div>
-            </div>
+            </article>
 
-            {templeData.godsAndGoddesses.map((god, index) => (
-                <div key={index} className="flex items-center justify-between bg-white p-4 rounded-md shadow-md mb-4">
-                    <div className="flex items-center">
-                        {god.image && <img src={god.image} alt={god.name} className="w-16 h-16 mr-4 rounded-md" />}
-                        <div>
-                            <h4 className="text-md font-semibold">{god.name}</h4>
+            <section>
+                {templeData.godsAndGoddesses.map((god, index) => (
+                    <article key={index} className="flex items-center justify-between bg-white p-4 rounded-md shadow-md mb-4">
+                        <div className="flex items-center">
+                            {god.image && <img src={god.image} alt={god.name} className="w-16 h-16 mr-4 rounded-md" />}
+                            <div>
+                                <h4 className="text-md font-semibold">{god.name}</h4>
+                            </div>
                         </div>
-                    </div>
-                    <button onClick={() => removeGodOrGoddess(index)} className="text-red-500 hover:text-red-700">
-                        <MdCancel size={24} />
-                    </button>
-                </div>
-            ))}
+                        <button onClick={() => removeGodOrGoddess(index)} className="text-red-500 hover:text-red-700" aria-label="Remove deity">
+                            <MdCancel size={24} />
+                        </button>
+                    </article>
+                ))}
+            </section>
 
             <Button 
                 gradientDuoTone="pinkToOrange" 
                 className="w-full mt-4" 
                 onClick={handleSaveAdditionalInfo}
                 disabled={loading}
+                aria-label="Save additional information"
             >
                 {loading ? <Spinner color={"pink"} /> : 'Save Additional Info'}
             </Button>
 
             {error && (
-                <Toast className="float-right my-4" theme="danger" onClose={() => setError(null)}>
+                <Toast className="float-right my-4" theme="danger" onClose={() => setError(null)} aria-live="assertive">
                     <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
                         <HiX className="h-5 w-5" />
                     </div>
@@ -253,7 +264,7 @@ export default function AdditionalTempleInfo({ temple }) {
             )}
 
             {success && (
-                <Toast className="float-right my-4" theme="success" onClose={() => setSuccess(null)}>
+                <Toast className="float-right my-4" theme="success" onClose={() => setSuccess(null)} aria-live="assertive">
                     <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
                         <HiCheck className="h-5 w-5" />
                     </div>
@@ -261,6 +272,6 @@ export default function AdditionalTempleInfo({ temple }) {
                     <Toast.Toggle />
                 </Toast>
             )}
-        </div>
+        </section>
     );
 }

@@ -7,6 +7,7 @@ import { Table } from "flowbite-react";
 import EventCard from "../EventCard";
 import ToggleSwitch from "../ToggleSwitch";
 import { useLocation } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 
 export default function DashEvents() {
     const { currUser } = useSelector(state => state.user);
@@ -106,6 +107,10 @@ export default function DashEvents() {
 
     return (
         <>
+            <Helmet>
+                <title>Manage Temple Events - Dashboard</title>
+                <meta name="description" content="Manage and track temple events in your dashboard. View, edit, and delete events with ease." />
+            </Helmet>
             {events && events.length > 0 && (
                 (currUser && currUser.isAdmin) ||
                 (currUser.roles && currUser.roles.some(role =>

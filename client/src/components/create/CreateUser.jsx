@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { Helmet } from  "react-helmet-async";
 
 export default function CreateUser({ roleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -83,6 +84,10 @@ export default function CreateUser({ roleUpdated }) {
     };
     return (
         <>
+        <Helmet>
+            <title>Create User - Your Dashboard</title>
+            <meta name="description" content="Create a new user and assign roles. Fill out the form with details such as username, email, password, and roles." />
+        </Helmet>
         {
             currUser.isAdmin && (
                 <>

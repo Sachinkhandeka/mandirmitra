@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Alert, Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 export default function CreatePermissions({ setUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -48,6 +49,10 @@ export default function CreatePermissions({ setUpdated }) {
 
     return (
         <>
+        <Helmet>
+            <title>Create Permissions - Your Dashboard</title>
+            <meta name="description" content="Create and assign permissions with specific actions. Fill out the form to add a new permission." />
+        </Helmet>
         {
             currUser.isAdmin && (
                 <>

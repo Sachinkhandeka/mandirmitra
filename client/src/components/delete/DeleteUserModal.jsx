@@ -2,6 +2,7 @@ import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setError , setSuccess , setUserDataUpdated }) {
   const { currUser } = useSelector(state  => state.user);
@@ -29,6 +30,11 @@ export default function DeleteUserModal({ showModalDelete, setShowModalDelete , 
         }
     }
     return(
+        <>
+        <Helmet>
+            <title>Delete Users Confirmation - Temple Management</title>
+            <meta name="description" content="Confirm deletion of a user in the temple management system. Ensure your actions before proceeding." />
+        </Helmet>
         <Modal show={showModalDelete} popup dismissible onClose={()=> setShowModalDelete(false)} size={"md"}>
             <Modal.Header />
             <Modal.Body>
@@ -48,5 +54,6 @@ export default function DeleteUserModal({ showModalDelete, setShowModalDelete , 
                  </div>
             </Modal.Body>
         </Modal>
+        </>
     );
 }

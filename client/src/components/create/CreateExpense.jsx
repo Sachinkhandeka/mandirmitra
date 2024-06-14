@@ -1,6 +1,7 @@
 import { Alert, Button, Datepicker, Label, Select, Spinner, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function CreateExpense() {
     const { currUser } = useSelector(state => state.user);
@@ -56,6 +57,11 @@ export default function CreateExpense() {
         }
     };
     return (
+        <>
+        <Helmet>
+            <title>Create Expense - Your Dashboard</title>
+            <meta name="description" content="Add a new expense to your profile. Fill out the form with details such as title, description, amount, date, category, and status." />
+        </Helmet>
         <div className="w-full border rounded-md p-2 md:p-4 my-4 flex gap-4">
             <div className="w-10 bg-yellow-300 dark:bg-gray-700 hidden md:block"></div>
             <div className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 mx-1 md:mx-4 p-4 flex-1">
@@ -143,5 +149,6 @@ export default function CreateExpense() {
                 </form>
             </div>
         </div>
+        </>
     );
 }

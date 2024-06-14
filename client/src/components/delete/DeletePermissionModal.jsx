@@ -2,6 +2,7 @@ import { Alert, Button, Modal, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function DeletePermissionModal({ deleteModal , setDeleteModal , permissionId , setPermissionUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -31,7 +32,11 @@ export default function DeletePermissionModal({ deleteModal , setDeleteModal , p
     }
     return (
         <>
-          <Modal show={deleteModal} dismissible onClose={()=> setDeleteModal(false)} size={"md"} popup >
+        <Helmet>
+            <title>Delete Permissions Confirmation - Temple Management</title>
+            <meta name="description" content="Confirm deletion of a permission in the temple management system. Ensure your actions before proceeding." />
+        </Helmet>
+        <Modal show={deleteModal} dismissible onClose={()=> setDeleteModal(false)} size={"md"} popup >
             <Modal.Header />
             <Modal.Body>
                 { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }

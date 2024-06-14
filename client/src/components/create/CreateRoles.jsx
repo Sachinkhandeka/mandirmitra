@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Button, Card, Label, Modal, TextInput, Select, Checkbox, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 export default function CreateRoles({ updated, setRoleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -84,6 +85,10 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
     }
     return (
         <>
+        <Helmet>
+            <title>Create Roles - Your Dashboard</title>
+            <meta name="description" content="Create and assign roles with specific permissions. Fill out the form to add a new role." />
+        </Helmet>
         {
             currUser.isAdmin && (
                 <>

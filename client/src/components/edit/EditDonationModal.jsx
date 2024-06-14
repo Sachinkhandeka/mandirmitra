@@ -4,6 +4,7 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { FaFilePdf } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 
@@ -142,6 +143,10 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
     };
     return (
         <>
+            <Helmet>
+                <title>Edit Donation - Temple Management</title>
+                <meta name="description" content="Edit a donation record in the temple management system. Update donor details, address, and donation information." />
+            </Helmet>
             <Modal show={showEditModal} dismissible onClose={() => setShowEditModal(false)} position={"top-right"}>
                 <Modal.Header>
                     <p className="text-bold font-mono uppercase">{donation.donorName}</p>

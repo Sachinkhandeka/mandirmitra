@@ -5,6 +5,7 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { FaFilePdf } from "react-icons/fa6";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import Invitation from "../pdf/Invitation";
+import { Helmet } from "react-helmet-async";
 
 export default function Invite({ inviteModal, setInviteModal, name, location, date, id }) {
     const { currUser } = useSelector(state => state.user);
@@ -145,6 +146,14 @@ export default function Invite({ inviteModal, setInviteModal, name, location, da
 
     return (
         <>
+            <Helmet>
+                <title>Invite Your Special/ Valuable Donors</title>
+                <meta name="description" content="Invite your donor with amazing and cutome pdf generation for each donor you can download it  and then send it to you special/valuable donors." />
+                <meta
+                    name="keywords"
+                    content="MandirMitra, temples, invitations, invitation-pdf, custome, Hinduism, deities, donations, expenses"
+                />
+            </Helmet>
             <Modal show={inviteModal} dismissible onClose={() => setInviteModal(false)}>
                 <Modal.Header>Invite Your Special Donors</Modal.Header>
                 <Modal.Body>
