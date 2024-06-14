@@ -1,6 +1,13 @@
+import { Helmet } from "react-helmet-async";
+
 export default function PrivacyPolicy() {
     return (
         <>
+            <Helmet>
+                <title>Privacy Policy - MandirMitra</title>
+                <meta name="description" content="Read the privacy policy of MandirMitra to understand how we collect, use, and protect your personal information." />
+                <meta name="keywords" content="privacy policy, data protection, personal information, MandirMitra" />
+            </Helmet>
            <div>
                 <h1 className="text-2xl font-bold mb-6" >Privacy Policy:</h1>
                 <div className="flex flex-col gap-6" >

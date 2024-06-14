@@ -1,15 +1,16 @@
+import React, { useRef, useState, useEffect } from "react";
 import { Button, Label, Modal, Spinner, TextInput, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
-import React, { useRef, useState, useEffect } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
+import { Helmet } from "react-helmet-async";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const AdditionalTempleInfo = React.lazy(()=> import("../AdditionalTempleInfo"));
+const AdditionalTempleInfo = React.lazy(() => import("../AdditionalTempleInfo"));
 
-export default function EditTemple({ showModal, setShowModal, temple, setIsTempleUpdted }) {
+export default function EditTemple({ showModal, setShowModal, temple, setIsTempleUpdated }) {
     const [formData, setFormData] = useState({
         name: '',
         location: '',
@@ -35,14 +36,14 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
         }
     }, [temple]);
 
-    const handleChange = (e)=> {
-        const { id, value } = e.target ; 
+    const handleChange = (e) => {
+        const { id, value } = e.target;
         setFormData({
             ...formData,
-            [id] : value,
+            [id]: value,
         });
         setIsUpdated(true);
-    }
+    };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -95,44 +96,49 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
         }
     }, [imageFile]);
 
-    const handleSubmit = async(e)=> {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setUploadError(null);
         setUploadSuccess(null);
-        if(!isUpdated) {
+        if (!isUpdated) {
             setLoading(false);
             setUploadError("No changes detected to update.");
-            return ;
+            return;
         }
         try {
-            
             const response = await fetch(
                 `/api/temple/edit/${temple._id}`,
                 {
-                    method : "PUT",
+                    method: "PUT",
                     headers: { "content-type": "application/json" },
-                    body : JSON.stringify({templeData : formData}),
+                    body: JSON.stringify({ templeData: formData }),
                 }
             );
-        
+
             const data = await response.json();
-    
-            if(!response.ok) {
+
+            if (!response.ok) {
                 setLoading(false);
                 return setUploadError(data.message);
             }
-    
+
             setUploadSuccess(data.message);
             setLoading(false);
-            setIsTempleUpdted(true);
-        } catch(err) {
+            setIsTempleUpdated(true);
+        } catch (err) {
             setLoading(false);
             setUploadError(err.message);
         }
-    }
+    };
+
     return (
         <>
+            <Helmet>
+                <title>Edit Temple Information</title>
+                <meta name="description" content="Edit the details of the temple including name, location, and image." />
+                <meta name="robots" content="noindex, nofollow" />
+            </Helmet>
             <Modal show={showModal} dismissible onClose={() => setShowModal(false)}>
                 <Modal.Header className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500">
                     <div className="relative w-full flex justify-center">
@@ -156,7 +162,7 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                             )}
                             <img
                                 src={tempImageUrl || temple.image}
-                                alt="profile_Image"
+                                alt="Temple Image"
                                 className={`
                                     h-full w-full rounded-full object-cover border-2 border-white
                                     ${uploadProgress > 0 && uploadProgress < 100 ? 'opacity-60' : ''}
@@ -166,7 +172,7 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <form onSubmit={handleSubmit} >
+                    <form onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-3">
                             <Label htmlFor="name">Temple Name</Label>
                             <TextInput
@@ -175,6 +181,7 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                                 value={formData.name}
                                 type="text"
                                 onChange={handleChange}
+                                aria-label="Temple Name"
                             />
                         </div>
                         <div className="flex flex-col gap-3 mt-2">
@@ -185,16 +192,17 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                                 value={formData.location}
                                 type="text"
                                 onChange={handleChange}
+                                aria-label="Temple Location"
                             />
                         </div>
                         <div className="flex flex-row-reverse my-4">
-                            <Button gradientDuoTone={"pinkToOrange"} onClick={handleSubmit} disabled={loading} >
-                                {loading ? <Spinner color={"pink"} /> : 'Save Changes'}
+                            <Button gradientDuoTone="pinkToOrange" onClick={handleSubmit} disabled={loading}>
+                                {loading ? <Spinner color="pink" /> : 'Save Changes'}
                             </Button>
                         </div>
                     </form>
-                    {uploadError &&(
-                        <Toast className=" float-right" theme="danger" onClose={() => setUploadError(null)}>
+                    {uploadError && (
+                        <Toast className="float-right" theme="danger" onClose={() => setUploadError(null)}>
                             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
                                 <HiX className="h-5 w-5" />
                             </div>
@@ -211,11 +219,14 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                             <Toast.Toggle />
                         </Toast>
                     )}
-                    <div onClick={()=> setAddMore(!addMore)} className="flex gap-1 items-center cursor-pointer text-xs text-blue-600 hover:underline font-semibold my-4" >
+                    <div
+                        onClick={() => setAddMore(!addMore)}
+                        className="flex gap-1 items-center cursor-pointer text-xs text-blue-600 hover:underline font-semibold my-4"
+                    >
                         <p>Add More</p>
-                        { addMore ? <MdOutlineKeyboardArrowUp /> : <MdOutlineKeyboardArrowDown /> }
+                        {addMore ? <MdOutlineKeyboardArrowUp /> : <MdOutlineKeyboardArrowDown />}
                     </div>
-                    { addMore && ( <AdditionalTempleInfo temple={temple} /> ) }
+                    {addMore && <AdditionalTempleInfo temple={temple} />}
                 </Modal.Body>
             </Modal>
         </>

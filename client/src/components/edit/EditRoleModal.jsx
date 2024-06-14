@@ -2,6 +2,7 @@ import { Modal, TextInput , Label , Badge, Checkbox, Button, Alert, Spinner } fr
 import { useEffect, useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function EditRoleModal({ roleData , setRoleData ,  showModal , setShowModal ,  setRoleUpdated }) {
     const {  currUser } = useSelector(state => state.user);
@@ -109,6 +110,11 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
     }
 
     return (
+        <>
+        <Helmet>
+            <title>Edit Role - Temple Management</title>
+            <meta name="description" content="Edit a role record in the temple management system. Update role details like role name, and permissions." />
+        </Helmet>
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"center-right"} >
             <Modal.Header>
                 <div>
@@ -166,5 +172,6 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
                 </div>
             </Modal.Body>
         </Modal>
+        </>
     );
 }

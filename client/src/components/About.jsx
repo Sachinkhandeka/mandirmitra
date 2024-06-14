@@ -45,8 +45,8 @@ export default function About() {
                     </li>
                     <li className="p-4" >
                         <span className="text-xl font-bold" >PDF Generation : </span>
-                        Generate detailed PDF reports for donations and expenses with just a click of a button, making it easy to share financial 
-                        information with stakeholders and auditors.
+                        Generate detailed PDF receipt and invitation for donors  with just a click of a button, making it easy to share with
+                        valuable donation givers.
                     </li>
                     <li className="p-4" >
                         <span className="text-xl font-bold" >Analytics Dashboard : </span>

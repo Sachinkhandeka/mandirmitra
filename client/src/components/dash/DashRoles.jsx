@@ -4,6 +4,7 @@ import { Table, Toast } from "flowbite-react";
 import { HiCheck, HiX } from "react-icons/hi";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
+import { Helmet } from "react-helmet-async";
 
 const EditRoleModal = React.lazy(()=> import("../edit/EditRoleModal"));
 const DeleteRoleModal = React.lazy(()=> import("../delete/DeleteRoleModal"));
@@ -62,6 +63,10 @@ export default function DashRoles() {
 
     return (
         <>
+            <Helmet>
+                <title>Manage Roles - Dashboard</title>
+                <meta name="description" content="View, edit, and delete roles for your temple. Manage user access rights efficiently." />
+            </Helmet>
             {/* Success toast */}
             {success && (
                 <Toast className="mb-3">

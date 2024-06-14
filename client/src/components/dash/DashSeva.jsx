@@ -5,6 +5,7 @@ import { FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 import { MdModeEdit } from "react-icons/md";
 import { HiCheck, HiX } from "react-icons/hi";
 import { TbFaceIdError } from "react-icons/tb";
+import { Helmet } from "react-helmet-async";
 
 export default function DashSeva() {
     const { currUser } = useSelector(state => state.user);
@@ -95,6 +96,11 @@ export default function DashSeva() {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>Seva Management - Dashboard</title>
+            <meta name="description" content="Manage Seva offerings efficiently. View, edit, and delete Seva offerings at your temple." />
+        </Helmet>
         <div className="min-h-screen py-8 px-4 relative">
             <div className="container mx-auto max-w-4xl rounded-lg shadow-lg p-6">
                 <h1 className="text-2xl font-bold mb-4 text-center">Seva Management</h1>
@@ -183,5 +189,6 @@ export default function DashSeva() {
                 </Toast>
             )}
         </div>
+        </>
     );
 }

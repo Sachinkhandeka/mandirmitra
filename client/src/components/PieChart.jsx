@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, PieController } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { Helmet } from "react-helmet-async";
 
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, PieController );
@@ -44,10 +45,16 @@ const DonationPieChart = ({ counts, title }) => {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>{title} - Donation And Expense Statistics</title>
+            <meta name="description" content={`View the donation and expense statistics for the past few months: ${labels.join(', ')}`} />
+        </Helmet>
         <div>
             <h2>{ title }</h2>
             <Pie data={chartData} />
         </div>
+        </>
     );
 };
 

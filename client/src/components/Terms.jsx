@@ -1,7 +1,14 @@
+import { Helmet } from "react-helmet-async";
+
 export default function Terms() {
     return (
         <>
-           <div className="min-h-screen" >
+            <Helmet>
+                <title>Terms and Conditions - MandirMitra</title>
+                <meta name="description" content="Read the terms and conditions of MandirMitra that govern your use of our temple management solution. By accessing or using our platform, you agree to comply with these terms and conditions." />
+                <meta name="keywords" content="terms and conditions, MandirMitra, temple management, platform usage" />
+            </Helmet>
+           <section className="min-h-screen" >
                 <h1 className="text-2xl font-bold mb-6" >Terms and Conditions:</h1>
                 <div className="flex flex-col gap-2 p-3" >
                     <h3 className="text-xl font-semibold" >Introduction:</h3>
@@ -41,7 +48,7 @@ export default function Terms() {
                         constitute your acceptance of such changes.
                     </p>
                 </div>
-           </div>
+           </section>
         </>
     );
 }

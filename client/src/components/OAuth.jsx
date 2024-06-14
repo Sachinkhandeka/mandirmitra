@@ -5,6 +5,7 @@ import { app } from "../firebase";
 import { useDispatch }  from "react-redux";
 import { signinStart, signinSuccess, signinFailure } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function OAuth({ templeId }) {
     const navigate = useNavigate();
@@ -45,6 +46,11 @@ export default function OAuth({ templeId }) {
         }
     }
     return (
+        <>
+        <Helmet>
+            <title>Sign up/in with Google</title>
+            <meta name="description" content="Sign up/in to your account using Google." />
+        </Helmet>
         <Button 
             type="button" 
             gradientDuoTone={"pinkToOrange"} 
@@ -53,5 +59,6 @@ export default function OAuth({ templeId }) {
                 <AiFillGoogleCircle className="w-6 h-6 mr-3" />
                 Continue with Google
         </Button>
+        </>
     );
 }

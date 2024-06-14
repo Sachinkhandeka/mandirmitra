@@ -2,6 +2,7 @@ import { Modal, Button, Spinner, Alert } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, setIsUpdated, expenseId }) {
     const { currUser } = useSelector(state => state.user);
@@ -30,6 +31,11 @@ export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, set
         }
     }
     return (
+        <>
+        <Helmet>
+            <title>Delete Expenses Confirmation - Temple Management</title>
+            <meta name="description" content="Confirm deletion of a expense in the temple management system. Ensure your actions before proceeding." />
+        </Helmet>
         <Modal show={showDeleteModal} dismissible onClose={()=> setShowDeleteModal(false)} popup >
             <Modal.Header />
                 <Modal.Body>
@@ -50,5 +56,6 @@ export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, set
                     </div>
                 </Modal.Body>
         </Modal>
+        </>
     );
 }

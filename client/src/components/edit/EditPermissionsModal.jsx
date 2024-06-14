@@ -1,6 +1,7 @@
 import { Button, Modal, Label , Select, Checkbox, Spinner, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default  function EditPermissionsModal({ showModal , setShowModal , setSuccess, permissionData , setPermissionUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -81,6 +82,10 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
     }
     return (
         <>
+            <Helmet>
+                <title>Edit Permission - Temple Management</title>
+                <meta name="description" content="Edit a permission record in the temple management system. Update permission details like permission name and actions." />
+            </Helmet>
             <Modal show={showModal} dismissible onClose={()=> setShowModal(false)} size={"md"} position={"top-right"} >
                 <Modal.Header>
                     <p>Edit Permission</p>

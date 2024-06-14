@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarElement } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { Helmet } from 'react-helmet-async';
 
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarElement);
@@ -55,10 +56,16 @@ const DonationBarChart = ({ amnt, title, label }) => {
         }]
     };
     return (
-        <div>
-            <h2>{ title }</h2>
-            <Bar data={data} options={chartOptions} />
-        </div>
+        <section className="donation-bar-chart">
+            <Helmet>
+                <title>{title} - Donation and Expense Analytics</title>
+                <meta name="description" content={`Bar chart showing ${title} over the last 7 months, depicting donations and expenses.`} />
+            </Helmet>
+            <div>
+                <h2>{ title }</h2>
+                <Bar data={data} options={chartOptions} />
+            </div>
+        </section>
     );
 };
 

@@ -1,11 +1,9 @@
 import { Button, Label, TextInput, Select, Datepicker, Alert, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { FaFilePdf } from "react-icons/fa6";
-import Invitation from "../pdf/Invitation";
+import { Helmet } from "react-helmet-async";
 
-export default function Event() {
+export default function CreateEvent() {
     const { currUser } = useSelector((state) => state.user);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
@@ -65,6 +63,10 @@ export default function Event() {
 
     return (
         <>
+            <Helmet>
+                <title>Create Event - Your Dashboard</title>
+                <meta name="description" content="Create a new event. Fill out the form with details such as event name, date, location, and status." />
+            </Helmet>
             <div className="w-full my-8 flex flex-col items-center">
                 <div className="w-full">
                     <div className="flex justify-center items-center">

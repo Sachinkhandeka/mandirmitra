@@ -5,6 +5,7 @@ import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons
 import { Button, Label, TextInput , Spinner, Alert } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux"
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
+import { Helmet } from "react-helmet-async";
 import OAuth from "../components/OAuth";
 
 export default function CreateSuperAdmin() {
@@ -69,6 +70,12 @@ export default function CreateSuperAdmin() {
         }
     }
     return(
+        <>
+         <Helmet>
+            <title>Create Super Admin - MadirMitra</title>
+            <meta name="description" content="Create a super admin for your temple on MadirMitra and manage all activities efficiently." />
+            <meta name="keywords" content="MadirMitra, super admin, temple management, create super admin" />
+        </Helmet>
         <div className="w-full p-8 relative" >
             <div className="absolute top-4 left-4 text-red-500" >
                 <FaOm size={26} />
@@ -130,5 +137,6 @@ export default function CreateSuperAdmin() {
                 </div>
             </div>
         </div>
+        </>
     );
 }

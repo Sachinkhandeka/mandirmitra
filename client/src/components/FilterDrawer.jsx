@@ -6,6 +6,7 @@ import { GoDash } from "react-icons/go";
 import { FaFilter } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount, setFilterCount}) {
     const { currUser } = useSelector(state => state.user);
@@ -146,6 +147,11 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
         setIsDrawerOpen(false);
     }
     return (
+        <>
+        <Helmet>
+            <title>Filter Donations</title>
+            <meta name="description" content="Filter donations by payment method, Seva, location, minimum donation amount and maximum donation amount." />
+        </Helmet>
         <Modal show={isDrawerOpen} dismissible onClose={()=> setIsDrawerOpen(false)} position="top-right">
             <Modal.Header>
                 <div className="flex gap-4 items-center" >
@@ -177,7 +183,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                     {/* Seva filter section */}
                     <div className="flex flex-col gap-4">
                         <h2 className="text-xl font-serif uppercase font-semibold">Seva</h2>
-                        <Select id="seva" defaultValue="" onChange={handleSevaChange}>
+                        <Select id="seva" defaultValue="" onChange={handleSevaChange} aria-label="Select Seva">
                             <option value="" disabled>Select</option>
                             {seva.map((sevaItem) => (
                                 <option key={sevaItem._id} value={sevaItem.sevaName}>
@@ -194,7 +200,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                             {/* Village */}
                             <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >Village</h2>
-                                <Select id="village" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) }>
+                                <Select id="village" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } aria-label="Select Village">
                                     <option value="Select" disabled>Select</option>
                                     { villages && villages.map(village => (
                                         <option value={village.name} key={village._id}>{village.name}</option>
@@ -204,7 +210,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                             {/* tehsil */}
                             <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >Tehsil</h2>
-                                <Select id="tehsil" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } >
+                                <Select id="tehsil" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } aria-label="Select Tehsil" >
                                     <option value="Select" disabled>Select</option>
                                     { tehsils && tehsils.map(tehsil => (
                                         <option value={tehsil.name} key={tehsil._id}>{tehsil.name}</option>
@@ -214,7 +220,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                              {/* district */}
                              <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >District</h2>
-                                <Select id="district" onClick={(e)=> setLocationParams({...locationParams,[e.target.id]: e.target.value})}>
+                                <Select id="district" onClick={(e)=> setLocationParams({...locationParams,[e.target.id]: e.target.value})} aria-label="Select District">
                                     <option value="Select" disabled>Select</option>
                                     { districts && districts.map(district => (
                                         <option value={district.name} key={district._id}>{district.name}</option>
@@ -224,7 +230,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                             {/* state */}
                             <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >State</h2>
-                                <Select id="state" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } >
+                                <Select id="state" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } aria-label="Select State" >
                                     <option value="Select" disabled>Select</option>
                                     { states && states.map(state => (
                                         <option value={state.name} key={state._id}>{state.name}</option>
@@ -234,7 +240,7 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                             {/* country */}
                             <div className="flex flex-col gap-3" >
                                 <h2 className="text-lg font-semibold" >Country</h2>
-                                <Select id="country" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } >
+                                <Select id="country" onClick={(e)=> setLocationParams({...locationParams, [e.target.id]: e.target.value}) } aria-label="Select Country" >
                                     <option value="Select" disabled>Select</option>
                                     { countries && countries.map(country => (
                                         <option value={country.name} key={country._id}>{country.name}</option>
@@ -248,9 +254,9 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                     <div className="flex flex-col gap-4" >
                         <h2 className="text-xl font-serif uppercase font-semibold" >Price Range</h2>
                         <div className="flex items-center justify-evenly gap-2" >
-                            <FloatingLabel type="number" id="minAmnt" value={minAmount} variant="outlined" label="Minimun" onChange={handleMinAmountChange} />
+                            <FloatingLabel type="number" id="minAmnt" value={minAmount} variant="outlined" label="Minimun" onChange={handleMinAmountChange} aria-labelledby="min-amount-label" />
                             <GoDash size={20} />
-                            <FloatingLabel  type="number" id="maxAmnt" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} />
+                            <FloatingLabel  type="number" id="maxAmnt" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} aria-labelledby="max-amount-label" />
                         </div>
                     </div>
                 </form>
@@ -260,5 +266,6 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
                 <Button onClick={handleSubmit} color={"dark"} >Apply Filters</Button>
             </Modal.Footer>
         </Modal>
+        </>
     )
 }

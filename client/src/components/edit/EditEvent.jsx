@@ -1,6 +1,7 @@
 import { Button, Label, TextInput, Select, Datepicker, Alert, Spinner, Modal } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, name, date, location, status, id }) {
     const { currUser } = useSelector(state => state.user); // Add currUser to useSelector
@@ -57,6 +58,10 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
 
     return (
         <>
+            <Helmet>
+                <title>Edit Event - Temple Management</title>
+                <meta name="description" content="Edit a event record in the temple management system. Update event details, address, and event information." />
+            </Helmet>
             <Modal show={editModal} dismissible onClose={() => setEditModal(false)}>
                 <Modal.Header>{ name }</Modal.Header>
                 <Modal.Body>

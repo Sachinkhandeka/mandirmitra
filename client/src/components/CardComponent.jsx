@@ -1,11 +1,17 @@
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Helmet } from 'react-helmet-async';
 
 export default function CardComponent({ total, label, compStyle, IconComponent, progressColor }) {
     // Calculate the percentage value
     const percentage = Math.min((parseInt(total)/ 100) * 100, 100);
     return (
-        <div className={`${compStyle ? compStyle : '' } rounded-md p-4 border border-b-4 w-full shadow-lg`} >
+        <>
+        <Helmet>
+            <title>{label} - Temple Analytics</title>
+            <meta name="description" content={`Analytical card component displaying ${label} with total ${total}.`} />
+        </Helmet>
+        <section className={`${compStyle ? compStyle : '' } rounded-md p-4 border border-b-4 w-full shadow-lg`} >
             <h1 className={`text-sm font-serif uppercase font-medium text-gray-400 dark:text-white`} >{ label }</h1>
             <div className="w-full flex items-center justify-between" >
                 <div  className=" w-full flex items-center gap-4" >
@@ -26,6 +32,7 @@ export default function CardComponent({ total, label, compStyle, IconComponent, 
                     <h3 className="text-md font-medium text-center" >{ Math.round(percentage) }</h3>
                 </div>
             </div>
-        </div>
-    )
+        </section>
+        </>
+    );
 }

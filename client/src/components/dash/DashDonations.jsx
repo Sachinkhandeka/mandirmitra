@@ -7,6 +7,7 @@ import { TbFaceIdError } from "react-icons/tb";
 import { HiCheck, HiX } from "react-icons/hi";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 
 // importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
@@ -93,6 +94,11 @@ export default function DashDonations() {
     }
     return (
         <>
+        <Helmet>
+            <title>Manage Donations - Dashboard</title>
+            <meta name="description" content="Manage and track donations in your temple dashboard. View, edit, and delete donations with ease." />
+            <meta name="keywords" content="donations, manage donations, temple donations, donation management" />
+        </Helmet>
         { error && (
             <Toast className="my-4" >
                 <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">

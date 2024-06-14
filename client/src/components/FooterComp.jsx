@@ -1,10 +1,16 @@
 import { Footer } from "flowbite-react";
-import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitter } from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsTwitter } from "react-icons/bs";
+import { Helmet } from "react-helmet-async";
 
 import brand from "../assets/brand.jpg";
 
 export default function FooterComp() {
     return (
+        <>
+            <Helmet>
+                <title>Footer - MandirMitra</title>
+                <meta name="description" content="Connect with MandirMitra through our social media platforms and learn more about us, our privacy policy, and terms and conditions." />
+            </Helmet>
             <Footer container className="z-50 sticky left-0 mt-6" >
                 <div className="w-full">
                     <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
@@ -44,5 +50,6 @@ export default function FooterComp() {
                     </div>
                 </div>
             </Footer>
+        </>
     );
 }

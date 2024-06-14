@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { setSearchTerm } from "../redux/search/searchSlice";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 import brand from "../assets/brand.jpg";
 
@@ -20,6 +21,13 @@ export default function Header() {
     };
 
     return(
+        <>
+        <Helmet>
+            <title>MandirMitra - Your Devotional Companion</title>
+            <meta name="description" content="Find and explore various sections like donations, expesnes, and location-address content with MandirMitra. Search for your donations, expenses, Seva and more." />
+            <meta name="keywords" content="temples, deities, Hinduism, search, MandirMitra, devotion, donation, expense, navbar, search" />
+            <meta name="author" content="MandirMitra" />
+        </Helmet>
         <Navbar className="border border-b-2 sticky top-0 z-20" >
             <Link to={"/"} className="cursor-pointer">
                 <img src={brand} alt="MandirMitra" className="w-8 h-8 rounded-md object-cover object-center border border-gray-300"/>
@@ -45,5 +53,6 @@ export default function Header() {
                 </Button>
             </div>
         </Navbar>
+        </>
     );
 }

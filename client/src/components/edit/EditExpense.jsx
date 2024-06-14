@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Textarea, Alert } from "flowbite-react";
+import { Helmet } from "react-helmet-async";
 
 export default function EditExpense({ showModal, setShowModal, setIsUpdated, expense }) {
     const { currUser } = useSelector(state => state.user);
@@ -65,6 +66,11 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
     };
 
     return (
+        <>
+        <Helmet>
+                <title>Edit Expense - Temple Management</title>
+                <meta name="description" content="Edit a expense record in the temple management system. Update expense details like title, description, date, category, status, and amount." />
+        </Helmet>
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"top-right"}>
             <Modal.Header>{expense.category}</Modal.Header>
             <Modal.Body> 
@@ -155,5 +161,6 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                     </div>
             </Modal.Body>
         </Modal>
+        </>
     );
 }
