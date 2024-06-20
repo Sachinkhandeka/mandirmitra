@@ -1,0 +1,68 @@
+.custom-phone-input-container {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 0.4rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.custom-phone-input-container:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.custom-phone-input {
+    width: 100% !important;
+    height: 60px !important;
+    border-radius: 0.4rem !important;
+    border: none;
+    background: transparent !important;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    outline: none !important;
+    border: none !important;
+    padding-left: 10px;
+}
+
+.custom-phone-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.custom-dropdown-button {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    cursor: pointer;
+    outline: none;
+}
+.custom-dropdown-container {
+    background: white;
+    color: black;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.custom-dropdown-item {
+    padding: 10px;
+    color: #fffbfb;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.custom-dropdown-item:hover {
+    background: #f0f0f0;
+}
+
+.custom-search-field {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+}
+
+.custom-search-field::placeholder {
+    color: #aaa;
+}

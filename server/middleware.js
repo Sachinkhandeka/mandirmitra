@@ -79,7 +79,8 @@ module.exports.validateSuperAdminSchema = (req ,res ,next)=> {
     if(!req.body.templeId) {
         superAdmin = {
             username : req.body.username, 
-            email : req.body.email, 
+            email : req.body.email,
+            phoneNumber : req.body.phoneNumber, 
             password : req.body.password, 
             profilePicture : req.body.profilePicture,
             templeId : req.params.templeId, 

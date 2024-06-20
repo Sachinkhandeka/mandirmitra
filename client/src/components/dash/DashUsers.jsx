@@ -90,6 +90,7 @@ export default function DashUsers() {
                         <Table.HeadCell>Profile Picture</Table.HeadCell>
                         <Table.HeadCell>Username</Table.HeadCell>
                         <Table.HeadCell>Email Address</Table.HeadCell>
+                        <Table.HeadCell>phoneNumber</Table.HeadCell>
                         <Table.HeadCell>Roles</Table.HeadCell>
                         <Table.HeadCell>Actions</Table.HeadCell>
                     </Table.Head>
@@ -108,6 +109,7 @@ export default function DashUsers() {
                                     </Table.Cell>
                                     <Table.Cell>{user.username}</Table.Cell>
                                     <Table.Cell>{user.email}</Table.Cell>
+                                    <Table.Cell>{user.phoneNumber}</Table.Cell>
                                     <Table.Cell>
                                         {user.roles && user.roles.length > 0
                                             ? user.roles.map((role) => (

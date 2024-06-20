@@ -27,6 +27,7 @@ export default function OAuth({ templeId }) {
                         name : result.user.displayName,
                         email: result.user.email,
                         googlePhotoUrl : result.user.photoURL,
+                        phoneNumber : localStorage.getItem("signupPhoneNumber"),
                         templeId : templeId,
                     })
                 }
@@ -54,8 +55,10 @@ export default function OAuth({ templeId }) {
         <Button 
             type="button" 
             gradientDuoTone={"pinkToOrange"} 
-            outline className="w-full my-8"
-            onClick={handleGoogleClick}>
+            outline 
+            className="w-full my-8 text-sm"
+            onClick={handleGoogleClick}
+        >
                 <AiFillGoogleCircle className="w-6 h-6 mr-3" />
                 Continue with Google
         </Button>

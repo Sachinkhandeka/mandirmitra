@@ -12,6 +12,12 @@ router.post(
     wrapAsync(superAdmin.createController),
 );
 
+//login with phoneNumber
+router.post(
+    "/login",
+    wrapAsync(superAdmin.singinWithPhoneNumber),
+);
+
 //login route for superadmin
 router.post(
     "/signin",

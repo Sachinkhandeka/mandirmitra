@@ -79,13 +79,13 @@ export default function AddTehsilGaam({ setLocationAdded }) {
     }
 
     return (
-        <section className="add-tehsil-gaam">
+        <section className="add-tehsil-gaam flex-1">
             <Helmet>
                 <title>Add Country, State, Disstrict, Tehsil And Village - MandirMitra</title>
                 <meta name="description" content="Add country, state, district, tehsil and village information for location." />
             </Helmet>
 
-            <div className="flex-1 border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4">
+            <div className="border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4">
                 <h1 className="text-xl font-mono uppercase text-center">Add Location</h1>
                 {error && (<Alert onDismiss={() => setError(null)} color={"failure"}>{error}</Alert>)}
                 {success && (<Alert onDismiss={() => setSuccess(null)} color={"success"}>{success}</Alert>)}

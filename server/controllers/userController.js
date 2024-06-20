@@ -1,4 +1,3 @@
-const { model } = require("mongoose");
 const User = require("../models/userSchema");
 const ExpressError = require("../utils/ExpressError");
 const bcryptjs = require("bcryptjs");
@@ -53,14 +52,14 @@ module.exports.createController = async(req ,res)=> {
         throw new ExpressError(400 , "Admin not found.");
     }
 
-    if(!formData.username || !formData.email || !formData.password || !Array.isArray(formData.roles)) {
+    if(!formData.username || !formData.email || !formData.phoneNumber || !formData.password || !Array.isArray(formData.roles)) {
         throw new ExpressError(400 , "Invalid data formate.");
     }
 
-    const  isUserDuplicate = await User.findOne({  username : formData.username, email : formData.email });
+    const  isUserDuplicate = await User.findOne({  username : formData.username, email : formData.email, phoneNumber : formData.phoneNumber });
 
     if(isUserDuplicate) {
-        throw new ExpressError(400, "Username or Email already taken.Try with new one.")
+        throw new ExpressError(400, "Username, Email or phoneNumber already taken.Try with new one.")
     }
     if(!templeId) {
         throw new ExpressError(400 , "Access denied.");
@@ -72,6 +71,7 @@ module.exports.createController = async(req ,res)=> {
         username : formData.username,
         email : formData.email,
         password : hashPass,
+        phoneNumber : formData.phoneNumber,
         roles : formData.roles,
         templeId : templeId ,
     });
@@ -82,7 +82,7 @@ module.exports.createController = async(req ,res)=> {
     } catch (error) {
         if (error.code === 11000) {
             // Duplicate key error, indicating that username or email is already taken
-            throw new ExpressError(400, "Username or Email already taken.");
+            throw new ExpressError(400, "Username, Email or phoneNumber already taken.");
         } else {
             // Other Mongoose errors
             throw new ExpressError(500, "Internal Server Error");
@@ -141,6 +141,9 @@ module.exports.editController = async(req ,res)=> {
     }
     if (formData.email) {
         updateObj.email = formData.email;
+    }
+    if(formData.phoneNumber) {
+        updateObj.phoneNumber = formData.phoneNumber;
     }
     if (formData.profilePicture) {
         updateObj.profilePicture = formData.profilePicture;
