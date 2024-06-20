@@ -1,5 +1,5 @@
 import { Table, Pagination, Tooltip, Button } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { TbFaceIdError } from "react-icons/tb";
@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { Helmet } from "react-helmet-async";
+import { debounce } from "lodash";
 
 const EditExpense = React.lazy(()=> import("../edit/EditExpense"));
 const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
@@ -35,6 +36,7 @@ export default function DashExpenses() {
 
         // Conditionally include searchTerm only when tab is 'daans'
         const searchParam = tab === 'expenses' ? `&searchTerm=${searchTerm}` : '';
+       
         try {
             const response = await fetch(
                 `/api/expense/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`
@@ -52,13 +54,16 @@ export default function DashExpenses() {
         }
     };
 
+    //debounce fetchExpenses function
+    const debouncedFetchExpense = useCallback(debounce(getExpenses,500),[currUser, location.search, searchTerm]);
+
     useEffect(() => {
-        getExpenses();
+        debouncedFetchExpense();
     }, [currUser, location.search, searchTerm ]);
 
     useEffect(() => {
         setIsUpdated(false);
-        getExpenses();
+        debouncedFetchExpense();
     }, [isUpdated]);
 
     //handle edit functionality

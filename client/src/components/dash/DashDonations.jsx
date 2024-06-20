@@ -1,5 +1,5 @@
 import { Table, Toast, Pagination, Button, Tooltip } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { HiCheck, HiX } from "react-icons/hi";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
+import { debounce } from "lodash";
 
 // importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
@@ -36,15 +37,14 @@ export default function DashDonations() {
 
     // Function to fetch all donations from the API
     const  getAllDonations = async()=> {
+        const tab = queryParams.get("tab");
+
+        // Conditionally include searchTerm only when tab is 'daans'
+        const searchParam = tab === 'daans' ? `&searchTerm=${searchTerm}` : '';
         try {
             setLoading(true);
             setError(null);
             setSuccess(null);
-
-            const tab = queryParams.get("tab");
-
-            // Conditionally include searchTerm only when tab is 'daans'
-            const searchParam = tab === 'daans' ? `&searchTerm=${searchTerm}` : '';
             
             // Fetch donation data from the API endpoint
             const response = await fetch(
@@ -68,17 +68,20 @@ export default function DashDonations() {
         }
     }
 
+    // Debounce getAllDonations function
+    const debouncedFetchDonations = useCallback(debounce(getAllDonations, 500), [searchTerm, currUser, location.search]);
+
     // Effect hook to fetch donations when the isDonationUpdated is true
     useEffect(()=>{
         if(isDonationUpdated) {
-            getAllDonations();
+            debouncedFetchDonations();
             setIsDonationUpdated(false);
         }
     },[isDonationUpdated]);
 
     // Effect hook to fetch donations when the component mounts or currUser changes
     useEffect(()=> {
-        getAllDonations();
+        debouncedFetchDonations();
     },[ currUser, location.search, searchTerm ]);
 
     //function  to handle the edit functionality
