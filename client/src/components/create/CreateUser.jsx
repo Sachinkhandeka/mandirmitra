@@ -2,6 +2,9 @@ import { useSelector } from "react-redux";
 import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import "../../css/PhoneInputCostom.css";
 import { Helmet } from  "react-helmet-async";
 
 export default function CreateUser({ roleUpdated }) {
@@ -15,6 +18,7 @@ export default function CreateUser({ roleUpdated }) {
         username : '',
         email : '',
         password : '',
+        phoneNumber : '',
         roles : [],
     });
 
@@ -45,9 +49,16 @@ export default function CreateUser({ roleUpdated }) {
             [id] : value,
         });
     }
+    //handle onChange  for phonenumber
+    const handleOnChange = (value, { dialCode = '' }) => {
+        setFormdata({
+            ...formData,
+            phoneNumber : `+${dialCode}${value.slice(dialCode.length)}`
+        })
+    };
 
-     //handle onChange for roles
-     const handleRoleSelection = (e , role)=> {
+    //handle onChange for roles
+    const handleRoleSelection = (e , role)=> {
         const { checked } = e.target ; 
         if(checked) {
             setFormdata((prev)=> ({
@@ -110,6 +121,19 @@ export default function CreateUser({ roleUpdated }) {
                                 <div className="flex flex-col gap-3 mt-2" >
                                     <Label htmlFor="email">email</Label>
                                     <TextInput type="email" id="email" name="email" placeholder="company.@gmail.com" onChange={handleChange} required />
+                                </div>
+                                <div className="flex flex-col gap-3 mt-2" >
+                                <Label htmlFor="email">phoneNumber</Label>
+                                    <PhoneInput
+                                        country={'in'}
+                                        onChange={handleOnChange}
+                                        placeholder="Enter Phone Number"
+                                        containerClass="custom-phone-input-container"
+                                        inputClass="custom-phone-input"
+                                        buttonClass="custom-dropdown-button"
+                                        dropdownClass="custom-dropdown-container"
+                                        searchClass="custom-search-field"
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-3 mt-2 relative" >
                                     <Label htmlFor="password" >password: </Label>

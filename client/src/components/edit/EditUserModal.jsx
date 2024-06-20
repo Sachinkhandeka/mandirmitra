@@ -13,6 +13,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
     const [formData, setFormData] = useState({
         username: '',
         email: '',
+        phoneNumber : '',
         password: '',
         roles: [],
     });
@@ -60,6 +61,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                 ...prevFormData,
                 username: userData.username,
                 email: userData.email,
+                phoneNumber : userData.phoneNumber,
                 roles: userData.roles,
             }));
         }

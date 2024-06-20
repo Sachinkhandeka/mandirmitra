@@ -26,6 +26,11 @@ const superAdminSchema = new  mongoose.Schema({
     templeId : {
         type : mongoose.Schema.Types.ObjectId,
         required : true
+    },
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
     }
 },{ timestamps : true });
 

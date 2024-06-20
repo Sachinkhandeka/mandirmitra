@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Link } from "react-router-dom";
-import { FaOm } from "react-icons/fa6";
-import { FaSuperpowers, FaCopyright, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Button, Label, TextInput, Spinner, Alert } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
@@ -59,31 +58,23 @@ export default function SigninSuperAdmin() {
     };
     
     return (
-        <div className="w-full p-8 relative">
+        <section className="flex flex-col gap-4 w-full md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 pt-1 p-10 text-black">
             <Helmet>
-                <title>Super Admin Sign In - MandirMitra</title>
+                <title>Super Admin Sign In - MandirMitra</title> 
                 <meta name="description" content="Sign in as a Super Admin to manage and oversee all temple activities, donations, events, and more through MandirMitra." />
                 <meta name="keywords" content="MandirMitra, Super Admin Sign In, Temple Management, Donations, Events, Secure Login" />
             </Helmet>
-            <div className="absolute top-4 left-4 text-red-500">
-                <FaOm size={26} />
-            </div>
-            <div className="absolute top-4 right-4 text-red-500">
-                <FaOm size={26} />
-            </div>
-            <div className="mx-auto p-4 border border-gray-200 shadow-lg rounded-lg w-full max-w-[600px] my-10">
+            <div>
                 {error && (
                     <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>
                         {error}
                     </Alert>
                 )}
-                <div className="flex whitespace-nowrap gap-4 my-4 items-center justify-center">
-                    <FaSuperpowers size={28} />
-                    <h1 className="text-2xl font-mono font-bold uppercase">Login with Super Admin</h1>
-                    <FaSuperpowers size={28} />
+                <div className="whitespace-nowrap ">
+                    <h1 className="text-2xl font-serif font-bold">Login Super Admin</h1>
                 </div>
-                <form className="p-4" onSubmit={handleSubmit}>
-                    <div className="flex flex-col gap-4 my-4">
+                <form onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-4 my-2">
                         <Label htmlFor="email">Email:</Label>
                         <TextInput
                             type="email"
@@ -94,7 +85,7 @@ export default function SigninSuperAdmin() {
                             required
                         />
                     </div>
-                    <div className="flex flex-col gap-4 my-4 relative">
+                    <div className="flex flex-col gap-4 my-2 relative">
                         <Label htmlFor="password">Password:</Label>
                         <TextInput
                             type={`${viewPass ? 'text' : 'password'}`}
@@ -112,7 +103,7 @@ export default function SigninSuperAdmin() {
                         onClick={handleSubmit}
                         gradientDuoTone={"purpleToBlue"}
                         outline
-                        className="w-full my-8"
+                        className="w-full my-4"
                         type="submit"
                         disabled={loading}
                     >
@@ -120,23 +111,16 @@ export default function SigninSuperAdmin() {
                     </Button>
                     <OAuth />
                 </form>
-                <div className="flex items-center flex-wrap gap-2 text-sm p-2">
-                    <p className="whitespace-nowrap">Don't have an account?</p>
-                    <span className="text-blue-600 text-sm">
-                        <Link to={"/signup"} className="hover:underline">Signup</Link>
-                    </span>
-                </div>
-                <div className="flex items-center flex-wrap gap-2 text-sm p-2">
-                    <p className="whitespace-nowrap">Login with user.</p>
-                    <span className="text-blue-600 text-sm">
-                        <Link to={"/user-signin"} className="hover:underline">User</Link>
-                    </span>
-                </div>
-                <div className="p-2 flex gap-2 items-center text-gray-500 text-sm">
-                    <FaCopyright size={18} />
-                    <p>All copyright reserved by MandirMitra.</p>
-                </div>
             </div>
-        </div>
+            <div className='flex items-center justify-center mt-2 border-t border-t-gray-500 relative' >
+                <span className=' absolute top-[-15px] px-4 bg-white' >or</span>
+            </div>
+            <div className='flex items-center gap-2 text-sm'>
+                Login with OTP ?
+                <span className='text-blue-500 hover:underline'>
+                    <Link to="#" onClick={() => setShowComponent('phoneInput')}>Click here</Link>
+                </span>
+            </div>
+        </section>
     );
 }

@@ -24,7 +24,7 @@ export default function LocationCard({ label, data, getLocation }) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         entityType: label.toLowerCase(),
-                        data: { name: editName .toLowerCase()},
+                        data: { name: editName.toLowerCase() },
                     }),
                 }
             );
@@ -33,7 +33,7 @@ export default function LocationCard({ label, data, getLocation }) {
                 getLocation(); // Refresh data after edit
                 setEditId(null);
                 setEditName("");
-                setSuccess("Updated successfull")
+                setSuccess("Updated successfully");
             } else {
                 setError(data.message);
             }
@@ -89,6 +89,8 @@ export default function LocationCard({ label, data, getLocation }) {
         );
     };
 
+    const canEditOrDelete = hasPermission("update") || hasPermission("delete");
+
     return (
         <>
         <Helmet>
@@ -104,15 +106,15 @@ export default function LocationCard({ label, data, getLocation }) {
                     {alphabet.map((letter) => (
                         <button
                             key={letter}
-                                className={`w-8 h-8 px-4 py-2 rounded-full border flex items-center justify-center mx-1 
+                            className={`w-8 h-8 px-4 py-2 rounded-full border flex items-center justify-center mx-1 
                                 ${
                                     selectedLetter === letter
                                     ? "bg-gradient-to-r from-green-400 to-blue-500 text-white"
                                     : "bg-white text-black dark:bg-slate-800 dark:text-white"
                                 } hover:bg-blue-300`}
-                                onClick={() => setSelectedLetter(letter)}
-                            >
-                                {letter.toUpperCase() }
+                            onClick={() => setSelectedLetter(letter)}
+                        >
+                            {letter.toUpperCase() }
                         </button>
                     ))}
                 </div>
@@ -123,8 +125,8 @@ export default function LocationCard({ label, data, getLocation }) {
                 </div>
             ) : (
                 <>
-                    { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4  z-40">{error}</Alert> ) }
-                    { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="my-4  z-40">{success}</Alert> ) }
+                    { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="fixed bottom-4 right-4 my-4">{error}</Alert> ) }
+                    { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="fixed bottom-4 right-4 my-4">{success}</Alert> ) }
                     <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                         <thead className="bg-gray-100 dark:bg-gray-700 sticky top-8 z-10">
                             <tr>
@@ -140,12 +142,14 @@ export default function LocationCard({ label, data, getLocation }) {
                                 >
                                     Name
                                 </th>
-                                <th
-                                    scope="col"
-                                    className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                >
-                                    Actions
-                                </th>
+                                { canEditOrDelete && (
+                                    <th
+                                        scope="col"
+                                        className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        Actions
+                                    </th>
+                                ) }
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
@@ -165,42 +169,40 @@ export default function LocationCard({ label, data, getLocation }) {
                                             item.name
                                         )}
                                     </td>
-                                    <td className="p-4 text-sm font-normal text-gray-900 dark:text-white">
-                                        <div className="flex gap-2">
-                                            {editId === item._id ? (
-                                               <>
-                                                    {hasPermission("update") && (
-                                                        <>
-                                                            <FaSave onClick={() => editLocation(item._id)} className="text-green-500 cursor-pointer mr-2" />
-                                                            <FaTimes  onClick={()=> { setEditId(null);   setEditName("");}} className="text-red-500 cursor-pointer" />
-                                                   </>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <>
-                                                { hasPermission("update") && (
-                                                    <FaEdit
-                                                        onClick={() => {
-                                                            setEditId(item._id);
-                                                            setEditName(
-                                                                item.name
-                                                            );
-                                                        }}
-                                                        className="text-blue-500 cursor-pointer mr-2"
-                                                    />
-                                                ) }
-                                                { hasPermission("delete") && (
-                                                    <FaTrash
-                                                        onClick={() =>
-                                                            deleteLocation(item._id)
-                                                        }
-                                                        className="text-red-500 cursor-pointer"
-                                                    />
-                                                ) }
-                                                </>
-                                            )}
-                                        </div>
-                                    </td>
+                                    {canEditOrDelete && (
+                                        <td className="p-4 text-sm font-normal text-gray-900 dark:text-white">
+                                            <div className="flex gap-2">
+                                                {editId === item._id ? (
+                                                    <>
+                                                        {hasPermission("update") && (
+                                                            <>
+                                                                <FaSave onClick={() => editLocation(item._id)} className="text-green-500 cursor-pointer mr-2" />
+                                                                <FaTimes onClick={()=> { setEditId(null); setEditName(""); }} className="text-red-500 cursor-pointer" />
+                                                            </>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {hasPermission("update") && (
+                                                            <FaEdit
+                                                                onClick={() => {
+                                                                    setEditId(item._id);
+                                                                    setEditName(item.name);
+                                                                }}
+                                                                className="text-blue-500 cursor-pointer mr-2"
+                                                            />
+                                                        )}
+                                                        {hasPermission("delete") && (
+                                                            <FaTrash
+                                                                onClick={() => deleteLocation(item._id)}
+                                                                className="text-red-500 cursor-pointer"
+                                                            />
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>

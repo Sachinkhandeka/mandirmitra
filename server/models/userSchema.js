@@ -27,6 +27,11 @@ const userSchema =  new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "Temple",
     },
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     roles : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Role"

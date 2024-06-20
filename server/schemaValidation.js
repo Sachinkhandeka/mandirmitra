@@ -51,6 +51,7 @@ const superAdminSchema = Joi.object({
     isAdmin: Joi.boolean().default(true),
     profilePicture: Joi.string().default('https://www.clipartmax.com/png/middle/82-820644_author-image-admin-icon.png'),
     templeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().error(new Error('Invalid temple ID')),
+    phoneNumber: Joi.string().pattern(/^\+\d{1,3}\d{8,}$/).required().error(new Error('Invalid phone number')),
 }).required().options({ abortEarly: false });
 
 //temple schema validations
@@ -68,6 +69,7 @@ const userSchema = Joi.object({
     profilePicture: Joi.string().default('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXNChij9NGxfXhZQeEwg0TG9WAK6vm4vVm-e0EncJcCQ&s'),
     isAdmin: Joi.boolean().default(false),
     templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    phoneNumber: Joi.string().pattern(/^\+\d{1,3}\d{8,}$/).required().error(new Error('Invalid phone number')),
     roles: Joi.array().items().error(new Error('Roles must be an array of strings'))
 }).required().options({ abortEarly: false });
 

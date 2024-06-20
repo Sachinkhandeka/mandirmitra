@@ -2,6 +2,7 @@ import { Modal, Button, Label,TextInput, Alert, Spinner, Toast } from "flowbite-
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { MdOutlineAttachEmail, MdOutlineCall } from "react-icons/md";
 import { HiCheck, HiX } from "react-icons/hi";
 import { useDispatch , useSelector } from "react-redux";
 import { updateStart, updateSuccess, updateFailure, resetError } from "../../redux/user/userSlice";
@@ -38,6 +39,7 @@ export default function DashProfile() {
     const [ formData , setFormData ] = useState({
         profilePicture : currUser.profilePicture,
         username : currUser.username,
+        phoneNumber : currUser.phoneNumber,
         email : currUser.email,
         password : "",
     });
@@ -173,9 +175,15 @@ export default function DashProfile() {
                             />
                         </div>
                     </div>
-                    <div className="mt-10 md:w-20" >
-                        <h1 className="text-2xl font-mono font-bold pl-4" >{  currUser.username }</h1>
-                        <p className="text-sm pl-4" >{ currUser.email }</p>
+                    <div className="mt-10 md:w-20 font-serif" >
+                        <h1 className="text-xl md:text-2xl font-bold pl-4 mb-4" >{  currUser.username }</h1>
+                        <p className="text-xs md:text-sm pl-6 mb-2 flex gap-2 items-center" >
+                            <span className=" animate-bounce"><MdOutlineAttachEmail /></span>
+                            { currUser.email }
+                        </p>
+                        <p className="text-xs md:text-sm pl-6 mb-4 flex gap-2 items-center" >
+                            <span className=" animate-bounce" ><MdOutlineCall /></span>
+                            { currUser.phoneNumber }</p>
                     </div>
                     <div className="p-4 md:absolute md:right-8 md:top-28 rounded-full w-14 h-14 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer" >
                         <FaPencil size={20} onClick={()=> setShowModal(true)} />

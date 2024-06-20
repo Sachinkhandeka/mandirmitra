@@ -9,6 +9,7 @@ const SigninSuperAdmin = React.lazy(()=> import("./pages/SigninSuperAdmin"));
 const SignupSuperAdmin =  React.lazy(()=> import("./pages/SignupSuperAdmin"));
 const CreateSuperAdmin = React.lazy(()=> import("./pages/CreateSuperAdmin"));
 const SigninUser = React.lazy(()=> import("./pages/SigninUser"));
+const PhoneOtpForm = React.lazy(()=> import("./pages/PhoneOtpForm"));
 
 export default function App() {
   return (
@@ -22,6 +23,17 @@ export default function App() {
       <BrowserRouter>
           <Routes>
             <Route 
+                path="/login"
+                element={
+                  <Suspense fallback={
+                    <div className="flex justify-center items-center min-h-screen gap-4" >
+                      <Spinner size={"xl"} />
+                      <div>Loading ...</div>
+                    </div>
+                  } ><PhoneOtpForm /></Suspense>
+                }
+            />
+            <Route 
                 element={
                   <Suspense fallback={
                     <div className="flex justify-center items-center min-h-screen gap-4" >
@@ -30,8 +42,8 @@ export default function App() {
                     </div>
                   } ><PrivateRoute /></Suspense>
                 }
-              >
-               <Route 
+            >
+            <Route 
                 path="/"
                 element={
                   <Suspense fallback={
@@ -41,52 +53,8 @@ export default function App() {
                     </div>
                   } ><Dashboard /></Suspense>
                 }
-              />
+            />
             </Route>
-              <Route 
-                path="/signin"
-                element={
-                  <Suspense fallback={
-                    <div className="flex justify-center items-center min-h-screen gap-4" >
-                      <Spinner size={"xl"} />
-                      <div>Loading ...</div>
-                    </div>
-                  } ><SigninSuperAdmin /></Suspense>
-                }
-              />
-              <Route 
-                path="/signup"
-                element={
-                  <Suspense fallback={
-                    <div className="flex justify-center items-center min-h-screen gap-4" >
-                      <Spinner size={"xl"} />
-                      <div>Loading ...</div>
-                    </div>
-                  } ><SignupSuperAdmin /></Suspense>
-                }
-              />
-               <Route 
-                path="/superadmin"
-                element={
-                  <Suspense fallback={
-                    <div className="flex justify-center items-center min-h-screen gap-4" >
-                      <Spinner size={"xl"} />
-                      <div>Loading ...</div>
-                    </div>
-                  } ><CreateSuperAdmin /></Suspense>
-                }
-              />
-              <Route 
-                path="/user-signin"
-                element={
-                  <Suspense fallback={
-                    <div className="flex justify-center items-center min-h-screen gap-4" >
-                      <Spinner size={"xl"} />
-                      <div>Loading ...</div>
-                    </div>
-                  } ><SigninUser /></Suspense>
-                }
-              />
           </Routes>
       </BrowserRouter>
     </>
