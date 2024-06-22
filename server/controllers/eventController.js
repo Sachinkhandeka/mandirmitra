@@ -1,4 +1,5 @@
 const Event = require("../models/eventSchema");
+const Invitation = require("../models/invitationSchema");
 const ExpressError = require("../utils/ExpressError");
 
 module.exports.create = async(req , res)=> {
@@ -104,7 +105,11 @@ module.exports.deleteEvent = async (req, res) => {
         throw new ExpressError(404, "Event not found.");
     }
 
+    // Delete the event
     await Event.deleteOne({ _id: id, temple: templeId });
+
+    // Delete all invitations associated with this event
+    await Invitation.deleteMany({ event: id });
 
     res.status(200).json({
         message: "Event deleted successfully",
