@@ -138,7 +138,7 @@ export default function PhoneOtpForm() {
                             </div>
                         </form>
                         <div className='flex items-center justify-center gap-2 mt-2 border-t border-t-gray-500 relative mx-6' >
-                            <span className=' absolute top-[-15px] px-4 bg-white' >or</span>
+                            <span className='absolute top-[-15px] px-4 bg-white text-black' >or</span>
                         </div>
                         <div className='flex items-center gap-2 text-sm text-black px-8'>
                             Login with user email?
