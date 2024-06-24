@@ -138,10 +138,11 @@ export default function Home() {
             />
             <meta
                 name="keywords"
-                content="MandirMitra, temples, Hinduism, deities, donations, expenses, analytics, spirituality, religious management"
+                content="MandirMitra, mandirmitra, mandir mitra, mandir, mitra temples, Hinduism, deities, donations, expenses, analytics, spirituality, religious management"
             />
+            <meta name="google-site-verification" content="VvYIu8ULwVvBXQX9D3xXhNJ_mVl9E7PKyae2OrlXMMQ" />
             <meta name="author" content="MandirMitra" />
-            <link rel="canonical" href="https://www.mandirmitra.com/home" />
+            <link rel="canonical" href="https://mandirmitra.onrender.com//home" />
         </Helmet>
         <div className="w-full" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
