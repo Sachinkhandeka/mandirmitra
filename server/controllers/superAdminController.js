@@ -144,7 +144,7 @@ module.exports.signinController = async(req ,res)=> {
 
 //google auth route handler
 module.exports.googleController = async(req ,res)=> {
-    const { email , name , googlePhotoUrl, templeId } = req.body ; 
+    const { email , name , googlePhotoUrl, phoneNumber, templeId } = req.body ; 
 
     //if superAdmin present -> login 
     const isSuperAdmin = await SuperAdmin.findOne({email});
