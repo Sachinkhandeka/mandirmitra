@@ -39,7 +39,7 @@ export default function OAuth({ templeId }) {
                 dispatch(signinFailure(data.message));
                 return ;
             }
-            dispatch(signinSuccess(data.currUser));
+            dispatch(signinSuccess(data.rest));
             navigate("/");
 
         }catch(err) {
