@@ -194,7 +194,7 @@ module.exports.googleController = async(req ,res)=> {
         const { password : pass, ...rest } = superAdmin._doc;
 
         res.status(200).cookie("access_token", token, { httpOnly : true }).json({
-            currUser : rest,
+            rest,
         });
 
     }
