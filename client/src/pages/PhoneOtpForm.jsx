@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { Button, Spinner } from 'flowbite-react';
+import { Alert, Button, Spinner } from 'flowbite-react';
 import OtpInput from '../components/OtpInput';
 import { app } from '../firebase';
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth';
@@ -20,6 +20,7 @@ export default function PhoneOtpForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [error, setError] = useState(null);
     const [showComponent, setShowComponent] = useState('phoneInput'); // 'phoneInput', 'otpInput', 'addTemple', 'signin', 'createSuperAdmin', 'signinSuperAdmin'
     const [loading, setLoading] = useState(false);
     const [confirmationResult, setConfirmationResult] = useState(null);
@@ -52,7 +53,7 @@ export default function PhoneOtpForm() {
             setConfirmationResult(response);
             setShowComponent('otpInput');
         } catch (error) {
-            console.error(error.message);
+            setError(error.message);
             setLoading(false);
         }
     };
@@ -64,7 +65,7 @@ export default function PhoneOtpForm() {
                 const phoneNumber = result.user.phoneNumber;
                 await LogInWithPhoneNumber(phoneNumber);
             } catch (error) {
-                console.error('Error during confirmation:', error.message);
+                setError(error.message);
             }
         }
     };
@@ -97,7 +98,7 @@ export default function PhoneOtpForm() {
             }
         } catch (err) {
             dispatch(signinFailure(err.message));
-            console.log(err.message);
+            setError(err.message);
             setLoading(false);
         }
     };
@@ -115,6 +116,7 @@ export default function PhoneOtpForm() {
             <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10">
                 {showComponent === 'phoneInput' && (
                     <>
+                        { error  && ( <Alert onDismiss={()=> setError(null)} color={"failure"} >{error}</Alert> ) }
                         <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4'>Log in or create an account</h1>
                         <h1 className='text-black font-bold text-4xl font-serif hidden md:block pt-4'>Login / Signup</h1>
                         <h2 className='text-gray-500 md:text-black text-sm font-serif md:font-bold px-8 md:px-1'>Please enter your phone number to continue</h2>
