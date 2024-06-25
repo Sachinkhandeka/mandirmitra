@@ -116,8 +116,8 @@ export default function PhoneOtpForm() {
             <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10">
                 {showComponent === 'phoneInput' && (
                     <>
-                        { error  && ( <Alert onDismiss={()=> setError(null)} color={"failure"} >{error}</Alert> ) }
                         <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4'>Log in or create an account</h1>
+                        { error  && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className='my-2' >{error}</Alert> ) }
                         <h1 className='text-black font-bold text-4xl font-serif hidden md:block pt-4'>Login / Signup</h1>
                         <h2 className='text-gray-500 md:text-black text-sm font-serif md:font-bold px-8 md:px-1'>Please enter your phone number to continue</h2>
                         <form onSubmit={handlePhoneSubmit} className="flex flex-col gap-4 px-8 md:px-1 w-full">
