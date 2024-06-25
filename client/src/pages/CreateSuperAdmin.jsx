@@ -74,7 +74,7 @@ export default function CreateSuperAdmin() {
                 <meta name="description" content="Create a super admin for your temple on MandirMitra and manage all activities efficiently." />
                 <meta name="keywords" content="MandirMitra, super admin, temple management, create super admin" />
             </Helmet>
-            <div className="relative flex flex-col gap-4 w-full max-w-md py-6 bg-white rounded-lg border border-blue-500 p-10">
+            <div className="relative flex flex-col gap-4 w-full max-w-md py-6 bg-white rounded-lg md:border md:border-blue-500 p-10">
                 {error && (
                     <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>
                         {error}
