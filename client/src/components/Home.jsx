@@ -142,28 +142,28 @@ export default function Home() {
             />
             <meta name="google-site-verification" content="VvYIu8ULwVvBXQX9D3xXhNJ_mVl9E7PKyae2OrlXMMQ" />
             <meta name="author" content="MandirMitra" />
-            <link rel="canonical" href="https://mandirmitra.onrender.com//home" />
+            <link rel="canonical" href="https://www.mandirmitra.co.in/" />
         </Helmet>
         <div className="w-full" >  
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
                 <h1 
                     className="absolute bottom-0 right-[32px] px-4 py-2 rounded-full 
-                    bg-cyan-500 font-mono font-bold text-xl text-center animated-text" >E</h1>
+                    bg-cyan-500 font-mono font-bold text-sm md:text-xl text-center animated-text" >E</h1>
                 <h1 
                     className="absolute bottom-0 right-[42px] px-4 py-2 rounded-full
-                    bg-rose-500 font-mono font-bold text-xl text-center animated-text" >L</h1>
+                    bg-rose-500 font-mono font-bold text-sm  md:text-xl text-center animated-text" >L</h1>
                 <h1 
                     className="absolute bottom-0 right-[52px] px-4 py-2 rounded-full 
-                    bg-orange-500 font-mono font-bold text-xl text-center animated-text" >P</h1>
+                    bg-orange-500 font-mono font-bold text-sm md:text-xl text-center animated-text" >P</h1>
                 <h1 
                     className="absolute bottom-0 right-[62px] px-4 py-2 rounded-full 
-                  bg-lime-500 font-mono font-bold text-xl text-center animated-text" >M</h1>
+                  bg-lime-500 font-mono font-bold text-sm md:text-xl text-center animated-text" >M</h1>
                 <h1 
                     className="absolute bottom-0 right-[72px] px-4 py-2 rounded-full 
-                  bg-blue-500 font-mono font-bold text-xl text-center animated-text" >A</h1>
+                  bg-blue-500 font-mono font-bold text-sm md:text-xl text-center animated-text" >A</h1>
                 <h1 
                     className="absolute bottom-0 right-[82px] px-4 py-2 rounded-full 
-                  bg-amber-500 font-mono font-bold text-xl text-center animated-text" >T</h1>
+                  bg-amber-500 font-mono font-bold text-sm md:text-xl text-center animated-text" >T</h1>
                 <div className={`absolute bottom-[-15px]  left-3 bg-white rounded-full`}>
                     {temple && Object.keys(temple).length > 0 ? (
                         <Avatar img={temple.image} rounded bordered color="light" size="lg" />
