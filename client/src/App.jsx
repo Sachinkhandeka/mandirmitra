@@ -15,10 +15,14 @@ export default function App() {
   return (
     <>
       <Helmet>
-        <title>MadirMitra - Temple Management</title>
-        <meta name="description" content="MadirMitra helps in managing temple donations, expenses, events, and more efficiently." />
-        <meta name="keywords" content="temple management, donations, events, MadirMitra" />
-        <meta name="author" content="MadirMitra Team" />
+          <title>MandirMitra: Streamline Temple Management</title>
+          <meta name="description" content="MandirMitra - The all-in-one temple management solution. Simplify donations, expenses, events, and gain data-driven insights. Empower your temple and connect with your devotees." />
+          <meta name="keywords" content="temple management software, temple donation management, temple event management, online donation platform for temples, mandir mitra, mandir management app, temple accounting software" />
+          <meta name="author" content="MandirMitra Team" />
+
+          <meta property="og:title" content="MandirMitra: Streamline Temple Management" />
+          <meta property="og:description" content="MandirMitra - The all-in-one temple management solution. Simplify donations, expenses, events, and gain data-driven insights. Empower your temple and connect with your devotees." />
+          <meta property="og:url" content="https://www.mandirmitra.co.in/" />
       </Helmet>
       <BrowserRouter>
           <Routes>

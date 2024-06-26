@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import brand from "../assets/brand.jpg";
 import "../css/PhoneInputCostom.css";
 import { useDispatch, useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet-async';
 import { signinSuccess, signinFailure } from '../redux/user/userSlice';
 
 const SignupSuperAdmin = React.lazy(() => import("./SignupSuperAdmin"));
@@ -105,6 +106,12 @@ export default function PhoneOtpForm() {
 
     return (
         <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800">
+            <Helmet>
+                <title>MandirMitra - Phone OTP Verification</title>
+                <meta name="description" content="MandirMitra helps you manage temple activities with ease and grace. Enter your phone number to log in or create a new account." />
+                <meta name="keywords" content="MandirMitra,mandirmitra, mandir mitra, Temple Management, OTP Verification, Phone Login" />
+                <meta name="author" content="MandirMitra Team" />
+            </Helmet>
             <div className="flex flex-col items-center justify-center gap-2 p-4 md:hidden">
                 <img src={brand} alt="brand_image" className='h-16 w-16 border-2 rounded-md' />
                 <span className='text-xs font-serif text-gray-500' >MandirMitra</span>
