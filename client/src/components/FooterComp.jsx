@@ -43,10 +43,10 @@ export default function FooterComp() {
                     <div className="w-full sm:flex sm:items-center sm:justify-between">
                         <Footer.Copyright href="/" by="MandirMitra™" year={new Date().getFullYear()} />
                         <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-                            <Footer.Icon href=" https://www.facebook.com/profile.php?id=61561382858176&mibextid=ZbWKwL" icon={BsFacebook} />
-                            <Footer.Icon href="https://www.instagram.com/mandirmitra/" icon={BsInstagram} />
-                            <Footer.Icon href="linkedin.com/in/mandir-mitra" icon={BsLinkedin} />
-                            <Footer.Icon href="https://x.com/MandirMitra" icon={BsTwitter} />
+                            <Footer.Icon href=" https://www.facebook.com/profile.php?id=61561382858176&mibextid=ZbWKwL" icon={BsFacebook} target="_blank" rel="noopener noreferrer" />
+                            <Footer.Icon href="https://www.instagram.com/mandirmitra/" icon={BsInstagram} target="_blank" rel="noopener noreferrer" />
+                            <Footer.Icon href="linkedin.com/in/mandir-mitra" icon={BsLinkedin} target="_blank" rel="noopener noreferrer" />
+                            <Footer.Icon href="https://x.com/MandirMitra" icon={BsTwitter} target="_blank" rel="noopener noreferrer" />
                         </div>
                     </div>
                 </div>
