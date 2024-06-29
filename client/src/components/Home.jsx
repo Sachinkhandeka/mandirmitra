@@ -131,14 +131,14 @@ export default function Home() {
     return (
         <>
         <Helmet>
-            <title>MandirMitra - Home</title>
+            <title>Home - MandirMitra</title>
             <meta
                 name="description"
                 content="MandirMitra is your ultimate devotional companion, providing detailed information about temples, deities, and spiritual practices. Manage donations, expenses, and analytics with ease."
             />
             <meta
                 name="keywords"
-                content="MandirMitra, mandirmitra, mandir mitra, mandir, mitra temples, Hinduism, deities, donations, expenses, analytics, spirituality, religious management"
+                content="MandirMitra, mandirmitra, mandir mitra, mandir, mitra temples, Hinduism, deities, donations, expenses, analytics, spirituality, religious management, Home-Page, Home Component"
             />
             <meta name="google-site-verification" content="VvYIu8ULwVvBXQX9D3xXhNJ_mVl9E7PKyae2OrlXMMQ" />
             <meta name="author" content="MandirMitra" />
