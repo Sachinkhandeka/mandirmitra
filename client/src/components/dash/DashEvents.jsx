@@ -154,6 +154,14 @@ export default function DashEvents() {
                     </div>
                 </div>
             )}
+            {events && events.length === 0 && (
+                <div className="flex justify-center items-center h-screen">
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <TbFaceIdError size={50} className="animate-bounce" />
+                        <p>No Events Available</p>
+                    </div>
+                </div>
+            )}
             {selectedEventId && events && events.length > 0 && (
                 (currUser && currUser.isAdmin) ||
                 (currUser.roles && currUser.roles.some(role =>
