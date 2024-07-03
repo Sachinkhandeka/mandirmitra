@@ -72,11 +72,11 @@ export default function SignupSuperAdmin({ setShowComponent }) {
                 <h1 className="text-center text-2xl font-mono font-bold leading-8 uppercase">Add Temple</h1>
                 <form className="my-10" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4">
-                        <Label htmlFor="name">Temple Name</Label>
+                        <Label htmlFor="name" className="text-black">Temple Name</Label>
                         <TextInput type="text" id="name" name="name" placeholder="add temple name" onChange={handleChange} required className="bg-gray-200 text-black placeholder-gray-500" />
                     </div>
                     <div className="flex flex-col gap-4 mt-4">
-                        <Label htmlFor="location">Temple Location</Label>
+                        <Label htmlFor="location" className="text-black">Temple Location</Label>
                         <TextInput type="text" id="location" name="location" placeholder="Bhuj, Kutch, Gujarat" onChange={handleChange} required className="bg-gray-200 text-black placeholder-gray-500" />
                     </div>
                     <Button
