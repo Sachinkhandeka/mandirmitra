@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.2.3",
+    "aos": "^2.3.4",
     "chart.js": "^4.4.2",
     "firebase": "^10.10.0",
     "flowbite-react": "^0.7.8",

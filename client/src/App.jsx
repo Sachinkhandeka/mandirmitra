@@ -1,17 +1,23 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Spinner } from  "flowbite-react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import { Helmet } from "react-helmet-async";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const Dashboard = React.lazy(()=> import("./pages/Dashboard"));
-const SigninSuperAdmin = React.lazy(()=> import("./pages/SigninSuperAdmin"));
-const SignupSuperAdmin =  React.lazy(()=> import("./pages/SignupSuperAdmin"));
-const CreateSuperAdmin = React.lazy(()=> import("./pages/CreateSuperAdmin"));
-const SigninUser = React.lazy(()=> import("./pages/SigninUser"));
+const LandingPage = React.lazy(()=> import("./components/landingpage/LandingPage"));
 const PhoneOtpForm = React.lazy(()=> import("./pages/PhoneOtpForm"));
 
 export default function App() {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration
+      once: false, // Whether animation should happen only once
+    });
+  }, []);
   return (
     <>
       <Helmet>
@@ -26,6 +32,19 @@ export default function App() {
       </Helmet>
       <BrowserRouter>
           <Routes>
+            <Route
+              path="/landingpage"
+              element={
+                <Suspense fallback={
+                  <div className="flex justify-center items-center min-h-screen gap-4" >
+                    <Spinner size={"xl"} />
+                    <div>Loading ...</div>
+                  </div>
+                }><LandingPage /></Suspense>
+              }
+            >
+
+            </Route>
             <Route 
                 path="/login"
                 element={
