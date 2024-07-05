@@ -11,6 +11,7 @@ const DashRoles = React.lazy(()=> import("../components/dash/DashRoles"));
 const DashPermissions = React.lazy(()=> import("../components/dash/DashPermissions"));
 const DashDonations = React.lazy(()=> import("../components/dash/DashDonations"));
 const DashExpenses = React.lazy(()=> import("../components/dash/DashExpenses"));
+const DashInventories = React.lazy(()=> import("../components/dash/DashInventories"));
 const DashEvents = React.lazy(()=> import("../components/dash/DashEvents"));
 const DashSeva = React.lazy(()=> import("../components/dash/DashSeva"));
 const DashAddress = React.lazy(()=> import("../components/dash/DashAddress"));
@@ -163,6 +164,13 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashExpenses /></Suspense>}
+                    {/* Inventories */}
+                    {tab === "inventories" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4">
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><DashInventories /></Suspense>}
                     {/* events */}
                     {tab === "events" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4">

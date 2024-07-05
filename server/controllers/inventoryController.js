@@ -18,3 +18,17 @@ module.exports.create = async(req ,res)=> {
 
     res.status(200).json({ message : "Inventory created successfully" });
 }
+
+module.exports.AllInventories = async(req ,res)=> {
+    const { templeId } = req.params ; 
+
+    if(!templeId) {
+        throw new ExpressError(400, "TempleId required.");
+    }
+
+    const inventoryItems = await InventoryItem.find({templeId : templeId});
+
+    res.status(200).json({
+        inventoryItems,
+    });
+}
