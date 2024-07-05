@@ -11,6 +11,7 @@ export default function CreateInventory() {
         category: '',
         quantity: '',
         unit: '',
+        unitPrice: '',
         totalPrice: '',
         description: '',
     });
@@ -22,11 +23,20 @@ export default function CreateInventory() {
         const { name, value } = e.target;
         setInventoryData({
             ...inventoryData,
-            [name]: value
+            [name]: value,
+            totalPrice: name === 'quantity' || name === 'unitPrice' ? calculateTotalPrice(inventoryData.quantity, inventoryData.unitPrice, name, value) : inventoryData.totalPrice
         });
     };
 
-    
+    const calculateTotalPrice = (quantity, unitPrice, name, value) => {
+        if (name === 'quantity') {
+            quantity = value;
+        } else if (name === 'unitPrice') {
+            unitPrice = value;
+        }
+        return quantity * unitPrice;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -41,31 +51,32 @@ export default function CreateInventory() {
                 }
             );
             const data = await response.json();
-            console.log(data);
 
             if (!response.ok) {
-                setAlert({message : data.message || 'Something went wrong'});
-                return ; 
+                setAlert({ type: "error", message: data.message });
+                setLoading(false);
+                return;
             }
 
             setAlert({ type: "success", message: data.message });
+            setLoading(false);
             setInventoryData({
                 name: '',
                 category: '',
                 quantity: '',
                 unit: '',
+                unitPrice: '',
                 totalPrice: '',
                 description: '',
             });
         } catch (err) {
             setAlert({ type: "error", message: err.message });
-        } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="md:px-8">
+        <div className="px-8">
             <div className="p-6 rounded-lg shadow-lg w-full dark:bg-slate-800">
                 <div className="flex justify-center mb-4">
                     <FaBoxes className="text-4xl text-blue-500" />
@@ -106,6 +117,7 @@ export default function CreateInventory() {
                                 <option value="Cleaning Supplies">Cleaning Supplies</option>
                                 <option value="Maintenance Supplies">Maintenance Supplies</option>
                                 <option value="Administrative Supplies">Administrative Supplies</option>
+                                <option value="Festival Supplies">Festival Supplies</option>
                             </Select>
                         </div>
                     </div>
@@ -117,7 +129,7 @@ export default function CreateInventory() {
                             <TextInput
                                 id="quantity"
                                 name="quantity"
-                                type="text"
+                                type="number"
                                 placeholder="Enter Quantity"
                                 value={inventoryData.quantity}
                                 onChange={handleChange}
@@ -145,20 +157,38 @@ export default function CreateInventory() {
                             </Select>
                         </div>
                     </div>
-                    <div className="mb-4 w-full">
-                        <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalPrice">
-                            Total Price
-                        </Label>
-                        <TextInput
-                            id="totalPrice"
-                            name="totalPrice"
-                            type="number"
-                            placeholder="Enter total price"
-                            value={inventoryData.totalPrice}
-                            onChange={handleChange}
-                            required
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        />
+                    <div className='mb-4 flex items-center flex-col  md:flex-row gap-4' >
+                        <div className="mb-4 w-full">
+                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="unitPrice">
+                                Unit Price
+                            </Label>
+                            <TextInput
+                                id="unitPrice"
+                                name="unitPrice"
+                                type="number"
+                                placeholder="Enter unit price"
+                                value={inventoryData.unitPrice}
+                                onChange={handleChange}
+                                required
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        <div className="mb-4 w-full">
+                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalPrice">
+                                Total Price
+                            </Label>
+                            <TextInput
+                                id="totalPrice"
+                                name="totalPrice"
+                                type="number"
+                                placeholder="Enter total price"
+                                value={inventoryData.totalPrice}
+                                onChange={handleChange}
+                                required
+                                readOnly
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
                     </div>
                     <div className="mb-4">
                         <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
@@ -176,13 +206,15 @@ export default function CreateInventory() {
                     </div>
                     <div className="flex items-center justify-end">
                         <Button type="submit" color={"blue"} disabled={loading}>
-                            { loading ? <Spinner color={"purple"} /> :  'Create' }
+                            {loading ? <Spinner color={"purple"} /> : 'Create'}
                         </Button>
                     </div>
                 </form>
                 {alert.message && (
-                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4 max-w-lg" onDismiss={()=> setAlert({message : ""})}>
-                        {alert.message}
+                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
+                        <span className="font-medium">
+                            {alert.type === 'success' ? 'Success!' : 'Error!'}
+                        </span> {alert.message}
                     </Alert>
                 )}
             </div>
