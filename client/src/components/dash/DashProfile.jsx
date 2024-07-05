@@ -21,6 +21,7 @@ import DonationForm from "../create/DonationForm";
 import CreateExpense from "../create/CreateExpense";
 import CreateEvent from "../create/CreateEvent";
 import CreateSeva from "../create/CreateSeva";
+import CreateInventory from "../create/CreateInventory";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -270,6 +271,7 @@ export default function DashProfile() {
                                 <DonationForm locationAdded={locationAdded} sevaUpdated={sevaUpdated} setSevaUpdated={setSevaUpdated} />
                                 <CreateExpense />
                                 <CreateEvent />
+                                <CreateInventory />
                             </>
                          )
                     }
