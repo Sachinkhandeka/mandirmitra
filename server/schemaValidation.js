@@ -103,6 +103,17 @@ const invitationSchema = Joi.object({
     event: Joi.string().required().error(new Error('Event ID is required'))
 }).options({ abortEarly: false });
 
+const inventorySchema = Joi.object({
+    name: Joi.string().required().error(new Error('Name is required')),
+    category: Joi.string().required().error(new Error('Category is required')),
+    quantity: Joi.number().required().error(new Error('Quantity is required')),
+    unit: Joi.string().required().error(new Error('Unit is required')),
+    totalPrice: Joi.number().required().error(new Error('Total Price is required')),
+    description: Joi.string().allow('').optional(),
+    image: Joi.string().allow('').optional(),
+    templeId: Joi.string().required().error(new Error('Temple ID is required'))
+}).options({ abortEarly: false });
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -113,4 +124,5 @@ module.exports = {
     expenseSchema,
     eventSchema,
     invitationSchema,
+    inventorySchema,
 }

@@ -1,5 +1,5 @@
 const ExpressError = require("./utils/ExpressError");
-const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema, eventSchema, invitationSchema } = require("./schemaValidation");
+const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema, eventSchema, invitationSchema, inventorySchema } = require("./schemaValidation");
 const { validate } = require("./models/eventSchema");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
@@ -203,6 +203,27 @@ module.exports.validateEventSchema = (req ,res ,next)=> {
 module.exports.validateInvitationSchema = (req ,res ,next)=> {
     const invitation = {...req.body, temple : req.params.templeId , event : req.params.eventId};
     let { error } = invitationSchema.validate(invitation);
+
+    if(error) {
+        //if error is of joi but not related to field validation
+        if(error instanceof Error && error.isJoi)  {
+            let errMsg = error.details.map(el => {
+                return el.message ; 
+            }).join(",");
+            throw new ExpressError(400, errMsg);
+        } else  {
+            //if error is related to field validation
+            let errMsg = error.message ;
+            throw new ExpressError(400, errMsg)
+        }
+    }
+    next();
+}
+
+// validate inventorySchema
+module.exports.validateInventorySchema = (req ,res ,next)=> {
+    const inventoryData = {...req.body, templeId : req.params.templeId};
+    let { error } = inventorySchema.validate(inventoryData);
 
     if(error) {
         //if error is of joi but not related to field validation
