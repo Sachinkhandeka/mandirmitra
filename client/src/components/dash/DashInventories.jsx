@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TbFaceIdError } from "react-icons/tb";
 import { AiOutlineWarning, AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import { Table } from "flowbite-react";
+import { Alert, Table } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+
+const EditInventoryItem = React.lazy(()=> import("../edit/EditInventoryItem"));
 
 export default function DashInventories() {
     const { currUser } = useSelector(state => state.user);
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [inventories, setInventories] = useState([]);
+    const [editModal, setEditModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [inventory, setInventory] =  useState({});
+    const [isInvetoryUpdated, setIsInventoryUpdated] = useState(false);
 
     const getInventoriesData = async () => {
         setAlert({ type: "", message: "" });
@@ -40,6 +46,13 @@ export default function DashInventories() {
         getInventoriesData();
     }, [currUser.templeId]);
 
+    useEffect(()=> {
+        if(isInvetoryUpdated) {
+            getInventoriesData();
+            setIsInventoryUpdated(false);
+        }
+    }, [isInvetoryUpdated]);
+
     const hasPermission = (action) => {
         return (
             currUser && currUser.isAdmin ||
@@ -55,12 +68,24 @@ export default function DashInventories() {
         return <AiOutlineCheckCircle className="text-green-500 ml-2" />;
     };
 
+    //edit inventory function
+    const handleEditInventory = (inventory)=> {
+        setInventory(inventory);
+        setEditModal(true);
+    }
     return (
         <>
             <section className="min-h-screen">
+                {alert.message && (
+                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
+                        <span className="font-medium">
+                            {alert.type === 'success' ? 'Success!' : 'Error!'}
+                        </span> {alert.message}
+                    </Alert>
+                )}
                 {
                     inventories.length > 0 && hasPermission("read") ? (
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto scrollbar-hidden">
                             <Table striped>
                                 <Table.Head>
                                     <Table.HeadCell>Inventory Name</Table.HeadCell>
@@ -94,12 +119,12 @@ export default function DashInventories() {
                                                         <div className="flex justify-between items-center gap-4">
                                                             {hasPermission("update") && (
                                                                 <span className="cursor-pointer">
-                                                                    <FaPencil size={16} color="teal" />
+                                                                    <FaPencil size={16} color="teal" onClick={()=> handleEditInventory(inventory)} />
                                                                 </span>
                                                             )}
                                                             {hasPermission("delete") && (
                                                                 <span className="cursor-pointer">
-                                                                    <MdDelete size={20} color="red" />
+                                                                    <MdDelete size={20} color="red" onClick={()=> handleDeleteInventory(inventory)} />
                                                                 </span>
                                                             )}
                                                         </div>
@@ -122,6 +147,15 @@ export default function DashInventories() {
                         )
                 }
             </section>
+            {/* edit inventory component */}
+            { editModal && (
+                <EditInventoryItem
+                    editModal={editModal} 
+                    setEditModal={setEditModal}
+                    inventory={inventory}
+                    setIsInventoryUpdated={setIsInventoryUpdated}
+                />
+            ) }
         </>
     );
 }

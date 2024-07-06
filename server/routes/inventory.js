@@ -18,4 +18,11 @@ router.get(
     wrapAsync(inventory.AllInventories),
 );
 
+router.put(
+    "/edit/:inventoryId/:templeId",
+    validateInventorySchema,
+    verifyUpdatePermission,
+    wrapAsync(inventory.edit),
+);
+
 module.exports = router ; 

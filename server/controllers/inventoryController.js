@@ -32,3 +32,43 @@ module.exports.AllInventories = async(req ,res)=> {
         inventoryItems,
     });
 }
+
+module.exports.edit = async (req, res) => {
+    const { inventoryId, templeId } = req.params; 
+    const inventoryData = req.body; 
+
+    if (!inventoryId) {
+        throw new ExpressError(400, "InventoryId is required.");
+    }
+    if (!templeId) {
+        throw new ExpressError(400, "TempleId is required.");
+    }
+    if (!inventoryData) {
+        throw new ExpressError(400, "Please provide valid Inventory Item.");
+    }
+
+    // Validate inventoryData structure
+    const allowedFields = ['name', 'category', 'quantity', 'unit', 'unitPrice', 'totalPrice', 'description'];
+    const keys = Object.keys(inventoryData);
+    
+    for (const key of keys) {
+        if (!allowedFields.includes(key)) {
+            throw new ExpressError(400, `Invalid field: ${key}`);
+        }
+    }
+
+    const inventoryItem = await InventoryItem.findOne({ _id: inventoryId, templeId: templeId });
+
+    if (!inventoryItem) {
+        throw new ExpressError(404, "Inventory not found.");
+    }
+
+    // Update inventory fields
+    for (const key of keys) {
+        inventoryItem[key] = inventoryData[key];
+    }
+
+    await inventoryItem.save();
+
+    res.status(200).json({ message: "Inventory updated successfully!" });
+};
