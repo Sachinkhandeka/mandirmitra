@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TbFaceIdError } from "react-icons/tb";
 import { AiOutlineWarning, AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import { Alert, Table } from "flowbite-react";
+import { Alert, Pagination, Table } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
@@ -13,11 +13,15 @@ export default function DashInventories() {
     const { currUser } = useSelector(state => state.user);
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [inventories, setInventories] = useState([]);
+    const [totalInventories, setTotalInventories] = useState(null);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [inventory, setInventory] =  useState({});
     const [isDeleted, setIsDeleted] = useState(false);
     const [isInvetoryUpdated, setIsInventoryUpdated] = useState(false);
+    const [ currentPage, setCurrentPage] = useState(1);
+
+    const onPageChange = (page) => setCurrentPage(page);
 
     const getInventoriesData = async () => {
         setAlert({ type: "", message: "" });
@@ -39,6 +43,7 @@ export default function DashInventories() {
             });
 
             setInventories(sortedInventories);
+            setTotalInventories(data.totalInventories);
         } catch (err) {
             setAlert({ type: "error", message: err.message });
         }
@@ -91,6 +96,14 @@ export default function DashInventories() {
     return (
         <>
             <section className="min-h-screen">
+                {/* Pagination */}
+                {
+                    totalInventories && totalInventories > 20 && hasPermission("read") && (
+                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
+                            <Pagination currentPage={currentPage} totalPages={Math.ceil(totalInventories / 20)} onPageChange={onPageChange} showIcons />
+                        </div>
+                    )
+                }
                 {alert.message && (
                     <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
                         <span className="font-medium">
@@ -113,7 +126,7 @@ export default function DashInventories() {
                                     <Table.HeadCell>Actions</Table.HeadCell>
                                 </Table.Head>
                                 <Table.Body className="divide-y">
-                                    {inventories.map((inventory, index) => (
+                                    { inventories.length > 0 && inventories.slice((currentPage - 1) * 20, currentPage * 20 ).map((inventory, index) => (
                                         <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                                 {inventory.name}
@@ -160,6 +173,14 @@ export default function DashInventories() {
                                 </div>
                             </div>
                         )
+                }
+                {/* Pagination */}
+                {
+                    totalInventories && totalInventories > 20 &&  hasPermission("read") && (
+                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
+                            <Pagination currentPage={currentPage} totalPages={Math.ceil(totalInventories / 20)} onPageChange={onPageChange} showIcons />
+                        </div>
+                    )
                 }
             </section>
             {/* edit inventory component */}
