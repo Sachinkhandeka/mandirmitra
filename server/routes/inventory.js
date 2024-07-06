@@ -15,7 +15,7 @@ router.post(
 router.get(
     "/get/:templeId",
     verifyReadPermission,
-    wrapAsync(inventory.AllInventories),
+    wrapAsync(inventory.getInventories),
 );
 
 router.put(
