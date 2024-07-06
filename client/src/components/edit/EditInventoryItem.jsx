@@ -195,7 +195,7 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                         </div>
                         <div className="flex items-center justify-end">
                             <Button type="submit" color={"blue"} disabled={loading}>
-                                {loading ? <Spinner color={"purple"} /> : 'Create'}
+                                {loading ? <Spinner color={"purple"} /> : 'Update'}
                             </Button>
                         </div>
                     </form>
