@@ -19,15 +19,51 @@ module.exports.create = async(req ,res)=> {
     res.status(200).json({ message : "Inventory created successfully" });
 }
 
-module.exports.AllInventories = async(req ,res)=> {
-    const { templeId } = req.params ; 
+module.exports.getInventories = async (req, res) => {
+    const { templeId } = req.params;
+    const { searchTerm, category, minQuantity, maxQuantity, unit, minUnitPrice, maxUnitPrice, minTotalPrice, maxTotalPrice } = req.query;
 
-    if(!templeId) {
+    if (!templeId) {
         throw new ExpressError(400, "TempleId required.");
     }
 
-    const inventoryItems = await InventoryItem.find({templeId : templeId});
-    const totalInventories = await InventoryItem.countDocuments();
+    // Building filter object dynamically based on the query parameters
+    const filter = { templeId };
+
+    if (searchTerm) {
+        filter.$or = [
+            { name: { $regex: searchTerm, $options: 'i' } },
+            { description: { $regex: searchTerm, $options: 'i' } }
+        ];
+    }
+    if (category) {
+        filter.category = category;
+    }
+    if (minQuantity) {
+        filter.quantity = { ...filter.quantity, $gte: Number(minQuantity) };
+    }
+    if (maxQuantity) {
+        filter.quantity = { ...filter.quantity, $lte: Number(maxQuantity) };
+    }
+    if (unit) {
+        filter.unit = unit;
+    }
+    if (minUnitPrice) {
+        filter.unitPrice = { ...filter.unitPrice, $gte: Number(minUnitPrice) };
+    }
+    if (maxUnitPrice) {
+        filter.unitPrice = { ...filter.unitPrice, $lte: Number(maxUnitPrice) };
+    }
+    if (minTotalPrice) {
+        filter.totalPrice = { ...filter.totalPrice, $gte: Number(minTotalPrice) };
+    }
+    if (maxTotalPrice) {
+        filter.totalPrice = { ...filter.totalPrice, $lte: Number(maxTotalPrice) };
+    }
+
+    // Fetch the inventory items based on the filter
+    const inventoryItems = await InventoryItem.find(filter);
+    const totalInventories = await InventoryItem.countDocuments({ templeId });
 
     res.status(200).json({
         inventoryItems,

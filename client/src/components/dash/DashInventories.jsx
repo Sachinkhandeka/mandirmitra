@@ -1,32 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TbFaceIdError } from "react-icons/tb";
 import { AiOutlineWarning, AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import { Alert, Pagination, Table } from "flowbite-react";
+import { Alert, Button, Pagination, Table, Tooltip } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+import { IoFilterCircleOutline } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
+import { debounce } from "lodash";
 
-const EditInventoryItem = React.lazy(()=> import("../edit/EditInventoryItem"));
-const DeleteInventory = React.lazy(()=> import("../delete/DeleteInventory"));
+const EditInventoryItem = React.lazy(() => import("../edit/EditInventoryItem"));
+const DeleteInventory = React.lazy(() => import("../delete/DeleteInventory"));
+const InventoryFilter = React.lazy(() => import("../InventoryFilter"));
 
 export default function DashInventories() {
     const { currUser } = useSelector(state => state.user);
+    const { searchTerm } = useSelector(state => state.searchTerm);
+    const location = useLocation();
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [inventories, setInventories] = useState([]);
     const [totalInventories, setTotalInventories] = useState(null);
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
-    const [inventory, setInventory] =  useState({});
+    const [inventory, setInventory] = useState({});
     const [isDeleted, setIsDeleted] = useState(false);
     const [isInvetoryUpdated, setIsInventoryUpdated] = useState(false);
-    const [ currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [filterCount, setFilterCount] = useState(0);
 
     const onPageChange = (page) => setCurrentPage(page);
+    const queryParams = new URLSearchParams(location.search);
 
     const getInventoriesData = async () => {
+        const tab = queryParams.get("tab");
+
+        // Conditionally include searchTerm only when tab is 'daans'
+        const searchParam = tab === 'inventories' ? `&searchTerm=${searchTerm}` : '';
+        const apiUrl = `/api/inventory/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`;
+
         setAlert({ type: "", message: "" });
         try {
-            const response = await fetch(`/api/inventory/get/${currUser.templeId}`);
+            const response = await fetch(apiUrl);
             const data = await response.json();
 
             if (!response.ok) {
@@ -49,19 +64,22 @@ export default function DashInventories() {
         }
     };
 
-    useEffect(() => {
-        getInventoriesData();
-    }, [currUser.templeId]);
+    // Debounce getAllDonations function
+    const debouncedFetchInventories = useCallback(debounce(getInventoriesData, 800), [searchTerm, currUser, location.search]);
 
-    useEffect(()=> {
-        if(isInvetoryUpdated) {
+    useEffect(() => {
+        debouncedFetchInventories();
+    }, [searchTerm, currUser.templeId, location.search]);
+
+    useEffect(() => {
+        if (isInvetoryUpdated) {
             getInventoriesData();
             setIsInventoryUpdated(false);
         }
     }, [isInvetoryUpdated]);
 
-    useEffect(()=> {
-        if(isDeleted) {
+    useEffect(() => {
+        if (isDeleted) {
             getInventoriesData();
             setIsDeleted(false);
         }
@@ -82,20 +100,45 @@ export default function DashInventories() {
         return <AiOutlineCheckCircle className="text-green-500 ml-2" />;
     };
 
-    //edit inventory function
-    const handleEditInventory = (inventory)=> {
+    // Edit inventory function
+    const handleEditInventory = (inventory) => {
         setInventory(inventory);
         setEditModal(true);
-    }
+    };
 
-    //delete inventory function
-    const  handleDeleteInventory = (inventory)=> {
+    // Delete inventory function
+    const handleDeleteInventory = (inventory) => {
         setInventory(inventory);
         setDeleteModal(true);
-    }
+    };
+
     return (
         <>
             <section className="min-h-screen">
+                {/* Filter button */}
+                {
+                    hasPermission("read") && (
+                        <div className="mb-3 flex flex-row-reverse sticky left-0">
+                            <Tooltip content={`${filterCount} filters applied`} placement="left">
+                                <Button color={"red"} onClick={() => setIsDrawerOpen(true)} >
+                                    <IoFilterCircleOutline className="mr-2 h-5 w-5" />
+                                    Filters
+                                </Button>
+                            </Tooltip>
+                        </div>
+                    )
+                }
+                {/* Filter modal */}
+                {
+                    isDrawerOpen && hasPermission("read") && (
+                        <InventoryFilter
+                            isDrawerOpen={isDrawerOpen}
+                            setIsDrawerOpen={setIsDrawerOpen}
+                            filterCount={filterCount}
+                            setFilterCount={setFilterCount}
+                        />
+                    )
+                }
                 {/* Pagination */}
                 {
                     totalInventories && totalInventories > 20 && hasPermission("read") && (
@@ -105,7 +148,7 @@ export default function DashInventories() {
                     )
                 }
                 {alert.message && (
-                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
+                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={() => setAlert({ type: "", message: "" })}>
                         <span className="font-medium">
                             {alert.type === 'success' ? 'Success!' : 'Error!'}
                         </span> {alert.message}
@@ -126,7 +169,7 @@ export default function DashInventories() {
                                     <Table.HeadCell>Actions</Table.HeadCell>
                                 </Table.Head>
                                 <Table.Body className="divide-y">
-                                    { inventories.length > 0 && inventories.slice((currentPage - 1) * 20, currentPage * 20 ).map((inventory, index) => (
+                                    {inventories.length > 0 && inventories.slice((currentPage - 1) * 20, currentPage * 20).map((inventory, index) => (
                                         <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                                 {inventory.name}
@@ -147,12 +190,12 @@ export default function DashInventories() {
                                                         <div className="flex justify-between items-center gap-4">
                                                             {hasPermission("update") && (
                                                                 <span className="cursor-pointer">
-                                                                    <FaPencil size={16} color="teal" onClick={()=> handleEditInventory(inventory)} />
+                                                                    <FaPencil size={16} color="teal" onClick={() => handleEditInventory(inventory)} />
                                                                 </span>
                                                             )}
                                                             {hasPermission("delete") && (
                                                                 <span className="cursor-pointer">
-                                                                    <MdDelete size={20} color="red" onClick={()=> handleDeleteInventory(inventory)} />
+                                                                    <MdDelete size={20} color="red" onClick={() => handleDeleteInventory(inventory)} />
                                                                 </span>
                                                             )}
                                                         </div>
@@ -176,31 +219,31 @@ export default function DashInventories() {
                 }
                 {/* Pagination */}
                 {
-                    totalInventories && totalInventories > 20 &&  hasPermission("read") && (
+                    totalInventories && totalInventories > 20 && hasPermission("read") && (
                         <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
                             <Pagination currentPage={currentPage} totalPages={Math.ceil(totalInventories / 20)} onPageChange={onPageChange} showIcons />
                         </div>
                     )
                 }
             </section>
-            {/* edit inventory component */}
-            { editModal && (
+            {/* Edit inventory component */}
+            {editModal && (
                 <EditInventoryItem
-                    editModal={editModal} 
+                    editModal={editModal}
                     setEditModal={setEditModal}
                     inventory={inventory}
                     setIsInventoryUpdated={setIsInventoryUpdated}
                 />
-            ) }
-            {/* delete inventory component */}
-            { deleteModal && (
-                <DeleteInventory 
+            )}
+            {/* Delete inventory component */}
+            {deleteModal && (
+                <DeleteInventory
                     deleteModal={deleteModal}
                     setDeleteModal={setDeleteModal}
                     inventoryId={inventory._id}
                     setIsDeleted={setIsDeleted}
                 />
-            ) }
+            )}
         </>
     );
 }
