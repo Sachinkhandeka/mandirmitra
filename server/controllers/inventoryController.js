@@ -27,9 +27,11 @@ module.exports.AllInventories = async(req ,res)=> {
     }
 
     const inventoryItems = await InventoryItem.find({templeId : templeId});
+    const totalInventories = await InventoryItem.countDocuments();
 
     res.status(200).json({
         inventoryItems,
+        totalInventories,
     });
 }
 
