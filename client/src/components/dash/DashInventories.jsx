@@ -7,6 +7,7 @@ import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
 const EditInventoryItem = React.lazy(()=> import("../edit/EditInventoryItem"));
+const DeleteInventory = React.lazy(()=> import("../delete/DeleteInventory"));
 
 export default function DashInventories() {
     const { currUser } = useSelector(state => state.user);
@@ -15,6 +16,7 @@ export default function DashInventories() {
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [inventory, setInventory] =  useState({});
+    const [isDeleted, setIsDeleted] = useState(false);
     const [isInvetoryUpdated, setIsInventoryUpdated] = useState(false);
 
     const getInventoriesData = async () => {
@@ -53,6 +55,13 @@ export default function DashInventories() {
         }
     }, [isInvetoryUpdated]);
 
+    useEffect(()=> {
+        if(isDeleted) {
+            getInventoriesData();
+            setIsDeleted(false);
+        }
+    }, [isDeleted]);
+
     const hasPermission = (action) => {
         return (
             currUser && currUser.isAdmin ||
@@ -72,6 +81,12 @@ export default function DashInventories() {
     const handleEditInventory = (inventory)=> {
         setInventory(inventory);
         setEditModal(true);
+    }
+
+    //delete inventory function
+    const  handleDeleteInventory = (inventory)=> {
+        setInventory(inventory);
+        setDeleteModal(true);
     }
     return (
         <>
@@ -154,6 +169,15 @@ export default function DashInventories() {
                     setEditModal={setEditModal}
                     inventory={inventory}
                     setIsInventoryUpdated={setIsInventoryUpdated}
+                />
+            ) }
+            {/* delete inventory component */}
+            { deleteModal && (
+                <DeleteInventory 
+                    deleteModal={deleteModal}
+                    setDeleteModal={setDeleteModal}
+                    inventoryId={inventory._id}
+                    setIsDeleted={setIsDeleted}
                 />
             ) }
         </>

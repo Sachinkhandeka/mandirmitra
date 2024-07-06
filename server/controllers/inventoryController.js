@@ -72,3 +72,24 @@ module.exports.edit = async (req, res) => {
 
     res.status(200).json({ message: "Inventory updated successfully!" });
 };
+
+module.exports.delete = async (req, res) => {
+    const { inventoryId, templeId } = req.params;
+
+    if (!inventoryId) {
+        throw new ExpressError(400, "InventoryId is required.");
+    }
+    if (!templeId) {
+        throw new ExpressError(400, "TempleId is required.");
+    }
+
+    const inventoryItem = await InventoryItem.findOne({ _id: inventoryId, templeId: templeId });
+
+    if (!inventoryItem) {
+        throw new ExpressError(404, "Inventory not found.");
+    }
+
+    await InventoryItem.deleteOne({ _id: inventoryId, templeId: templeId });
+
+    res.status(200).json({ message: "Inventory deleted successfully." });
+};
