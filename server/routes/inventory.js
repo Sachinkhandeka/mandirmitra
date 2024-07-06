@@ -25,4 +25,10 @@ router.put(
     wrapAsync(inventory.edit),
 );
 
+router.delete(
+    "/delete/:inventoryId/:templeId",
+    verifyDeletePermission,
+    wrapAsync(inventory.delete),
+);
+
 module.exports = router ; 
