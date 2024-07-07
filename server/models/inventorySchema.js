@@ -33,7 +33,7 @@ const inventorySchema = new mongoose.Schema({
         ref: "Temple",
         required: true,
     }
-});
+},{ timestamps : true });
 
 const InventoryItem = mongoose.model("InventoryItem", inventorySchema);
 

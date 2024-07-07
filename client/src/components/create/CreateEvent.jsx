@@ -70,14 +70,14 @@ export default function CreateEvent() {
             <div className="w-full my-8 flex flex-col items-center">
                 <div className="w-full">
                     <div className="flex justify-center items-center">
-                        <div className="w-full md:w-2/3 border border-gray-200 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
+                        <div className="w-full border border-gray-200 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
                             { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4">{error}</Alert> ) }
                             { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="my-4">{success}</Alert> ) }
                             <h1 className="text-yellow-500 uppercase font-serif text-lg md:text-2xl font-bold text-center mb-6">
                                 Create Event
                             </h1>
                             <form onSubmit={handleSubmit}>
-                                <div className="flex flex-col gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex flex-col">
                                         <Label htmlFor="name" className="mb-1 text-sm font-medium">
                                             Name of Event
