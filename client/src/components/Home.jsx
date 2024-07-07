@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
-import { FaRupeeSign } from "react-icons/fa";
+import { FaRupeeSign, FaBoxes, FaExclamationTriangle, FaTimesCircle, FaChartBar, FaChartPie  } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
@@ -15,6 +15,8 @@ import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
 import PieChart from "./PieChart";
 import EditTemple from "./edit/EditTemple";
+import InventoryPieChart from "./InventoryPieChart";
+import InventoryBarChart from "./InventoryBarChart";
 
 const GodCard = React.lazy(()=> import("./GodCard"));
 
@@ -38,6 +40,12 @@ export default function Home() {
     const [balance, setBalance] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [isTemplUpdted, setIsTempleUpdted] = useState(false);
+
+    const [totalInventoryValue, setTotalInventoryValue] = useState(0);
+    const [lowStockItemsCount, setLowStockItemsCount] = useState(0);
+    const [outOfStockItemsCount, setOutOfStockItemsCount] = useState(0);
+    const [inventoryCategoryBreakdown, setInventoryCategoryBreakdown] = useState([]);
+    const [inventoryQuantities, setInventoryQuantities] = useState([]);
 
     //function to get  templeData
     const getTempleData = async()=> {
@@ -90,6 +98,11 @@ export default function Home() {
             setTotalUserCount(data.totalUserCount);
             setTotalRoleCount(data.totalRoleCount);
             setTotalPermissionCount(data.totalPermissionCount);
+            setTotalInventoryValue(data.totalInventoryValue);
+            setLowStockItemsCount(data.lowStockItemsCount);
+            setOutOfStockItemsCount(data.outOfStockItemsCount);
+            setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
+            setInventoryQuantities(data.inventoryQuantities);
         }catch(err) {
             setError(err.message);
         }
@@ -282,6 +295,45 @@ export default function Home() {
                     <PieChart
                         counts={expenseCounts} 
                         title={"Monthly Expense Counts"}
+                    />
+                </div>
+            </div>
+            <h1 className="my-4 text-2xl font-serif font-bold uppercase">Inventories</h1>
+            <div className="flex flex-col lg:flex-row items-center gap-4 my-8 w-full">
+                <CardComponent 
+                    total={totalInventoryValue.toLocaleString("en-IN")}
+                    label="Total Inventory Value"
+                    compStyle="border-b border-orange-400"
+                    IconComponent={FaBoxes}
+                    progressColor={"#fb923c"}
+                />
+                <CardComponent 
+                    total={lowStockItemsCount}
+                    label="Low Stock Items"
+                    compStyle="border-b border-yellow-400"
+                    IconComponent={FaExclamationTriangle}
+                    progressColor={"#facc15"}
+                />
+                <CardComponent 
+                    total={outOfStockItemsCount}
+                    label="Out of Stock Items"
+                    compStyle="border-b border-red-400"
+                    IconComponent={FaTimesCircle}
+                    progressColor={"#f87171"}
+                />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4 my-4 p-4">
+                <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]">
+                    <InventoryBarChart
+                        data={inventoryQuantities}
+                        title={"Inventory Quantity Breakdown"}
+                        label={"Inventory Quantity"}
+                    />
+                </div>
+                <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]">
+                    <InventoryPieChart
+                        data={inventoryCategoryBreakdown}
+                        title={"Inventory Category Breakdown"}
                     />
                 </div>
             </div>

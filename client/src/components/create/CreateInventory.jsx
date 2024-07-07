@@ -76,7 +76,7 @@ export default function CreateInventory() {
     };
 
     return (
-        <div className="px-8">
+        <div>
             <div className="p-6 rounded-lg shadow-lg w-full dark:bg-slate-800">
                 <div className="flex justify-center mb-4">
                     <FaBoxes className="text-4xl text-blue-500" />
