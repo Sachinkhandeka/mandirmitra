@@ -8,6 +8,7 @@ import { MdDelete } from "react-icons/md";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { debounce } from "lodash";
+import { Helmet } from "react-helmet-async";
 
 const EditInventoryItem = React.lazy(() => import("../edit/EditInventoryItem"));
 const DeleteInventory = React.lazy(() => import("../delete/DeleteInventory"));
@@ -113,7 +114,17 @@ export default function DashInventories() {
     };
 
     return (
-        <>
+        <>  
+            <Helmet>
+                <title>Temple Inventory Management | Manage and Track Inventories</title>
+                <meta name="description" content="Efficiently manage and track inventories for your temple. Monitor stock levels, categorize items, and ensure smooth temple operations with our inventory management system." />
+                <meta name="keywords" content="Temple Inventory Management, Inventory Tracking, mandirmitra, mandir, mitra, Temple Operations, Stock Management, Inventory Monitoring, Temple Supplies, Inventory Categories, Efficient Inventory Management" />
+                <meta name="author" content="MandirMitra Team" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta property="og:title" content="Temple Inventory Management | Manage and Track Inventories" />
+                <meta property="og:description" content="Efficiently manage and track inventories for your temple. Monitor stock levels, categorize items, and ensure smooth temple operations with our inventory management system." />
+                <meta property="og:url" content="https://www.mandirmitra.co.in/" />
+            </Helmet>
             <section className="min-h-screen">
                 {/* Filter button */}
                 {
