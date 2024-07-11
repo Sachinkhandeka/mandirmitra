@@ -6,6 +6,7 @@ import DescriptionCard from "./DescriptionCard";
 import { useState } from "react";
 import { DashImage } from "./DashImage";
 import DashDescription from "./DashDescription";
+import { Helmet } from "react-helmet-async";
 
 export default function description() {
     const [ selectedService, setSelectedService ] = useState("Donations");
@@ -35,6 +36,12 @@ export default function description() {
     };
     return (
         <section className="my-auto p-2" >
+            <Helmet>
+                <title>Services We Offer - MandirMitra</title>
+                <meta name="description" content="Explore the services we offer at MandirMitra, including Donations, Expenses, Events, and Inventory management." />
+                <meta name="keywords" content="MandirMitra, mandirmitra, mandir, mitra, temple management, donations, events, expenses, inventory" />
+                <meta name="author" content="MandirMitra Team" />
+            </Helmet>
             <p className="text-3xl font-bold italic text-black text-center my-4" data-aos="zoom-in-left" data-aos-duration="3000">Services We Offer</p>
             <div className="scrollbar-hidden overflow-x-scroll md:mx-auto sm:max-w-[80%]" >
                 <div className="flex gap-8 items-center justify-center" data-aos="zoom-in-right" data-aos-duration="3000" >
