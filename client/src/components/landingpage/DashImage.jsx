@@ -21,8 +21,8 @@ export function DashImage({ selectedService, services, handleCarouselChange }) {
         >
             <Carousel 
                 slide={false}
-                leftControl={<CiCircleChevLeft size={34} onClick={()=> handleCarouselChange("left")} />} 
-                rightControl={<CiCircleChevRight size={34} onClick={()=> handleCarouselChange("right")} />} 
+                leftControl={<CiCircleChevLeft size={34} onClick={()=> handleCarouselChange("left")} className="text-black" />} 
+                rightControl={<CiCircleChevRight size={34} onClick={()=> handleCarouselChange("right")} className="text-black" />} 
             >
                 {services.map(service => (
                     <img
