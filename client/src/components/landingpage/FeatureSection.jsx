@@ -5,7 +5,7 @@ import FeatureCard from './FeatureCard';
 export  default function FeatureSection() {
     return (
         <section className="p-8 bg-white text-center">
-            <h3 className="text-2xl font-semibold mb-6 text-black font-serif" data-aos="flip-left">Features</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-black font-serif" data-aos="flip-left" data-aos-duration="3000">Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <FeatureCard icon={<FaDonate />} title="Daan Management" description="Sabhi daanon ka record rakhein aur receipts generate karein." style={"bg-yellow-300"} />
                 <FeatureCard icon={<FaMoneyBillTrendUp />} title="Kharch Ka Hisaab" description="Mandir ke sabhi kharchon ko manage karein." style={"bg-green-300"} />
