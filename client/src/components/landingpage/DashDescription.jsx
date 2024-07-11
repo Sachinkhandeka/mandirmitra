@@ -4,12 +4,12 @@ export default function DashDescription({ selectedService }) {
   const descriptions = [
     {
       title: "Donations",
-      content: "Hamari MandirMitra app mein, aap donations track kar sakte hain. Har donor ka naam, village, tehsil, district, state, aur country ke saath seva ka naam aur contact information bhi add kar sakte hain. Aap payment method (cash, bank, UPI) aur donation amount bhi dekh sakte hain. Yeh sab CRUD operations ke sath possible hai.",
+      content: "Hamari MandirMitra app mein, aap donations track kar sakte hain. Har donor ka naam, village, tehsil, district, state, aur country ke saath seva ka naam aur contact information bhi add kar sakte hain. Aap payment method (cash, bank, UPI) aur donation amount bhi dekh sakte hain. App end me reciept generate karake donor ko de sakate hain. Yeh sab CRUD operations ke sath possible hai.",
       gradient: "bg-gradient-to-r from-green-400 to-blue-500"
     },
     {
       title: "Events",
-      content: "MandirMitra app mein, aap events ko manage kar sakte hain. Har event ka naam, date, location, aur status (pending, completed) ko track kar sakte hain. Temple ka reference bhi included hai. Yeh sab CRUD operations ke sath possible hai.",
+      content: "MandirMitra app mein, aap events ko manage kar sakte hain. Har event ka naam, date, location, aur status (pending, completed) ko track kar sakte hain. Temple ka reference bhi included hai.Aap har donor ke liye invitation PDF generate kar sakte hain jisme unka naam, mobile number aur passcode hoga. Yeh passcode verify ho sakta hai jab user event attend karta hai. Yeh sab CRUD operations ke sath possible hai.",
       gradient: "bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"
     },
     {
@@ -21,11 +21,6 @@ export default function DashDescription({ selectedService }) {
       title: "Inventories",
       content: "MandirMitra app mein inventory management bhi hai. Har item ka naam, category, quantity, unit, unit price, total price, aur description add kar sakte hain. Temple ka reference bhi included hai. Yeh sab CRUD operations ke sath possible hai.",
       gradient: "bg-gradient-to-r from-teal-400 to-cyan-500"
-    },
-    {
-      title: "Invitation PDF",
-      content: "Aap har donor ke liye invitation PDF generate kar sakte hain jisme unka naam, mobile number aur passcode hoga. Yeh passcode verify ho sakta hai jab user event attend karta hai. Yeh sab CRUD operations ke sath possible hai.",
-      gradient: "bg-gradient-to-r from-red-400 to-yellow-500"
     }
   ];
 
