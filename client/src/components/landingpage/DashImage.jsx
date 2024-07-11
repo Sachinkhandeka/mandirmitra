@@ -15,7 +15,7 @@ export function DashImage({ selectedService, services, handleCarouselChange }) {
     };
 
   return (
-        <div className="h-80 lg:h-96 w-[70%] mx-auto my-4 border border-slate-200 bg-gray-300 shadow-md rounded-lg" 
+        <div className=" h-48 md:h-80 lg:h-96 w-full md:w-[70%] mx-auto my-4 border border-slate-200 bg-gray-300 shadow-md rounded-lg" 
             data-aos="fade-up"
             data-aos-duration="3000"
         >
