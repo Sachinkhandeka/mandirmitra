@@ -92,26 +92,26 @@ export default function AddTehsilGaam({ setLocationAdded }) {
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 justify-stretch gap-10 p-4">
                         <div className="flex flex-col gap-2 mt-1">
-                            <FloatingLabel id="country" name="country" label="Country" variant="standard" onChange={handleChange} />
+                            <FloatingLabel id="country" name="country" label="Country" variant="standard" onChange={handleChange} required />
                         </div>
                         {showState && (
                             <div className="flex flex-col gap-2 mt-1">
-                                <FloatingLabel id="state" name="state" label="State" variant="standard" onChange={handleChange} />
+                                <FloatingLabel id="state" name="state" label="State" variant="standard" onChange={handleChange}  required/>
                             </div>
                         )}
                         {showDistrict && (
                             <div className="flex flex-col gap-2 mt-1">
-                                <FloatingLabel id="district" name="district" label="District" variant="standard" onChange={handleChange} />
+                                <FloatingLabel id="district" name="district" label="District" variant="standard" onChange={handleChange} required />
                             </div>
                         )}
                         {showTehsil && (
                             <div className="flex flex-col gap-2 mt-1">
-                                <FloatingLabel id="tehsil" name="tehsil" label="Tehsil" variant="standard" onChange={handleChange} />
+                                <FloatingLabel id="tehsil" name="tehsil" label="Tehsil" variant="standard" onChange={handleChange} required />
                             </div>
                         )}
                         {showVillage && (
                             <div className="flex flex-col gap-2 mt-1">
-                                <FloatingLabel id="village" name="village" label="Village" variant="standard" onChange={handleChange} />
+                                <FloatingLabel id="village" name="village" label="Village" variant="standard" onChange={handleChange} required />
                             </div>
                         )}
                     </div>

@@ -2,9 +2,9 @@ import { Helmet } from 'react-helmet-async';
 import FeatureSection from "./FeatureSection";
 import Heading from "./Heading";
 import HeroSection from "./HeroSection";
-import FooterComp from "../FooterComp";
 import GetStarted from "./GetStarted";
 import LandingNavbar from "./LandingNavbar";
+import Description from "./Description";
 
 export default function LandingPage() {
     return (
@@ -27,6 +27,8 @@ export default function LandingPage() {
                 <Heading />
                 {/* Hero Section */}
                 <HeroSection />
+                {/* description section */}
+                <Description />
                 {/* Feature Section */}
                 <FeatureSection />
                 {/* Get Started Section */}

@@ -27,8 +27,8 @@ export default function HeroSection() {
                 </div>
             </div>
         </div>
-        <h2 className="text-4xl text-center font-serif font-semibold my-10" data-aos="zoom-in-right">Affordable Temple Management System for All Mandirs</h2>
-        <p className="mb-4 text-xl text-center" data-aos="zoom-in-left">Har Mandir ka apna management system, bina zyada kharch ke!</p>
+        <h2 className="text-4xl text-center font-serif font-semibold my-10" data-aos="zoom-in-right" data-aos-duration="3000" >Affordable Temple Management System for All Mandirs</h2>
+        <p className="mb-4 text-xl text-center" data-aos="zoom-in-left" data-aos-duration="3000" >Har Mandir ka apna management system, bina zyada kharch ke!</p>
     </section>
   );
 }
