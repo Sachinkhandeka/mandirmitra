@@ -23,6 +23,7 @@ const eventRoute = require("./routes/event");
 const invitationRoute = require("./routes/invitation");
 const sevaRoute = require("./routes/seva");
 const inventoryRoute = require("./routes/inventory");
+const tenantRoute = require("./routes/tenant");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -53,6 +54,7 @@ app.use( "/api/event", eventRoute );
 app.use( "/api/invitation", invitationRoute );
 app.use( "/api/seva", sevaRoute );
 app.use( "/api/inventory", inventoryRoute );
+app.use( "/api/tenant", tenantRoute );
 
 
 //static folder for client side pages 

@@ -1,5 +1,5 @@
 const ExpressError = require("./utils/ExpressError");
-const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema, eventSchema, invitationSchema, inventorySchema } = require("./schemaValidation");
+const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema, eventSchema, invitationSchema, inventorySchema, tenantSchema, assetSchema } = require("./schemaValidation");
 const { validate } = require("./models/eventSchema");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
@@ -240,3 +240,37 @@ module.exports.validateInventorySchema = (req ,res ,next)=> {
     }
     next();
 }
+
+//validate tenantSchema
+module.exports.validateTenantSchema = (req, res, next) => {
+    const tenantData = {...req.body, templeId: req.params.templeId};
+    let { error } = tenantSchema.validate(tenantData);
+
+    if (error) {
+        if (error.isJoi) {
+            let errMsg = error.details.map(el => el.message).join(",");
+            throw new ExpressError(400, errMsg);
+        } else {
+            let errMsg = error.message;
+            throw new ExpressError(400, errMsg);
+        }
+    }
+    next();
+};
+
+//validate assetsSchema
+module.exports.validateAssetSchema = (req, res, next) => {
+    const assetData = {...req.body, templeId: req.params.templeId, tenant : req.params.tenantId};
+    let { error } = assetSchema.validate(assetData);
+
+    if (error) {
+        if (error.isJoi) {
+            let errMsg = error.details.map(el => el.message).join(",");
+            throw new ExpressError(400, errMsg);
+        } else {
+            let errMsg = error.message;
+            throw new ExpressError(400, errMsg);
+        }
+    }
+    next();
+};

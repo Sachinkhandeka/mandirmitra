@@ -114,6 +114,68 @@ const inventorySchema = Joi.object({
     templeId: Joi.string().required().error(new Error('Temple ID is required'))
 }).options({ abortEarly: false });
 
+const tenantSchema = Joi.object({
+    name: Joi.string().required().error(new Error('Name is required')),
+    contactInfo: Joi.string().length(10).required().error(new Error('Contact Info must be a 10-digit number')),
+    email: Joi.string().email().allow('').optional().error(new Error('Please provide a valid email address')),
+    address: Joi.string().required().error(new Error('Address is required')),
+    pinCode: Joi.number().required().error(new Error('Pin Code is required')),
+    status: Joi.string().valid('Active', 'Inactive').default('Active').error(new Error('Status must be either Active or Inactive')),
+    templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    idProofType: Joi.string().valid(
+        'Aadhaar Card',
+        'PAN Card',
+        'Voter ID',
+        'Passport',
+        'Driving License',
+        'Ration Card',
+        'Employee ID Card',
+        'Bank Passbook',
+        'Government Issued ID Card'
+    ).required().error(new Error('Valid ID Proof Type is required')),
+    idProofNumber: Joi.string().required().error(new Error('ID Proof Number is required'))
+}).options({ abortEarly: false });
+
+const assetSchema = Joi.object({
+    assetType: Joi.string().valid('Land', 'Building', 'Shop', 'Rental Property', 'Vehicle', 'Jewelry', 'Furniture', 'Equipment').required().messages({
+        'any.required': 'Asset Type is required'
+    }),
+    name: Joi.string().required().messages({
+        'any.required': 'Name is required'
+    }),
+    description: Joi.string().allow('').optional(),
+    acquisitionDate: Joi.date().optional(),
+    acquisitionCost: Joi.number().optional(),
+    currentValue: Joi.number().optional(),
+    location: Joi.object({
+        address: Joi.string().required().messages({
+            'any.required': 'Address is required'
+        }),
+        pincode: Joi.string().required().messages({
+            'any.required': 'Pincode is required'
+        })
+    }).required().messages({
+        'any.required': 'Location is required'
+    }),
+    status: Joi.string().valid('Active', 'Under Maintenance', 'Inactive').default('Active'),
+    templeId: Joi.string().required().error(new Error('Temple ID is required')),
+    rentDetails: Joi.object({
+        tenant: Joi.string().required().error(new Error('Tenant ID is required')),
+        rentAmount: Joi.number().required().messages({
+            'any.required': 'Rent Amount is required'
+        }),
+        leaseStartDate: Joi.date().required().messages({
+            'any.required': 'Lease Start Date is required'
+        }),
+        leaseEndDate: Joi.date().required().messages({
+            'any.required': 'Lease End Date is required'
+        }),
+        paymentStatus: Joi.string().valid('Paid', 'Pending', 'Overdue').default('Pending').required().messages({
+            'any.required': 'Payment Status is required'
+        })
+    }).required()
+}).options({ abortEarly: false });
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -125,4 +187,6 @@ module.exports = {
     eventSchema,
     invitationSchema,
     inventorySchema,
+    tenantSchema,
+    assetSchema,
 }
