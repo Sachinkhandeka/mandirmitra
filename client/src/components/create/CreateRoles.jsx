@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { FaAddressCard } from "react-icons/fa6";
 import { Button, Card, Label, Modal, TextInput, Select, Checkbox, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -92,15 +93,19 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className=" w-full max-w-sm bg-gradient-to-t from-rose-200 to-rose-600">
-                        <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
+                   <Card className=" w-full max-w-sm bg-white">
+                        <div className="flex items-center md:flex-col gap-4" >
+                            <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-red-400 to-red-700 rounded-md" ><FaAddressCard size={30} /></span>
+                            <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
+                        </div>
                         <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"failure"} >Add</Button>
                     </Card>
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)}>
-                    <Modal.Header />
+                    <Modal.Header className="bg-gradient-to-r from-red-400 to-red-700 p-4 text-2xl font-medium text-gray-900 dark:text-white" >
+                        Add Roles
+                    </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Roles</h3>
                             { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
                             { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } >{ success }</Alert> ) }
                             <form onSubmit={handleSubmit} >
@@ -129,7 +134,7 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
                                 </div>
                             )}
                             <div className="w-full mt-3 ">
-                                <Button onClick={handleSubmit} >Add Role</Button>
+                                <Button onClick={handleSubmit} gradientMonochrome={"failure"} outline >Add Role</Button>
                             </div>
                             </form>
                         </div>

@@ -22,6 +22,7 @@ import CreateExpense from "../create/CreateExpense";
 import CreateEvent from "../create/CreateEvent";
 import CreateSeva from "../create/CreateSeva";
 import CreateInventory from "../create/CreateInventory";
+import CreateTenant from "../create/CreateTenant";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -243,11 +244,11 @@ export default function DashProfile() {
                         <UserRoles />  
                      ) }
                     {currUser.isAdmin && (
-                        <div className="w-full bg-gradient-to-t from-amber-200 to-amber-500 rounded-lg dark:bg-gray-700 p-2 md:p-10">
-                            <div className="flex items-center justify-center flex-col md:flex-row gap-5 w-full">
+                        <div className="w-full bg-gradient-to-t from-red-400 via-orange-500 to-yellow-600 rounded-lg dark:bg-gray-700 p-2 md:p-10">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
                                 <CreateUser
                                     roleUpdated={roleUpdated} 
-                                />
+                                /> 
                                 <CreateRoles  
                                     updated={updated}
                                     setRoleUpdated={setRoleUpdated}
@@ -255,6 +256,7 @@ export default function DashProfile() {
                                 <CreatePermissions 
                                     setUpdated={setUpdated}
                                 />
+                                <CreateTenant />
                             </div>
                         </div>
                     )}

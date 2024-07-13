@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { FiUserPlus } from "react-icons/fi";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import "../../css/PhoneInputCostom.css";
@@ -102,15 +103,19 @@ export default function CreateUser({ roleUpdated }) {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className="w-full max-w-sm bg-gradient-to-t from-lime-200 to-lime-600">
-                        <h5 className="text-2xl font-bold tracking-tight">Create User</h5>
+                   <Card className="w-full max-w-sm bg-white">
+                        <div className="flex items-center md:flex-col gap-4" >
+                            <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-lime-200 to-lime-500 rounded-md" ><FiUserPlus size={30} /></span>
+                            <h5 className="text-2xl text-center font-bold tracking-tight">Create User</h5>
+                        </div>
                         <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"lime"} className="text-white" >Create</Button>
                     </Card>
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} position={"left-top"}>
-                    <Modal.Header />
+                    <Modal.Header className="bg-gradient-to-r from-lime-200 to-lime-500 p-4 text-2xl font-medium text-gray-900 dark:text-white" >
+                        Create user with roles
+                    </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Create user with roles</h3>
                             { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="sticky top-0 z-20" >{ error }</Alert> ) }
                             { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="sticky top-0 z-20" >{ success }</Alert> ) }
                             <form className="my-3" onSubmit={handleSubmit} >
@@ -170,7 +175,7 @@ export default function CreateUser({ roleUpdated }) {
                                         </div>
                                     )
                                 }
-                                <Button onClick={handleSubmit} className="mt-4" outline>Create new user</Button>
+                                <Button onClick={handleSubmit} className="mt-4" gradientMonochrome={"lime"} outline>Create new user</Button>
                             </form>
                         </div>
                      </Modal.Body>

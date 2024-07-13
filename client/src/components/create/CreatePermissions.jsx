@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { FaEdit } from "react-icons/fa";
 import { Alert, Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -56,15 +57,19 @@ export default function CreatePermissions({ setUpdated }) {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className=" w-full max-w-sm bg-gradient-to-t from-indigo-200 to-indigo-600">
-                        <h5 className="text-2xl font-bold tracking-tight">Add Permissions</h5>
+                   <Card className=" w-full max-w-sm bg-white">
+                        <div className="flex items-center md:flex-col gap-4" >
+                            <span className=" h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-purple-400 to-purple-700 rounded-md" ><FaEdit size={30} /></span>
+                            <h5 className="text-2xl font-bold tracking-tight">Add Permissions</h5>
+                        </div>
                         <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"purple"} >Add</Button>
                     </Card>
-                    <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} position={"top-right"} >
-                    <Modal.Header />
+                    <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)}>
+                    <Modal.Header className="bg-gradient-to-r from-purple-400 to-purple-700 text-2xl p-4 font-medium text-gray-900 dark:text-white" >
+                        Add Permissions
+                    </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Permissions</h3>
                         { error && ( <Alert color={"failure"} onDismiss={ ()=> setError(null) }>{ error } </Alert>  ) }
                         { success  && ( <Alert color={"success"} onDismiss={ ()=> setSuccess(null) }>{ success }</Alert> ) }
                         <form onSubmit={handleSubmit} className="flex flex-col gap-8" >
@@ -102,7 +107,7 @@ export default function CreatePermissions({ setUpdated }) {
                             </div>
                          </div>
                          <div className="w-full my-3">
-                            <Button onClick={handleSubmit} >Add Permission</Button>
+                            <Button onClick={handleSubmit} gradientMonochrome={"purple"} outline >Add Permission</Button>
                          </div>
                          </form>
                      </div>
