@@ -122,18 +122,6 @@ const tenantSchema = Joi.object({
     pinCode: Joi.number().required().error(new Error('Pin Code is required')),
     status: Joi.string().valid('Active', 'Inactive').default('Active').error(new Error('Status must be either Active or Inactive')),
     templeId: Joi.string().required().error(new Error('Temple ID is required')),
-    idProofType: Joi.string().valid(
-        'Aadhaar Card',
-        'PAN Card',
-        'Voter ID',
-        'Passport',
-        'Driving License',
-        'Ration Card',
-        'Employee ID Card',
-        'Bank Passbook',
-        'Government Issued ID Card'
-    ).required().error(new Error('Valid ID Proof Type is required')),
-    idProofNumber: Joi.string().required().error(new Error('ID Proof Number is required'))
 }).options({ abortEarly: false });
 
 const assetSchema = Joi.object({
@@ -144,36 +132,20 @@ const assetSchema = Joi.object({
         'any.required': 'Name is required'
     }),
     description: Joi.string().allow('').optional(),
-    acquisitionDate: Joi.date().optional(),
-    acquisitionCost: Joi.number().optional(),
-    currentValue: Joi.number().optional(),
-    location: Joi.object({
-        address: Joi.string().required().messages({
-            'any.required': 'Address is required'
-        }),
-        pincode: Joi.string().required().messages({
-            'any.required': 'Pincode is required'
-        })
-    }).required().messages({
-        'any.required': 'Location is required'
-    }),
+    acquisitionDate: Joi.date().allow('').optional(),
+    acquisitionCost: Joi.string().allow('').optional(),
+    currentValue: Joi.string().allow('').optional(),
+    address: Joi.string().required().error(new Error('Address is required')),
+    pincode: Joi.number().required().error(new Error('Pin Code is required')),
     status: Joi.string().valid('Active', 'Under Maintenance', 'Inactive').default('Active'),
     templeId: Joi.string().required().error(new Error('Temple ID is required')),
     rentDetails: Joi.object({
-        tenant: Joi.string().required().error(new Error('Tenant ID is required')),
-        rentAmount: Joi.number().required().messages({
-            'any.required': 'Rent Amount is required'
-        }),
-        leaseStartDate: Joi.date().required().messages({
-            'any.required': 'Lease Start Date is required'
-        }),
-        leaseEndDate: Joi.date().required().messages({
-            'any.required': 'Lease End Date is required'
-        }),
-        paymentStatus: Joi.string().valid('Paid', 'Pending', 'Overdue').default('Pending').required().messages({
-            'any.required': 'Payment Status is required'
-        })
-    }).required()
+        tenant: Joi.string().optional(),
+        rentAmount: Joi.number().optional(),
+        leaseStartDate: Joi.date().optional(),
+        leaseEndDate: Joi.date().optional(),
+        paymentStatus: Joi.string().valid('Paid', 'Pending', 'Overdue').optional().default('Pending')
+    }).optional()
 }).options({ abortEarly: false });
 
 module.exports = {

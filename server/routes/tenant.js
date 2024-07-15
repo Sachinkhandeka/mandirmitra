@@ -7,8 +7,14 @@ const { verifyCreatePermission, verifyReadPermission, verifyUpdatePermission, ve
 
 router.post(
     "/create/:templeId",
+    verifyCreatePermission,
     validateTenantSchema,
     wrapAsync(tenantController.createTenant),
 ); 
 
+router.get(
+    "/get/:templeId",
+    verifyReadPermission,
+    wrapAsync(tenantController.getTenantsData),
+);
 module.exports = router ; 

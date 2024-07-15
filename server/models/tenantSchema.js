@@ -42,15 +42,6 @@ const tenantSchema = new mongoose.Schema({
     templeId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Temple",
-    },
-    idProofType : {
-        type : String,
-        enum : ['Aadhaar Card','PAN Card','Voter ID','Passport','Driving License','Ration Card','Employee ID Card','Bank Passbook','Government Issued ID Card'],
-        required : true,
-    },
-    idProofNumber: {
-        type: String,
-        required: true,
     }
 }, { timestamps: true });
 

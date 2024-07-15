@@ -19,8 +19,6 @@ export default function CreateTenant() {
         email: '',
         address: '',
         pinCode: '',
-        idProofType: '',
-        idProofNumber: ''
     });
 
     //handle change
@@ -67,8 +65,6 @@ export default function CreateTenant() {
                 email: '',
                 address: '',
                 pinCode: '',
-                idProofType: '',
-                idProofNumber: ''
             });
         } catch (err) {
             setLoading(false);
@@ -128,25 +124,6 @@ export default function CreateTenant() {
                                         <div className="flex flex-col gap-3 mt-2">
                                             <Label htmlFor="pinCode">Pin Code</Label>
                                             <TextInput type="number" id="pinCode" name="pinCode" value={formData.pinCode} placeholder="Enter pin code" onChange={handleChange} required />
-                                        </div>
-                                        <div className="flex flex-col gap-3 mt-2">
-                                            <Label htmlFor="idProofType">ID Proof Type</Label>
-                                            <Select id="idProofType" name="idProofType" value={formData.idProofType} onChange={handleChange} required>
-                                                <option value="">Select ID Proof Type</option>
-                                                <option value="Aadhaar Card">Aadhaar Card</option>
-                                                <option value="PAN Card">PAN Card</option>
-                                                <option value="Voter ID">Voter ID</option>
-                                                <option value="Passport">Passport</option>
-                                                <option value="Driving License">Driving License</option>
-                                                <option value="Ration Card">Ration Card</option>
-                                                <option value="Employee ID Card">Employee ID Card</option>
-                                                <option value="Bank Passbook">Bank Passbook</option>
-                                                <option value="Government Issued ID Card">Government Issued ID Card</option>
-                                            </Select>
-                                        </div>
-                                        <div className="flex flex-col gap-3 mt-2">
-                                            <Label htmlFor="idProofNumber">ID Proof Number</Label>
-                                            <TextInput type="text" id="idProofNumber" name="idProofNumber" value={formData.idProofNumber} placeholder="Enter ID proof number" onChange={handleChange} required />
                                         </div>
                                         <Button type="submit" className="mt-4" gradientMonochrome={"pink"} outline disabled={loading}>
                                             {loading ? <Spinner color={'pink'} /> : 'Create Tenant'}

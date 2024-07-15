@@ -260,7 +260,7 @@ module.exports.validateTenantSchema = (req, res, next) => {
 
 //validate assetsSchema
 module.exports.validateAssetSchema = (req, res, next) => {
-    const assetData = {...req.body, templeId: req.params.templeId, tenant : req.params.tenantId};
+    const assetData = {...req.body, templeId: req.params.templeId};
     let { error } = assetSchema.validate(assetData);
 
     if (error) {
