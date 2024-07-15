@@ -22,15 +22,13 @@ const assetSchema = new mongoose.Schema({
     currentValue: {
         type: Number,
     },
-    location: {
-        address: {
-            type: String,
-            required: true
-        },
-        pincode: {
-            type: String,
-            required: true
-        }
+    address: {
+        type: String,
+        required: true
+    },
+    pincode: {
+        type: String,
+        required: true
     },
     status: {
         type: String,
@@ -46,25 +44,20 @@ const assetSchema = new mongoose.Schema({
         tenant: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Tenant',
-            required: true
         },
         rentAmount: {
             type: Number,
-            required: true
         },
         leaseStartDate: {
             type: Date,
-            required: true
         },
         leaseEndDate: {
             type: Date,
-            required: true
         },
         paymentStatus: {
             type: String,
             enum: ['Paid', 'Pending', 'Overdue'],
             default: 'Pending',
-            required: true
         }
     }
 }, { timestamps: true });
