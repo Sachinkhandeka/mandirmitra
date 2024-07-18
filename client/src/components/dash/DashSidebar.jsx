@@ -1,7 +1,7 @@
 import { Sidebar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart } from "react-icons/fa";
-import { FaMoneyBillTrendUp, FaMapLocationDot } from "react-icons/fa6";
+import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart, FaLandmark } from "react-icons/fa";
+import { FaMoneyBillTrendUp, FaMapLocationDot, FaBuildingUser } from "react-icons/fa6";
 import { SiEventbrite } from "react-icons/si";
 import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
@@ -97,6 +97,22 @@ export default function DashSidebar() {
                                             icon={SiEventbrite}
                                             as={"div"} 
                                         >Events</Sidebar.Item>
+                                    </Link>
+                                    <Link to={"/?tab=assets"} >
+                                        <Sidebar.Item
+                                            active={tab === "assets"}
+                                            className="mt-6 cursor-pointer"
+                                            icon={FaLandmark}
+                                            as={"div"} 
+                                        >Assets</Sidebar.Item>
+                                    </Link>
+                                    <Link to={"/?tab=tenants"} >
+                                        <Sidebar.Item
+                                            active={tab === "tenants"}
+                                            className="mt-6 cursor-pointer"
+                                            icon={FaBuildingUser}
+                                            as={"div"} 
+                                        >Tenants</Sidebar.Item>
                                     </Link>
                                     <Link to={"/?tab=seva"}>
                                         <Sidebar.Item

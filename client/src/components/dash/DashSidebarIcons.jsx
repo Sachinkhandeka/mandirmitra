@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart } from "react-icons/fa";
-import { FaMoneyBillTrendUp, FaMapLocationDot  } from "react-icons/fa6";
+import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart, FaLandmark } from "react-icons/fa";
+import { FaMoneyBillTrendUp, FaMapLocationDot, FaBuildingUser  } from "react-icons/fa6";
 import { SiEventbrite } from "react-icons/si";
 import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
@@ -58,6 +58,12 @@ export default function DashSidebarIcon() {
                             </Link>
                             <Link to={"/?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <SiEventbrite />
+                            </Link>
+                            <Link to={"/?tab=assets"} className={`${tab === 'assets' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                <FaLandmark />
+                            </Link>
+                            <Link to={"/?tab=tenants"} className={`${tab === 'tenants' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                                <FaBuildingUser />
                             </Link>
                             <Link to={"/?tab=seva"} className={`${tab === 'seva' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                  <RiHandHeartFill />
