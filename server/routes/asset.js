@@ -12,4 +12,22 @@ router.post(
     wrapAsync(asset.createAsset),
 );
 
+router.get(
+    "/get/:templeId",
+    verifyReadPermission,
+    wrapAsync(asset.getAssets),
+);
+
+router.put(
+    "/addTenant/:templeId/:assetId",
+    verifyCreatePermission,
+    wrapAsync(asset.addTenantToAsset),
+);
+
+router.put(
+    "/removeTenant/:templeId/:assetId",
+    verifyCreatePermission,
+    wrapAsync(asset.removeTenantFromAsset),
+);
+
 module.exports = router ; 
