@@ -4,6 +4,7 @@ import debounce from "lodash/debounce";
 import { TbFaceIdError } from "react-icons/tb";
 
 const EditTenant = React.lazy(()=> import("../edit/EditTenant"));
+const DeleteTenant = React.lazy(()=> import("../delete/DeleteTenant"));
 
 export default function DashTenants() {
     const { currUser } = useSelector(state => state.user);
@@ -11,6 +12,8 @@ export default function DashTenants() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedTenant, setSelectedTenant] = useState({});
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedTenantId, setSelectedTenantId] = useState('');
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const getTenantsData = async (searchQuery) => {
         try {
@@ -56,6 +59,11 @@ export default function DashTenants() {
     const handleEditClick = (tenant)=> {
         setSelectedTenant(tenant);
         setIsEditModalOpen(true);
+    }
+
+    const handleDeleteClick = (tenant)=> {
+        setSelectedTenantId(tenant._id);
+        setIsDeleteModalOpen(true);
     }
 
     return (
@@ -117,8 +125,8 @@ export default function DashTenants() {
                                 </div>
                             </td>
                             <td className="px-6 py-4 flex items-center justify-center gap-2">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline" onClick={()=> handleEditClick(tenant)}>Edit</a>
-                                <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
+                                <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" onClick={()=> handleEditClick(tenant)}>Edit</span>
+                                <span className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" onClick={()=> handleDeleteClick(tenant)} >Remove</span>
                             </td>
                         </tr>
                     ))}
@@ -139,6 +147,16 @@ export default function DashTenants() {
                         tenant={selectedTenant}
                         isOpen={isEditModalOpen}
                         onClose={()=> setIsEditModalOpen(false)}
+                        refreshTenants={()=> getTenantsData('')}
+                    />
+                )
+            }
+            {
+                selectedTenantId && (
+                    <DeleteTenant 
+                        tenantId={selectedTenantId}
+                        isOpen={isDeleteModalOpen}
+                        onClose={()=> setIsDeleteModalOpen(false)}
                         refreshTenants={()=> getTenantsData('')}
                     />
                 )

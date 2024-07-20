@@ -70,3 +70,15 @@ module.exports.EditTenant = async(req,res)=> {
         message : "Tenant updated successfully."
      });
 }
+
+module.exports.deleteTenant =  async(req ,res)=> {
+    const { templeId, tenantId } = req.params ; 
+
+    if(!templeId && !tenantId) {
+        throw new ExpressError(400,  "ID's not found.");
+    }
+
+    await Tenant.findOneAndDelete({ _id : tenantId, templeId : templeId });
+
+    res.status(200).json({ message : "Tenant deleted successfully." });
+}
