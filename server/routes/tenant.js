@@ -17,4 +17,12 @@ router.get(
     verifyReadPermission,
     wrapAsync(tenantController.getTenantsData),
 );
+
+router.put(
+    "/update/:templeId/:tenantId",
+    validateTenantSchema,
+    verifyUpdatePermission,
+    wrapAsync(tenantController.EditTenant),
+);
+
 module.exports = router ; 

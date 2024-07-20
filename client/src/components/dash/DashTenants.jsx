@@ -1,12 +1,16 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import debounce from "lodash/debounce";
 import { TbFaceIdError } from "react-icons/tb";
+
+const EditTenant = React.lazy(()=> import("../edit/EditTenant"));
 
 export default function DashTenants() {
     const { currUser } = useSelector(state => state.user);
     const [tenants, setTenants] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedTenant, setSelectedTenant] = useState({});
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const getTenantsData = async (searchQuery) => {
         try {
@@ -48,6 +52,11 @@ export default function DashTenants() {
         const firstLetters = slicedParts.map(chunk => chunk.charAt(0));
         return firstLetters.join('');
     };
+
+    const handleEditClick = (tenant)=> {
+        setSelectedTenant(tenant);
+        setIsEditModalOpen(true);
+    }
 
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
@@ -108,7 +117,7 @@ export default function DashTenants() {
                                 </div>
                             </td>
                             <td className="px-6 py-4 flex items-center justify-center gap-2">
-                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline" onClick={()=> handleEditClick(tenant)}>Edit</a>
                                 <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a>
                             </td>
                         </tr>
@@ -124,6 +133,16 @@ export default function DashTenants() {
                     </div>
                 </div>
             ) }
+            {
+                selectedTenant && (
+                    <EditTenant 
+                        tenant={selectedTenant}
+                        isOpen={isEditModalOpen}
+                        onClose={()=> setIsEditModalOpen(false)}
+                        refreshTenants={()=> getTenantsData('')}
+                    />
+                )
+            }
         </section>
     );
 }
