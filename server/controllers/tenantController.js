@@ -51,3 +51,22 @@ module.exports.getTenantsData = async (req, res, next) => {
 
     res.status(200).json({ tenants });
 };
+
+module.exports.EditTenant = async(req,res)=> {
+    const { templeId, tenantId } = req.params ; 
+    const formData = req.body  ; 
+
+    if(!templeId && !tenantId) {
+        throw new ExpressError(400 , "Cannot find tenant without id.");
+    }
+
+    if(!formData) {
+        throw new ExpressError(400, "Invalid tenant Data.");
+    }
+
+    await Tenant.findOneAndUpdate({ _id : tenantId, templeId : templeId}, formData);
+
+    res.status(200).json({ 
+        message : "Tenant updated successfully."
+     });
+}
