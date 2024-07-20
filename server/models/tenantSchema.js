@@ -1,5 +1,5 @@
-const { required } = require('joi');
 const mongoose = require('mongoose');
+const Asset = require("../models/assetsSchema");
 
 const tenantSchema = new mongoose.Schema({
     name: {
@@ -44,6 +44,15 @@ const tenantSchema = new mongoose.Schema({
         ref: "Temple",
     }
 }, { timestamps: true });
+
+tenantSchema.post("findOneAndDelete", async(tenant)=> {
+    const tenantId = tenant._id;
+
+    await Asset.updateMany(
+        { "rentDetails.tenant" : tenantId },
+        { $unset : { rentDetails : {} } }
+    )
+});
 
 const Tenant = mongoose.model('Tenant', tenantSchema);
 

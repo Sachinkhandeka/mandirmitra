@@ -25,4 +25,10 @@ router.put(
     wrapAsync(tenantController.EditTenant),
 );
 
+router.delete(
+    "/delete/:templeId/:tenantId",
+    verifyDeletePermission,
+    wrapAsync(tenantController.deleteTenant),
+);
+
 module.exports = router ; 
