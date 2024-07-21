@@ -9,6 +9,7 @@ import { Modal, Button, Spinner } from "flowbite-react";
 import { PopOver } from "../PopOver";
 
 const EditAsset = React.lazy(()=> import("../edit/EditAsset"));
+const DeleteAsset = React.lazy(()=> import("../delete/DeleteAsset"));
 
 export default function DashAssets() {
     const { currUser } = useSelector(state => state.user);
@@ -22,7 +23,7 @@ export default function DashAssets() {
     const [loading, setLoading] = useState(false);
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isEditAssetOpen, setIsEditAssetOpen] =  useState(false);
-    const [assetId, setAssetId] = useState(false);
+    const [assetId, setAssetId] = useState("");
     const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
 
 
@@ -171,7 +172,7 @@ export default function DashAssets() {
                         type="text"
                         id="table-search"
                         className="block pt-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search for items"
+                        placeholder="Search for assets"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -318,6 +319,16 @@ export default function DashAssets() {
                         asset={selectedAsset}
                         isOpen={isEditAssetOpen}
                         onClose={()=> setIsEditAssetOpen(false)}
+                        refreshAssets={()=> getAssetsData()}
+                    />
+                )
+            }
+            {
+                isDeleteAssetOpen && (
+                    <DeleteAsset 
+                        assetId={assetId}
+                        isOpen={isDeleteAssetOpen}
+                        onClose={()=> setIsDeleteAssetOpen(false)}
                         refreshAssets={()=> getAssetsData()}
                     />
                 )
