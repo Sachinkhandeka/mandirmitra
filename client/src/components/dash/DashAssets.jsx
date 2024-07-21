@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import debounce from "lodash/debounce";
 import { TbFaceIdError } from "react-icons/tb";
@@ -7,6 +7,8 @@ import GetTenants from "../GetTenants";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Modal, Button, Spinner } from "flowbite-react";
 import { PopOver } from "../PopOver";
+
+const EditAsset = React.lazy(()=> import("../edit/EditAsset"));
 
 export default function DashAssets() {
     const { currUser } = useSelector(state => state.user);
@@ -18,6 +20,10 @@ export default function DashAssets() {
     const [openModal, setOpenModal] = useState(false);
     const [assetToRemove, setAssetToRemove] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [selectedAsset, setSelectedAsset] = useState({});
+    const [isEditAssetOpen, setIsEditAssetOpen] =  useState(false);
+    const [assetId, setAssetId] = useState(false);
+    const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
 
 
     const getAssetsData = async (searchQuery = '') => {
@@ -142,6 +148,15 @@ export default function DashAssets() {
         const firstLetters = slicedParts.map(chunk => chunk.charAt(0));
         return firstLetters.join('');
     };
+
+    const handleEditClick = (tenant)=> {
+        setSelectedAsset(tenant);
+        setIsEditAssetOpen(true);
+    }
+    const handleDeleteClick = (tenant)=> {
+        setAssetId(tenant._id);
+        setIsDeleteAssetOpen(true);
+    }
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
             <div className="pb-4 bg-white dark:bg-gray-900">
@@ -174,6 +189,7 @@ export default function DashAssets() {
                             <th scope="col" className="px-6 py-3">Acquisition Cost</th>
                             <th scope="col" className="px-6 py-3">Current Value</th>
                             <th scope="col" className="px-6 py-3">Tenant</th>
+                            <th scope="col" className="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,8 +218,14 @@ export default function DashAssets() {
                                 <td className="px-6 py-4">{asset.address}, {asset.pincode}</td>
                                 <td className="px-6 py-4">{asset.status}</td>
                                 <td className="px-6 py-4">{asset.acquisitionDate ? new Date(asset.acquisitionDate).toLocaleDateString() : "N/A"}</td>
-                                <td className="px-6 py-4">{asset.acquisitionCost ? `${asset.acquisitionCost}` : "N/A"}</td>
-                                <td className="px-6 py-4">{asset.currentValue ? `${asset.currentValue}` : "N/A"}</td>
+                                <td className="px-6 py-4">
+                                    {asset.acquisitionCost ? 
+                                    `${ new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(asset.acquisitionCost)}` : "N/A"}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {asset.currentValue ? 
+                                    `${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(asset.currentValue)}` : "N/A"}
+                                </td>
                                 <td className="px-6 py-4 relative">
                                     <div className="flex items-center">
                                         {asset.rentDetails.tenant ? (
@@ -242,6 +264,10 @@ export default function DashAssets() {
                                             </>
                                         )}
                                     </div>
+                                </td>
+                                <td className="px-6 py-4 flex items-center justify-center gap-2">
+                                    <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" onClick={()=> handleEditClick(asset)}>Edit</span>
+                                    <span className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" onClick={()=> handleDeleteClick(asset)} >Remove</span>
                                 </td>
                             </tr>
                         ))}
@@ -286,6 +312,16 @@ export default function DashAssets() {
                     </Modal.Body>
                 </Modal>
             )}
+            {
+                isEditAssetOpen && (
+                    <EditAsset 
+                        asset={selectedAsset}
+                        isOpen={isEditAssetOpen}
+                        onClose={()=> setIsEditAssetOpen(false)}
+                        refreshAssets={()=> getAssetsData()}
+                    />
+                )
+            }
         </section>
     );
 }
