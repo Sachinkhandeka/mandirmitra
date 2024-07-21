@@ -20,14 +20,21 @@ router.get(
 
 router.put(
     "/addTenant/:templeId/:assetId",
-    verifyCreatePermission,
+    verifyUpdatePermission,
     wrapAsync(asset.addTenantToAsset),
 );
 
 router.put(
     "/removeTenant/:templeId/:assetId",
-    verifyCreatePermission,
+    verifyUpdatePermission,
     wrapAsync(asset.removeTenantFromAsset),
+);
+
+router.put(
+    "/update/:templeId/:assetId",
+    validateAssetSchema,
+    verifyUpdatePermission,
+    wrapAsync(asset.updateAsset),
 );
 
 module.exports = router ; 

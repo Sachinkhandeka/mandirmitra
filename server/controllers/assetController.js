@@ -136,3 +136,38 @@ module.exports.removeTenantFromAsset = async (req, res)=> {
     // Send a success response
     res.status(200).json({ message: 'Tenant removed successfully' });
 }
+
+module.exports.updateAsset = async (req, res) => {
+    const { templeId, assetId } = req.params;
+    const assetData = req.body;
+
+    if (!templeId) {
+        throw new ExpressError(400, "Temple ID is required.");
+    }
+
+    if (!assetId) {
+        throw new ExpressError(400, "Asset ID is required.");
+    }
+
+    if (!assetData) {
+        throw new ExpressError(404, "Please provide valid data.");
+    }
+
+    const asset = await Asset.findById(assetId);
+
+    if (!asset) {
+        throw new ExpressError(404, "Asset not found.");
+    }
+
+    if (asset.templeId.toString() !== templeId) {
+        throw new ExpressError(403, "Asset does not belong to the specified temple.");
+    }
+
+    Object.keys(assetData).forEach(key => {
+        asset[key] = assetData[key];
+    });
+
+    await asset.save();
+
+    res.status(200).json({ message: "Asset updated successfully", asset });
+};
