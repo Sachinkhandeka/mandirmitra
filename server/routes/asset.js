@@ -37,4 +37,10 @@ router.put(
     wrapAsync(asset.updateAsset),
 );
 
+router.delete(
+    "/delete/:templeId/:assetId",
+    verifyDeletePermission,
+    wrapAsync(asset.deleteAsset),
+);
+
 module.exports = router ; 

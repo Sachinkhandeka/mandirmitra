@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Modal, Button, Spinner, Alert } from "flowbite-react";
+import { Alert, Modal, Button, Spinner } from "flowbite-react";
 import { Helmet } from "react-helmet-async";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
-export default function DeleteTenant({ tenantId, isOpen, onClose, refreshTenants }) {
-    const { currUser } = useSelector( state => state.user );
+export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets }) {
+    const { currUser } = useSelector(state => state.user);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -14,7 +14,7 @@ export default function DeleteTenant({ tenantId, isOpen, onClose, refreshTenants
         setError(null);
 
         try {
-            const response = await fetch(`/api/tenant/delete/${currUser.templeId}/${tenantId}`, {
+            const response = await fetch(`/api/asset/delete/${currUser.templeId}/${assetId}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });
@@ -27,7 +27,7 @@ export default function DeleteTenant({ tenantId, isOpen, onClose, refreshTenants
             }
 
             setLoading(false);
-            refreshTenants();
+            refreshAssets();
             onClose();
         } catch (err) {
             setLoading(false);
@@ -38,16 +38,16 @@ export default function DeleteTenant({ tenantId, isOpen, onClose, refreshTenants
     return (
         <>
             <Helmet>
-                <title>Delete Tenant Confirmation - Temple Management</title>
-                <meta name="description" content="Confirm deletion of a tenant in the temple management system. Ensure your actions before proceeding." />
+                <title>Delete Asset Confirmation - Temple Management</title>
+                <meta name="description" content="Confirm deletion of an asset in the temple management system. Ensure your actions before proceeding." />
             </Helmet>
-            <Modal show={isOpen} dismissible onClose={onClose} size={"md"} popup>
+            <Modal show={isOpen} size={"md"} dismissible onClose={onClose} popup>
                 <Modal.Header />
                 <Modal.Body>
                     <div className="text-center">
                         <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-red-600" />
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                            Are you sure you want to delete this Tenant?
+                            Are you sure you want to delete this Asset?
                         </h3>
                         {error && (
                             <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-2" >{error}</Alert>

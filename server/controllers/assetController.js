@@ -171,3 +171,29 @@ module.exports.updateAsset = async (req, res) => {
 
     res.status(200).json({ message: "Asset updated successfully", asset });
 };
+
+module.exports.deleteAsset = async (req, res) => {
+    const { templeId, assetId } = req.params;
+
+    if (!templeId) {
+        throw new ExpressError(400, "Temple ID is required.");
+    }
+
+    if (!assetId) {
+        throw new ExpressError(400, "Asset ID is required.");
+    }
+
+    const asset = await Asset.findById(assetId);
+
+    if (!asset) {
+        throw new ExpressError(404, "Asset not found.");
+    }
+
+    if (asset.templeId.toString() !== templeId) {
+        throw new ExpressError(403, "Asset does not belong to the specified temple.");
+    }
+
+    await Asset.findOneAndDelete({ _id : assetId, templeId : templeId });
+
+    res.status(200).json({ message: "Asset deleted successfully" });
+};
