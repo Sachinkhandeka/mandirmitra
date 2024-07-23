@@ -7,6 +7,7 @@ import GetTenants from "../GetTenants";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Modal, Button, Spinner } from "flowbite-react";
 import { PopOver } from "../PopOver";
+import { Helmet } from "react-helmet-async";
 
 const EditAsset = React.lazy(()=> import("../edit/EditAsset"));
 const DeleteAsset = React.lazy(()=> import("../delete/DeleteAsset"));
@@ -167,8 +168,43 @@ export default function DashAssets() {
             ))
         );
     };
+
+    const getCurrentMetaTags = () => {
+        if (isEditAssetOpen) {
+            return {
+                title: "Edit Asset | MandirMitra",
+                description: "Edit asset details in MandirMitra, including name, type, location, status, and more.",
+                keywords: "edit asset, temple management, asset details, MandirMitra, mandir mitra, mandirmitra, mandir"
+            };
+        } else if (isDeleteAssetOpen) {
+            return {
+                title: "Delete Asset | MandirMitra",
+                description: "Remove an asset from the temple's inventory in MandirMitra.",
+                keywords: "delete asset, temple management, remove asset, MandirMitra, mandir mitra, mandirmitra, mandir"
+            };
+        } else if (dropdownVisible[selectedAssetId]) {
+            return {
+                title: "Add or Remove Tenants | MandirMitra",
+                description: "Manage tenants for temple assets, add new tenants, or remove existing ones in MandirMitra.",
+                keywords: "manage tenants, add tenant, remove tenant, temple management, MandirMitra, mandir mitra, mandirmitra, mandir"
+            };
+        } else {
+            return {
+                title: "Manage Temple Assets | MandirMitra",
+                description: "View and manage all temple assets, add or remove tenants, and update asset details in MandirMitra.",
+                keywords: "temple management, asset management, add tenant, remove tenant, MandirMitra, mandir mitra, mandirmitra, mandir"
+            };
+        }
+    };
+
+    const { title, description, keywords } = getCurrentMetaTags();
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
+            <Helmet>
+                <title>{title}</title>
+                <meta name="description" content={description} />
+                <meta name="keywords" content={keywords} />
+            </Helmet>
             <div className="pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
                 <div className="relative mt-1">

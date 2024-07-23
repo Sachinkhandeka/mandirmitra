@@ -74,8 +74,37 @@ export default function DashTenants() {
             ))
         );
     };
+
+    const getCurrentMetaTags = (isEditModalOpen, isDeleteModalOpen) => {
+        if (isEditModalOpen) {
+            return {
+                title: 'Edit Tenant | MandirMitra',
+                description: 'Edit tenant details in your temple management system.',
+                keywords: 'edit tenant, temple management, MandirMitra'
+            };
+        }
+    
+        if (isDeleteModalOpen) {
+            return {
+                title: 'Delete Tenant | MandirMitra',
+                description: 'Remove a tenant from your temple management system.',
+                keywords: 'delete tenant, temple management, MandirMitra'
+            };
+        }
+        return {
+            title: 'Manage Tenants | MandirMitra',
+            description: 'View and manage tenants in your temple management system.',
+            keywords: 'manage tenants, view tenants, temple management, MandirMitra'
+        };
+    };
+    const metaTags = getCurrentMetaTags(isEditModalOpen, isDeleteModalOpen);
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
+            <Helmet>
+                <title>{metaTags.title}</title>
+                <meta name="description" content={metaTags.description} />
+                <meta name="keywords" content={metaTags.keywords} />
+            </Helmet>
             { tenants && tenants.length > 0 && hasPermission("read") ? (
             <>
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
