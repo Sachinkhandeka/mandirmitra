@@ -71,26 +71,28 @@ export default function SigninSuperAdmin() {
                     </Alert>
                 )}
                 <div className="whitespace-nowrap ">
-                    <h1 className="text-2xl font-serif font-bold">Login Super Admin</h1>
+                    <h1 className="text-2xl font-serif font-bold">Login with Admin</h1>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4 my-2">
-                        <Label htmlFor="email">Email:</Label>
+                        <Label htmlFor="email" className="dark:text-black" >Email:</Label>
                         <TextInput
                             type="email"
                             id="email"
                             name="email"
+                            className="dark:bg-white text-black"
                             placeholder="eg. superAdmin@gmail.com"
                             onChange={handleChange}
                             required
                         />
                     </div>
                     <div className="flex flex-col gap-4 my-2 relative">
-                        <Label htmlFor="password">Password:</Label>
+                        <Label htmlFor="password" className="dark:text-black" >Password:</Label>
                         <TextInput
                             type={`${viewPass ? 'text' : 'password'}`}
                             id="password"
                             name="password"
+                            className="dark:bg-white text-black"
                             placeholder="************"
                             onChange={handleChange}
                             required
@@ -113,7 +115,7 @@ export default function SigninSuperAdmin() {
                 </form>
             </div>
             <div className='flex items-center justify-center mt-2 border-t border-t-gray-500 relative' >
-                <span className=' absolute top-[-15px] px-4 bg-white' >or</span>
+                <span className=' absolute top-[-15px] px-4 bg-white text-black' >or</span>
             </div>
             <div className='flex items-center gap-2 text-sm'>
                 Login with OTP ?

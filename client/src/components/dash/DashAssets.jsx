@@ -198,7 +198,13 @@ export default function DashAssets() {
                             <th scope="col" className="px-6 py-3">Acquisition Date</th>
                             <th scope="col" className="px-6 py-3">Acquisition Cost</th>
                             <th scope="col" className="px-6 py-3">Current Value</th>
-                            <th scope="col" className="px-6 py-3">Tenant</th>
+                            {
+                                (currUser && currUser.isAdmin ||
+                                    currUser.roles && currUser.roles.some(role => 
+                                        role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
+                                            <th scope="col" className="px-6 py-3">Tenant</th>
+                                        )
+                            }
                             {
                                 (currUser && currUser.isAdmin ||
                                     currUser.roles && currUser.roles.some(role => 
@@ -242,45 +248,63 @@ export default function DashAssets() {
                                     {asset.currentValue ? 
                                     `${new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(asset.currentValue)}` : "N/A"}
                                 </td>
-                                <td className="px-6 py-4 relative">
-                                    <div className="flex items-center">
-                                        {asset.rentDetails.tenant ? (
-                                            <>
-                                                <button
-                                                    onClick={() => {
-                                                        setAssetToRemove(asset._id);
-                                                        setOpenModal(true);
-                                                    }}                                                
-                                                    className="ml-2 text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                                                >
-                                                    Remove
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <a
-                                                    onClick={() => toggleDropdown(asset._id)}
-                                                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                                                >
-                                                    Add
-                                                </a>
-                                                {dropdownVisible[asset._id] && (
-                                                    <div id="tenantDropdown" className="absolute top-2 right-24 md:right-28 lg:right-32 max-h-60 overflow-y-auto scrollbar-hidden z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
-                                                        <div className="flex items-center justify-end sticky top-0 p-2 z-30 bg-gray-200 dark:bg-gray-500">
-                                                            <IoIosClose size={20} onClick={() => toggleDropdown(asset._id)} className="text-black dark:text-white hover:bg-gray-400 hover:dark:bg-gray-600 rounded-md" />
-                                                        </div>
-                                                        <GetTenants 
-                                                            rentDetails={rentDetails}
-                                                            setRentDetails={setRentDetails}
-                                                            onConfirm={(details) => addTenantToAsset(asset._id, details)}
-                                                            selectedAssetId={selectedAssetId}
-                                                        />
+                                {
+                                    (currUser && currUser.isAdmin ||
+                                        currUser.roles && currUser.roles.some(role => 
+                                            role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
+                                                <td className="px-6 py-4 relative">
+                                                    <div className="flex items-center">
+                                                        {asset.rentDetails.tenant ? (
+                                                            <>
+                                                            {
+                                                                (currUser && currUser.isAdmin ||
+                                                                    currUser.roles && currUser.roles.some(role => 
+                                                                        role.permissions.some(p => p.actions.includes("delete")))) && (
+                                                                            <button
+                                                                                onClick={() => {
+                                                                                    setAssetToRemove(asset._id);
+                                                                                    setOpenModal(true);
+                                                                                }}                                                
+                                                                                className="ml-2 text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                                                                            >
+                                                                                Remove
+                                                                            </button>
+                                                                        )
+                                                            }
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                            {
+                                                                (currUser && currUser.isAdmin ||
+                                                                    currUser.roles && currUser.roles.some(role => 
+                                                                        role.permissions.some(p => p.actions.includes("update")))) && (
+                                                                            <a
+                                                                                onClick={() => toggleDropdown(asset._id)}
+                                                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                                                                            >
+                                                                                Add
+                                                                            </a>
+                                                                        )
+                                                            }
+                                                                {dropdownVisible[asset._id] && (
+                                                                    <div id="tenantDropdown" className="absolute top-2 right-24 md:right-28 lg:right-32 max-h-60 overflow-y-auto scrollbar-hidden z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-60 dark:bg-gray-700 dark:divide-gray-600">
+                                                                        <div className="flex items-center justify-end sticky top-0 p-2 z-30 bg-gray-200 dark:bg-gray-500">
+                                                                            <IoIosClose size={20} onClick={() => toggleDropdown(asset._id)} className="text-black dark:text-white hover:bg-gray-400 hover:dark:bg-gray-600 rounded-md" />
+                                                                        </div>
+                                                                        <GetTenants 
+                                                                            rentDetails={rentDetails}
+                                                                            setRentDetails={setRentDetails}
+                                                                            onConfirm={(details) => addTenantToAsset(asset._id, details)}
+                                                                            selectedAssetId={selectedAssetId}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </>
+                                                        )}
                                                     </div>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                </td>
+                                                </td>
+                                            )
+                                }
                                 {
                                     (currUser && currUser.isAdmin ||
                                         currUser.roles && currUser.roles.some(role => 
