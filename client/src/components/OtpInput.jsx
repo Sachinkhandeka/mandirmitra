@@ -59,7 +59,7 @@ export default function OtpInput({ length, onOtpSubmit,  }) {
                 { otp.map((val, indx)=> {
                     return (
                         <input 
-                            type="text" 
+                            type="number" 
                             name="otp-input" 
                             id="otp-input"
                             ref={(input)=> (inputRefs.current[indx] = input)}
