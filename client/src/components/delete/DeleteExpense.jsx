@@ -36,7 +36,7 @@ export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, set
             <title>Delete Expenses Confirmation - Temple Management</title>
             <meta name="description" content="Confirm deletion of a expense in the temple management system. Ensure your actions before proceeding." />
         </Helmet>
-        <Modal show={showDeleteModal} dismissible onClose={()=> setShowDeleteModal(false)} popup >
+        <Modal show={showDeleteModal} size={"md"} dismissible onClose={()=> setShowDeleteModal(false)} popup >
             <Modal.Header />
                 <Modal.Body>
                     <div className="text-center">
