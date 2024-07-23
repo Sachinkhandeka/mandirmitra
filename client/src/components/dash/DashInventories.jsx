@@ -177,7 +177,10 @@ export default function DashInventories() {
                                     <Table.HeadCell>Unit</Table.HeadCell>
                                     <Table.HeadCell>Unit Price</Table.HeadCell>
                                     <Table.HeadCell>Total Price</Table.HeadCell>
-                                    { hasPermission("update") || hasPermission("delete") &&  (
+                                    { 
+                                        (currUser && currUser.isAdmin ||
+                                            currUser.roles && currUser.roles.some(role => 
+                                                role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) &&  (
                                         <Table.HeadCell>Actions</Table.HeadCell>
                                     ) }
                                 </Table.Head>
@@ -198,18 +201,26 @@ export default function DashInventories() {
                                             <Table.Cell>{`${inventory.unitPrice}/${inventory.unit}`}</Table.Cell>
                                             <Table.Cell>{inventory.totalPrice}</Table.Cell>
                                             {
-                                                hasPermission("update") && hasPermission("delete") && (
+                                                (currUser && currUser.isAdmin ||
+                                                    currUser.roles && currUser.roles.some(role => 
+                                                        role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                                         <div className="flex justify-between items-center gap-4">
-                                                            {hasPermission("update") && (
-                                                                <span className="cursor-pointer">
-                                                                    <FaPencil size={16} color="teal" onClick={() => handleEditInventory(inventory)} />
-                                                                </span>
+                                                            {
+                                                                (currUser && currUser.isAdmin ||
+                                                                    currUser.roles && currUser.roles.some(role => 
+                                                                        role.permissions.some(p => p.actions.includes("update")))) && (
+                                                                            <span className="cursor-pointer">
+                                                                                <FaPencil size={16} color="teal" onClick={() => handleEditInventory(inventory)} />
+                                                                            </span>
                                                             )}
-                                                            {hasPermission("delete") && (
-                                                                <span className="cursor-pointer">
-                                                                    <MdDelete size={20} color="red" onClick={() => handleDeleteInventory(inventory)} />
-                                                                </span>
+                                                            {
+                                                                (currUser && currUser.isAdmin ||
+                                                                    currUser.roles && currUser.roles.some(role => 
+                                                                        role.permissions.some(p => p.actions.includes("delete")))) && (
+                                                                            <span className="cursor-pointer">
+                                                                                <MdDelete size={20} color="red" onClick={() => handleDeleteInventory(inventory)} />
+                                                                            </span>
                                                             )}
                                                         </div>
                                                     </Table.Cell>

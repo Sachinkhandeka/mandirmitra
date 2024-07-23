@@ -200,8 +200,10 @@ export default function DashAssets() {
                             <th scope="col" className="px-6 py-3">Current Value</th>
                             <th scope="col" className="px-6 py-3">Tenant</th>
                             {
-                                hasPermission("update") || hasPermission("delete") && (
-                                    <th scope="col" className="px-6 py-3">Actions</th>
+                                (currUser && currUser.isAdmin ||
+                                    currUser.roles && currUser.roles.some(role => 
+                                        role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
+                                            <th scope="col" className="px-6 py-3">Actions</th>
                                 )
                             }
                         </tr>
@@ -280,10 +282,14 @@ export default function DashAssets() {
                                     </div>
                                 </td>
                                 {
-                                    hasPermission("update") && hasPermission("delete") && (
+                                    (currUser && currUser.isAdmin ||
+                                        currUser.roles && currUser.roles.some(role => 
+                                            role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                         <>
                                             <td className="px-6 py-6 flex items-center justify-center gap-2">
-                                                { hasPermission("update") && (
+                                                { (currUser && currUser.isAdmin ||
+                                                        currUser.roles && currUser.roles.some(role => 
+                                                            role.permissions.some(p => p.actions.includes("update")))) && (
                                                     <>
                                                         <span 
                                                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" 
@@ -293,7 +299,10 @@ export default function DashAssets() {
                                                         </span>
                                                     </>
                                                 ) }
-                                                { hasPermission("delete") && (
+                                                { 
+                                                    (currUser && currUser.isAdmin ||
+                                                        currUser.roles && currUser.roles.some(role => 
+                                                            role.permissions.some(p => p.actions.includes("delete")))) && (
                                                     <>
                                                         <span 
                                                             className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" 

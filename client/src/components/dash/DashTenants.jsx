@@ -105,7 +105,9 @@ export default function DashTenants() {
                         <th scope="col" className="px-6 py-3">Address</th>
                         <th scope="col" className="px-6 py-3">Status</th>
                         {
-                            hasPermission("update") &&  hasPermission("delete") && (
+                            (currUser && currUser.isAdmin ||
+                                currUser.roles && currUser.roles.some(role => 
+                                    role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                 <th scope="col" className="px-6 py-3">Action</th>
                             )
                         }
@@ -137,10 +139,14 @@ export default function DashTenants() {
                                 </div>
                             </td>
                             {
-                                hasPermission("update") && hasPermission("delete") && (
+                                (currUser && currUser.isAdmin ||
+                                    currUser.roles && currUser.roles.some(role => 
+                                        role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
                                     <td className="px-6 py-4 flex items-center justify-center gap-2">
                                         {
-                                            hasPermission("update") && (
+                                            (currUser && currUser.isAdmin ||
+                                                currUser.roles && currUser.roles.some(role => 
+                                                    role.permissions.some(p => p.actions.includes("update")))) && (
                                                 <> 
                                                     <span 
                                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" 
@@ -152,7 +158,9 @@ export default function DashTenants() {
                                             )
                                         }
                                         {
-                                            hasPermission("delete") && (
+                                            (currUser && currUser.isAdmin ||
+                                                currUser.roles && currUser.roles.some(role => 
+                                                    role.permissions.some(p => p.actions.includes("delete")))) && (
                                                 <>
                                                     <span 
                                                         className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" 
