@@ -73,7 +73,7 @@ export default function SigninUser({ setShowComponent }) {
                 </div>
                 <form onSubmit={handleSubmit} className="text-gray-800">
                     <div className="flex flex-col gap-4 my-4">
-                        <Label htmlFor="email" className="text-gray-800">Email:</Label>
+                        <Label htmlFor="email" className="dark:text-black">Email:</Label>
                         <TextInput
                             type="email"
                             id="email"
@@ -81,11 +81,11 @@ export default function SigninUser({ setShowComponent }) {
                             placeholder="eg. user@gmail.com"
                             onChange={handleChange}
                             required
-                            className="bg-gray-200 text-gray-800 placeholder-gray-500"
+                            className="dark:bg-white text-gray-800 placeholder-gray-200"
                         />
                     </div>
-                    <div className="flex flex-col gap-4 relative">
-                        <Label htmlFor="password" className="text-gray-800">Password:</Label>
+                    <div className="flex flex-col gap-4 relative text-black">
+                        <Label htmlFor="password" className="dark:text-black">Password:</Label>
                         <TextInput
                             type={`${viewPass ? 'text' : 'password'}`}
                             id="password"
@@ -93,7 +93,7 @@ export default function SigninUser({ setShowComponent }) {
                             placeholder="************"
                             onChange={handleChange}
                             required
-                            className="bg-gray-200 text-gray-800 placeholder-gray-500"
+                            className="bg-white text-gray-800 placeholder-gray-500"
                         />
                         <span className="absolute right-4 top-12 cursor-pointer text-gray-800" onClick={() => setViewPass(!viewPass)}>
                             {viewPass ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -112,7 +112,7 @@ export default function SigninUser({ setShowComponent }) {
                 </form>
             </div>
             <div className='flex items-center justify-center gap-2 mt-2 border-t border-t-gray-500 relative' >
-                <span className=' absolute top-[-15px] px-4 bg-white' >or</span>
+                <span className=' absolute top-[-15px] px-4 bg-white text-black' >or</span>
             </div>
             <div className='flex items-center gap-2 text-sm text-black'>
                 Login with OTP ?
