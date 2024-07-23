@@ -31,7 +31,7 @@ export default function DeleteInventory({ deleteModal, setDeleteModal, inventory
     }
     return (
         <>
-            <Modal show={deleteModal} dismissible onClose={()=> setDeleteModal(false)} >
+            <Modal show={deleteModal} size={"md"} dismissible onClose={()=> setDeleteModal(false)} >
                 
                 <Modal.Body>
                     <div className="text-center">

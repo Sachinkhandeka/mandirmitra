@@ -39,7 +39,7 @@ export default function DeleteDonation({ showDeleteModal, setShowDeleteModal, se
                 <title>Delete Donation Confirmation - Temple Management</title>
                 <meta name="description" content="Confirm deletion of a donation in the temple management system. Ensure your actions before proceeding." />
             </Helmet>
-            <Modal show={showDeleteModal} dismissible onClose={()=> setShowDeleteModal(false)} popup >
+            <Modal show={showDeleteModal} size={"md"} dismissible onClose={()=> setShowDeleteModal(false)} popup >
                 <Modal.Header />
                 <Modal.Body>
                     <div className="text-center">
