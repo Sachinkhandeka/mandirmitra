@@ -13,7 +13,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
     const [formData, setFormData] = useState({
         username: '',
         email: '',
-        phoneNumber : '',
+        phoneNumber: '',
         password: '',
         roles: [],
     });
@@ -33,7 +33,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
         } catch (err) {
             setError(err.message);
         }
-    }
+    };
 
     useEffect(() => {
         getRolesData();
@@ -53,7 +53,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
             }));
         }
         setIsFormUpdated(true);
-    }
+    };
 
     useEffect(() => {
         if (userData && userData.username !== undefined && userData.email !== undefined) {
@@ -61,7 +61,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                 ...prevFormData,
                 username: userData.username,
                 email: userData.email,
-                phoneNumber : userData.phoneNumber,
+                phoneNumber: userData.phoneNumber,
                 roles: userData.roles,
             }));
         }
@@ -73,7 +73,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
             [e.target.id]: e.target.value,
         });
         setIsFormUpdated(true);
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,7 +110,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
             setLoading(false);
             setError(err.message);
         }
-    }
+    };
 
     return (
         <>
@@ -208,12 +208,12 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                                             <Checkbox
                                                 checked={formData.roles.some(r => r._id === role._id)}
                                                 onChange={(e) => handleRoleSelection(e, role)}
-                                                id={role.name}
-                                                value={role.name}
-                                                disabled
+                                                id={role._id}
+                                                value={role._id}
+                                                className="cursor-pointer"
                                                 aria-label={`Role ${role.name}`}
                                             />
-                                            <Label htmlFor={role.name}>
+                                            <Label htmlFor={role._id}>
                                                 <div>
                                                     <p>{role.name}</p>
                                                     <span className="text-xs text-gray-500">
@@ -237,7 +237,7 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                                                 checked={formData.roles.some(r => r._id === role._id)}
                                                 type="checkbox"
                                                 id={role._id}
-                                                value={role.name}
+                                                value={role._id}
                                                 onChange={(e) => handleRoleSelection(e, role)}
                                                 className="cursor-pointer"
                                                 aria-label={`Role ${role.name}`}
