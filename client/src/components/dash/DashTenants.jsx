@@ -66,9 +66,17 @@ export default function DashTenants() {
         setIsDeleteModalOpen(true);
     }
 
+    const hasPermission = (action) => {
+        return (
+            currUser && currUser.isAdmin ||
+            (currUser.roles && currUser.roles.some(role =>
+                role.permissions.some(p => p.actions.includes(action))
+            ))
+        );
+    };
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
-            { tenants && tenants.length > 0 ? (
+            { tenants && tenants.length > 0 && hasPermission("read") ? (
             <>
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
@@ -96,7 +104,11 @@ export default function DashTenants() {
                         <th scope="col" className="px-6 py-3">Contact Info</th>
                         <th scope="col" className="px-6 py-3">Address</th>
                         <th scope="col" className="px-6 py-3">Status</th>
-                        <th scope="col" className="px-6 py-3">Action</th>
+                        {
+                            hasPermission("update") &&  hasPermission("delete") && (
+                                <th scope="col" className="px-6 py-3">Action</th>
+                            )
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -124,10 +136,37 @@ export default function DashTenants() {
                                     <div className={`h-2.5 w-2.5 rounded-full ${tenant.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} me-2`}></div> {tenant.status}
                                 </div>
                             </td>
-                            <td className="px-6 py-4 flex items-center justify-center gap-2">
-                                <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" onClick={()=> handleEditClick(tenant)}>Edit</span>
-                                <span className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" onClick={()=> handleDeleteClick(tenant)} >Remove</span>
-                            </td>
+                            {
+                                hasPermission("update") && hasPermission("delete") && (
+                                    <td className="px-6 py-4 flex items-center justify-center gap-2">
+                                        {
+                                            hasPermission("update") && (
+                                                <> 
+                                                    <span 
+                                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" 
+                                                        onClick={()=> handleEditClick(tenant)}
+                                                    >
+                                                        Edit
+                                                    </span>
+                                                </>
+                                            )
+                                        }
+                                        {
+                                            hasPermission("delete") && (
+                                                <>
+                                                    <span 
+                                                        className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" 
+                                                        onClick={()=> handleDeleteClick(tenant)} 
+                                                    >
+                                                        Remove
+                                                    </span>
+                                                </>
+                                            )
+                                        }
+                                    </td>
+                                )
+                            }
+                            
                         </tr>
                     ))}
                 </tbody>

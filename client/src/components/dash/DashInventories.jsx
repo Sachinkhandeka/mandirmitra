@@ -177,7 +177,9 @@ export default function DashInventories() {
                                     <Table.HeadCell>Unit</Table.HeadCell>
                                     <Table.HeadCell>Unit Price</Table.HeadCell>
                                     <Table.HeadCell>Total Price</Table.HeadCell>
-                                    <Table.HeadCell>Actions</Table.HeadCell>
+                                    { hasPermission("update") || hasPermission("delete") &&  (
+                                        <Table.HeadCell>Actions</Table.HeadCell>
+                                    ) }
                                 </Table.Head>
                                 <Table.Body className="divide-y">
                                     {inventories.length > 0 && inventories.slice((currentPage - 1) * 20, currentPage * 20).map((inventory, index) => (

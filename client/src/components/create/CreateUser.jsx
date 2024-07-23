@@ -116,8 +116,8 @@ export default function CreateUser({ roleUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="sticky top-0 z-20" >{ error }</Alert> ) }
-                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="sticky top-0 z-20" >{ success }</Alert> ) }
+                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="sticky top-0 z-20 my-2" >{ error }</Alert> ) }
+                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="sticky top-0 z-20 my-2" >{ success }</Alert> ) }
                             <form className="my-3" onSubmit={handleSubmit} >
                                 <div className="flex flex-col gap-3 mt-2" >
                                     <Label htmlFor="username">username</Label>

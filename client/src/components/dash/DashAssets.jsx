@@ -158,6 +158,15 @@ export default function DashAssets() {
         setAssetId(tenant._id);
         setIsDeleteAssetOpen(true);
     }
+
+    const hasPermission = (action) => {
+        return (
+            currUser && currUser.isAdmin ||
+            (currUser.roles && currUser.roles.some(role =>
+                role.permissions.some(p => p.actions.includes(action))
+            ))
+        );
+    };
     return (
         <section className="relative min-h-screen overflow-x-auto scrollbar-hidden shadow-md sm:rounded-lg">
             <div className="pb-4 bg-white dark:bg-gray-900">
@@ -178,7 +187,7 @@ export default function DashAssets() {
                     />
                 </div>
             </div>
-            {assets.length > 0 ? (
+            {assets.length > 0 && hasPermission("read") ? (
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -190,7 +199,11 @@ export default function DashAssets() {
                             <th scope="col" className="px-6 py-3">Acquisition Cost</th>
                             <th scope="col" className="px-6 py-3">Current Value</th>
                             <th scope="col" className="px-6 py-3">Tenant</th>
-                            <th scope="col" className="px-6 py-3">Actions</th>
+                            {
+                                hasPermission("update") || hasPermission("delete") && (
+                                    <th scope="col" className="px-6 py-3">Actions</th>
+                                )
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -266,10 +279,34 @@ export default function DashAssets() {
                                         )}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 flex items-center justify-center gap-2">
-                                    <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" onClick={()=> handleEditClick(asset)}>Edit</span>
-                                    <span className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" onClick={()=> handleDeleteClick(asset)} >Remove</span>
-                                </td>
+                                {
+                                    hasPermission("update") && hasPermission("delete") && (
+                                        <>
+                                            <td className="px-6 py-6 flex items-center justify-center gap-2">
+                                                { hasPermission("update") && (
+                                                    <>
+                                                        <span 
+                                                            className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer" 
+                                                            onClick={()=> handleEditClick(asset)}
+                                                        >
+                                                            Edit
+                                                        </span>
+                                                    </>
+                                                ) }
+                                                { hasPermission("delete") && (
+                                                    <>
+                                                        <span 
+                                                            className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer" 
+                                                            onClick={()=> handleDeleteClick(asset)} 
+                                                        >
+                                                            Remove
+                                                        </span>
+                                                    </>
+                                                ) }
+                                            </td>
+                                        </>
+                                    )
+                                }
                             </tr>
                         ))}
                     </tbody>

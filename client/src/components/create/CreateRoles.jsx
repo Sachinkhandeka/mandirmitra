@@ -106,8 +106,8 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
-                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } >{ success }</Alert> ) }
+                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="my-2" >{ error }</Alert> ) }
+                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="my-2" >{ success }</Alert> ) }
                             <form onSubmit={handleSubmit} >
                             <div>
                                 <div className="mb-2 block">
