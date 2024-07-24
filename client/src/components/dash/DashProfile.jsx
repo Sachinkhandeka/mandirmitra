@@ -24,7 +24,6 @@ import CreateSeva from "../create/CreateSeva";
 import CreateInventory from "../create/CreateInventory";
 import CreateTenant from "../create/CreateTenant";
 import CreateAssets from "../create/CreateAssets";
-import AddTenantToAsset from "../AddTenantToAsset";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -240,8 +239,8 @@ export default function DashProfile() {
                                 Decline
                             </Button>
                        </Modal.Footer>
-                     </Modal>
-                     </form>
+                    </Modal>
+                    </form>
                      { !currUser.isAdmin && (
                         <UserRoles />  
                      ) }

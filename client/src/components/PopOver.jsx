@@ -57,7 +57,7 @@ export function PopOver({ asset }) {
                 </div>
             }
         >
-            <p><IoIosArrowDown /></p>
+            <p className="cursor-pointer" ><IoIosArrowDown /></p>
         </Popover>
   );
 }

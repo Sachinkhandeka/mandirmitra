@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import debounce from "lodash/debounce";
 import { TbFaceIdError } from "react-icons/tb";
+import { Helmet } from "react-helmet-async";
 
 const EditTenant = React.lazy(()=> import("../edit/EditTenant"));
 const DeleteTenant = React.lazy(()=> import("../delete/DeleteTenant"));
