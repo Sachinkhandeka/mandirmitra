@@ -1,7 +1,10 @@
-import { Button, Popover } from "flowbite-react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Popover } from "flowbite-react";
 import { IoIosArrowDown } from "react-icons/io";
+import Invoice from "../pdf/Invoice";
 
 export function PopOver({ asset }) {
+
     const getProfileLetters = (fullName) => {
         const slicedParts = fullName.split(' ');
         const firstLetters = slicedParts.map(chunk => chunk.charAt(0));
@@ -21,14 +24,21 @@ export function PopOver({ asset }) {
                                 </span>
                             </div>
                         </a>
-                        <div>
-                            <button
-                                type="button"
-                                className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        { asset &&  (
+                            <PDFDownloadLink 
+                                document={<Invoice invoiceData={asset} />}
+                                fileName={`${asset.rentDetails.tenant.name}.pdf`}
                             >
-                                Reciept
-                            </button>
-                        </div>
+                                <div>
+                                    <button
+                                        type="button"
+                                        className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    >
+                                        Reciept
+                                    </button>
+                                </div>
+                            </PDFDownloadLink>
+                        ) }
                     </div>
                     <p id="profile-popover" className="text-base font-semibold leading-none text-gray-900 dark:text-white">{ asset.name }</p>
                     <p className="mb-3 text-sm font-normal">{ asset.rentDetails.tenant.name }</p>

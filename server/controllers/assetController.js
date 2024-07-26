@@ -43,7 +43,7 @@ module.exports.getAssets = async(req, res)=> {
             { status: { $regex: regex } }
         ];
     }
-    const assets = await Asset.find(filters).populate('rentDetails.tenant');
+    const assets = await Asset.find(filters).populate('rentDetails.tenant').populate('templeId')
 
     res.status(200).json({ assets });
 }
