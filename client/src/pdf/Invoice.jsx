@@ -147,6 +147,11 @@ export default function Invoice({ invoiceData }) {
   const templeAddress = templeId?.location || "Temple Address";
   const templeInitials = getProfileLetters(templeName);
 
+  const formatDate = (date) => {
+    const options = { day: '2-digit', month: 'short', year: '2-digit' };
+    return new Intl.DateTimeFormat('en-IN', options).format(new Date(date));
+  };
+
   return (
     <Document>
         <Page size="A4" style={styles.page}>
@@ -221,10 +226,10 @@ export default function Invoice({ invoiceData }) {
                     </View>
                     <View style={styles.tableRow}>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{new Date(rentDetails.leaseStartDate).toLocaleDateString('en-US')}</Text>
+                            <Text style={styles.tableCell}>{formatDate(rentDetails.leaseStartDate)}</Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{new Date(rentDetails.leaseEndDate).toLocaleDateString('en-US')}</Text>
+                            <Text style={styles.tableCell}>{formatDate(rentDetails.leaseEndDate)}</Text>
                         </View>
                         <View style={styles.tableCol}>
                             <Text style={styles.tableCell}>{rentDetails.rentAmount}</Text>
