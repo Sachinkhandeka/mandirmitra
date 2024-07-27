@@ -106,8 +106,6 @@ export default function DashTenants() {
                 <meta name="description" content={metaTags.description} />
                 <meta name="keywords" content={metaTags.keywords} />
             </Helmet>
-            { tenants && tenants.length > 0 && hasPermission("read") ? (
-            <>
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
                 <div className="relative">
@@ -127,6 +125,7 @@ export default function DashTenants() {
                     />
                 </div>
             </div>
+            { tenants && tenants.length > 0 && hasPermission("read") ? (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -209,7 +208,6 @@ export default function DashTenants() {
                     ))}
                 </tbody>
             </table>
-            </>
             ) : (
                 <div className="flex justify-center items-center h-screen">
                     <div className="text-center flex flex-col items-center justify-center">
