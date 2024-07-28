@@ -73,12 +73,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
         </Helmet>
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"top-right"}>
             <Modal.Header>{expense.category}</Modal.Header>
-            <Modal.Body> 
-                    <div className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 mx-4 p-4 flex-1">
-                        {error && (<Alert onDismiss={() => setError(null)} color={"failure"} className="my-4">{error}</Alert>)}
-                        {success && (<Alert onDismiss={() => setSuccess(null)} color={"success"} className="my-4 static">{success}</Alert>)}
-                        <h1 className="text-2xl font-serif uppercase font-bold text-indigo-800 dark:text-white">Edit Expense</h1>
-                        <form className="my-3" onSubmit={handleSubmit}>
+            <Modal.Body className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 p-4 flex-1" > 
+                    {error && (<Alert onDismiss={() => setError(null)} color={"failure"} className="my-4">{error}</Alert>)}
+                    {success && (<Alert onDismiss={() => setSuccess(null)} color={"success"} className="my-4 static">{success}</Alert>)}
+                    <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex flex-col gap-4 my-2 flex-1">
                                     <Label htmlFor="title" className="text-indigo-800">Title</Label>
@@ -157,8 +155,7 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                     {loading ? <Spinner color={"purple"} /> : "Update Expense"}
                                 </Button>
                             </div>
-                        </form>
-                    </div>
+                    </form>
             </Modal.Body>
         </Modal>
         </>

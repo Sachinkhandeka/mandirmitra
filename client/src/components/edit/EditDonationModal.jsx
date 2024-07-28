@@ -151,11 +151,9 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                 <Modal.Header>
                     <p className="text-bold font-mono uppercase">{donation.donorName}</p>
                 </Modal.Header>
-                <Modal.Body>
-                    <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
-                        <div className="flex-1 p-10">
-                            <h2 className="text-blue-400 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl">Edit Donation</h2>
-                            <form onSubmit={handleSubmit}>
+                <Modal.Body className="w-full flex flex-col md:flex-row gap-4 relative" >
+                        <div className="flex-1">
+                            <form onSubmit={handleSubmit} className="py-4" >
                                 <div className="flex flex-col md:flex-row flex-wrap gap-4">
                                     <div className="flex-1 flex flex-col gap-4">
                                         <Label htmlFor="donorName">Name of Donor</Label>
@@ -242,7 +240,6 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                 <Toast.Toggle />
                             </Toast>
                         )}
-                    </div>
                 </Modal.Body>
             </Modal>
         </>
