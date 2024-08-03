@@ -1,3 +1,8 @@
+# Ignore .env files
+*.env
+client/.env
+server/.env
+
 # Ignore files within the client folder
 client/node_modules/
 client/build/
@@ -11,9 +16,6 @@ server/build/
 *.dll
 *.so
 *.dylib
-
-# Ignore .env files
-*.env
 
 # Logs
 logs
