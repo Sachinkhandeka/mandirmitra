@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Button, Label, Select, Spinner, TextInput, Toast } from "flowbite-react";
-import { HiCheck, HiX } from "react-icons/hi";
+import { Button, Label, Select, Spinner, TextInput } from "flowbite-react";
 import { FcDonate } from "react-icons/fc";
 import { FaFilePdf } from "react-icons/fa6";
 import { MdOutlineWaterDrop } from "react-icons/md";
@@ -9,6 +8,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
+import Alert from "../Alert";
 
 export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdated }) {
     const [selectedCountry, setSelectedCountry] = useState({});
@@ -235,24 +235,10 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
                     </div>
                 </form>
             </div>
-            {success && (
-                <Toast className="fixed bottom-4 right-4 z-50">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                        <HiCheck className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{success}</div>
-                    <Toast.Toggle />
-                </Toast>
-            )}
-            {error && (
-                <Toast className="fixed bottom-4 right-4 z-40">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                        <HiX className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{error}</div>
-                    <Toast.Toggle />
-                </Toast>
-            )}
+            <div className="absolute left-2 bottom-2" >
+                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> )}
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> )}
+            </div>
         </div>
     );
 }

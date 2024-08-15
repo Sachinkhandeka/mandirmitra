@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
-import { Alert, Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
+import { Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function CreatePermissions({ setUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -70,8 +71,8 @@ export default function CreatePermissions({ setUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                        { error && ( <Alert color={"failure"} onDismiss={ ()=> setError(null) } className="my-2" >{ error } </Alert>  ) }
-                        { success  && ( <Alert color={"success"} onDismiss={ ()=> setSuccess(null) } className="my-2" >{ success }</Alert> ) }
+                        { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
+                        { success  && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
                         <form onSubmit={handleSubmit} className="flex flex-col gap-8" >
                         <div >
                             <div className="mb-2 block">

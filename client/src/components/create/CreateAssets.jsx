@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Label, Select, TextInput, Textarea, Alert, Spinner } from 'flowbite-react';
+import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import { FaLandmark } from 'react-icons/fa';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
+import Alert from '../Alert';
 
 export default function AssetsForm() {
     const { currUser } = useSelector(state => state.user);
@@ -150,11 +151,12 @@ export default function AssetsForm() {
                     </div>
                 </form>
                 {alert.message && (
-                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={() => setAlert({ type: "", message: "" })}>
-                        <span className="font-medium">
-                            {alert.type === 'success' ? 'Success!' : 'Error!'}
-                        </span> {alert.message}
-                    </Alert>
+                    <Alert 
+                       type={alert.type}
+                       message={alert.message}
+                       autoDismiss={true}
+                       duration={6000}
+                    />
                 )}
             </div>
         </div>
