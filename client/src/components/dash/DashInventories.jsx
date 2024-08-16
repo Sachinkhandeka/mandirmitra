@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { TbFaceIdError } from "react-icons/tb";
 import { AiOutlineWarning, AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
-import { Alert, Button, Pagination, Table, Tooltip } from "flowbite-react";
+import { Button, Pagination, Table, Tooltip } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { debounce } from "lodash";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 const EditInventoryItem = React.lazy(() => import("../edit/EditInventoryItem"));
 const DeleteInventory = React.lazy(() => import("../delete/DeleteInventory"));
@@ -60,6 +61,7 @@ export default function DashInventories() {
 
             setInventories(sortedInventories);
             setTotalInventories(data.totalInventories);
+            setAlert({ type : "success", message : "Inventories fetched successfully." });
         } catch (err) {
             setAlert({ type: "error", message: err.message });
         }
@@ -158,13 +160,11 @@ export default function DashInventories() {
                         </div>
                     )
                 }
-                {alert.message && (
-                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={() => setAlert({ type: "", message: "" })}>
-                        <span className="font-medium">
-                            {alert.type === 'success' ? 'Success!' : 'Error!'}
-                        </span> {alert.message}
-                    </Alert>
-                )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
+                </div>
                 {
                     inventories.length > 0 && hasPermission("read") ? (
                         <div className="overflow-x-auto scrollbar-hidden">

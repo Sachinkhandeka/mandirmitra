@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Table, Toast } from "flowbite-react";
-import { HiCheck, HiX } from "react-icons/hi";
+import { Table } from "flowbite-react";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 const EditRoleModal = React.lazy(()=> import("../edit/EditRoleModal"));
 const DeleteRoleModal = React.lazy(()=> import("../delete/DeleteRoleModal"));
@@ -40,6 +40,7 @@ export default function DashRoles() {
                 return setError(data.message);
             }
             setRoles(data.roles);
+            setSuccess("Role data fetched successfully.");
         } catch (err) {
             setError(err.message);
         }
@@ -67,26 +68,12 @@ export default function DashRoles() {
                 <title>Manage Roles - Dashboard</title>
                 <meta name="description" content="View, edit, and delete roles for your temple. Manage user access rights efficiently." />
             </Helmet>
-            {/* Success toast */}
-            {success && (
-                <Toast className="mb-3">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                        <HiCheck className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{success}</div>
-                    <Toast.Toggle onDismiss={() => setSuccess(null)} />
-                </Toast>
-            )}
-            {/* Error toast */}
-            {error && (
-                <Toast className="mb-3">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                        <HiX className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{error}</div>
-                    <Toast.Toggle onDismiss={() => setError(null)} />
-                </Toast>
-            )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {/* Success toast */}
+                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> )}
+                {/* Error toast */}
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> )}
+            </div>
             {/* Displaying roles table if isAdmin and roles array has length > 0 */}
             {currUser.isAdmin && roles.length > 0 ? (
                 <Table striped>

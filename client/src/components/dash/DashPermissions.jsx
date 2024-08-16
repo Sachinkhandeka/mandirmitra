@@ -1,9 +1,10 @@
-import { Alert , Table ,  } from "flowbite-react";
+import { Table } from "flowbite-react";
 import React, { useState , useEffect } from "react";
 import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from 'react-helmet-async';
+import Alert from "../Alert";
 
 const EditPermissionsModal = React.lazy(()=> import("../edit/EditPermissionsModal"));
 const DeletePermissionModal = React.lazy(()=> import("../delete/DeletePermissionModal"));
@@ -34,6 +35,7 @@ export default function DashPermissions() {
                 return setError(data.message);
             }
             setPermissions( data.permissions );
+            setSuccess("Permissions data fetched successfully.");
         }catch(err) {
             setError(err.message);
         }
@@ -62,8 +64,10 @@ export default function DashPermissions() {
                 <title>Manage Permissions - Dashboard</title>
                 <meta name="description" content="View, edit, and delete permissions for your temple. Manage user access rights efficiently." />
             </Helmet>
-            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null) } className="mb-3" >{ error }</Alert> ) }
-            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null)} className="mb-3" >{ success }</Alert> ) }
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
+                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+            </div>
             {/* Displaying permissions table if isAdmin and permissions array has length > 0 */}
             {currUser.isAdmin && permissions.length > 0 ? (
                 <Table striped>

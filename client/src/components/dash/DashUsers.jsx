@@ -1,10 +1,11 @@
-import { Table, Toast } from "flowbite-react";
+import { Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { HiCheck, HiX } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
+import { set } from "lodash";
+import Alert from "../Alert";
 
 const EditUserModal = React.lazy(() => import("../edit/EditUserModal"));
 const DeleteUserModal = React.lazy(() => import("../delete/DeleteUserModal"));
@@ -39,6 +40,7 @@ export default function DashUsers() {
                 return setError(data.message);
             }
             setUsers(data.allUser);
+            setSuccess("users data fetched successfully");
         } catch (err) {
             setError(err.message);
         }
@@ -66,24 +68,10 @@ export default function DashUsers() {
                 <title>Users Management - Dashboard</title>
                 <meta name="description" content="Manage users efficiently. View, edit, and delete user at your temple." />
             </Helmet>
-            {success && (
-                <Toast className="mb-3 min-w-36">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                        <HiCheck className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{success}</div>
-                    <Toast.Toggle onDismiss={() => setSuccess(null)} />
-                </Toast>
-            )}
-            {error && (
-                <Toast className="mb-3">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                        <HiX className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{error}</div>
-                    <Toast.Toggle onDismiss={() => setError(null)} />
-                </Toast>
-            )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+            </div>
             {currUser.isAdmin && users.length > 0 ? (
                 <Table striped>
                     <Table.Head>

@@ -1,4 +1,4 @@
-import { Modal, Button, Label,TextInput, Alert, Spinner, Toast } from "flowbite-react";
+import { Modal, Button, Label,TextInput, Spinner, Toast } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
@@ -24,6 +24,7 @@ import CreateSeva from "../create/CreateSeva";
 import CreateInventory from "../create/CreateInventory";
 import CreateTenant from "../create/CreateTenant";
 import CreateAssets from "../create/CreateAssets";
+import Alert from "../Alert";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -137,23 +138,10 @@ export default function DashProfile() {
         <div className="w-full" >
             { currUser && (
                 <div className="w-full" >
-                    { uploadError && (
-                    <Toast>
-                        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                          <HiX className="h-5 w-5" />
-                        </div>
-                        <div className="ml-3 text-sm font-normal">{ uploadError }</div>
-                        <Toast.Toggle />
-                    </Toast>) }
-                    { uploadSuccess && (
-                        <Toast>
-                            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                            <HiCheck className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3 text-sm font-normal">{ uploadSuccess }</div>
-                            <Toast.Toggle />
-                        </Toast>
-                    ) }
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm"  >
+                        { uploadError && (<Alert type="error" message={uploadError} autoDismiss duration={6000} onClose={()=> setUploadError(null)} />) }
+                        { uploadSuccess && ( <Alert type="success" message={uploadSuccess} autoDismiss duration={6000} onClose={setUploadSuccess(null)} /> ) }
+                    </div>
                     <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 rounded-lg h-16 relative" >
                         <input type="file" accept="image/*" onChange={handleImageChange} ref={inputRef} hidden/>
                         <div className="h-14 w-14 absolute bottom-[-10px] left-4 rounded-full cursor-pointer" onClick={()=> inputRef.current.click()} >
@@ -195,8 +183,10 @@ export default function DashProfile() {
                     <Modal show={showModal} onClose={() => setShowModal(false)} position={"top-right"} >
                        <Modal.Header>Edit Details</Modal.Header>
                        <Modal.Body>
-                       { error && ( <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>{ error }</Alert> ) }
-                       { success && ( <Alert color={"success"} onDismiss={() => setSuccess(null)}>{ success }</Alert> ) }
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm"  >
+                            { error && ( <Alert type={"error"} message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> ) }
+                            { success && ( <Alert type={"success"} message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> ) }
+                       </div>
                          <div className="space-y-6">
                                 <div className="flex flex-col gap-4 my-4" >
                                     <Label htmlFor="username" >username: </Label>

@@ -1,14 +1,15 @@
-import { Table, Toast, Pagination, Button, Tooltip } from "flowbite-react";
+import { Table, Pagination, Button, Tooltip } from "flowbite-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { TbFaceIdError } from "react-icons/tb";
-import { HiCheck, HiX } from "react-icons/hi";
+import { HiX } from "react-icons/hi";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { debounce } from "lodash";
+import Alert from "../Alert";
 
 // importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
@@ -102,15 +103,10 @@ export default function DashDonations() {
             <meta name="description" content="Manage and track donations in your temple dashboard. View, edit, and delete donations with ease." />
             <meta name="keywords" content="donations, manage donations, temple donations, donation management" />
         </Helmet>
-        { error && (
-            <Toast className="my-4" >
-                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                    <HiX className="h-5 w-5" />
-                </div>
-                <div className="ml-3 text-sm font-normal">{ error }</div>
-                <Toast.Toggle />
-            </Toast> 
-        ) }
+        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
+                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=>  setSuccess(null)} /> ) }
+            </div>
         {/* Drawer toggler */}
         {
             (currUser && currUser.isAdmin || 
