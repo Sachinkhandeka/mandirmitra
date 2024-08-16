@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
+=======
+import { Button, Label, Select, TextInput, Textarea, Alert, Spinner } from 'flowbite-react';
+>>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 import React, { useState } from 'react';
 import { FaBoxes } from 'react-icons/fa';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
+<<<<<<< HEAD
 import Alert from '../Alert';
+=======
+>>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 
 export default function CreateInventory() {
     const { currUser } = useSelector(state => state.user);
@@ -212,12 +219,20 @@ export default function CreateInventory() {
                     </div>
                 </form>
                 {alert.message && (
+<<<<<<< HEAD
                     <Alert 
                         type={alert.type}
                         message={alert.message}
                         autoDismiss
                         duration={6000}
                     />
+=======
+                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
+                        <span className="font-medium">
+                            {alert.type === 'success' ? 'Success!' : 'Error!'}
+                        </span> {alert.message}
+                    </Alert>
+>>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
                 )}
             </div>
         </div>

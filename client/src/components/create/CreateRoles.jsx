@@ -1,9 +1,15 @@
 import { useSelector } from "react-redux";
 import { FaAddressCard } from "react-icons/fa6";
+<<<<<<< HEAD
 import { Button, Card, Label, Modal, TextInput, Checkbox } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+=======
+import { Button, Card, Label, Modal, TextInput, Select, Checkbox, Alert } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+>>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 
 export default function CreateRoles({ updated, setRoleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -107,8 +113,13 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
+<<<<<<< HEAD
                             { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
                             { success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
+=======
+                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="my-2" >{ error }</Alert> ) }
+                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="my-2" >{ success }</Alert> ) }
+>>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
                             <form onSubmit={handleSubmit} >
                             <div>
                                 <div className="mb-2 block">
