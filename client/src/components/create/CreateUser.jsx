@@ -1,9 +1,5 @@
 import { useSelector } from "react-redux";
-<<<<<<< HEAD
 import { Button, Card, Checkbox, Label, Modal, TextInput } from "flowbite-react";
-=======
-import { Button, Card, Checkbox, Label, Modal, TextInput, Alert } from "flowbite-react";
->>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { FiUserPlus } from "react-icons/fi";
@@ -11,10 +7,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import "../../css/PhoneInputCostom.css";
 import { Helmet } from  "react-helmet-async";
-<<<<<<< HEAD
 import Alert from "../Alert";
-=======
->>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 
 export default function CreateUser({ roleUpdated }) {
     const [ openModal, setOpenModal ] = useState(false);
@@ -124,13 +117,8 @@ export default function CreateUser({ roleUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-<<<<<<< HEAD
                             { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
                             { success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
-=======
-                            { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="sticky top-0 z-20 my-2" >{ error }</Alert> ) }
-                            { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null) } className="sticky top-0 z-20 my-2" >{ success }</Alert> ) }
->>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
                             <form className="my-3" onSubmit={handleSubmit} >
                                 <div className="flex flex-col gap-3 mt-2" >
                                     <Label htmlFor="username">username</Label>

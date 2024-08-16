@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 import { Button, Label, TextInput, Select, Datepicker, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
-=======
-import { Button, Label, TextInput, Select, Datepicker, Alert, Spinner } from "flowbite-react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Helmet } from "react-helmet-async";
->>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
 
 export default function CreateEvent() {
     const { currUser } = useSelector((state) => state.user);
@@ -79,13 +72,8 @@ export default function CreateEvent() {
                 <div className="w-full">
                     <div className="flex justify-center items-center">
                         <div className="w-full border border-gray-200 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
-<<<<<<< HEAD
                             { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
                             { success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
-=======
-                            { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4">{error}</Alert> ) }
-                            { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="my-4">{success}</Alert> ) }
->>>>>>> 1ec6c1190f4d0e1f435a1159826a6485d909f462
                             <h1 className="text-yellow-500 uppercase font-serif text-lg md:text-2xl font-bold text-center mb-6">
                                 Create Event
                             </h1>
