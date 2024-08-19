@@ -94,8 +94,10 @@ export default function CreateTenant() {
                             </Modal.Header>
                             <Modal.Body>
                                 <div className="space-y-6">
-                                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} />)}
-                                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> )}
+                                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} />)}
+                                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> )}
+                                    </div>
                                     <form className="my-3" onSubmit={handleSubmit}>
                                         <div className="flex flex-col gap-3 mt-2">
                                             <Label htmlFor="name">Name</Label>

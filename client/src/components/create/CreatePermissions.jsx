@@ -71,8 +71,10 @@ export default function CreatePermissions({ setUpdated }) {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="space-y-6">
-                        { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
-                        { success  && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
+                            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
+                                { success  && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                            </div>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-8" >
                         <div >
                             <div className="mb-2 block">

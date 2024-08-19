@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import { FaLandmark } from 'react-icons/fa';
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
 
@@ -150,14 +149,17 @@ export default function AssetsForm() {
                         </Button>
                     </div>
                 </form>
-                {alert.message && (
-                    <Alert 
-                       type={alert.type}
-                       message={alert.message}
-                       autoDismiss={true}
-                       duration={6000}
-                    />
-                )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert.message && (
+                        <Alert 
+                           type={alert.type}
+                           message={alert.message}
+                           autoDismiss={true}
+                           duration={6000}
+                           onClose={()=> setAlert({ type : "", message : "" })}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );

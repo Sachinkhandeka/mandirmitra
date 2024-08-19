@@ -72,8 +72,10 @@ export default function CreateEvent() {
                 <div className="w-full">
                     <div className="flex justify-center items-center">
                         <div className="w-full border border-gray-200 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg shadow-xl">
-                            { error && ( <Alert type="error" message={error} autoDismiss duration={6000} /> ) }
-                            { success && ( <Alert type="success" message={success} autoDismiss duration={6000} /> ) }
+                            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
+                                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                            </div>
                             <h1 className="text-yellow-500 uppercase font-serif text-lg md:text-2xl font-bold text-center mb-6">
                                 Create Event
                             </h1>

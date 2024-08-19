@@ -210,14 +210,17 @@ export default function CreateInventory() {
                         </Button>
                     </div>
                 </form>
-                {alert.message && (
-                    <Alert 
-                        type={alert.type}
-                        message={alert.message}
-                        autoDismiss
-                        duration={6000}
-                    />
-                )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert.message && (
+                        <Alert 
+                            type={alert.type}
+                            message={alert.message}
+                            autoDismiss
+                            duration={6000}
+                            onClose={()=> setAlert({ type : "", message : "" })}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
