@@ -1,9 +1,9 @@
-import { Modal, Button, Label,TextInput, Spinner, Toast } from "flowbite-react";
+import { Modal, Button, Label,TextInput, Spinner } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
+import { LuView } from "react-icons/lu";
 import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineAttachEmail, MdOutlineCall } from "react-icons/md";
-import { HiCheck, HiX } from "react-icons/hi";
 import { useDispatch , useSelector } from "react-redux";
 import { updateStart, updateSuccess, updateFailure, resetError } from "../../redux/user/userSlice";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
@@ -25,6 +25,7 @@ import CreateInventory from "../create/CreateInventory";
 import CreateTenant from "../create/CreateTenant";
 import CreateAssets from "../create/CreateAssets";
 import Alert from "../Alert";
+import ImageModal from "../ImageModal";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
@@ -49,7 +50,8 @@ export default function DashProfile() {
     });
     const [ locationAdded , setLocationAdded ] = useState(false);
     const [sevaUpdated, setSevaUpdated] = useState(false);
-    
+    const [showImageModal, setShowImageModal] = useState(false);
+
     //handleChange - formData
     const handleChange = (e)=> {
         setFormData({
@@ -128,6 +130,7 @@ export default function DashProfile() {
             uploadImage();
         }
     },[imageFile]);
+
     return (
         <>
         <Helmet>
@@ -165,6 +168,12 @@ export default function DashProfile() {
                                 `}
                             />
                         </div>
+                        <button
+                            className="absolute bottom-[-14px] left-14 p-2 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 text-white shadow-lg"
+                            onClick={() => setShowImageModal(true)}
+                        >
+                                <LuView size={14} />
+                        </button>
                     </div>
                     <div className="mt-10 md:w-20 font-serif" >
                         <h1 className="text-xl md:text-2xl font-bold pl-4 mb-4" >{  currUser.username }</h1>
@@ -271,6 +280,15 @@ export default function DashProfile() {
                     }
                 </div>
             ) }
+            {
+                showImageModal && (
+                    <ImageModal
+                        isOpen={showImageModal}
+                        onClose={()=> setShowImageModal(null)}
+                        url={ tempImageUrl || currUser.profilePicture }
+                    />
+                )
+            }
         </div>
         </>
     );

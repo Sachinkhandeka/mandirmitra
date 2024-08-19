@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
-import { set } from "lodash";
 import Alert from "../Alert";
 
 const EditUserModal = React.lazy(() => import("../edit/EditUserModal"));
 const DeleteUserModal = React.lazy(() => import("../delete/DeleteUserModal"));
+const ImageModal = React.lazy(()=> import("../ImageModal"));
 
 export default function DashUsers() {
     const { currUser } = useSelector((state) => state.user);
@@ -19,6 +19,8 @@ export default function DashUsers() {
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [userDataUpdated, setUserDataUpdated] = useState(false);
+    const [imageModal, setImageModal] = useState(false);
+    const [profileUrl, setProfileUrl] = useState('');
 
     useEffect(() => {
         if (userDataUpdated) {
@@ -62,6 +64,10 @@ export default function DashUsers() {
         setUserData(user);
     };
 
+    const handleShowProfile = (url)=> {
+        setProfileUrl(url);
+        setImageModal(true);
+    }
     return (
         <>
             <Helmet>
@@ -92,7 +98,8 @@ export default function DashUsers() {
                                         <img
                                             src={user.profilePicture}
                                             alt={`${user.username}'s profile`}
-                                            className="h-10 w-10 rounded-full"
+                                            className="h-10 w-10 rounded-full cursor-pointer"
+                                            onClick={()=> handleShowProfile(user.profilePicture)}
                                         />
                                     </Table.Cell>
                                     <Table.Cell>{user.username}</Table.Cell>
@@ -164,6 +171,14 @@ export default function DashUsers() {
                 setSuccess={setSuccess}
                 setUserDataUpdated={setUserDataUpdated}
             />
+            { imageModal && (
+                <ImageModal 
+                    isOpen={imageModal}
+                    onClose={()=> setImageModal(false)}
+                    url={profileUrl}
+                />
+            ) }
         </>
     );
 }
+

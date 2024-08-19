@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { TextInput } from "flowbite-react";
 
 export default function OtpInput({ length, onOtpSubmit,  }) {
     const [ otp, setOtp ] = useState(new Array(length).fill(""));
@@ -58,7 +59,7 @@ export default function OtpInput({ length, onOtpSubmit,  }) {
             <div className={`grid grid-cols-6 gap-2 max-w-72`} >
                 { otp.map((val, indx)=> {
                     return (
-                        <input 
+                        <TextInput 
                             type="number" 
                             name="otp-input" 
                             id="otp-input"
@@ -68,7 +69,7 @@ export default function OtpInput({ length, onOtpSubmit,  }) {
                             onChange={(e)=> handleChange(e, indx)}
                             onClick={()=> handleClick(indx)}
                             onKeyDown={(e)=> handleKeyDown(e, indx)}
-                            className="bg-transparent rounded-md text-center"
+                            className="bg-transparent rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     )
                 }) }
