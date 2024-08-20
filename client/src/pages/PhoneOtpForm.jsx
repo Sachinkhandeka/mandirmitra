@@ -1,16 +1,17 @@
 import React, { useState, Suspense } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { Alert, Button, Spinner } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import OtpInput from '../components/OtpInput';
 import { app } from '../firebase';
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import brand from "../assets/brand.jpg";
 import "../css/PhoneInputCostom.css";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { signinSuccess, signinFailure } from '../redux/user/userSlice';
+import Alert from '../components/Alert';
 
 const SignupSuperAdmin = React.lazy(() => import("./SignupSuperAdmin"));
 const SigninUser = React.lazy(() => import("./SigninUser"));
@@ -124,7 +125,9 @@ export default function PhoneOtpForm() {
                 {showComponent === 'phoneInput' && (
                     <>
                         <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4'>Log in or create an account</h1>
-                        { error  && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className='my-2' >{error}</Alert> ) }
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                         <h1 className='text-black font-bold text-4xl font-serif hidden md:block pt-4'>Login / Signup</h1>
                         <h2 className='text-gray-500 md:text-black text-sm font-serif md:font-bold px-8 md:px-1'>Please enter your phone number to continue</h2>
                         <form onSubmit={handlePhoneSubmit} className="flex flex-col gap-4 px-8 md:px-1 w-full">

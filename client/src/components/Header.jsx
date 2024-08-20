@@ -1,4 +1,4 @@
-import { Button, Dropdown, Navbar, TextInput } from "flowbite-react";
+import { Button, Navbar, TextInput } from "flowbite-react";
 import { FaSearch } from "react-icons/fa";
 import { RxMoon,  RxSun } from "react-icons/rx";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,11 +8,14 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import brand from "../assets/brand.jpg";
+import { useState } from "react";
+import Alert from "./Alert";
 
 export default function Header() {
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
     const { searchTerm } = useSelector(state => state.searchTerm);
+    const [ alert, setAlert ] = useState({type : '', message : ''});
 
     const handleSearchInputChange = (e) => {
         const searchTermValue = e.target.value ; 
@@ -53,6 +56,11 @@ export default function Header() {
                 </Button>
             </div>
         </Navbar>
+        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+            {alert && alert.message && (
+                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert({ type :'', message :'' })} />
+            )}
+        </div>
         </>
     );
 }

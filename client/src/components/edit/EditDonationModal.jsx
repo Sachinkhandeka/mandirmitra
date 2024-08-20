@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { Button, Label, Select, Spinner, TextInput, Toast, Modal } from "flowbite-react";
-import { HiCheck, HiX } from "react-icons/hi";
+import { Button, Label, Select, Spinner, TextInput, Modal } from "flowbite-react";
 import { FaFilePdf } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
+import Alert from "../Alert";
 
 export default function EditDonationModal({ showEditModal, setShowEditModal, donation, setIsDonationUpdated }) {
     const [selectedCountry, setSelectedCountry] = useState({});
@@ -222,24 +222,10 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                 </div>
                             </form>
                         </div>
-                        {success && (
-                            <Toast className="absolute bottom-[-10px] md:bottom-4 left-4">
-                                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                                    <HiCheck className="h-5 w-5" />
-                                </div>
-                                <div className="ml-3 text-sm font-normal">{success}</div>
-                                <Toast.Toggle />
-                            </Toast>
-                        )}
-                        {error && (
-                            <Toast className="absolute bottom-[-10px] md:bottom-4 left-4">
-                                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                                    <HiX className="h-5 w-5" />
-                                </div>
-                                <div className="ml-3 text-sm font-normal">{error}</div>
-                                <Toast.Toggle />
-                            </Toast>
-                        )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                 </Modal.Body>
             </Modal>
         </>

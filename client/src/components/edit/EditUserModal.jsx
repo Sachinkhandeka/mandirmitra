@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Avatar, Badge, Button, Checkbox, Label, Modal, Spinner, TextInput } from "flowbite-react";
+import { Avatar, Badge, Button, Checkbox, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function EditUserModal({ showModalEdit, setShowModalEdit, userData, setUserData, setUserDataUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -156,12 +157,10 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    {error && (
-                        <Alert color={"failure"} onDismiss={() => setError(null)} className="sticky top-0 z-10">{error}</Alert>
-                    )}
-                    {success && (
-                        <Alert color={"success"} onDismiss={() => setSuccess(null)} className="sticky top-0 z-10">{success}</Alert>
-                    )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    </div>
                     <form>
                         <div className="flex-1 flex flex-col gap-4 my-4">
                             <Label htmlFor="username">Username</Label>

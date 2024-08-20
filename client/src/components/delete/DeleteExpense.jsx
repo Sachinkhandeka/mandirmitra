@@ -1,8 +1,9 @@
-import { Modal, Button, Spinner, Alert } from "flowbite-react";
+import { Modal, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, setIsUpdated, expenseId }) {
     const { currUser } = useSelector(state => state.user);
@@ -40,7 +41,9 @@ export default function DeleteExpense({ showDeleteModal, setShowDeleteModal, set
             <Modal.Header />
                 <Modal.Body>
                     <div className="text-center">
-                        { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4">{error}</Alert> ) }
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                         <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Are you sure you want to delete this expense?

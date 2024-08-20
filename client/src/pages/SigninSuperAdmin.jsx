@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import { Button, Label, TextInput, Spinner, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Spinner } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
+import Alert from "../components/Alert";
 
 export default function SigninSuperAdmin() {
     const navigate = useNavigate();
@@ -65,11 +66,9 @@ export default function SigninSuperAdmin() {
                 <meta name="keywords" content="MandirMitra, Super Admin Sign In, Temple Management, Donations, Events, Secure Login" />
             </Helmet>
             <div>
-                {error && (
-                    <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>
-                        {error}
-                    </Alert>
-                )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> )}
+            </div>
                 <div className="whitespace-nowrap ">
                     <h1 className="text-2xl font-serif font-bold">Login with Admin</h1>
                 </div>

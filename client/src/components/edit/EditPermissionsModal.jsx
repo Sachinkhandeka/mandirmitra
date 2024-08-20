@@ -1,7 +1,8 @@
-import { Button, Modal, Label , Select, Checkbox, Spinner, Alert } from "flowbite-react";
+import { Button, Modal, Label , Select, Checkbox, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default  function EditPermissionsModal({ showModal , setShowModal , setSuccess, permissionData , setPermissionUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -90,8 +91,10 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
                 <Modal.Header>
                     <p>Edit Permission</p>
                 </Modal.Header>
-                { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} className="m-4" >{ error }</Alert> ) }
                 <Modal.Body>
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    </div>
                     <form>
                         <div >
                             <div className="mb-2 block">

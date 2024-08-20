@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Label, Select, TextInput, Alert, Spinner } from 'flowbite-react';
+import React, { useState } from 'react';
+import { Button, Label, Select, TextInput, Spinner } from 'flowbite-react';
 import { useSelector } from 'react-redux';
 import GetTenants from './GetTenants';
+import Alert from './Alert';
 
 export default function AddTenantToAsset({ assetId, fetchAssets }) {
     const { currUser } = useSelector(state => state.user);
@@ -89,13 +90,11 @@ export default function AddTenantToAsset({ assetId, fetchAssets }) {
                         </Button>
                     </div>
                 </form>
-                {alert.message && (
-                    <Alert color={alert.type === 'success' ? 'success' : 'failure'} className="my-4" onDismiss={() => setAlert({ type: "", message: "" })}>
-                        <span className="font-medium">
-                            {alert.type === 'success' ? 'Success!' : 'Error!'}
-                        </span> {alert.message}
-                    </Alert>
-                )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
+                </div>
             </div>
         </div>
     );

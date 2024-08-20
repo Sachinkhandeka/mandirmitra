@@ -1,8 +1,9 @@
-import { Alert, Button, Modal, Spinner } from "flowbite-react";
+import { Button, Modal, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function DeletePermissionModal({ deleteModal , setDeleteModal , permissionId , setPermissionUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -39,7 +40,9 @@ export default function DeletePermissionModal({ deleteModal , setDeleteModal , p
         <Modal show={deleteModal} dismissible onClose={()=> setDeleteModal(false)} size={"md"} popup >
             <Modal.Header />
             <Modal.Body>
-                { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                </div>
                 <form>
                     <div className="text-center">
                         <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />

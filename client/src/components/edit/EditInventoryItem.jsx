@@ -1,7 +1,8 @@
-import { Modal, Button, Label, Select, TextInput, Textarea, Alert, Spinner } from "flowbite-react";
+import { Modal, Button, Label, Select, TextInput, Textarea, Spinner } from "flowbite-react";
 import React, { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
+import Alert from "../Alert";
 
 export default function EditInventoryItem({ editModal, setEditModal, inventory, setIsInventoryUpdated }) {
     const { currUser } = useSelector(state => state.user);
@@ -199,13 +200,11 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                             </Button>
                         </div>
                     </form>
-                    {alert.message && (
-                        <Alert color={alert.type === 'success' ? 'success' : 'failure'} icon={alert.type === 'success' ? AiOutlineCheckCircle : AiOutlineCloseCircle} className="my-4" onDismiss={()=> setAlert({ type : "", message : ""})}>
-                            <span className="font-medium">
-                                {alert.type === 'success' ? 'Success!' : 'Error!'}
-                            </span> {alert.message}
-                        </Alert>
-                    )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
+                    </div>
                 </Modal.Body>
             </Modal>
         </>

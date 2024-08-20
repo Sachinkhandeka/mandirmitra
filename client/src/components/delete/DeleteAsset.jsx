@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Alert, Modal, Button, Spinner } from "flowbite-react";
+import { Modal, Button, Spinner } from "flowbite-react";
 import { Helmet } from "react-helmet-async";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import Alert from "../Alert";
 
 export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets }) {
     const { currUser } = useSelector(state => state.user);
@@ -49,9 +50,9 @@ export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets })
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Are you sure you want to delete this Asset?
                         </h3>
-                        {error && (
-                            <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-2" >{error}</Alert>
-                        )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                         <div className="flex justify-center gap-4">
                             <Button color="failure" onClick={handleDelete} disabled={loading}>
                                 {loading ? <Spinner color="failure" /> : "Yes, I'm sure"}

@@ -1,7 +1,8 @@
-import { FloatingLabel, Button, Alert, Spinner } from "flowbite-react";
+import { FloatingLabel, Button, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "./Alert";
 
 export default function AddTehsilGaam({ setLocationAdded }) {
     const { currUser } = useSelector(state => state.user);
@@ -87,8 +88,10 @@ export default function AddTehsilGaam({ setLocationAdded }) {
 
             <div className="border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4">
                 <h1 className="text-xl font-mono uppercase text-center">Add Location</h1>
-                {error && (<Alert onDismiss={() => setError(null)} color={"failure"}>{error}</Alert>)}
-                {success && (<Alert onDismiss={() => setSuccess(null)} color={"success"}>{success}</Alert>)}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 justify-stretch gap-10 p-4">
                         <div className="flex flex-col gap-2 mt-1">

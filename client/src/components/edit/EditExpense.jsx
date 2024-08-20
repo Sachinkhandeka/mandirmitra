@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Textarea, Alert } from "flowbite-react";
+import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Textarea } from "flowbite-react";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function EditExpense({ showModal, setShowModal, setIsUpdated, expense }) {
     const { currUser } = useSelector(state => state.user);
@@ -74,8 +75,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"top-right"}>
             <Modal.Header>{expense.category}</Modal.Header>
             <Modal.Body className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 p-4 flex-1" > 
-                    {error && (<Alert onDismiss={() => setError(null)} color={"failure"} className="my-4">{error}</Alert>)}
-                    {success && (<Alert onDismiss={() => setSuccess(null)} color={"success"} className="my-4 static">{success}</Alert>)}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                </div>
                     <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex flex-col gap-4 my-2 flex-1">

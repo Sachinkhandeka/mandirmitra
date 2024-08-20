@@ -1,7 +1,8 @@
-import { Button, Label, TextInput, Select, Datepicker, Alert, Spinner, Modal } from "flowbite-react";
+import { Button, Label, TextInput, Select, Datepicker, Spinner, Modal } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from  "../Alert";
 
 export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, name, date, location, status, id }) {
     const { currUser } = useSelector(state => state.user); // Add currUser to useSelector
@@ -65,16 +66,10 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
             <Modal show={editModal} dismissible onClose={() => setEditModal(false)}>
                 <Modal.Header>{ name }</Modal.Header>
                 <Modal.Body>
-                    {error && (
-                        <Alert onDismiss={() => setError(null)} color={"failure"} className="my-4">
-                            {error}
-                        </Alert>
-                    )}
-                    {success && (
-                        <Alert onDismiss={() => setSuccess(null)} color={"success"} className="my-4">
-                            {success}
-                        </Alert>
-                    )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    </div>
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col">

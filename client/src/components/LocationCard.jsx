@@ -1,9 +1,10 @@
-import { TextInput, Alert } from "flowbite-react";
+import { TextInput } from "flowbite-react";
 import { useState } from "react";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
 import { MdWrongLocation } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "./Alert";
 
 export default function LocationCard({ label, data, getLocation }) {
     const { currUser } = useSelector((state) => state.user);
@@ -33,7 +34,7 @@ export default function LocationCard({ label, data, getLocation }) {
                 getLocation(); // Refresh data after edit
                 setEditId(null);
                 setEditName("");
-                setSuccess("Updated successfully");
+                setSuccess("Address updated successfully");
             } else {
                 setError(data.message);
             }
@@ -57,7 +58,7 @@ export default function LocationCard({ label, data, getLocation }) {
             const data = await response.json();
             if (response.ok) {
                 getLocation(); // Refresh data after delete
-                setSuccess("Deleted successfully");
+                setSuccess("Address deleted successfully");
             } else {
                 setError(data.message);
             }
@@ -125,8 +126,10 @@ export default function LocationCard({ label, data, getLocation }) {
                 </div>
             ) : (
                 <>
-                    { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="fixed bottom-4 right-4 my-4">{error}</Alert> ) }
-                    { success && ( <Alert onDismiss={()=> setSuccess(null)} color={"success"} className="fixed bottom-4 right-4 my-4">{success}</Alert> ) }
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    </div>
                     <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                         <thead className="bg-gray-100 dark:bg-gray-700 sticky top-8 z-10">
                             <tr>

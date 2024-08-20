@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Label, TextInput, Button, Textarea, Spinner, Toast } from "flowbite-react";
-import { HiUpload, HiX, HiCheck } from "react-icons/hi";
+import { Label, TextInput, Button, Textarea, Spinner } from "flowbite-react";
+import { HiUpload } from "react-icons/hi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
@@ -8,6 +8,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import { app } from "../firebase";
 import { Helmet } from "react-helmet-async";
 import "react-circular-progressbar/dist/styles.css";
+import Alert from "./Alert";
 
 export default function AdditionalTempleInfo({ temple }) {
     const [templeData, setTempleData] = useState({
@@ -252,26 +253,10 @@ export default function AdditionalTempleInfo({ temple }) {
             >
                 {loading ? <Spinner color={"pink"} /> : 'Save Additional Info'}
             </Button>
-
-            {error && (
-                <Toast className="float-right my-4" theme="danger" onClose={() => setError(null)} aria-live="assertive">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                        <HiX className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{error}</div>
-                    <Toast.Toggle />
-                </Toast>
-            )}
-
-            {success && (
-                <Toast className="float-right my-4" theme="success" onClose={() => setSuccess(null)} aria-live="assertive">
-                    <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                        <HiCheck className="h-5 w-5" />
-                    </div>
-                    <div className="ml-3 text-sm font-normal">{success}</div>
-                    <Toast.Toggle />
-                </Toast>
-            )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+            </div>
         </section>
     );
 }

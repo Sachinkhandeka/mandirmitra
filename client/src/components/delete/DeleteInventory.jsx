@@ -1,7 +1,8 @@
-import { Modal, Spinner, Button, Alert } from "flowbite-react";
+import { Modal, Spinner, Button } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import Alert from "../Alert";
 
 export default function DeleteInventory({ deleteModal, setDeleteModal, inventoryId, setIsDeleted, }) {
     const  { currUser } = useSelector(state => state.user);
@@ -35,7 +36,9 @@ export default function DeleteInventory({ deleteModal, setDeleteModal, inventory
                 
                 <Modal.Body>
                     <div className="text-center">
-                        { error && ( <Alert onDismiss={()=> setError(null)} color={"failure"} className="my-4">{error}</Alert> ) }
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                         <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Are you sure you want to delete this Inventory?

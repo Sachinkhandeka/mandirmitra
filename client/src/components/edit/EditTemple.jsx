@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Button, Label, Modal, Spinner, TextInput, Toast } from "flowbite-react";
-import { HiCheck, HiX } from "react-icons/hi";
+import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../../firebase";
 import { Helmet } from "react-helmet-async";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import Alert from "../Alert";
 
 const AdditionalTempleInfo = React.lazy(() => import("../AdditionalTempleInfo"));
 
@@ -201,24 +201,10 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
                             </Button>
                         </div>
                     </form>
-                    {uploadError && (
-                        <Toast className="float-right" theme="danger" onClose={() => setUploadError(null)}>
-                            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                                <HiX className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3 text-sm font-normal">{uploadError}</div>
-                            <Toast.Toggle />
-                        </Toast>
-                    )}
-                    {uploadSuccess && (
-                        <Toast className="float-right" theme="success" onClose={() => setUploadSuccess(null)}>
-                            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                                <HiCheck className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3 text-sm font-normal">{uploadSuccess}</div>
-                            <Toast.Toggle />
-                        </Toast>
-                    )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {uploadSuccess && ( <Alert type="success" message={uploadSuccess} autoDismiss duration={6000} onClose={() => setUploadSuccess(null)} /> )}
+                            {uploadError && ( <Alert type="error" message={uploadError} autoDismiss duration={6000} onClose={() => setUploadError(null)} /> )}
+                        </div>
                     <div
                         onClick={() => setAddMore(!addMore)}
                         className="flex gap-1 items-center cursor-pointer text-xs text-blue-600 hover:underline font-semibold my-4"

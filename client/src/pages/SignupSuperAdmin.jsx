@@ -1,11 +1,10 @@
-import { Button, Label, Spinner, TextInput, Alert } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { GiPrayer } from "react-icons/gi";
 import { Helmet } from "react-helmet-async";
+import Alert from "../components/Alert";
 
 export default function SignupSuperAdmin({ setShowComponent }) {
-    const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -68,7 +67,9 @@ export default function SignupSuperAdmin({ setShowComponent }) {
                 <div className="absolute hidden md:block md:top-2 md:right-2 text-red-500 bg-white rounded-full p-2">
                     <GiPrayer size={12} />
                 </div>
-                {error && (<Alert color={"failure"} onDismiss={() => setError(null)} className="my-10 w-full">{error}</Alert>)}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                </div>
                 <h1 className="text-center text-2xl font-mono font-bold leading-8 uppercase">Add Temple</h1>
                 <form className="my-10" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4">

@@ -1,8 +1,9 @@
-import { Modal, TextInput , Label , Badge, Checkbox, Button, Alert, Spinner } from "flowbite-react";
+import { Modal, TextInput , Label , Badge, Checkbox, Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function EditRoleModal({ roleData , setRoleData ,  showModal , setShowModal ,  setRoleUpdated }) {
     const {  currUser } = useSelector(state => state.user);
@@ -125,8 +126,10 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
                 </div>
             </Modal.Header>
             <Modal.Body>
-                { error && ( <Alert color={"failure"} onDismiss={()=> setError(null)} >{ error }</Alert> ) }
-                { success && ( <Alert color={"success"} onDismiss={()=> setSuccess(null)} >{ success }</Alert> ) }
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                </div>
                 <div className="space-y-6" >
                     <h3 className="text-xl font-medium text-gray-900 dark:text-white">Edit Role</h3>
                     <form onSubmit={handleUpdate}>

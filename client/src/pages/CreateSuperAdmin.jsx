@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import { Button, Label, TextInput, Spinner, Alert } from "flowbite-react";
+import { Button, Label, TextInput, Spinner } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
 import { Helmet } from "react-helmet-async";
 import OAuth from "../components/OAuth";
+import Alert from "../components/Alert";
 
 export default function CreateSuperAdmin() {
     const navigate = useNavigate();
@@ -75,11 +76,9 @@ export default function CreateSuperAdmin() {
                 <meta name="keywords" content="MandirMitra, mandirmitra, mandir mitra, super admin, temple management, create super admin" />
             </Helmet>
             <div className="relative flex flex-col gap-4 w-full max-w-md py-6 bg-white rounded-lg md:border md:border-blue-500 p-10">
-                {error && (
-                    <Alert color={"failure"} onDismiss={() => dispatch(resetError())}>
-                        {error}
-                    </Alert>
-                )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> )}
+                </div>
                 <div className="text-black">
                     <h1 className="text-2xl font-mono font-bold uppercase">Create Super Admin</h1>
                 </div>

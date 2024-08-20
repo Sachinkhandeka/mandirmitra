@@ -1,13 +1,11 @@
 import { Modal, Button, FloatingLabel, Select } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
-export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, filterCount, setFilterCount }) {
-    const { currUser } = useSelector(state => state.user);
+export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilterCount }) {
     const navigate = useNavigate();
     const [ category, setCategory ] = useState('');
     const [ minAmount, setMinAmount ] = useState('');

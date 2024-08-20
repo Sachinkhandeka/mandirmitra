@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { Button, Card, Label, Modal, TextInput, Select, Alert, Spinner } from "flowbite-react";
+import { Button, Label, Modal, TextInput, Select, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaBuildingUser } from "react-icons/fa6";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import "../../css/PhoneInputCostom.css";
 import { Helmet } from "react-helmet-async";
+import Alert from "../Alert";
 
 export default function EditTenant({ tenant, isOpen, onClose, refreshTenants }) {
     const { currUser } = useSelector(state => state.user);
@@ -93,8 +93,10 @@ export default function EditTenant({ tenant, isOpen, onClose, refreshTenants }) 
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
-                        {error && (<Alert color={"failure"} onDismiss={() => setError(null)} className="sticky top-2 z-20">{error}</Alert>)}
-                        {success && (<Alert color={"success"} onDismiss={() => setSuccess(null)} className="sticky top-2 z-20">{success}</Alert>)}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                            {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        </div>
                         <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-3 mt-2">
                                 <Label htmlFor="name">Name</Label>
