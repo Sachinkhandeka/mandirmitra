@@ -124,7 +124,7 @@ export default function DashEvents() {
                 <div className="mb-6 sticky left-0">
                     <div className="relative">
                         <IoIosArrowBack
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
+                            className="absolute z-30 left-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
                             size={36}
                             onClick={scrollLeft}
                         />
@@ -147,7 +147,7 @@ export default function DashEvents() {
                             ))}
                         </div>
                         <IoIosArrowForward
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
+                            className="absolute z-30 right-0 top-1/2 transform -translate-y-1/2 cursor-pointer border border-slate-500 rounded-full p-2 hover:shadow-lg"
                             size={36}
                             onClick={scrollRight}
                         />

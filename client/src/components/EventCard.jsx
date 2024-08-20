@@ -88,33 +88,32 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
             <meta name="description" content={`Event details for ${name}, happening on ${new Date(date).toLocaleDateString()} at ${location}.`} />
         </Helmet>
         <article
-            className={`max-w-72 rounded-xl overflow-hidden hover:shadow-lg border 
-            border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 
-            m-4 min-w-72 cursor-pointer flex flex-col justify-between
-            ${isSelected ?
-                `border-2 border-t-blue-600 border-r-red-600 border-b-yellow-400 border-l-green-500 shadow
-                dark:border-2 dark:border-r-2 dark:border-t-blue-600 dark:border-b-yellow-400 dark:border-r-red-600 
-                dark:border-l-green-600 dark:shadow` : ''
-                }`}
+            className={`min-w-[18rem] lg:max-w-md xl:max-w-lg 2xl:max-w-xl 
+            rounded-3xl overflow-hidden shadow-lg border border-slate-300 
+            dark:border-slate-700 bg-gradient-to-br ${getRandomGradient()} 
+            text-white dark:bg-slate-800 m-4 cursor-pointer flex flex-col justify-between 
+            transform transition-transform duration-300 hover:scale-105
+            ${isSelected ? 'ring-4 ring-blue-600' : ''}
+            `}
             key={id}
             onClick={onClick}
         >
-            <div className='p-6' >
-                <div className="font-bold text-xl mb-4 flex items-center gap-3">
-                    <SiEventbrite className="text-blue-500 mr-2" />
+            <div className='p-6'>
+                <div className="font-extrabold text-xl md:text-2xl mb-4 flex items-center gap-3">
+                    <SiEventbrite className="text-blue-200" />
                     {name}
                 </div>
-                <div className='pl-4 text-xs flex items-start flex-col gap-4'>
+                <div className='pl-4 text-sm flex flex-col gap-4'>
                     <p className="flex items-center gap-2">
-                        <FaCalendarAlt className="text-green-500 mr-2" />
+                        <FaCalendarAlt className="text-green-300" />
                         {new Date(date).toLocaleDateString()}
                     </p>
                     <p className="flex items-center gap-2">
-                        <FaMapMarkerAlt className="text-red-500 mr-2" />
+                        <FaMapMarkerAlt className="text-red-300" />
                         {location}
                     </p>
-                    <span className={`mt-2 px-2 py-1 rounded ${status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                        {status}
+                    <span className={`mt-4 inline-block text-xs font-semibold px-4 py-2 rounded-full ${status === 'completed' ? 'bg-green-200 text-green-900' : 'bg-blue-200 text-blue-900'}`}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
                     </span>
                     <AttendanceStats
                         guestCount={guestCount}
@@ -128,21 +127,20 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
                     (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete"))))) && (
                     <div 
                         className={
-                            `flex justify-center items-center gap-4 w-full 
-                            h-16 px-4 mt-2 bg-gradient-to-r ${getRandomGradient()} 
-                            opacity-100 md:opacity-0 md:transition-opacity md:duration-300 md:ease-in-out 
-                            md:hover:opacity-100`
+                            `flex justify-center items-center gap-4 w-full h-16 px-4 
+                            bg-gradient-to-r ${getRandomGradient()} 
+                            transition-opacity duration-300 ease-in-out hover:opacity-90`
                         }
                     >
                         {
                             (currUser && currUser.isAdmin ||
                                 (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update"))))) && (
                                 <>
-                                    <span className="cursor-pointer px-2 py-1 text-sm hover:text-blue-800 hover:bg-blue-100 hover:rounded-lg" onClick={() => setEditModal(true)}>
+                                    <span className="cursor-pointer px-2 py-1 text-sm bg-white text-blue-600 rounded-lg font-semibold hover:text-blue-800 hover:bg-blue-100" onClick={() => setEditModal(true)}>
                                         Edit
                                     </span>
                                     {status === "pending" && (
-                                        <span className="cursor-pointer px-2 py-1 text-sm hover:text-yellow-800 hover:bg-yellow-100 hover:rounded-lg" onClick={() => setInviteModal(true)}>
+                                        <span className="cursor-pointer px-2 py-1 text-sm bg-white text-yellow-600 rounded-lg font-semibold hover:text-yellow-800 hover:bg-yellow-100" onClick={() => setInviteModal(true)}>
                                             Invite
                                         </span>
                                     )}
@@ -152,7 +150,7 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
                         {
                             (currUser && currUser.isAdmin ||
                                 (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("delete"))))) && (
-                                <span className="cursor-pointer text-sm px-2 py-1 hover:text-red-800 hover:bg-red-100 hover:rounded-lg" onClick={handleDelete} >
+                                <span className="cursor-pointer text-sm px-2 py-1 bg-white text-red-600 rounded-lg font-semibold hover:text-red-800 hover:bg-red-100" onClick={handleDelete} >
                                     {loading ? <Spinner color={"failure"} /> : "Delete"}
                                 </span>
                             )
