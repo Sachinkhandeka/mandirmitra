@@ -97,17 +97,15 @@ export default function DashSeva() {
     };
 
     return (
-        <>
-        <Helmet>
-            <title>Seva Management - Dashboard</title>
-            <meta name="description" content="Manage Seva offerings efficiently. View, edit, and delete Seva offerings at your temple." />
-        </Helmet>
-        <div className="min-h-screen py-8 px-4 relative">
+        <section className="min-h-screen" >
+            <Helmet>
+                <title>Seva Management - Dashboard</title>
+                <meta name="description" content="Manage Seva offerings efficiently. View, edit, and delete Seva offerings at your temple." />
+            </Helmet>
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
                 {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
             </div>
-            <div className="container mx-auto h-screen overflow-y-auto scrollbar-hidden rounded-lg shadow-lg p-6 bg-white dark:bg-gray-700">
                 {seva.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {seva.map((sevaItem, index) => (
@@ -177,8 +175,6 @@ export default function DashSeva() {
                         </div>
                     </div>
                 )}
-            </div>
-        </div>
-        </>
+        </section>
     );
 }
