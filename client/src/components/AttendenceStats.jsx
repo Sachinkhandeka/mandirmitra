@@ -1,6 +1,19 @@
 import { FaUserCheck, FaUserTimes, FaUsers } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
 
+// Utility function to format numbers
+function formatNumber(num) {
+    if (num >= 1_000_000_000) {
+        return (num / 1_000_000_000).toFixed(1) + 'b';
+    } else if (num >= 1_000_000) {
+        return (num / 1_000_000).toFixed(1) + 'm';
+    } else if (num >= 1_000) {
+        return (num / 1_000).toFixed(1) + 'k';
+    } else {
+        return num;
+    }
+}
+
 export default function AttendanceStats({ guestCount, attended, notAttended }) {
     return (
         <section className="attendance-stats">
@@ -8,24 +21,24 @@ export default function AttendanceStats({ guestCount, attended, notAttended }) {
                 <title>Event Attendance Statistics</title>
                 <meta name="description" content="View attendance statistics for event guests, including total guests, attendees, and non-attendees." />
             </Helmet>
-            <div className="mt-1 w-full py-4 px-6 bg-white dark:bg-slate-700 rounded-lg shadow-md flex justify-around items-center text-center">
-                <div className="flex flex-col items-center justify-center gap-2">
-                    <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
-                        <FaUsers className="text-2xl text-blue-500" size={14} />
+            <div className="mt-4 w-full py-6 px-8 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-2xl shadow-2xl flex justify-around items-center text-center">
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
+                        <FaUsers className="text-xl text-white" />
                     </div>
-                    <p className="text-sm font-bold text-blue-500">{guestCount === 0 ? '00' : guestCount}</p>
+                    <p className="text-lg font-extrabold text-white">{formatNumber(guestCount)}</p>
                 </div>
-                <div className="flex flex-col items-center justify-center gap-2">
-                    <div className="ml-4 flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
-                        <FaUserCheck className="text-2xl text-green-500" size={14} />
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
+                        <FaUserCheck className="text-xl text-white" />
                     </div>
-                    <p className="text-sm font-bold text-green-500">{attended === 0 ? '00' : attended}</p>
+                    <p className="text-lg font-extrabold text-white">{formatNumber(attended)}</p>
                 </div>
-                <div className="ml-4 flex flex-col items-center justify-center gap-2">
-                    <div className="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full">
-                        <FaUserTimes className="text-2xl text-red-500" size={14} />
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
+                        <FaUserTimes className="text-xl text-white" />
                     </div>
-                    <p className="text-sm font-bold text-red-500">{notAttended === 0 ? '00' : notAttended}</p>
+                    <p className="text-lg font-extrabold text-white">{formatNumber(notAttended)}</p>
                 </div>
             </div>
         </section>
