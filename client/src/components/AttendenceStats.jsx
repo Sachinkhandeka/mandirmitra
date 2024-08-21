@@ -26,19 +26,19 @@ export default function AttendanceStats({ guestCount, attended, notAttended }) {
                     <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
                         <FaUsers className="text-xl text-white" />
                     </div>
-                    <p className="text-lg font-extrabold text-white">{formatNumber(guestCount)}</p>
+                    <p className="text-md font-serif font-extrabold text-white">{formatNumber(guestCount)}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
                         <FaUserCheck className="text-xl text-white" />
                     </div>
-                    <p className="text-lg font-extrabold text-white">{formatNumber(attended)}</p>
+                    <p className="text-md font-serif font-extrabold text-white">{formatNumber(attended)}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-full shadow-lg">
                         <FaUserTimes className="text-xl text-white" />
                     </div>
-                    <p className="text-lg font-extrabold text-white">{formatNumber(notAttended)}</p>
+                    <p className="text-md font-serif font-extrabold text-white">{formatNumber(notAttended)}</p>
                 </div>
             </div>
         </section>
