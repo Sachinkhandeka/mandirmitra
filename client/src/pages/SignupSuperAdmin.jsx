@@ -1,7 +1,7 @@
-import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { GiPrayer } from "react-icons/gi";
 import { Helmet } from "react-helmet-async";
+import { Spinner } from "flowbite-react";
 import Alert from "../components/Alert";
 
 export default function SignupSuperAdmin({ setShowComponent }) {
@@ -73,23 +73,36 @@ export default function SignupSuperAdmin({ setShowComponent }) {
                 <h1 className="text-center text-2xl font-mono font-bold leading-8 uppercase">Add Temple</h1>
                 <form className="my-10" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4">
-                        <Label htmlFor="name" className="text-black">Temple Name</Label>
-                        <TextInput type="text" id="name" name="name" placeholder="add temple name" onChange={handleChange} required className="bg-gray-200 text-black placeholder-gray-500" />
+                        <label htmlFor="name" className="text-black">Temple Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Add temple name"
+                            onChange={handleChange}
+                            required
+                            className="bg-gray-200 text-black placeholder-gray-500 p-2 rounded"
+                        />
                     </div>
                     <div className="flex flex-col gap-4 mt-4">
-                        <Label htmlFor="location" className="text-black">Temple Location</Label>
-                        <TextInput type="text" id="location" name="location" placeholder="Bhuj, Kutch, Gujarat" onChange={handleChange} required className="bg-gray-200 text-black placeholder-gray-500" />
+                        <label htmlFor="location" className="text-black">Temple Location</label>
+                        <input
+                            type="text"
+                            id="location"
+                            name="location"
+                            placeholder="Bhuj, Kutch, Gujarat"
+                            onChange={handleChange}
+                            required
+                            className="bg-gray-200 text-black placeholder-gray-500 p-2 rounded"
+                        />
                     </div>
-                    <Button
-                        onClick={handleSubmit}
-                        gradientDuoTone={"tealToLime"}
-                        outline
-                        className="w-full my-8"
+                    <button
                         type="submit"
+                        className="w-full my-8 bg-gradient-to-r from-teal-400 to-lime-400 text-white py-2 rounded disabled:opacity-50"
                         disabled={loading}
                     >
-                        {loading ? <Spinner /> : 'Add'}
-                    </Button>
+                        {loading ? <Spinner color={"blue"} /> : 'Add'}
+                    </button>
                 </form>
             </div>
         </div>

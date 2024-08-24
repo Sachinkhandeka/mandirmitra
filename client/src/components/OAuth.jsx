@@ -34,12 +34,11 @@ export default function OAuth({ templeId }) {
             );
 
             const  data = await response.json();
-
             if(!response.ok) {
                 dispatch(signinFailure(data.message));
                 return ;
             }
-            dispatch(signinSuccess(data));
+            dispatch(signinSuccess(data.currUser));
             navigate("/");
 
         }catch(err) {

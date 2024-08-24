@@ -78,11 +78,10 @@ export default function Home() {
             setIsTempleUpdted(false);
         }
     },[isTemplUpdted]);
-
     //get analytics data
     const getAnalyticsData = async()=> {
         try {
-            const response = await fetch(`/api/temple//analytics/${currUser.templeId}`);
+            const response = await fetch(`/api/temple/analytics/${currUser.templeId}`);
             const data = await response.json();
 
             if(!response.ok) {

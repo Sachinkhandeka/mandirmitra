@@ -84,8 +84,8 @@ export default function CreateSuperAdmin() {
                 </div>
                 <form onSubmit={handleSubmit} className="px-8" >
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="username" className="text-black">Username</Label>
-                        <TextInput
+                        <label htmlFor="username" className="text-black">Username</label>
+                        <input
                             type="text"
                             id="username"
                             name="username"
@@ -96,8 +96,8 @@ export default function CreateSuperAdmin() {
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <Label htmlFor="email" className="text-black">Email</Label>
-                        <TextInput
+                        <label htmlFor="email" className="text-black">Email</label>
+                        <input
                             type="email"
                             id="email"
                             name="email"
@@ -108,8 +108,8 @@ export default function CreateSuperAdmin() {
                         />
                     </div>
                     <div className="flex flex-col gap-2 relative">
-                        <Label htmlFor="password" className="text-black">Password</Label>
-                        <TextInput
+                        <label htmlFor="password" className="text-black">Password</label>
+                        <input
                             type={`${viewPass ? 'text' : 'password'}`}
                             id="password"
                             name="password"
