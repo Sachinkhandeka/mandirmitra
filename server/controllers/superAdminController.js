@@ -156,7 +156,9 @@ module.exports.googleController = async(req ,res)=> {
         
         const { password , ...rest } = isSuperAdmin._doc ; 
 
-        return res.status(200).cookie("access_token", token, { httpOnly : true }).json(rest);
+        return res.status(200).cookie("access_token", token, { httpOnly : true }).json({
+            currUser : rest,
+        });
 
     }else {
         const genRandomPass = Math.random().toString(36).slice(-8) + Math.random().toString().slice(-8);

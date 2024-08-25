@@ -77,7 +77,7 @@ export default function CreateSuperAdmin() {
             </Helmet>
             <div className="relative flex flex-col gap-4 w-full max-w-md py-6 bg-white rounded-lg md:border md:border-blue-500 p-10">
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> )}
+                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> )}
                 </div>
                 <div className="text-black">
                     <h1 className="text-2xl font-mono font-bold uppercase">Create Super Admin</h1>

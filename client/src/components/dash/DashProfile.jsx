@@ -111,7 +111,7 @@ export default function DashProfile() {
                 setUploadProgress(progress.toFixed(0));
             },
             (error)=> {
-                setUploadError('Could not upload an image.(File must be less than 2KB)');
+                setUploadError(error.message);
                 setUploadProgress(0);
                 setImageFile(null);
                 setTempImageUrl(null);

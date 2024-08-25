@@ -17,6 +17,7 @@ import PieChart from "./PieChart";
 import EditTemple from "./edit/EditTemple";
 import InventoryPieChart from "./InventoryPieChart";
 import InventoryBarChart from "./InventoryBarChart";
+import Alert from "./Alert";
 
 const GodCard = React.lazy(()=> import("./GodCard"));
 
@@ -102,6 +103,7 @@ export default function Home() {
             setOutOfStockItemsCount(data.outOfStockItemsCount);
             setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
             setInventoryQuantities(data.inventoryQuantities);
+            setSuccess("Analitical data fetched successfully");
         }catch(err) {
             setError(err.message);
         }
@@ -157,6 +159,10 @@ export default function Home() {
             <link rel="canonical" href="https://www.mandirmitra.co.in/" />
         </Helmet>
         <div className="w-full" >  
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+            </div>
             <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
                 <h1 
                     className="absolute bottom-0 right-[32px] px-2 md:px-4 py-1 md:py-2 rounded-full 
