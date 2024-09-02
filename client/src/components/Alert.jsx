@@ -6,6 +6,7 @@ import { IoIosWarning } from "react-icons/io";
 export default function Alert({ type = "info", message, link, linkText = "Click here", autoDismiss = true, duration = 5000, onClose}) {
     const [progress, setProgress] = useState(100);
     const [visible, setVisible] = useState(true);
+    const [opacity, setOpacity] = useState("opacity-0");
 
     const alertStyles = {
         info: {
@@ -63,6 +64,9 @@ export default function Alert({ type = "info", message, link, linkText = "Click 
     const styles = alertStyles[type] || alertStyles.info;
 
     useEffect(() => {
+        // Trigger fade-in effect
+        setOpacity("opacity-100");
+
         if (autoDismiss) {
             const interval = setInterval(() => {
                 setProgress((prev) => {
@@ -70,26 +74,28 @@ export default function Alert({ type = "info", message, link, linkText = "Click 
                     return newValue > 0 ? newValue : 0;
                 });
             }, 100);
-    
+
             const timeout = setTimeout(() => {
                 setProgress(0); 
-                setVisible(false);
-                if (onClose) onClose();
+                setOpacity("opacity-0");
+                setTimeout(() => {
+                    setVisible(false);
+                    if (onClose) onClose();
+                }, 500);
             }, duration);
-    
+
             return () => {
                 clearInterval(interval);
                 clearTimeout(timeout);
             };
         }
     }, [duration, autoDismiss, onClose]);
-    
 
     if (!visible) return null;
 
     return (
         <div
-            className={`flex relative items-center p-4 my-4 ${styles.textColor} ${styles.bgColor} border-t-4 ${styles.borderColor} ${styles.darkTextColor} ${styles.darkBgColor} ${styles.darkBorderColor}`}
+            className={`flex relative items-center p-4 my-4 ${styles.textColor} ${styles.bgColor} border-t-4 ${styles.borderColor} ${styles.darkTextColor} ${styles.darkBgColor} ${styles.darkBorderColor} transition-opacity duration-500 ${opacity}`}
             role="alert"
         >
             {styles.icon && styles.icon}
@@ -104,8 +110,11 @@ export default function Alert({ type = "info", message, link, linkText = "Click 
                 type="button"
                 className="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 hover:bg-opacity-50 inline-flex items-center justify-center h-8 w-8"
                 onClick={() => {
-                    setVisible(false);
-                    if (onClose) onClose();
+                    setOpacity("opacity-0"); // Start fade-out
+                    setTimeout(() => {
+                        setVisible(false);
+                        if (onClose) onClose();
+                    }, 500); // Duration for fade-out effect
                 }}
                 aria-label="Close"
             >
