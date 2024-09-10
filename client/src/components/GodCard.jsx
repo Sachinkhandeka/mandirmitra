@@ -21,12 +21,11 @@ export default function GodCard({ godsAndGoddesses }) {
     return (
         <>
         <Helmet>
-            <title>Devi-Devta & Sant-Mahant | MandirMitra</title>
             <meta name="description" content="Explore the diverse and rich collection of Devi-Devta and Sant-Mahant images and information." />
             <meta name="keywords" content="Devi, Devta, Sant, Mahant, Gods, Goddesses, Hinduism, MandirMitra" />
             <meta name="author" content="MandirMitra" />
         </Helmet>
-        <h2 className="text-xl font-serif uppercase font-semibold my-4" >Devi-Devta & Sant-Mahant</h2>
+        <h2 className="text-xl font-serif uppercase font-semibold my-4" >Analytical Page - mandirmitra</h2>
         <div className="flex overflow-x-auto scrollbar-hidden">
             <div className="my-2 flex gap-4">
                 {godsAndGoddesses.map((god, index) => (

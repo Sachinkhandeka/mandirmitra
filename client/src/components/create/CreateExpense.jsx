@@ -60,7 +60,7 @@ export default function CreateExpense() {
     return (
         <>
         <Helmet>
-            <title>Create Expense - Your Dashboard</title>
+            <title>Profile - {currUser.username}</title>
             <meta name="description" content="Add a new expense to your profile. Fill out the form with details such as title, description, amount, date, category, and status." />
         </Helmet>
         <div className="w-full border rounded-md p-2 md:p-4 my-4 flex gap-4">

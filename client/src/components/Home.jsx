@@ -145,7 +145,7 @@ export default function Home() {
     return (
         <>
         <Helmet>
-            <title>Analytical Page - MandirMitra</title>
+            <title>Analytical Page - mandirmitra</title>
             <meta
                 name="description"
                 content="MandirMitra is your ultimate devotional companion, providing detailed information about temples, deities, and spiritual practices. Manage donations, expenses, and analytics with ease."

@@ -65,7 +65,7 @@ export default function CreateEvent() {
     return (
         <>
             <Helmet>
-                <title>Create Event - Your Dashboard</title>
+                <title>Profile - {currUser.username}</title>
                 <meta name="description" content="Create a new event. Fill out the form with details such as event name, date, location, and status." />
             </Helmet>
             <div className="w-full my-8 flex flex-col items-center">

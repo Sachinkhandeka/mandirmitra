@@ -135,7 +135,7 @@ export default function EditTemple({ showModal, setShowModal, temple, setIsTempl
     return (
         <>
             <Helmet>
-                <title>Edit Temple Information</title>
+                <title>Analytical Page - mandirmitra</title>
                 <meta name="description" content="Edit the details of the temple including name, location, and image." />
                 <meta name="robots" content="noindex, nofollow" />
             </Helmet>
