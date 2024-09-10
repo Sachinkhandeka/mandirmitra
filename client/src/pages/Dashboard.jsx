@@ -152,6 +152,13 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashProfile /></Suspense>}
+                    {/* analytics ... */}
+                    {tab === "analytics" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4">
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><Home /></Suspense>}
                     {/* Donations ... */}
                     {tab === "daans" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4">

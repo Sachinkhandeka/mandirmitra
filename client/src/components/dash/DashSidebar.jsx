@@ -2,6 +2,7 @@ import { Sidebar } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart, FaLandmark } from "react-icons/fa";
 import { FaMoneyBillTrendUp, FaMapLocationDot, FaBuildingUser } from "react-icons/fa6";
+import { MdAnalytics } from "react-icons/md";
 import { SiEventbrite } from "react-icons/si";
 import { RiHandHeartFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
@@ -59,6 +60,14 @@ export default function DashSidebar() {
                             labelColor={"dark"} 
                             as={"div"}
                         >Profile</Sidebar.Item>
+                    </Link>
+                    <Link to={"/?tab=analytics"} >
+                        <Sidebar.Item 
+                            active={tab === "analytics"} 
+                            className="mt-6 cursor-pointer" 
+                            icon={MdAnalytics}
+                            as={"div"}
+                        >Analytics</Sidebar.Item>
                     </Link>
                     {
                         (currUser && currUser.isAdmin || 

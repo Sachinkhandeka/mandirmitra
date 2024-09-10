@@ -8,7 +8,6 @@ export default function FooterComp() {
     return (
         <>
             <Helmet>
-                <title>Footer - mandirmitra</title>
                 <meta name="description" content="Connect with mandirmitra through our social media platforms and learn more about us, our privacy policy, and terms and conditions." />
             </Helmet>
             <Footer container className="z-50 sticky left-0 mt-6" >

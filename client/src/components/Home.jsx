@@ -145,7 +145,7 @@ export default function Home() {
     return (
         <>
         <Helmet>
-            <title>Home - MandirMitra</title>
+            <title>Analytical Page - MandirMitra</title>
             <meta
                 name="description"
                 content="MandirMitra is your ultimate devotional companion, providing detailed information about temples, deities, and spiritual practices. Manage donations, expenses, and analytics with ease."
@@ -178,7 +178,7 @@ export default function Home() {
                   bg-lime-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >M</h1>
                 <h1 
                     className="absolute bottom-0 right-[72px] px-2 md:px-4 py-1 md:py-2 rounded-full 
-                  bg-blue-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >A</h1>
+                  bg-blue-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >E</h1>
                 <h1 
                     className="absolute bottom-0 right-[82px] px-2 md:px-4 py-1 md:py-2 rounded-full 
                   bg-amber-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >T</h1>
