@@ -103,7 +103,7 @@ export default function Home() {
             setOutOfStockItemsCount(data.outOfStockItemsCount);
             setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
             setInventoryQuantities(data.inventoryQuantities);
-            setSuccess("Analitical data fetched successfully");
+            setSuccess("Analytical data data fetched successfully");
         }catch(err) {
             setError(err.message);
         }
