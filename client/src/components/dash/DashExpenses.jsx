@@ -81,10 +81,10 @@ export default function DashExpenses() {
     //functionality to appply color to status dynamically
     const getStatusColor  = (status)=> {
         switch(status) {
-            case "pending" :  return "text-yellow-500"
-            case "approved" : return  "text-green-500"
-            case "completed" : return  "text-blue-500"
-            case "rejected" :  return "text-red-500"
+            case "pending" :  return "bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300"
+            case "completed" : return  "bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400"
+            case "approved" : return  "bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400"
+            case "rejected" :  return "bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400"
             default : return ; 
         }
     }
@@ -141,8 +141,8 @@ export default function DashExpenses() {
                     <Table.Head>
                         <Table.HeadCell>Date</Table.HeadCell>
                         <Table.HeadCell>Expense Title</Table.HeadCell>
-                        <Table.HeadCell>Short Description</Table.HeadCell>
                         <Table.HeadCell>Category</Table.HeadCell>
+                        <Table.HeadCell>Short Description</Table.HeadCell>
                         <Table.HeadCell>Amount</Table.HeadCell>
                         <Table.HeadCell>Status</Table.HeadCell>
                         {/* Render actions if user is an admin or has permission to edit or delete expenses */}
@@ -157,8 +157,10 @@ export default function DashExpenses() {
                             <Table.Row key={expense._id}>
                                 <Table.Cell>{new Date(expense.date).toLocaleDateString()}</Table.Cell>
                                 <Table.Cell>{expense.title}</Table.Cell>
+                                <Table.Cell>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{expense.category}</span>
+                                </Table.Cell>
                                 <Table.Cell>{expense.description}</Table.Cell>
-                                <Table.Cell>{expense.category}</Table.Cell>
                                 <Table.Cell>
                                     { expense.amount ? parseFloat(expense.amount).toLocaleString('en-IN', {
                                         maximumFractionDigits: 2,
@@ -166,7 +168,9 @@ export default function DashExpenses() {
                                         currency: 'INR'
                                     }) : ''}
                                 </Table.Cell>
-                                <Table.Cell className={`${getStatusColor(expense.status)}`} >{expense.status}</Table.Cell>
+                                <Table.Cell>
+                                    <span className={`${getStatusColor(expense.status)}`} >{expense.status}</span>
+                                </Table.Cell>
                                 {/* Render actions if user is an admin or has permission to edit or delete expenses */}
                                 {(currUser && currUser.isAdmin ||
                                     (currUser.roles &&

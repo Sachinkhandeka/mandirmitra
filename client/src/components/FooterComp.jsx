@@ -8,8 +8,8 @@ export default function FooterComp() {
     return (
         <>
             <Helmet>
-                <title>Footer - MandirMitra</title>
-                <meta name="description" content="Connect with MandirMitra through our social media platforms and learn more about us, our privacy policy, and terms and conditions." />
+                <title>Footer - mandirmitra</title>
+                <meta name="description" content="Connect with mandirmitra through our social media platforms and learn more about us, our privacy policy, and terms and conditions." />
             </Helmet>
             <Footer container className="z-50 sticky left-0 mt-6" >
                 <div className="w-full">
@@ -19,7 +19,7 @@ export default function FooterComp() {
                                 href="/"
                                 src={brand}
                                 alt="MandirMitra Logo"
-                                name="MandirMitra"
+                                name="mandirmitra"
                                 className="rounded-md"
                             />
                         </div>

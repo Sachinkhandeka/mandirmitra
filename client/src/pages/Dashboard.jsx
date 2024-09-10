@@ -82,31 +82,31 @@ export default function Dashboard() {
     const getDescription = () => {
         switch (tab) {
             case "profile":
-                return "Manage your profile details, create donations, expenses, events, Seva activities, addresses, user roles, and permissions in MadirMitra Dashboard.";
+                return "Manage your profile details, create donations, expenses, events, Seva activities, addresses, user roles, and permissions in mandirmitra Dashboard.";
             case "daans":
-                return "View, edit, delete, and search donations with advanced functionalities in MadirMitra Dashboard.";
+                return "View, edit, delete, and search donations with advanced functionalities in mandirmitra Dashboard.";
             case "expenses":
-                return "View, edit, delete, and search expense records in MadirMitra Dashboard.";
+                return "View, edit, delete, and search expense records in mandirmitra Dashboard.";
             case "events":
-                return "View, edit, delete, and search event details in MadirMitra Dashboard.";
+                return "View, edit, delete, and search event details in mandirmitra Dashboard.";
             case "seva":
-                return "View, edit, delete, and search Seva activities and volunteer details in MadirMitra Dashboard.";
+                return "View, edit, delete, and search Seva activities and volunteer details in mandirmitra Dashboard.";
             case "address":
-                return "View, edit, delete, and search address details in MadirMitra Dashboard.";
+                return "View, edit, delete, and search address details in mandirmitra Dashboard.";
             case "users":
-                return "View, edit, delete, and search user details with advanced functionalities in MadirMitra Dashboard.";
+                return "View, edit, delete, and search user details with advanced functionalities in mandirmitra Dashboard.";
             case "roles":
-                return "View, edit, delete, user roles in MadirMitra Dashboard.";
+                return "View, edit, delete, user roles in mandirmitra Dashboard.";
             case "permissions":
-                return "View, edit, delete, permissions in MadirMitra Dashboard.";
+                return "View, edit, delete, permissions in mandirmitra Dashboard.";
             case "about":
-                return "Learn more about MadirMitra Dashboard, its features, and functionalities.";
+                return "Learn more about mandirmitra Dashboard, its features, and functionalities.";
             case "privacy":
-                return "Read the privacy policy of MadirMitra Dashboard to understand how we handle your data.";
+                return "Read the privacy policy of mandirmitra Dashboard to understand how we handle your data.";
             case "terms":
-                return "Read the terms and conditions of MadirMitra Dashboard to understand the usage policies.";
+                return "Read the terms and conditions of mandirmitra Dashboard to understand the usage policies.";
             default:
-                return "Welcome to the MadirMitra Dashboard, your central hub for managing temple activities.";
+                return "Welcome to the mandirmitra Dashboard, your central hub for managing temple activities.";
         }
     };
 
@@ -115,7 +115,7 @@ export default function Dashboard() {
             <Helmet>
                 <title>{getTitle()}</title>
                 <meta name="description" content={getDescription()} />
-                <meta name="keywords" content="MadirMitra, Temple Management, Donations, Expenses, Events, Dashboard, CRUD operations, Search functionality" />
+                <meta name="keywords" content="mandirmitra, Temple Management, Donations, Expenses, Events, Dashboard, CRUD operations, Search functionality" />
             </Helmet>
             {/* header ... */}
             <Header />

@@ -59,9 +59,9 @@ export default function SigninUser({ setShowComponent }) {
     return (
         <section className="flex flex-col gap-4 w-full md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 pt-1 p-10">
             <Helmet>
-                <title>User Sign In - MandirMitra</title>
-                <meta name="description" content="Sign in as a user created by the Super Admin to access your specific functionalities and manage your activities through MandirMitra." />
-                <meta name="keywords" content="MandirMitra, User Sign In, Temple Management, Secure Login" />
+                <title>User Sign In - mandirmitra</title>
+                <meta name="description" content="Sign in as a user created by the Super Admin to access your specific functionalities and manage your activities through mandirmitra." />
+                <meta name="keywords" content="mandirmitra, MandirMitra, User Sign In, Temple Management, Secure Login" />
             </Helmet>
             <div className="w-full">
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">

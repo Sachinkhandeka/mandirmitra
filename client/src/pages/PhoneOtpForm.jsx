@@ -109,17 +109,17 @@ export default function PhoneOtpForm() {
         <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800">
             <Helmet>
                 <title>MandirMitra - Phone OTP Verification</title>
-                <meta name="description" content="MandirMitra helps you manage temple activities with ease and grace. Enter your phone number to log in or create a new account." />
-                <meta name="keywords" content="MandirMitra,mandirmitra, mandir mitra, Temple Management, OTP Verification, Phone Login" />
-                <meta name="author" content="MandirMitra Team" />
+                <meta name="description" content="mandirmitra helps you manage temple activities with ease and grace. Enter your phone number to log in or create a new account." />
+                <meta name="keywords" content="mandirmitra, MandirMitra, mandir mitra, Temple Management, OTP Verification, Phone Login" />
+                <meta name="author" content="mandirmitra Team" />
             </Helmet>
             <div className="flex flex-col items-center justify-center gap-2 p-4 md:hidden">
                 <img src={brand} alt="brand_image" className='h-16 w-16 border-2 rounded-md' />
-                <span className='text-xs font-serif text-gray-500' >MandirMitra</span>
+                <span className='text-xs font-serif text-gray-500' >mandirmitra</span>
             </div>
             <div className="hidden md:flex md:w-1/2 flex-col p-12">
                 <p className="text-white md:text-4xl lg:text-6xl font-bold italic">"Managing Temple Activities with Ease and Grace."</p>
-                <p className="text-white md:text-2xl lg:text-4xl font-bold italic p-6">- MandirMitra</p>
+                <p className="text-white md:text-2xl lg:text-4xl font-bold italic p-6">- mandirmitra</p>
             </div>
             <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10">
                 {showComponent === 'phoneInput' && (

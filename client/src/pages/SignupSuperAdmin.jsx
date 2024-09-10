@@ -56,9 +56,9 @@ export default function SignupSuperAdmin({ setShowComponent }) {
     return (
         <div className="relative flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 pt-1 p-10 text-black">
             <Helmet>
-                <title>Add Temple - MandirMitra</title>
-                <meta name="description" content="Add a new temple to MandirMitra. Provide the temple's name and location to get started." />
-                <meta name="keywords" content="MandirMitra, Add Temple, Temple Management, Super Admin" />
+                <title>Add Temple - mandirmitra</title>
+                <meta name="description" content="Add a new temple to mandirmitra. Provide the temple's name and location to get started." />
+                <meta name="keywords" content="mandirmitra, MandirMitra, Add Temple, Temple Management, Super Admin" />
             </Helmet>
             <div className="relative">
                 <div className="absolute hidden md:block md:top-2 md:left-2 text-red-500 bg-white rounded-full p-2">

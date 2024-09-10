@@ -144,8 +144,8 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
         <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
             <Helmet>
                 <title>Add Donation - MandirMitra</title>
-                <meta name="description" content="Add a new donation to MandirMitra. Fill out donor details, select Seva, and enter donation amount." />
-                <meta name="keywords" content="MandirMitra, Donation, Seva, Temple Donation" />
+                <meta name="description" content="Add a new donation to mandirmitra. Fill out donor details, select Seva, and enter donation amount." />
+                <meta name="keywords" content="mandirmitra, mandir, mitra, MandirMitra, Donation, Seva, Temple Donation" />
             </Helmet>
             <div
                 className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 
