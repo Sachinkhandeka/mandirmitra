@@ -66,7 +66,7 @@ export default function AdditionalTempleInfo({ temple }) {
                 (error) => {
                     console.error("Upload failed:", error);
                     setUploading(false);
-                    setError("Image upload failed. File must be less than 2KB");
+                    setError(error.message);
                 }, 
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
