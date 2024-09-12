@@ -1,5 +1,5 @@
 import { Footer } from "flowbite-react";
-import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter } from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsLinkedin, BsTwitterX  } from "react-icons/bs";
 import { Helmet } from "react-helmet-async";
 
 import brand from "../assets/brand.jpg";
@@ -45,7 +45,7 @@ export default function FooterComp() {
                             <Footer.Icon href=" https://www.facebook.com/profile.php?id=61561382858176&mibextid=ZbWKwL" icon={BsFacebook} target="_blank" rel="noopener noreferrer" />
                             <Footer.Icon href="https://www.instagram.com/mandirmitra/" icon={BsInstagram} target="_blank" rel="noopener noreferrer" />
                             <Footer.Icon href="https://www.linkedin.com/in/mandir-mitra/" icon={BsLinkedin} target="_blank" rel="noopener noreferrer" />
-                            <Footer.Icon href="https://x.com/MandirMitra" icon={BsTwitter} target="_blank" rel="noopener noreferrer" />
+                            <Footer.Icon href="https://x.com/MandirMitra" icon={BsTwitterX} target="_blank" rel="noopener noreferrer" />
                         </div>
                     </div>
                 </div>
