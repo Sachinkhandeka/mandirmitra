@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button, Label, Select, Spinner, TextInput } from "flowbite-react";
-import { FcDonate } from "react-icons/fc";
 import { FaFilePdf } from "react-icons/fa6";
+import { TbCoinRupee } from "react-icons/tb";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -154,13 +154,13 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
                 md:rounded-tr-none rounded-tl-md md:rounded-bl-md"
             >
                 <div>
-                    <FcDonate size={30} />
+                    <TbCoinRupee size={35} color="white" />
                 </div>
                 <div>
-                    <MdOutlineWaterDrop size={30} />
+                    <MdOutlineWaterDrop size={35} color="white" />
                 </div>
                 <div>
-                    <FcDonate size={30} />
+                    <TbCoinRupee size={35} color="white" />
                 </div>
             </div>
             <div className="flex-1 p-4 md:p-10">

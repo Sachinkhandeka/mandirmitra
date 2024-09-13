@@ -73,7 +73,36 @@ export default function Receipt({ receiptData }) {
             color: '#6b6b6a',
             padding: 10,
             fontSize: 10,
-        }
+        },
+        outerCircle: {
+            position: 'absolute',
+            width: 120,
+            height: 120,
+            borderRadius: 60,
+            borderWidth: 2,
+            borderColor: 'blue',
+            borderStyle: 'solid',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.3,
+            zIndex: 0,
+            top: "50%", 
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+        },
+        innerCircle: {
+            width: 90,
+            height: 90,
+            borderRadius: 45,
+            borderWidth: 6,
+            borderColor: 'blue',
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        templeNameText: {
+            textAlign: 'center',
+            color: 'blue',
+        },
     });
 
     return (
@@ -92,6 +121,11 @@ export default function Receipt({ receiptData }) {
                             <Text style={styles.text}>
                                 {`${village}, ${tehsil}, ${district}, ${state}, ${country}`}
                             </Text>
+                        </View>
+                    </View>
+                    <View style={styles.outerCircle}>
+                        <View style={styles.innerCircle}>
+                            <Text style={styles.templeNameText}>{temple ? temple.name : '__Temple Name__'}</Text>
                         </View>
                     </View>
                     <View style={styles.normalContainer}>

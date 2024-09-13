@@ -1,4 +1,5 @@
 import { Button, Label, TextInput, Select, Datepicker, Spinner, Modal } from "flowbite-react";
+import { FiCalendar, FiMapPin, FiFileText, FiCheckSquare } from "react-icons/fi";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
@@ -64,7 +65,9 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                 <meta name="description" content="Edit a event record in the temple management system. Update event details, address, and event information." />
             </Helmet>
             <Modal show={editModal} dismissible onClose={() => setEditModal(false)}>
-                <Modal.Header>{ name }</Modal.Header>
+                <Modal.Header className="bg-gradient-to-r from-blue-500 to-purple-600" >
+                    <div className="text-white uppercase font-bold" >{ name }</div>
+                </Modal.Header>
                 <Modal.Body>
                     <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                         {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
@@ -73,12 +76,12 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col">
-                                <Label htmlFor="name" className="mb-1 text-sm font-medium">
+                                <Label htmlFor="name" className="mb-4 text-sm font-medium flex items-center gap-2">
+                                    <FiFileText className="inline mr-2 text-xl text-gray-500" />
                                     Name of Event
                                 </Label>
                                 <TextInput
                                     type="text"
-                                    className="p-2 border rounded-lg"
                                     id="name"
                                     name="name"
                                     value={eventData.name}
@@ -86,7 +89,8 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <Label htmlFor="date" className="mb-1 text-sm font-medium">
+                                <Label htmlFor="date" className="mb-4 text-sm font-medium flex items-center gap-2">
+                                    <FiCalendar className="inline mr-2 text-xl text-gray-500" />
                                     Date
                                 </Label>
                                 <Datepicker
@@ -99,16 +103,15 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                                         year: 'numeric',
                                     })}
                                     onSelectedDateChanged={handleDatePickerChange}
-                                    className="p-2 border rounded-lg"
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <Label htmlFor="location" className="mb-1 text-sm font-medium">
+                                <Label htmlFor="location" className="mb-4 text-sm font-medium flex items-center gap-2">
+                                    <FiMapPin className="inline mr-2 text-xl text-gray-500" />
                                     Location of Event
                                 </Label>
                                 <TextInput
                                     type="text"
-                                    className="p-2 border rounded-lg"
                                     id="location"
                                     name="location"
                                     value={eventData.location}
@@ -116,7 +119,8 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                                 />
                             </div>
                             <div className="flex flex-col">
-                                <Label htmlFor="status" className="mb-1 text-sm font-medium">
+                                <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2">
+                                    <FiCheckSquare className="inline mr-2 text-xl text-gray-500" />
                                     Status
                                 </Label>
                                 <Select
@@ -124,7 +128,6 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                                     name="status"
                                     value={eventData.status}
                                     onChange={handleChange}
-                                    className="p-2 border rounded-lg"
                                 >
                                     <option value="Select" disabled>
                                         Select
@@ -137,7 +140,7 @@ export default function EditEvent({ editModal, setEditModal, setIsEventUpdated, 
                         <div className="flex justify-end mt-6">
                             <Button
                                 type="submit"
-                                color={"warning"}
+                                gradientDuoTone="purpleToBlue"
                                 pill
                                 disabled={loading}
                             >
