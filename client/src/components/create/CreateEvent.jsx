@@ -90,8 +90,8 @@ export default function CreateEvent() {
                                 <div><SiEventbrite size={30} color="white" /></div>
                             </div>
                             <div className="flex-1 p-4 md:p-10">
-                                <h1 className="text-blue-400 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl">
-                                    Create Event
+                                <h1 className="bg-gradient-to-bl from-blue-500 to-purple-600 bg-clip-text text-transparent font-mono uppercase font-bold p-2 mb-4 text-3xl">
+                                    Add Event
                                 </h1>
                                 <form onSubmit={handleSubmit}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -161,7 +161,7 @@ export default function CreateEvent() {
                                             pill
                                             disabled={loading}
                                         >
-                                            { loading ? <Spinner color={"warning"} />  : "Create" }
+                                            { loading ? <Spinner color={"warning"} />  : "Add Event" }
                                         </Button>
                                     </div>
                                 </form>

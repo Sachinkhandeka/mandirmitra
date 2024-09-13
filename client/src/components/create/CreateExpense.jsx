@@ -80,7 +80,9 @@ export default function CreateExpense() {
                     { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} />) }
                     { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
                 </div>
-                <h1 className="text-indigo-800 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl">Add Expense</h1>
+                <h1 className="bg-gradient-to-bl from-pink-500 to-orange-500 bg-clip-text text-transparent dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl flex gap-3">
+                    Add Expense
+                </h1>
                 <form className="my-3" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex flex-col gap-4 my-2 flex-1">
@@ -155,7 +157,7 @@ export default function CreateExpense() {
                         />
                     </div>
                     <div className="flex flex-row-reverse my-4">
-                        <Button gradientMonochrome="purple" pill onClick={handleSubmit} disabled={loading}>
+                        <Button gradientDuoTone="pinkToOrange" pill onClick={handleSubmit} disabled={loading}>
                             { loading ? <Spinner color={"purple"} /> : "Add Expense" }
                         </Button>
                     </div>

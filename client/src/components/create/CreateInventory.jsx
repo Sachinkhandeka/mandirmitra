@@ -1,6 +1,7 @@
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { FaBoxes } from 'react-icons/fa';
+import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
 
@@ -77,11 +78,25 @@ export default function CreateInventory() {
 
     return (
         <div>
-            <div className="p-6 rounded-lg shadow-lg w-full dark:bg-slate-800">
-                <div className="flex justify-center mb-4">
-                    <FaBoxes className="text-4xl text-blue-500" />
+            <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10">
+                <div
+                    className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 
+                    justify-around items-center bg-gradient-to-bl from-rose-500 to-amber-500 
+                    dark:bg-gradient-to-bl dark:from-gray-600 dark:to-gray-800 rounded-tr-md 
+                    md:rounded-tr-none rounded-tl-md md:rounded-bl-md"
+                >
+                    <div>
+                        <BsFillBox2HeartFill size={30} color="white" />
+                    </div>
+                    <div>
+                        <BsBoxFill size={30} color="white" />
+                    </div>
+                    <div>
+                        <BsFillBox2HeartFill size={30} color="white" />
+                    </div>
                 </div>
-                <h2 className="text-2xl font-semibold text-center mb-6">Create Inventory Item</h2>
+                <div className="flex-1 p-4 md:p-10">
+                <h2 className="bg-gradient-to-bl from-rose-500 to-amber-500 bg-clip-text text-transparent dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl flex gap-3">Add Inventory Item</h2>
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-col md:flex-row gap-4'>
                         <div className="mb-4 w-full">
@@ -96,7 +111,6 @@ export default function CreateInventory() {
                                 value={inventoryData.name}
                                 onChange={handleChange}
                                 required
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>
                         <div className="mb-4 w-full">
@@ -109,7 +123,6 @@ export default function CreateInventory() {
                                 value={inventoryData.category}
                                 onChange={handleChange}
                                 required
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             >
                                 <option value="">Select a category</option>
                                 <option value="Ritual Supplies">Ritual Supplies</option>
@@ -134,7 +147,6 @@ export default function CreateInventory() {
                                 value={inventoryData.quantity}
                                 onChange={handleChange}
                                 required
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>
                         <div className="w-full">
@@ -147,7 +159,6 @@ export default function CreateInventory() {
                                 value={inventoryData.unit}
                                 onChange={handleChange}
                                 required
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             >
                                 <option value="">Select a unit</option>
                                 <option value="kg">Kilograms (kg)</option>
@@ -170,7 +181,6 @@ export default function CreateInventory() {
                                 value={inventoryData.unitPrice}
                                 onChange={handleChange}
                                 required
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>
                         <div className="mb-4 w-full">
@@ -186,7 +196,6 @@ export default function CreateInventory() {
                                 onChange={handleChange}
                                 required
                                 readOnly
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>
                     </div>
@@ -200,16 +209,16 @@ export default function CreateInventory() {
                             value={inventoryData.description}
                             onChange={handleChange}
                             placeholder="Add a small description"
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             rows="4"
                         />
                     </div>
                     <div className="flex items-center justify-end">
-                        <Button type="submit" color={"blue"} disabled={loading}>
-                            {loading ? <Spinner color={"purple"} /> : 'Create'}
+                        <Button type="submit" gradientDuoTone="pinkToOrange" pill disabled={loading}>
+                            {loading ? <Spinner color={"purple"} /> : 'Add Inventory'}
                         </Button>
                     </div>
                 </form>
+                </div>
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
                     {alert.message && (
                         <Alert 
