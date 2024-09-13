@@ -1,6 +1,7 @@
 import { Button, Datepicker, Label, Select, Spinner, TextInput, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { GiMoneyStack, GiReceiveMoney, GiTakeMyMoney } from "react-icons/gi";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
@@ -63,18 +64,27 @@ export default function CreateExpense() {
             <title>Profile - {currUser.username}</title>
             <meta name="description" content="Add a new expense to your profile. Fill out the form with details such as title, description, amount, date, category, and status." />
         </Helmet>
-        <div className="w-full border rounded-md p-2 md:p-4 my-4 flex gap-4">
-            <div className="w-10 bg-yellow-300 dark:bg-gray-700 hidden md:block"></div>
-            <div className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 mx-1 md:mx-4 p-4 flex-1">
+        <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
+            <div
+                className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 
+                justify-around items-center bg-gradient-to-bl from-pink-500 to-orange-500
+                dark:bg-gradient-to-bl dark:from-gray-600 dark:to-gray-800 rounded-tr-md 
+                md:rounded-tr-none rounded-tl-md md:rounded-bl-md"
+            >
+                <div><GiMoneyStack size={35} color="white" /></div>
+                <div><GiReceiveMoney size={35} color="white" /></div>
+                <div><GiTakeMyMoney size={35} color="white" /></div>
+            </div>
+            <div className="flex-1 p-4 md:p-10">
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
                     { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} />) }
                     { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
                 </div>
-                <h1 className="text-2xl font-serif uppercase font-bold text-indigo-800 dark:text-white">Add Expense</h1>
+                <h1 className="text-indigo-800 dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl">Add Expense</h1>
                 <form className="my-3" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="title" className="text-indigo-800">Title</Label>
+                            <Label htmlFor="title">Title</Label>
                             <TextInput
                                 type="text"
                                 id="title"
@@ -85,7 +95,7 @@ export default function CreateExpense() {
                             />
                         </div>
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="date" className="text-indigo-800">Date</Label>
+                            <Label htmlFor="date">Date</Label>
                             <Datepicker
                                 weekStart={1}
                                 id="date"
@@ -95,7 +105,7 @@ export default function CreateExpense() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 my-2">
-                        <Label htmlFor="description" className="text-indigo-800">Description</Label>
+                        <Label htmlFor="description">Description</Label>
                         <Textarea
                             type="text"
                             id="description"
@@ -107,7 +117,7 @@ export default function CreateExpense() {
                     </div>
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="category" className="text-indigo-800">Category</Label>
+                            <Label htmlFor="category">Category</Label>
                             <TextInput
                                 type="text"
                                 id="category"
@@ -118,7 +128,7 @@ export default function CreateExpense() {
                             />
                         </div>
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="status" className="text-indigo-800">Status</Label>
+                            <Label htmlFor="status">Status</Label>
                             <Select
                                 id="status"
                                 name="status"
@@ -134,7 +144,7 @@ export default function CreateExpense() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 my-2">
-                        <Label htmlFor="amount" className="text-indigo-800">Amount</Label>
+                        <Label htmlFor="amount">Amount</Label>
                         <TextInput
                             type="number"
                             id="amount"
@@ -145,7 +155,7 @@ export default function CreateExpense() {
                         />
                     </div>
                     <div className="flex flex-row-reverse my-4">
-                        <Button gradientMonochrome="purple" onClick={handleSubmit} disabled={loading}>
+                        <Button gradientMonochrome="purple" pill onClick={handleSubmit} disabled={loading}>
                             { loading ? <Spinner color={"purple"} /> : "Add Expense" }
                         </Button>
                     </div>
