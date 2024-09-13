@@ -90,7 +90,7 @@ export default function CreateEvent() {
                                 <div><SiEventbrite size={30} color="white" /></div>
                             </div>
                             <div className="flex-1 p-4 md:p-10">
-                                <h1 className="bg-gradient-to-bl from-blue-500 to-purple-600 bg-clip-text text-transparent font-mono uppercase font-bold p-2 mb-4 text-3xl">
+                                <h1 className="bg-gradient-to-bl from-blue-500 to-purple-600 dark:text-white bg-clip-text text-transparent font-mono uppercase font-bold p-2 mb-4 text-3xl">
                                     Add Event
                                 </h1>
                                 <form onSubmit={handleSubmit}>
