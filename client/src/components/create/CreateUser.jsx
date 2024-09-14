@@ -105,7 +105,7 @@ export default function CreateUser({ roleUpdated }) {
             currUser.isAdmin && (
                 <>
                    <div className="p-0.5 bg-gradient-to-r from-lime-200 to-lime-500 rounded-lg">
-                        <Card className="w-full max-w-sm bg-white rounded-lg">
+                        <Card className="w-full h-full bg-white rounded-lg">
                             <div className="flex items-center md:flex-col gap-4">
                                 <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-lime-200 to-lime-500 rounded-md">
                                     <FiUserPlus size={30} />

@@ -95,7 +95,7 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
             currUser.isAdmin && (
                 <>
                     <div className="p-0.5 bg-gradient-to-r from-red-400 to-red-700 rounded-lg">
-                        <Card className=" w-full max-w-sm bg-white">
+                        <Card className="w-full h-full bg-white">
                             <div className="flex items-center md:flex-col gap-4" >
                                 <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-red-400 to-red-700 rounded-md" ><FaAddressCard size={30} /></span>
                                 <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
