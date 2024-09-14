@@ -81,13 +81,15 @@ export default function CreateTenant() {
             {
                 currUser.isAdmin && (
                     <>
-                        <Card className="w-full max-w-sm bg-white">
-                            <div className="flex items-center md:flex-col gap-4">
-                                <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-pink-400 to-pink-700 rounded-md"><FaBuildingUser size={30} /></span>
-                                <h5 className="text-2xl text-center font-bold tracking-tight">Create Tenant</h5>
-                            </div>
-                            <Button onClick={() => setOpenModal(true)} gradientMonochrome={"pink"} className="text-white">Create</Button>
-                        </Card>
+                        <div className="p-0.5 bg-gradient-to-r from-pink-400 to-pink-700 rounded-lg">
+                            <Card className="w-full max-w-sm bg-white rounded-lg">
+                                <div className="flex items-center md:flex-col gap-4">
+                                    <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-pink-400 to-pink-700 rounded-md"><FaBuildingUser size={30} /></span>
+                                    <h5 className="text-2xl text-center font-bold tracking-tight">Create Tenant</h5>
+                                </div>
+                                <Button onClick={() => setOpenModal(true)} gradientMonochrome={"pink"} className="text-white">Create</Button>
+                            </Card>
+                        </div>
                         <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} position={"center-right"}>
                             <Modal.Header className="bg-gradient-to-r from-pink-400 to-pink-700 p-4 text-2xl font-bold text-gray-900 dark:text-white" >
                                 Create Tenant

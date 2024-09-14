@@ -244,7 +244,7 @@ export default function DashProfile() {
                         <UserRoles />  
                      ) }
                     {currUser.isAdmin && (
-                        <div className="w-full bg-gradient-to-t from-red-400 via-orange-500 to-yellow-600 rounded-lg dark:bg-gray-700 p-2 md:p-10">
+                        <div className="w-full p-2 md:p-10">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
                                 <CreateUser
                                     roleUpdated={roleUpdated} 

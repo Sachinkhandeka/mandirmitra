@@ -9,6 +9,7 @@ import { CiEdit } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiCash } from "react-icons/gi";
+import banner from "../assets/banner.png";
 
 import "../App.css";
 import BarChart from "./BarChart";
@@ -163,7 +164,7 @@ export default function Home() {
                 {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
                 {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
             </div>
-            <div className="bg-gradient-to-t from-purple-400 to-purple-800 rounded-lg flex p-10 relative" >
+            <div className="bg-contain bg-center h-28 rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
                 <h1 
                     className="absolute bottom-0 right-[32px] px-2 md:px-4 py-1 md:py-2 rounded-full 
                     bg-cyan-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >E</h1>

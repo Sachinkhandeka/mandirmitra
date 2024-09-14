@@ -104,13 +104,24 @@ export default function CreateUser({ roleUpdated }) {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className="w-full max-w-sm bg-white">
-                        <div className="flex items-center md:flex-col gap-4" >
-                            <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-lime-200 to-lime-500 rounded-md" ><FiUserPlus size={30} /></span>
-                            <h5 className="text-2xl text-center font-bold tracking-tight">Create User</h5>
-                        </div>
-                        <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"lime"} className="text-white" >Create</Button>
-                    </Card>
+                   <div className="p-0.5 bg-gradient-to-r from-lime-200 to-lime-500 rounded-lg">
+                        <Card className="w-full max-w-sm bg-white rounded-lg">
+                            <div className="flex items-center md:flex-col gap-4">
+                                <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-lime-200 to-lime-500 rounded-md">
+                                    <FiUserPlus size={30} />
+                                </span>
+                                <h5 className="text-2xl text-center font-bold tracking-tight">Create User</h5>
+                            </div>
+                            <Button
+                                onClick={() => setOpenModal(true)}
+                                gradientMonochrome={"lime"}
+                                className="text-white"
+                            >
+                                Create
+                            </Button>
+                        </Card>
+                    </div>
+
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)} position={"left-top"}>
                     <Modal.Header className="bg-gradient-to-r from-lime-200 to-lime-500 p-4 text-2xl font-medium text-gray-900 dark:text-white" >
                         Create user with roles

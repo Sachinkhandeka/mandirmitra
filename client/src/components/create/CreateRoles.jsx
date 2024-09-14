@@ -94,13 +94,15 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
         {
             currUser.isAdmin && (
                 <>
-                   <Card className=" w-full max-w-sm bg-white">
-                        <div className="flex items-center md:flex-col gap-4" >
-                            <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-red-400 to-red-700 rounded-md" ><FaAddressCard size={30} /></span>
-                            <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
-                        </div>
-                        <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"failure"} >Add</Button>
-                    </Card>
+                    <div className="p-0.5 bg-gradient-to-r from-red-400 to-red-700 rounded-lg">
+                        <Card className=" w-full max-w-sm bg-white">
+                            <div className="flex items-center md:flex-col gap-4" >
+                                <span className="h-20 w-20 flex items-center justify-center p-2 bg-gradient-to-r from-red-400 to-red-700 rounded-md" ><FaAddressCard size={30} /></span>
+                                <h5 className="text-2xl font-bold tracking-tight">Add Roles</h5>
+                            </div>
+                            <Button onClick={()=> setOpenModal(true)} gradientMonochrome={"failure"} >Add</Button>
+                        </Card>
+                    </div>
                     <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)}>
                     <Modal.Header className="bg-gradient-to-r from-red-400 to-red-700 p-4 text-2xl font-medium text-gray-900 dark:text-white" >
                         Add Roles
