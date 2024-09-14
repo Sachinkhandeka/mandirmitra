@@ -2,6 +2,7 @@ import { Button, Datepicker, Label, Select, Spinner, TextInput, Textarea } from 
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { GiMoneyStack, GiReceiveMoney, GiTakeMyMoney } from "react-icons/gi";
+import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaAlignLeft, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
@@ -86,7 +87,10 @@ export default function CreateExpense() {
                 <form className="my-3" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="title" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                <FaFileAlt className="inline mr-2 text-xl text-gray-500" />
+                                Title
+                            </Label>
                             <TextInput
                                 type="text"
                                 id="title"
@@ -97,7 +101,10 @@ export default function CreateExpense() {
                             />
                         </div>
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="date">Date</Label>
+                            <Label htmlFor="date" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                <FaCalendarAlt className="inline mr-2 text-xl text-gray-500" />
+                                Date
+                            </Label>
                             <Datepicker
                                 weekStart={1}
                                 id="date"
@@ -107,7 +114,10 @@ export default function CreateExpense() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 my-2">
-                        <Label htmlFor="description">Description</Label>
+                        <Label htmlFor="description" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                            <FaAlignLeft className="inline mr-2 text-xl text-gray-500" />
+                            Description
+                        </Label>
                         <Textarea
                             type="text"
                             id="description"
@@ -119,7 +129,10 @@ export default function CreateExpense() {
                     </div>
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="category">Category</Label>
+                            <Label htmlFor="category" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                <FaListAlt className="inline mr-2 text-xl text-gray-500" />
+                                Category
+                            </Label>
                             <TextInput
                                 type="text"
                                 id="category"
@@ -130,7 +143,10 @@ export default function CreateExpense() {
                             />
                         </div>
                         <div className="flex flex-col gap-4 my-2 flex-1">
-                            <Label htmlFor="status">Status</Label>
+                            <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                <FaClipboardCheck className="inline mr-2 text-xl text-gray-500" />
+                                Status
+                            </Label>
                             <Select
                                 id="status"
                                 name="status"
@@ -146,7 +162,10 @@ export default function CreateExpense() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 my-2">
-                        <Label htmlFor="amount">Amount</Label>
+                        <Label htmlFor="amount" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                            <FaMoneyBillWave className="inline mr-2 text-xl text-gray-500" />
+                            Amount
+                        </Label>
                         <TextInput
                             type="number"
                             id="amount"
