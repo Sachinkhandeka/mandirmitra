@@ -25,7 +25,6 @@ export default function GodCard({ godsAndGoddesses }) {
             <meta name="keywords" content="Devi, Devta, Sant, Mahant, Gods, Goddesses, Hinduism, MandirMitra" />
             <meta name="author" content="MandirMitra" />
         </Helmet>
-        <h2 className="text-xl font-serif uppercase font-semibold my-4" >Analytical Page - mandirmitra</h2>
         <div className="flex overflow-x-auto scrollbar-hidden">
             <div className="my-2 flex gap-4">
                 {godsAndGoddesses.map((god, index) => (

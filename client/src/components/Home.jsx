@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
 import { FaRupeeSign, FaBoxes, FaExclamationTriangle, FaTimesCircle, FaChartBar, FaChartPie  } from "react-icons/fa";
-import { CiEdit } from "react-icons/ci";
+import { CiEdit, CiLocationOn } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import { GiCash } from "react-icons/gi";
+import { GiCash, GiGearHammer } from "react-icons/gi";
 import banner from "../assets/banner.png";
 
 import "../App.css";
@@ -81,7 +81,7 @@ export default function Home() {
         }
     },[isTemplUpdted]);
     //get analytics data
-    const getAnalyticsData = async()=> {
+    const getAnalyticsData = useCallback( async()=> {
         try {
             const response = await fetch(`/api/temple/analytics/${currUser.templeId}`);
             const data = await response.json();
@@ -108,7 +108,7 @@ export default function Home() {
         }catch(err) {
             setError(err.message);
         }
-    }
+    },[currUser.templeId]);
     useEffect(()=> {
         getAnalyticsData();
     },[currUser.templeId]);
@@ -164,7 +164,7 @@ export default function Home() {
                 {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
                 {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
             </div>
-            <div className="bg-contain bg-center h-28 rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
+            <div className="bg-contain bg-center h-full rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
                 <h1 
                     className="absolute bottom-0 right-[32px] px-2 md:px-4 py-1 md:py-2 rounded-full 
                     bg-cyan-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >E</h1>
@@ -192,14 +192,21 @@ export default function Home() {
                 </div>
             </div>
             <div className="mt-8 ml-4" >
-                <div className="font-serif" >
-                    <h3 className="text-xl uppercase font-semibold" >{ temple.name }</h3>
-                    <p className="text-xs font-light mb-2" >{ temple.location }</p>
+                <div >
+                    <h3 className="text-3xl font-bold dark:text-white">{ temple.name }</h3>
+                    <p className="text-md font-normal text-gray-500 lg:text-lg dark:text-gray-400 flex items-center gap-3" >
+                        <CiLocationOn size={16} className="text-black dark:text-white"/>
+                        { temple.location }
+                    </p>
                     { temple.foundedYear && (
-                        <span className="text-xs font-bold px-2 py-1 rounded-md bg-gradient-to-tr from-sky-500 to-sky-300" > Founded-In:{ temple.foundedYear }</span>
+                        <div className="text-gray-400 flex items-center gap-3 mb-4" > 
+                            <GiGearHammer size={16} className="text-black dark:text-white"/>
+                            <h6 className="text-lg text-gray-500 lg:text-lg dark:text-gray-400">since, { temple.foundedYear }</h6> 
+                        </div>
                     ) }
                     { temple.description && (
-                        <div className="mt-2 tracking-wide text-sm italic font-bold border-2 rounded-lg py-6 px-4 bg-gradient-to-t from-rose-400 to-orange-400 border-none" >
+                        <div className="mb-3 text-gray-500 dark:text-gray-400" >
+                            <div className="text-3xl text-black dark:text-white mb-3">About</div>
                             { temple.description }
                         </div>
                     ) }
