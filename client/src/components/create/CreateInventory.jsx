@@ -1,6 +1,12 @@
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
-import { FaBoxes } from 'react-icons/fa';
+import { FaLuggageCart } from "react-icons/fa";
+import { HiOutlineClipboardList } from 'react-icons/hi';
+import { HiOutlineHashtag } from 'react-icons/hi'; // Quantity
+import { HiOutlineCube } from 'react-icons/hi'; // Unit
+import { HiOutlineTag } from 'react-icons/hi'; // Unit Price
+import { HiOutlineCalculator } from 'react-icons/hi'; // Total Price
+import { HiOutlineDocumentText } from 'react-icons/hi'; // Description
 import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
@@ -100,7 +106,8 @@ export default function CreateInventory() {
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-col md:flex-row gap-4'>
                         <div className="mb-4 w-full">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="name">
+                                <FaLuggageCart className="inline mr-2 text-xl text-gray-500" />
                                 Name
                             </Label>
                             <TextInput
@@ -114,7 +121,8 @@ export default function CreateInventory() {
                             />
                         </div>
                         <div className="mb-4 w-full">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="category">
+                                <HiOutlineClipboardList className="inline mr-2 text-xl text-gray-500" />
                                 Category
                             </Label>
                             <Select
@@ -136,7 +144,8 @@ export default function CreateInventory() {
                     </div>
                     <div className="mb-4 w-full flex flex-col md:flex-row gap-4">
                         <div className="w-full">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantity">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="quantity">
+                                <HiOutlineHashtag className="inline mr-2 text-xl text-gray-500" />
                                 Quantity
                             </Label>
                             <TextInput
@@ -150,7 +159,8 @@ export default function CreateInventory() {
                             />
                         </div>
                         <div className="w-full">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="unit">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="unit">
+                                <HiOutlineCube className="inline mr-2 text-xl text-gray-500" />
                                 Unit
                             </Label>
                             <Select
@@ -171,6 +181,7 @@ export default function CreateInventory() {
                     <div className='mb-4 flex items-center flex-col  md:flex-row gap-4' >
                         <div className="mb-4 w-full">
                             <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="unitPrice">
+                                <HiOutlineTag className="inline mr-2 text-xl text-gray-500" />
                                 Unit Price
                             </Label>
                             <TextInput
@@ -184,7 +195,8 @@ export default function CreateInventory() {
                             />
                         </div>
                         <div className="mb-4 w-full">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalPrice">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="totalPrice">
+                                <HiOutlineCalculator className="inline mr-2 text-xl text-gray-500" />
                                 Total Price
                             </Label>
                             <TextInput
@@ -200,7 +212,8 @@ export default function CreateInventory() {
                         </div>
                     </div>
                     <div className="mb-4">
-                        <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                        <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="description">
+                            <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
                             Description
                         </Label>
                         <Textarea
