@@ -1,5 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button, Label, Select, Spinner, TextInput, Modal } from "flowbite-react";
+import { TbCoinRupee } from "react-icons/tb";
+import { IoManSharp } from "react-icons/io5";
+import { FiMapPin } from "react-icons/fi";
+import { FaHandHoldingHeart, FaDonate } from "react-icons/fa";
+import { MdOutlineWaterDrop, MdOutlineContactPhone, MdPayment } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -156,11 +161,16 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                             <form onSubmit={handleSubmit} className="py-4" >
                                 <div className="flex flex-col md:flex-row flex-wrap gap-4">
                                     <div className="flex-1 flex flex-col gap-4">
-                                        <Label htmlFor="donorName">Name of Donor</Label>
+                                        <Label htmlFor="donorName" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                            <IoManSharp className="inline mr-2 text-xl text-gray-500" />
+                                            Name of Donor
+                                        </Label>
                                         <TextInput id="donorName" name="donorName" value={formData.donorName} onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
                                     </div>
                                     <div className="flex-1 flex flex-col gap-4">
-                                        <Label htmlFor="sevaName">Name of Seva</Label>
+                                        <Label htmlFor="sevaName" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                            <FaHandHoldingHeart className="inline mr-2 text-xl text-gray-500" />
+                                            Name of Seva</Label>
                                         <Select id="sevaName" name="sevaName" onChange={(e)=>  setFormData({ ...formData, [e.target.id] : e.target.value })} value={formData.sevaName}>
                                             <option value="" disabled>Select Seva</option>
                                             {seva.map((item) => (
@@ -171,7 +181,10 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                         </Select>
                                     </div>
                                 </div>
-                                <h2 className="my-3 font-bold">Address</h2>
+                                <h2 className="my-4 text-sm font-medium flex items-center gap-2">
+                                    <FiMapPin className="inline mr-2 text-xl text-gray-500" />
+                                    Address
+                                </h2>
                                 <AddressForm
                                     selectedCountry={selectedCountry}
                                     selectedState={selectedState}
@@ -183,13 +196,19 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                 />
                                 <div className="flex flex-col md:flex-row flex-wrap gap-4 my-8">
                                     <div className="flex-1 flex flex-col gap-4">
-                                        <Label htmlFor="contactInfo">Add Contact Info</Label>
+                                    <Label htmlFor="contactInfo" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <MdOutlineContactPhone className="inline mr-2 text-xl text-gray-500" />
+                                        Add Contact Info
+                                    </Label>
                                         <TextInput id="contactInfo" name="contactInfo" value={formData.contactInfo} onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
                                     </div>
                                 </div>
                                 <div className="flex flex-col md:flex-row flex-wrap gap-4">
                                     <div className="flex-1 flex flex-col gap-4">
-                                        <Label htmlFor="paymentMethod">Payment Method</Label>
+                                    <Label htmlFor="paymentMethod" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <MdPayment className="inline mr-2 text-xl text-gray-500" />
+                                        Payment Method
+                                    </Label>
                                         <Select id="paymentMethod" onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} value={formData.paymentMethod}>
                                             <option value="select" disabled>Select</option>
                                             <option value="cash">Cash</option>
@@ -198,7 +217,10 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                         </Select>
                                     </div>
                                     <div className="flex-1 flex flex-col gap-4">
-                                        <Label htmlFor="donationAmount">Donation Amount</Label>
+                                    <Label htmlFor="donationAmount" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <FaDonate className="inline mr-2 text-xl text-gray-500" />
+                                        Donation Amount
+                                    </Label>
                                         <TextInput type="number" id="donationAmount" name="donationAmount" value={formData.donationAmount} onChange={(e) => setFormData({ ...formData, [e.target.id]: e.target.value })} />
                                     </div>
                                 </div>
