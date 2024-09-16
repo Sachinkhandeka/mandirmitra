@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
-import { Label, Modal, TextInput, Select, Spinner } from "flowbite-react";
+import { Label, Modal, TextInput, Select, Spinner, Button } from "flowbite-react";
 import { MdAddHomeWork } from "react-icons/md";
-import { GiKeyring } from "react-icons/gi";
 import { HiOutlineCollection, HiOutlineDocumentText, HiOutlineCalendar, HiOutlineTag, 
     HiOutlineCurrencyRupee, HiOutlineLocationMarker, HiOutlineMap, HiOutlineStatusOnline } from 'react-icons/hi';
 import { useEffect, useState } from "react";
@@ -169,16 +168,9 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
                                     <option value="Inactive">Inactive</option>
                                 </Select>
                             </div>
-                            <button 
-                                type="submit" 
-                                className={`text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 
-                                    hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 
-                                    dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                                    me-2 mt-4 mb-2`}
-                                disabled={loading}
-                            >
+                            <Button type="submit" gradientMonochrome={"cyan"}  pill disabled={loading} className="my-3" >
                                 {loading ? <Spinner color={'blue'} /> : 'Update Asset'}
-                            </button>
+                            </Button>
                         </form>
                     </div>
                 </Modal.Body>

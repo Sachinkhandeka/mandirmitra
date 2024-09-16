@@ -1,6 +1,8 @@
 import { Modal, Button, Label, Select, TextInput, Textarea, Spinner } from "flowbite-react";
 import React, { useState } from 'react';
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
+import { FaLuggageCart } from "react-icons/fa";
+import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, HiOutlineCalculator, HiOutlineDocumentText  } from 'react-icons/hi';
+import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import Alert from "../Alert";
 
@@ -75,7 +77,8 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                     <form onSubmit={handleSubmit}>
                         <div className='flex flex-col md:flex-row gap-4'>
                             <div className="mb-4 w-full">
-                                <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                                <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="name">
+                                    <FaLuggageCart className="inline mr-2 text-xl text-gray-500" />
                                     Name
                                 </Label>
                                 <TextInput
@@ -86,11 +89,11 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     value={inventoryData.name}
                                     onChange={handleChange}
                                     required
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
                             <div className="mb-4 w-full">
-                                <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+                                <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="category">
+                                    <HiOutlineClipboardList className="inline mr-2 text-xl text-gray-500" />
                                     Category
                                 </Label>
                                 <Select
@@ -99,7 +102,6 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     value={inventoryData.category}
                                     onChange={handleChange}
                                     required
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 >
                                     <option value="">Select a category</option>
                                     <option value="Ritual Supplies">Ritual Supplies</option>
@@ -113,7 +115,8 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                         </div>
                         <div className="mb-4 w-full flex flex-col md:flex-row gap-4">
                             <div className="w-full">
-                                <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="quantity">
+                                <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="quantity">
+                                    <HiOutlineHashtag className="inline mr-2 text-xl text-gray-500" />
                                     Quantity
                                 </Label>
                                 <TextInput
@@ -124,11 +127,11 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     value={inventoryData.quantity}
                                     onChange={handleChange}
                                     required
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
                             <div className="w-full">
-                                <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="unit">
+                                <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="unit">
+                                    <HiOutlineCube className="inline mr-2 text-xl text-gray-500" />
                                     Unit
                                 </Label>
                                 <Select
@@ -137,7 +140,6 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     value={inventoryData.unit}
                                     onChange={handleChange}
                                     required
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 >
                                     <option value="">Select a unit</option>
                                     <option value="kg">Kilograms (kg)</option>
@@ -150,6 +152,7 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                         <div className='mb-4 flex items-center flex-col  md:flex-row gap-4' >
                             <div className="mb-4 w-full">
                                 <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="unitPrice">
+                                    <HiOutlineTag className="inline mr-2 text-xl text-gray-500" />
                                     Unit Price
                                 </Label>
                                 <TextInput
@@ -160,11 +163,11 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     value={inventoryData.unitPrice}
                                     onChange={handleChange}
                                     required
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
                             <div className="mb-4 w-full">
-                                <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalPrice">
+                                <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="totalPrice">
+                                    <HiOutlineCalculator className="inline mr-2 text-xl text-gray-500" />
                                     Total Price
                                 </Label>
                                 <TextInput
@@ -176,12 +179,12 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     onChange={handleChange}
                                     required
                                     readOnly
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 />
                             </div>
                         </div>
                         <div className="mb-4">
-                            <Label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="description">
+                                <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
                                 Description
                             </Label>
                             <Textarea
@@ -190,12 +193,11 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                 value={inventoryData.description}
                                 onChange={handleChange}
                                 placeholder="Add a small description"
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 rows="4"
                             />
                         </div>
                         <div className="flex items-center justify-end">
-                            <Button type="submit" color={"blue"} disabled={loading}>
+                            <Button type="submit" gradientDuoTone="pinkToOrange" pill disabled={loading}>
                                 {loading ? <Spinner color={"purple"} /> : 'Update'}
                             </Button>
                         </div>
