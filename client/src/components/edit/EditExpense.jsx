@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Textarea } from "flowbite-react";
+import { GiMoneyStack, GiReceiveMoney, GiTakeMyMoney } from "react-icons/gi";
+import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaAlignLeft, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
@@ -74,15 +76,19 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
         </Helmet>
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)} position={"top-right"}>
             <Modal.Header>{expense.category}</Modal.Header>
-            <Modal.Body className="bg-gradient-to-t from-yellow-100 to-yellow-400 dark:from-gray-600 dark:to-gray-800 p-4 flex-1" > 
-                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
-                </div>
+            <Modal.Body className="w-full flex flex-col" >
+                <div>
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
+                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    </div>
                     <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex flex-col gap-4 my-2 flex-1">
-                                    <Label htmlFor="title" className="text-indigo-800">Title</Label>
+                                    <Label htmlFor="title" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <FaFileAlt className="inline mr-2 text-xl text-gray-500" />
+                                        Title
+                                    </Label>
                                     <TextInput
                                         type="text"
                                         id="title"
@@ -92,7 +98,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                     />
                                 </div>
                                 <div className="flex flex-col gap-4 my-2 flex-1">
-                                    <Label htmlFor="date" className="text-indigo-800">Date</Label>
+                                    <Label htmlFor="date" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <FaCalendarAlt className="inline mr-2 text-xl text-gray-500" />
+                                        Date
+                                    </Label>
                                     <Datepicker
                                         weekStart={1}
                                         id="date"
@@ -107,7 +116,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                 </div>
                             </div>
                             <div className="flex flex-col gap-4 my-2">
-                                <Label htmlFor="description" className="text-indigo-800">Description</Label>
+                                <Label htmlFor="description" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <FaAlignLeft className="inline mr-2 text-xl text-gray-500" />
+                                    Description
+                                </Label>
                                 <Textarea
                                     type="text"
                                     id="description"
@@ -118,7 +130,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                             </div>
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex flex-col gap-4 my-2 flex-1">
-                                    <Label htmlFor="category" className="text-indigo-800">Category</Label>
+                                    <Label htmlFor="category" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <FaListAlt className="inline mr-2 text-xl text-gray-500" />
+                                        Category
+                                    </Label>
                                     <TextInput
                                         type="text"
                                         id="category"
@@ -128,7 +143,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                     />
                                 </div>
                                 <div className="flex flex-col gap-4 my-2 flex-1">
-                                    <Label htmlFor="status" className="text-indigo-800">Status</Label>
+                                    <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                        <FaClipboardCheck className="inline mr-2 text-xl text-gray-500" />
+                                        Status
+                                    </Label>
                                     <Select
                                         id="status"
                                         name="status"
@@ -144,7 +162,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                 </div>
                             </div>
                             <div className="flex flex-col gap-4 my-2">
-                                <Label htmlFor="amount" className="text-indigo-800">Amount</Label>
+                                <Label htmlFor="amount" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <FaMoneyBillWave className="inline mr-2 text-xl text-gray-500" />
+                                    Amount
+                                </Label>
                                 <TextInput
                                     type="number"
                                     id="amount"
@@ -154,11 +175,12 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                 />
                             </div>
                             <div className="flex flex-row-reverse my-4">
-                                <Button gradientMonochrome="purple" onClick={handleSubmit} disabled={loading}>
+                                <Button gradientDuoTone="pinkToOrange" pill onClick={handleSubmit} disabled={loading}>
                                     {loading ? <Spinner color={"purple"} /> : "Update Expense"}
                                 </Button>
                             </div>
                     </form>
+                </div>
             </Modal.Body>
         </Modal>
         </>
