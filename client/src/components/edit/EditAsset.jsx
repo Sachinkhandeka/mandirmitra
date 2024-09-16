@@ -1,5 +1,9 @@
 import { useSelector } from "react-redux";
 import { Label, Modal, TextInput, Select, Spinner } from "flowbite-react";
+import { MdAddHomeWork } from "react-icons/md";
+import { GiKeyring } from "react-icons/gi";
+import { HiOutlineCollection, HiOutlineDocumentText, HiOutlineCalendar, HiOutlineTag, 
+    HiOutlineCurrencyRupee, HiOutlineLocationMarker, HiOutlineMap, HiOutlineStatusOnline } from 'react-icons/hi';
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
@@ -89,7 +93,10 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
                         </div>
                         <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="assetType">Asset Type</Label>
+                                <Label htmlFor="assetType" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCollection className="inline mr-2 text-xl text-gray-500" />
+                                    Asset Type
+                                </Label>
                                 <Select id="assetType" name="assetType" value={formData.assetType} onChange={handleChange} required>
                                     <option value="">Select Asset Type</option>
                                     <option value="Land">Land</option>
@@ -103,35 +110,59 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
                                 </Select>
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <MdAddHomeWork className="inline mr-2 text-xl text-gray-500" />
+                                    Name
+                                </Label>
                                 <TextInput type="text" id="name" name="name" value={formData.name} placeholder="Enter asset name" onChange={handleChange} required />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="description">Description</Label>
+                                <Label htmlFor="description" className="mt-4 text-sm font-medium flex items-center gap-2" > 
+                                    <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
+                                    Description
+                                </Label>
                                 <TextInput type="text" id="description" name="description" value={formData.description} placeholder="Enter description" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="acquisitionDate">Acquisition Date</Label>
+                                <Label htmlFor="acquisitionDate" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCalendar className="inline mr-2 text-xl text-gray-500" />
+                                    Acquisition Date
+                                </Label>
                                 <TextInput type="date" id="acquisitionDate" name="acquisitionDate" value={formData.acquisitionDate} onChange={handleChange} />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="acquisitionCost">Acquisition Cost</Label>
+                                <Label htmlFor="acquisitionCost" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineTag className="inline mr-2 text-xl text-gray-500" />
+                                    Acquisition Cost
+                                </Label>
                                 <TextInput type="number" id="acquisitionCost" name="acquisitionCost" value={formData.acquisitionCost} placeholder="Enter acquisition cost" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="currentValue">Current Value</Label>
+                                <Label htmlFor="currentValue" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCurrencyRupee className="inline mr-2 text-xl text-gray-500" />
+                                    Current Value
+                                </Label>
                                 <TextInput type="number" id="currentValue" name="currentValue" value={formData.currentValue} placeholder="Enter current value" onChange={handleChange} />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="address">Address</Label>
+                                <Label htmlFor="address" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineLocationMarker className="inline mr-2 text-xl text-gray-500" />
+                                    Address
+                                </Label>
                                 <TextInput type="text" id="address" name="address" value={formData.address} placeholder="Enter address" onChange={handleChange} required />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="pincode">Pin Code</Label>
+                                <Label htmlFor="pincode" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineMap className="inline mr-2 text-xl text-gray-500" />
+                                    Pincode
+                                </Label>
                                 <TextInput type="text" id="pincode" name="pincode" value={formData.pincode} placeholder="Enter pin code" onChange={handleChange} required />
                             </div>
                             <div className="flex flex-col gap-3 mt-2">
-                                <Label htmlFor="status">Status</Label>
+                                <Label htmlFor="status" className="mt-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineStatusOnline className="inline mr-2 text-xl text-gray-500" />
+                                    Status
+                                </Label>
                                 <Select id="status" name="status" value={formData.status} onChange={handleChange} required>
                                     <option value="Active">Active</option>
                                     <option value="Under Maintenance">Under Maintenance</option>
