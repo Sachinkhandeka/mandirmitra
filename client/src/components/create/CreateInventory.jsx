@@ -1,12 +1,7 @@
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { FaLuggageCart } from "react-icons/fa";
-import { HiOutlineClipboardList } from 'react-icons/hi';
-import { HiOutlineHashtag } from 'react-icons/hi'; // Quantity
-import { HiOutlineCube } from 'react-icons/hi'; // Unit
-import { HiOutlineTag } from 'react-icons/hi'; // Unit Price
-import { HiOutlineCalculator } from 'react-icons/hi'; // Total Price
-import { HiOutlineDocumentText } from 'react-icons/hi'; // Description
+import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, HiOutlineCalculator, HiOutlineDocumentText  } from 'react-icons/hi';
 import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button, Label, Select, TextInput, Textarea, Spinner } from 'flowbite-react';
 import { MdAddHomeWork } from "react-icons/md";
 import { GiKeyring } from "react-icons/gi";
-import { FaLandmark } from 'react-icons/fa';
+import { HiOutlineCollection, HiOutlineDocumentText, HiOutlineCalendar, HiOutlineTag, 
+    HiOutlineCurrencyRupee, HiOutlineLocationMarker, HiOutlineMap, HiOutlineStatusOnline } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
 
@@ -100,7 +101,10 @@ export default function AssetsForm() {
                         {/* Asset Form Fields */}
                         <div className='flex flex-col md:flex-row gap-4'>
                             <div className="mb-4 w-full">
-                                <Label htmlFor="assetType">Asset Type</Label>
+                                <Label htmlFor="assetType" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCollection className="inline mr-2 text-xl text-gray-500" />
+                                    Asset Type
+                                </Label>
                                 <Select id="assetType" name="assetType" value={assetData.assetType} onChange={handleChange} required>
                                     <option value="">Select an asset type</option>
                                     <option value="Land">Land</option>
@@ -114,48 +118,72 @@ export default function AssetsForm() {
                                 </Select>
                             </div>
                             <div className="mb-4 w-full">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <MdAddHomeWork className="inline mr-2 text-xl text-gray-500" />
+                                    Name
+                                </Label>
                                 <TextInput id="name" name="name" type="text" placeholder="Enter asset name" value={assetData.name} onChange={handleChange} required />
                             </div>
                         </div>
                         {/* Additional Fields */}
                         <div className="mb-4">
-                            <Label htmlFor="description">Description</Label>
+                            <Label htmlFor="description" className="mb-4 text-sm font-medium flex items-center gap-2" > 
+                                <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
+                                Description
+                            </Label>
                             <Textarea id="description" name="description" value={assetData.description} onChange={handleChange} placeholder="Add a small description" rows="4" />
                             <span className="text-xs text-blue-600 dark:text-yellow-400">Optional</span>
                         </div>
                         {/* More Fields */}
                         <div className="mb-4 flex flex-col md:flex-row gap-4">
                             <div className="w-full">
-                                <Label htmlFor="acquisitionDate">Acquisition Date</Label>
+                                <Label htmlFor="acquisitionDate" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCalendar className="inline mr-2 text-xl text-gray-500" />
+                                    Acquisition Date
+                                </Label>
                                 <TextInput id="acquisitionDate" name="acquisitionDate" type="date" value={assetData.acquisitionDate} onChange={handleChange} />
                                 <span className="text-xs text-blue-600 dark:text-yellow-400">Optional</span>
                             </div>
                             <div className="w-full">
-                                <Label htmlFor="acquisitionCost">Acquisition Cost</Label>
+                                <Label htmlFor="acquisitionCost" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineTag className="inline mr-2 text-xl text-gray-500" />
+                                    Acquisition Cost
+                                </Label>
                                 <TextInput id="acquisitionCost" name="acquisitionCost" type="number" placeholder="Enter acquisition cost" value={assetData.acquisitionCost} onChange={handleChange}/>
                                 <span className="text-xs text-blue-600 dark:text-yellow-400">Optional</span>
                             </div>
                         </div>
                         <div className="mb-4 flex flex-col md:flex-row gap-4">
                             <div className="w-full">
-                                <Label htmlFor="currentValue">Current Value</Label>
+                                <Label htmlFor="currentValue" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineCurrencyRupee className="inline mr-2 text-xl text-gray-500" />
+                                    Current Value
+                                </Label>
                                 <TextInput id="currentValue" name="currentValue" type="number" placeholder="Enter current value" value={assetData.currentValue} onChange={handleChange}/>
                                 <span className="text-xs text-blue-600 dark:text-yellow-400">Optional</span>
                             </div>
                         </div>
                         <div className="mb-4 flex flex-col md:flex-row gap-4">
                             <div className="w-full">
-                                <Label htmlFor="address">Address</Label>
+                                <Label htmlFor="address" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineLocationMarker className="inline mr-2 text-xl text-gray-500" />
+                                    Address
+                                </Label>
                                 <TextInput id="address" name="address" type="text" placeholder="Enter address" value={assetData.address} onChange={handleChange} required />
                             </div>
                             <div className="w-full">
-                                <Label htmlFor="pincode">Pincode</Label>
+                                <Label htmlFor="pincode" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                    <HiOutlineMap className="inline mr-2 text-xl text-gray-500" />
+                                    Pincode
+                                </Label>
                                 <TextInput id="pincode" name="pincode" type="text" placeholder="Enter pincode" value={assetData.pincode} onChange={handleChange} required />
                             </div>
                         </div>
                         <div className="mb-4">
-                            <Label htmlFor="status">Status</Label>
+                            <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2" >
+                                <HiOutlineStatusOnline className="inline mr-2 text-xl text-gray-500" />
+                                Status
+                            </Label>
                             <Select id="status" name="status" value={assetData.status} onChange={handleChange} required>
                                 <option value="">Select a status</option>
                                 <option value="Active">Active</option>
