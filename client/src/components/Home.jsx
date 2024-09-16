@@ -42,6 +42,7 @@ export default function Home() {
     const [balance, setBalance] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [isTemplUpdted, setIsTempleUpdted] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const [totalInventoryValue, setTotalInventoryValue] = useState(0);
     const [lowStockItemsCount, setLowStockItemsCount] = useState(0);
@@ -104,7 +105,6 @@ export default function Home() {
             setOutOfStockItemsCount(data.outOfStockItemsCount);
             setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
             setInventoryQuantities(data.inventoryQuantities);
-            setSuccess("Analytical data data fetched successfully");
         }catch(err) {
             setError(err.message);
         }
@@ -164,7 +164,7 @@ export default function Home() {
                 {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
                 {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
             </div>
-            <div className="bg-contain bg-center h-full rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
+            <div className="bg-cover bg-center bg-no-repeat h-full md:h-36 rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
                 <h1 
                     className="absolute bottom-0 right-[32px] px-2 md:px-4 py-1 md:py-2 rounded-full 
                     bg-cyan-500 font-mono md:font-bold text-xs md:text-xl text-center animated-text" >E</h1>
@@ -205,9 +205,17 @@ export default function Home() {
                         </div>
                     ) }
                     { temple.description && (
-                        <div className="mb-3 text-gray-500 dark:text-gray-400" >
+                        <div className="mb-3 text-gray-500 dark:text-gray-400">
                             <div className="text-3xl text-black dark:text-white mb-3">About</div>
-                            { temple.description }
+                            <div className={`${isExpanded ? '' : 'line-clamp-3'}`}>
+                                {temple.description}
+                            </div>
+                            <button
+                                onClick={()=> setIsExpanded(!isExpanded)}
+                                className="text-blue-600 dark:text-yellow-400 mt-2"
+                            >
+                                {isExpanded ? 'See Less' : 'See More'}
+                            </button>
                         </div>
                     ) }
                         { temple.godsAndGoddesses && temple.godsAndGoddesses.length > 0 && (
