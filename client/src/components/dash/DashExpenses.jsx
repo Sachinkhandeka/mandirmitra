@@ -8,6 +8,7 @@ import { FaPencil } from "react-icons/fa6";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { Helmet } from "react-helmet-async";
 import { debounce } from "lodash";
+import ExpenseSummary from "../ExpenseSummary";
 
 const EditExpense = React.lazy(()=> import("../edit/EditExpense"));
 const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
@@ -34,7 +35,7 @@ export default function DashExpenses() {
     const getExpenses = async () => {
         const tab  = queryParams.get("tab");
 
-        // Conditionally include searchTerm only when tab is 'daans'
+        // Conditionally include searchTerm only when tab is 'expenses'
         const searchParam = tab === 'expenses' ? `&searchTerm=${searchTerm}` : '';
        
         try {
@@ -54,7 +55,7 @@ export default function DashExpenses() {
         }
     };
 
-    //debounce fetchExpenses function
+    // Debounce fetchExpenses function
     const debouncedFetchExpense = useCallback(debounce(getExpenses,500),[currUser, location.search, searchTerm]);
 
     useEffect(() => {
@@ -66,19 +67,19 @@ export default function DashExpenses() {
         debouncedFetchExpense();
     }, [isUpdated]);
 
-    //handle edit functionality
+    // Handle edit functionality
     const handleEdit = (expense) => {
         setExpense(expense);
         setShowModal(true);
     }
 
-    //handle delete functionality
+    // Handle delete functionality
     const handleDelete = (expense)=> {
         setExpenseId(expense._id);
         setShowDeleteModal(true);
     }
 
-    //functionality to appply color to status dynamically
+    // Functionality to apply color to status dynamically
     const getStatusColor  = (status)=> {
         switch(status) {
             case "pending" :  return "bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300"
@@ -95,48 +96,38 @@ export default function DashExpenses() {
                 <title>Manage Temple Expenses - Dashboard</title>
                 <meta name="description" content="View and manage expenses for your temple. Edit or delete expenses as needed." />
             </Helmet>
+            
             {/* Drawer toggler */}
-            {
-                (currUser && currUser.isAdmin || 
-                    (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20">
-                            <Tooltip content={`${filterCount} filters applied`} placement="left">
-                                <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
-                                    <IoFilterCircleOutline className="mr-2 h-5 w-5" />
-                                    Filters
-                                </Button>
-                            </Tooltip>
-                        </div>
-                )}
+            {currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (
+                <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20">
+                    <Tooltip content={`${filterCount} filters applied`} placement="left">
+                        <Button color={"red"} onClick={()=> setIsDrawerOpen(true)} >
+                            <IoFilterCircleOutline className="mr-2 h-5 w-5" />
+                            Filters
+                        </Button>
+                    </Tooltip>
+                </div>
+            )}
+            
             {/* Drawer */}
-            { isDrawerOpen &&
-            (currUser && currUser.isAdmin || 
-                (currUser.roles && currUser.roles.some(role=> 
-                    role.permissions.some(p=> p.actions.includes("read"))))) &&
-                (
-                    <ExpenseFilter 
-                        isDrawerOpen={isDrawerOpen}
-                        setIsDrawerOpen={setIsDrawerOpen}
-                        filterCount={filterCount}
-                        setFilterCount={setFilterCount}
-                    />
-            ) }
-            {/* pagination */}
-            { totalExpenses && totalExpenses > 20 &&
-                (currUser && currUser.isAdmin || 
-                   (currUser.roles && currUser.roles.some(role=> 
-                    role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
-                            <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
-                        </div>
-            ) }
-            {expenses && expenses.length > 0 && (
-                // Render the table if user is an admin or has permission to read expenses
-                (currUser && currUser.isAdmin) ||
-                (currUser.roles && currUser.roles.some(role => 
-                    role.permissions.some(p => 
-                        p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete"))))
-            ) && (
+            { isDrawerOpen && currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (
+                <ExpenseFilter 
+                    isDrawerOpen={isDrawerOpen}
+                    setIsDrawerOpen={setIsDrawerOpen}
+                    filterCount={filterCount}
+                    setFilterCount={setFilterCount}
+                />
+            )}
+            
+            {/* Pagination */}
+            { totalExpenses && totalExpenses > 20 && currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (
+                <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
+                    <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
+                </div>
+            )}
+            
+            { expenses && expenses.length > 0 && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")))) && (
+                <>
                 <Table striped>
                     <Table.Head>
                         <Table.HeadCell>Date</Table.HeadCell>
@@ -145,96 +136,94 @@ export default function DashExpenses() {
                         <Table.HeadCell>Short Description</Table.HeadCell>
                         <Table.HeadCell>Amount</Table.HeadCell>
                         <Table.HeadCell>Status</Table.HeadCell>
+                        <Table.HeadCell>Event</Table.HeadCell>
                         {/* Render actions if user is an admin or has permission to edit or delete expenses */}
-                        {(currUser && currUser.isAdmin ||
-                            (currUser.roles &&
-                                currUser.roles.some(role =>
-                                    role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))
-                                )) && <Table.HeadCell>Actions</Table.HeadCell>}
+                        {currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))) && (
+                            <Table.HeadCell>Actions</Table.HeadCell>
+                        )}
                     </Table.Head>
                     <Table.Body>
-                        { expenses && expenses.length > 0 && expenses.slice((currPage - 1) * 20, currPage * 20 ).map(expense => (
+                        { expenses && expenses.length > 0 && expenses.slice((currPage - 1) * 20, currPage * 20).map(expense => (
                             <Table.Row key={expense._id}>
                                 <Table.Cell>{new Date(expense.date).toLocaleDateString()}</Table.Cell>
                                 <Table.Cell>{expense.title}</Table.Cell>
                                 <Table.Cell>
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{expense.category}</span>
+                                    <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                        {expense.category}
+                                    </span>
                                 </Table.Cell>
                                 <Table.Cell>{expense.description}</Table.Cell>
                                 <Table.Cell>
-                                    { expense.amount ? parseFloat(expense.amount).toLocaleString('en-IN', {
-                                        maximumFractionDigits: 2,
-                                        style: 'currency',
-                                        currency: 'INR'
-                                    }) : ''}
+                                    {expense.amount ? parseFloat(expense.amount).toLocaleString('en-IN', { maximumFractionDigits: 2, style: 'currency', currency: 'INR' }) : ''}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <span className={`${getStatusColor(expense.status)}`} >{expense.status}</span>
+                                    <span className={getStatusColor(expense.status)}>
+                                        {expense.status}
+                                    </span>
                                 </Table.Cell>
-                                {/* Render actions if user is an admin or has permission to edit or delete expenses */}
+                                <Table.Cell>{expense.event ? expense.event.name : 'N/A'}</Table.Cell>
                                 {(currUser && currUser.isAdmin ||
                                     (currUser.roles &&
                                         currUser.roles.some(role =>
-                                            role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete")))
-                                        )) && (
-                                        <Table.Cell>
-                                            <div className="flex justify-between items-center gap-4" >
-                                                { 
-                                                    // Render edit icon if user is admin or has permission to edit expense
-                                                    (currUser && currUser.isAdmin ||
-                                                    (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update"))))) && (
-                                                        <span className="cursor-pointer" >
-                                                            <FaPencil onClick={() => handleEdit(expense)} size={16} color="teal"/>
-                                                        </span>
-                                                    )
-                                                }
-                                                { 
-                                                    // Render delete icon if user is admin or has permission to delete expense
-                                                    (currUser && currUser.isAdmin ||
-                                                    (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("delete"))))) && (
-                                                        <span className="cursor-pointer" >
-                                                            <MdDelete onClick={() => handleDelete(expense)} size={20} color="red"/>
-                                                        </span>
-                                                    )
-                                                }
-                                            </div>
-                                        </Table.Cell>
-                                    )}
+                                            role.permissions.some(p => p.actions.includes("update") || p.actions.includes("delete"))))
+                                    ) && (
+                                    <Table.Cell>
+                                        <div className="flex justify-between items-center gap-4" >
+                                            { 
+                                                // Render edit icon if user is admin or has permission to edit expense
+                                                (currUser && currUser.isAdmin ||
+                                                (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("update"))))) && (
+                                                    <span className="cursor-pointer" >
+                                                        <FaPencil onClick={() => handleEdit(expense)} size={16} color="teal"/>
+                                                    </span>
+                                                )
+                                            }
+                                            { 
+                                                // Render delete icon if user is admin or has permission to delete expense
+                                                (currUser && currUser.isAdmin ||
+                                                (currUser.roles && currUser.roles.some(role => role.permissions.some(p => p.actions.includes("delete"))))) && (
+                                                    <span className="cursor-pointer" >
+                                                        <MdDelete onClick={() => handleDelete(expense)} size={20} color="red"/>
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                    </Table.Cell>
+                                )}
                             </Table.Row>
                         ))}
                     </Table.Body>
                 </Table>
+                <ExpenseSummary expenses={expenses} />
+                </>
             )}
-            {/* pagination */}
-            { totalExpenses && totalExpenses > 20 &&
-                (currUser && currUser.isAdmin || 
-                   (currUser.roles && currUser.roles.some(role=> 
-                    role.permissions.some(p=> p.actions.includes("read"))))) && (
-                        <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
-                            <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
-                        </div>
-            ) }
-            {(!expenses || expenses.length === 0) && (
+            
+            { totalExpenses && totalExpenses > 20 && currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (
+                <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
+                    <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />
+                </div>
+            )}
+            
+            { (!expenses || expenses.length === 0) && (
                 <div className="flex justify-center items-center h-screen">
                     <div className="text-center flex flex-col items-center justify-center">
                         <TbFaceIdError size={50} className="animate-bounce" />
                         <p>No Expenses Added Yet!</p>
                     </div>
                 </div>
-            )}
+            )}        
             <EditExpense
-                showModal={showModal} 
+                showModal={showModal}
                 setShowModal={setShowModal}
                 setIsUpdated={setIsUpdated}
                 expense={expense}
             />
-            <DeleteExpense 
+            <DeleteExpense
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
                 setIsUpdated={setIsUpdated}
                 expenseId={expenseId}
             />
-
         </>
     );
 }

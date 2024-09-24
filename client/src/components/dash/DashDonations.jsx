@@ -4,12 +4,12 @@ import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { TbFaceIdError } from "react-icons/tb";
-import { HiX } from "react-icons/hi";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { debounce } from "lodash";
 import Alert from "../Alert";
+import Summary from "../Summary";
 
 // importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
@@ -60,7 +60,6 @@ export default function DashDonations() {
             }
 
             setLoading(false);
-            setSuccess("Donation data fetched successfully.");
             setTotalDonations(data.total);
             setDonations(data.daans);
             
@@ -95,6 +94,20 @@ export default function DashDonations() {
     const handleDelete = (donation)=> {
         setShowDeleteModal(true);
         setDonation(donation);
+    }
+
+    // Helper function to generate a concise address
+    const formatAddress = (donation) => {
+        const { village, tehsil, district, state, country } = donation;
+        return [
+            village && village.trim(),
+            tehsil && tehsil.trim(),
+            district && district.trim(),
+            state && state.trim(),
+            country && country.trim()
+        ]
+        .filter(Boolean) // Remove any empty fields
+        .join(', '); // Join with a comma and space
     }
     return (
         <>
@@ -149,19 +162,15 @@ export default function DashDonations() {
             // Render the table if user is an admin or has permission to read donations
             (currUser && currUser.isAdmin || 
             (currUser.roles && currUser.roles.some(role=> role.permissions.some(p=> p.actions.includes("read"))))) && (
+                <>
                 <Table>
                     <Table.Head>
                         <Table.HeadCell>Donor Name</Table.HeadCell>
                         <Table.HeadCell>Contact</Table.HeadCell>
-                        <Table.HeadCell>Temple</Table.HeadCell>
                         <Table.HeadCell>Name of Seva</Table.HeadCell>
+                        <Table.HeadCell>Address</Table.HeadCell>
                         <Table.HeadCell>Payment Method</Table.HeadCell>
                         <Table.HeadCell>Amount</Table.HeadCell>
-                        <Table.HeadCell>Village</Table.HeadCell>
-                        <Table.HeadCell>Tehsil</Table.HeadCell>
-                        <Table.HeadCell>District</Table.HeadCell>
-                        <Table.HeadCell>State</Table.HeadCell>
-                        <Table.HeadCell>Country</Table.HeadCell>
                         {/* Render actions if user is an admin or has permission to edit or delete donations */}
                         {
                             (
@@ -178,8 +187,10 @@ export default function DashDonations() {
                             <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" >
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.donorName }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.contactInfo }</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.temple.name }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.sevaName }</Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {formatAddress(donation)}
+                                </Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.paymentMethod }</Table.Cell>
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >
                                     { donation.donationAmount ? parseFloat(donation.donationAmount).toLocaleString('en-IN', {
@@ -188,12 +199,6 @@ export default function DashDonations() {
                                         currency: 'INR'
                                     }) : ''}
                                 </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.village }</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.tehsil }</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.district }</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.state }</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" >{ donation.country }</Table.Cell>
-
                                 {/* Render edit and delete icons if user is an admin or has permission to edit or delete donations */}
                                 {
                                     ( currUser && currUser.isAdmin ||
@@ -226,6 +231,9 @@ export default function DashDonations() {
                         </Table.Body>
                     )) }
                 </Table>
+                {/* Donation Summary */}
+                <Summary donations={donations} />
+            </>
         )
         : (
             <div className="flex justify-center items-center h-screen">

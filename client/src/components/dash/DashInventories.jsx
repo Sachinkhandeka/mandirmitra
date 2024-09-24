@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import { debounce } from "lodash";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import InventorySummary from "../InventorySummary";
 
 const EditInventoryItem = React.lazy(() => import("../edit/EditInventoryItem"));
 const DeleteInventory = React.lazy(() => import("../delete/DeleteInventory"));
@@ -61,7 +62,6 @@ export default function DashInventories() {
 
             setInventories(sortedInventories);
             setTotalInventories(data.totalInventories);
-            setAlert({ type : "success", message : "Inventories fetched successfully." });
         } catch (err) {
             setAlert({ type: "error", message: err.message });
         }
@@ -232,6 +232,7 @@ export default function DashInventories() {
                                     ))}
                                 </Table.Body>
                             </Table>
+                            <InventorySummary inventories={inventories} />
                         </div>
                     )
                         : (

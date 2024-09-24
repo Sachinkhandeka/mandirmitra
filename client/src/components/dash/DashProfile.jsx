@@ -6,7 +6,8 @@ import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineAttachEmail, MdOutlineCall } from "react-icons/md";
 import { useDispatch , useSelector } from "react-redux";
 import { updateStart, updateSuccess, updateFailure, resetError } from "../../redux/user/userSlice";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable, updateMetadata } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import { Helmet } from "react-helmet-async";
@@ -51,6 +52,15 @@ export default function DashProfile() {
     const [ locationAdded , setLocationAdded ] = useState(false);
     const [sevaUpdated, setSevaUpdated] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
+    const auth = getAuth(app);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setUser(user);
+        });
+        return () => unsubscribe(); // Clean up the listener when the component unmounts
+    }, []);
 
     //handleChange - formData
     const handleChange = (e)=> {
@@ -96,35 +106,68 @@ export default function DashProfile() {
         }
     }
     //upload image file
-    const uploadImage = async()=> {
-        setUploadError(null);
-        setUploadSuccess(null);
-        const storage = getStorage(app);
-        const fileName = `${ currUser.isAdmin ? 'adminProfiles': 'userProfiles'}/${new Date().getTime()}_${imageFile.name}` ; 
-        const storageRef = ref(storage , fileName);
-
-        const uploadTask = uploadBytesResumable( storageRef, imageFile );
-        uploadTask.on(
-            'state_changed',
-            (snapshot)=> {
-                const progress = ( snapshot.bytesTransferred / snapshot.totalBytes ) * 100 ; 
-                setUploadProgress(progress.toFixed(0));
-            },
-            (error)=> {
-                setUploadError(error.message);
-                setUploadProgress(0);
-                setImageFile(null);
-                setTempImageUrl(null);
-            },
-            ()=> {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=> {
-                    setTempImageUrl(downloadURL);
-                    setFormData({ ...formData , profilePicture : downloadURL })
-                    setUploadSuccess("Profile picture uploaded Successfully.Please save Changes by clicking on pencil.")
-                })
+    const uploadImage = async () => {
+        try {
+            setUploadError(null);
+            setUploadSuccess(null);
+    
+            const storage = getStorage(app);
+            const fileName = `${currUser.isAdmin ? 'adminProfiles' : 'userProfiles'}/${new Date().getTime()}_${imageFile.name}`;
+            const storageRef = ref(storage, fileName);
+    
+            if (user) {
+                const uid = user.uid;
+    
+                // Step 1: Upload the image file and await its completion
+                const uploadTask = uploadBytesResumable(storageRef, imageFile);
+    
+                // Await the upload task as a Promise
+                await new Promise((resolve, reject) => {
+                    uploadTask.on(
+                        'state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            setUploadProgress(progress.toFixed(0));
+                        },
+                        (error) => {
+                            setUploadError(error.message);
+                            setUploadProgress(0);
+                            setImageFile(null);
+                            setTempImageUrl(null);
+                            reject(error);  // Reject the promise on error
+                        },
+                        resolve  // Resolve the promise on completion
+                    );
+                });
+    
+                // Step 2: Get the download URL after the upload completes
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                setTempImageUrl(downloadURL);
+                setFormData({ ...formData, profilePicture: downloadURL });
+    
+                console.log("Image uploaded, download URL: ", downloadURL);
+    
+                // Step 3: Update metadata (e.g., set the author_uid after the file upload is completed)
+                const metadata = {
+                    customMetadata: {
+                        author_uid: uid, // Attach user ID to the file metadata
+                    }
+                };
+    
+                // Update the metadata
+                await updateMetadata(uploadTask.snapshot.ref, metadata);
+    
+                console.log("Metadata updated successfully.");
+    
+                // Step 4: Set the success message
+                setUploadSuccess("Profile picture uploaded successfully. Please save changes.");
             }
-        );
-    }
+        } catch (error) {
+            setUploadError(error.message);
+            console.error("Error during upload or metadata update: ", error);
+        }
+    };
+    
     useEffect(()=>{
         if(imageFile) {
             uploadImage();
@@ -143,7 +186,7 @@ export default function DashProfile() {
                 <div className="w-full" >
                     <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm"  >
                         { uploadError && (<Alert type="error" message={uploadError} autoDismiss duration={6000} onClose={()=> setUploadError(null)} />) }
-                        { uploadSuccess && ( <Alert type="success" message={uploadSuccess} autoDismiss duration={6000} onClose={setUploadSuccess(null)} /> ) }
+                        { uploadSuccess && ( <Alert type="success" message={uploadSuccess} autoDismiss={false} onClose={setUploadSuccess(null)} /> ) }
                     </div>
                     <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 rounded-lg h-16 relative" >
                         <input type="file" accept="image/*" onChange={handleImageChange} ref={inputRef} hidden/>

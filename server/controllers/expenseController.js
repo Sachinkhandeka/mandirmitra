@@ -1,33 +1,45 @@
 const Expense = require("../models/expenseSchema");
+const Event = require("../models/eventSchema");
 const ExpressError = require("../utils/ExpressError");
 
-module.exports.createController = async(req, res)=> {
-    const templeId = req.params.templeId ; 
-    const formData = req.body ; 
+module.exports.createController = async (req, res) => {
+    const templeId = req.params.templeId;
+    const formData = req.body;
 
-    if(!templeId) {
+    if (!templeId) {
         throw new ExpressError(400, "Temple not found.");
     }
 
-    if(!formData.title && !formData.description && !formData.amount && !formData.date && !formData.category && !formData.status) {
-        throw new ExpressError(400, "Please provide all expense details.");
+    const { title, description, amount, date, category, status, event } = formData;
+
+    if (!title || !description || !amount || !date || !category || !status) {
+        throw new ExpressError(400, "Please provide all required expense details.");
     }
-    
+
+    let associatedEvent = null;
+    if (event) {
+        associatedEvent = await Event.findById(event);
+        if (!associatedEvent) {
+            throw new ExpressError(400, "Invalid event ID.");
+        }
+    }
+
     const newExpense = new Expense({
-        title : formData.title,
-        description : formData.description,
-        amount : formData.amount,
-        date : formData.date,
-        category : formData.category,
-        status : formData.status,
-        temple : templeId,
+        title,
+        description,
+        amount,
+        date,
+        category,
+        status,
+        temple: templeId,
+        event: associatedEvent ? associatedEvent._id : null,
     });
 
     await newExpense.save();
-    res.status(200).json( "Expense added successfully.");
-}
 
-//get  all expense data
+    res.status(200).json("Expense added successfully.");
+};
+
 module.exports.getController = async (req, res) => {
     const templeId = req.params.templeId;
     const startIndx = parseInt(req.query.startIndx) || 0;
@@ -60,12 +72,17 @@ module.exports.getController = async (req, res) => {
 
     // Add status filter if present in query parameters
     if (req.query.status) searchCriteria.status = req.query.status;
-    
+
+    // Add optional event filtering if event ID is provided
+    if (req.query.event) searchCriteria.event = req.query.event;
+
     try {
-        // Fetch filtered expenses with pagination and sorting
+        // Fetch filtered expenses with pagination, sorting, and event population
         const allExpenses = await Expense.find(searchCriteria)
             .skip(startIndx)
-            .sort({ updatedAt: sortDirection });
+            .sort({ updatedAt: sortDirection })
+            .populate('event', 'name')
+            .exec();
 
         // Count total expenses for the given temple with filters
         const totalExpenses = await Expense.countDocuments(searchCriteria);

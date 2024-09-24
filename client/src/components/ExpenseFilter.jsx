@@ -1,16 +1,35 @@
 import { Modal, Button, FloatingLabel, Select } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaFilter } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useSelector } from "react-redux";
 
 export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilterCount }) {
+    const { currUser } = useSelector(state => state.user);
     const navigate = useNavigate();
-    const [ category, setCategory ] = useState('');
-    const [ minAmount, setMinAmount ] = useState('');
-    const [ maxAmount, setMaxAmount ] = useState('');
-    const [ status, setStatus ] = useState('');
+    const [category, setCategory] = useState('');
+    const [minAmount, setMinAmount] = useState('');
+    const [maxAmount, setMaxAmount] = useState('');
+    const [status, setStatus] = useState('');
+    const [event, setEvent] = useState('');  // Event state for filtering
+    const [events, setEvents] = useState([]); // Store list of events
+
+    // Fetch list of events when the component mounts
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch(`/api/event/get/${currUser.templeId}`); // Adjust API endpoint accordingly
+                const data = await response.json();
+                setEvents(data.events); // Set fetched events
+            } catch (err) {
+                console.error("Error fetching events:", err);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     // Validate and set minAmount
     const handleMinAmountChange = (e) => {
@@ -18,7 +37,7 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
         if (/^\d+$/.test(amount) && amount.length <= 6) {
             setMinAmount(amount);
         }
-    }
+    };
 
     // Validate and set maxAmount
     const handleMaxAmountChange = (e) => {
@@ -26,7 +45,7 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
         if (/^\d+$/.test(amount) && amount.length <= 6) {
             setMaxAmount(amount);
         }
-    }
+    };
 
     // Handle apply filter functionality
     const handleSubmit = async (e) => {
@@ -50,12 +69,16 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
             params.set("status", status);
             filterCount++;
         }
+        if (event) {  // Include event in the filter
+            params.set("event", event);
+            filterCount++;
+        }
 
         const searchQuery = params.toString();
         setFilterCount(filterCount);
         navigate(`?tab=expenses&${searchQuery}`);
         setIsDrawerOpen(false);
-    }
+    };
 
     // Handle clear all filters
     const handleClearFilters = () => {
@@ -63,68 +86,85 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
         setMinAmount('');
         setMaxAmount('');
         setStatus('');
+        setEvent(''); // Reset event filter
         navigate(`?tab=expenses`);
         setFilterCount(0); // Reset filter count
         setIsDrawerOpen(false);
-    }
+    };
 
     return (
         <>
-        <Helmet>
-            <title>Expense Filters</title>
-            <meta name="description" content="Apply filters to manage expenses based on category, amount, and status." />
-        </Helmet>
-        <Modal show={isDrawerOpen} dismissible onClose={() => setIsDrawerOpen(false)} position="top-right">
-            <Modal.Header>
-                <div className="flex gap-4 items-center">
-                    <FaFilter size={24} className="mx-3" />
-                    <h2 className="text-xl">Filters</h2>
-                </div>
-            </Modal.Header>
-            <Modal.Body>
-                <form onSubmit={handleSubmit}>
-                    {/* Category Field */}
-                    <div className="flex flex-col gap-4">
-                        <h2 className="text-xl font-serif uppercase font-semibold">Category</h2>
-                        <FloatingLabel 
-                            type="text" 
-                            id="category" 
-                            value={category} 
-                            variant="outlined" 
-                            label="Category" 
-                            onChange={(e)=> setCategory(e.target.value)} 
-                            aria-labelledby="category-label" 
-                        />
+            <Helmet>
+                <title>Expense Filters</title>
+                <meta name="description" content="Apply filters to manage expenses based on category, amount, and status." />
+            </Helmet>
+            <Modal show={isDrawerOpen} dismissible onClose={() => setIsDrawerOpen(false)} position="top-right">
+                <Modal.Header>
+                    <div className="flex gap-4 items-center">
+                        <FaFilter size={24} className="mx-3" />
+                        <h2 className="text-xl">Filters</h2>
                     </div>
-                    {/* Status Field */}
-                    <hr className="gray-400 my-3" />
-                    <div className="flex flex-col gap-4">
-                        <h2 className="text-xl font-serif uppercase font-semibold">Status</h2>
-                        <Select id="status" value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Select Expense Status" >
-                            <option value="">Select</option>
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="completed">Completed</option>
-                            <option value="rejected">Rejected</option>
-                        </Select>
-                    </div>
-                    {/* Price Range */}
-                    <hr className="gray-400 my-3" />
-                    <div className="flex flex-col gap-4">
-                        <h2 className="text-xl font-serif uppercase font-semibold">Price Range</h2>
-                        <div className="flex items-center justify-evenly gap-2">
-                            <FloatingLabel type="number" id="minAmount" value={minAmount} variant="outlined" label="Minimum" onChange={handleMinAmountChange} aria-labelledby="min-amount-label" />
-                            <GoDash size={20} />
-                            <FloatingLabel type="number" id="maxAmount" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} aria-labelledby="max-amount-label" />
+                </Modal.Header>
+                <Modal.Body>
+                    <form onSubmit={handleSubmit}>
+                        {/* Category Field */}
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-serif uppercase font-semibold">Category</h2>
+                            <FloatingLabel
+                                type="text"
+                                id="category"
+                                value={category}
+                                variant="outlined"
+                                label="Category"
+                                onChange={(e) => setCategory(e.target.value)}
+                                aria-labelledby="category-label"
+                            />
                         </div>
-                    </div>
-                </form>
-            </Modal.Body>
-            <Modal.Footer className="flex justify-between items-center">
-                <Button onClick={handleClearFilters} color={"gray"}>Clear All</Button>
-                <Button onClick={handleSubmit} color={"dark"}>Apply Filters</Button>
-            </Modal.Footer>
-        </Modal>
+
+                        {/* Event Field */}
+                        <hr className="gray-400 my-3" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-serif uppercase font-semibold">Event</h2>
+                            <Select id="event" value={event} onChange={(e) => setEvent(e.target.value)} aria-label="Select Event">
+                                <option value="">Select Event</option>
+                                {events.map(event => (
+                                    <option key={event._id} value={event._id}>
+                                        {event.name}
+                                    </option>
+                                ))}
+                            </Select>
+                        </div>
+
+                        {/* Status Field */}
+                        <hr className="gray-400 my-3" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-serif uppercase font-semibold">Status</h2>
+                            <Select id="status" value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Select Expense Status">
+                                <option value="">Select</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="completed">Completed</option>
+                                <option value="rejected">Rejected</option>
+                            </Select>
+                        </div>
+
+                        {/* Price Range */}
+                        <hr className="gray-400 my-3" />
+                        <div className="flex flex-col gap-4">
+                            <h2 className="text-xl font-serif uppercase font-semibold">Price Range</h2>
+                            <div className="flex items-center justify-evenly gap-2">
+                                <FloatingLabel type="number" id="minAmount" value={minAmount} variant="outlined" label="Minimum" onChange={handleMinAmountChange} aria-labelledby="min-amount-label" />
+                                <GoDash size={20} />
+                                <FloatingLabel type="number" id="maxAmount" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} aria-labelledby="max-amount-label" />
+                            </div>
+                        </div>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer className="flex justify-between items-center">
+                    <Button onClick={handleClearFilters} color={"gray"}>Clear All</Button>
+                    <Button onClick={handleSubmit} color={"dark"}>Apply Filters</Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
