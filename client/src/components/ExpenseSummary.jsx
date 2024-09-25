@@ -23,6 +23,26 @@ export default function ExpenseSummary({ expenses }) {
     acc[expense.status].totalAmount += expense.amount;
     return acc;
   }, {});
+
+  // Event-wise breakdown
+  const eventBreakdown = expenses.reduce((acc, expense) => {
+    if (expense.event && expense.event.name) {
+      if (!acc[expense.event.name]) acc[expense.event.name] = { count: 0, totalAmount: 0 };
+      acc[expense.event.name].count += 1;
+      acc[expense.event.name].totalAmount += expense.amount;
+    }
+    return acc;
+  }, {});
+
+  const mostFrequentCategory = Object.entries(categoryBreakdown).reduce((max, curr) => {
+    return curr[1].count > max[1].count ? curr : max;
+  }, [null, { count: 0 }])[0];
+
+  // Top 3 Categories by Expense Count
+  const topCategories = Object.entries(categoryBreakdown)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 3);
+
   return (
     <div className="p-5 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md w-full mx-auto mt-10 space-y-8">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">Expense Summary</h2>
@@ -93,7 +113,7 @@ export default function ExpenseSummary({ expenses }) {
           <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
             {Object.entries(categoryBreakdown).map(([category, data]) => (
               <li key={category}>
-                {category}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
+                {category}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   style: "currency",
                   currency: "INR",
@@ -111,7 +131,25 @@ export default function ExpenseSummary({ expenses }) {
           <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
             {Object.entries(statusBreakdown).map(([status, data]) => (
               <li key={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
+                {status.charAt(0).toUpperCase() + status.slice(1)}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                  style: "currency",
+                  currency: "INR",
+                })}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Event-wise Breakdown */}
+      <div>
+        <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Event-wise Breakdown</h3>
+        <div className="bg-white dark:bg-gray-700 p-5 rounded-lg shadow-lg">
+          <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
+            {Object.entries(eventBreakdown).map(([eventName, data]) => (
+              <li key={eventName}>
+                {eventName}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   style: "currency",
                   currency: "INR",
