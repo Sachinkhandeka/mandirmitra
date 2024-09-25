@@ -232,7 +232,9 @@ export default function DashDonations() {
                     )) }
                 </Table>
                 {/* Donation Summary */}
-                <Summary donations={donations} />
+                <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20" >
+                    <Summary donations={donations} />
+                </div>
             </>
         )
         : (
