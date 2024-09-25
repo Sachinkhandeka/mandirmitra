@@ -172,7 +172,6 @@ export default function DashInventories() {
                                 <Table.Head>
                                     <Table.HeadCell>Inventory Name</Table.HeadCell>
                                     <Table.HeadCell>Category</Table.HeadCell>
-                                    <Table.HeadCell>Description</Table.HeadCell>
                                     <Table.HeadCell>Quantity</Table.HeadCell>
                                     <Table.HeadCell>Unit</Table.HeadCell>
                                     <Table.HeadCell>Unit Price</Table.HeadCell>
@@ -191,9 +190,8 @@ export default function DashInventories() {
                                                 {inventory.name}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{inventory.category}</span>
+                                                <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{inventory.category}</span>
                                             </Table.Cell>
-                                            <Table.Cell>{inventory.description}</Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex items-center justify-center" >
                                                     {inventory.quantity} {getStatusIcon(inventory.quantity)}
@@ -232,7 +230,9 @@ export default function DashInventories() {
                                     ))}
                                 </Table.Body>
                             </Table>
-                            <InventorySummary inventories={inventories} />
+                            <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20" >
+                                <InventorySummary inventories={inventories} />
+                            </div>
                         </div>
                     )
                         : (

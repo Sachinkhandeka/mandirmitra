@@ -25,9 +25,6 @@ const inventorySchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    description: {
-        type: String,
-    },
     templeId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Temple",

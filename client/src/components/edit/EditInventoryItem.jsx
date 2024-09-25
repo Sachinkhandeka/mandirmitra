@@ -1,8 +1,7 @@
-import { Modal, Button, Label, Select, TextInput, Textarea, Spinner } from "flowbite-react";
+import { Modal, Button, Label, Select, TextInput, Spinner } from "flowbite-react";
 import React, { useState } from 'react';
 import { FaLuggageCart } from "react-icons/fa";
-import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, HiOutlineCalculator, HiOutlineDocumentText  } from 'react-icons/hi';
-import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
+import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, HiOutlineCalculator } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Alert from "../Alert";
 
@@ -15,7 +14,6 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
         unit: inventory.unit || '',
         unitPrice: inventory.unitPrice || '',
         totalPrice: inventory.totalPrice || '',
-        description: inventory.description || '',
     });
 
     const [alert, setAlert] = useState({ type: '', message: '' });
@@ -181,20 +179,6 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
                                     readOnly
                                 />
                             </div>
-                        </div>
-                        <div className="mb-4">
-                            <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="description">
-                                <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
-                                Description
-                            </Label>
-                            <Textarea
-                                id="description"
-                                name="description"
-                                value={inventoryData.description}
-                                onChange={handleChange}
-                                placeholder="Add a small description"
-                                rows="4"
-                            />
                         </div>
                         <div className="flex items-center justify-end">
                             <Button type="submit" gradientDuoTone="pinkToOrange" pill disabled={loading}>

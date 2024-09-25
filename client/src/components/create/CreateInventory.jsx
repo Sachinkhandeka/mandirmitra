@@ -15,7 +15,6 @@ export default function CreateInventory() {
         unit: '',
         unitPrice: '',
         totalPrice: '',
-        description: '',
     });
 
     const [alert, setAlert] = useState({ type: '', message: '' });
@@ -69,7 +68,6 @@ export default function CreateInventory() {
                 unit: '',
                 unitPrice: '',
                 totalPrice: '',
-                description: '',
             });
         } catch (err) {
             setAlert({ type: "error", message: err.message });
@@ -205,20 +203,6 @@ export default function CreateInventory() {
                                 readOnly
                             />
                         </div>
-                    </div>
-                    <div className="mb-4">
-                        <Label className="mb-4 text-sm font-medium flex items-center gap-2" htmlFor="description">
-                            <HiOutlineDocumentText className="inline mr-2 text-xl text-gray-500" />
-                            Description
-                        </Label>
-                        <Textarea
-                            id="description"
-                            name="description"
-                            value={inventoryData.description}
-                            onChange={handleChange}
-                            placeholder="Add a small description"
-                            rows="4"
-                        />
                     </div>
                     <div className="flex items-center justify-end">
                         <Button type="submit" gradientDuoTone="pinkToOrange" pill disabled={loading}>

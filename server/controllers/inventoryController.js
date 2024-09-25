@@ -33,7 +33,6 @@ module.exports.getInventories = async (req, res) => {
     if (searchTerm) {
         filter.$or = [
             { name: { $regex: searchTerm, $options: 'i' } },
-            { description: { $regex: searchTerm, $options: 'i' } }
         ];
     }
     if (category) {
@@ -86,7 +85,7 @@ module.exports.edit = async (req, res) => {
     }
 
     // Validate inventoryData structure
-    const allowedFields = ['name', 'category', 'quantity', 'unit', 'unitPrice', 'totalPrice', 'description'];
+    const allowedFields = ['name', 'category', 'quantity', 'unit', 'unitPrice', 'totalPrice'];
     const keys = Object.keys(inventoryData);
     
     for (const key of keys) {
