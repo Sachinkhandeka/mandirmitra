@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Textarea, Checkbox } from "flowbite-react";
-import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaAlignLeft, FaCalendarAlt } from "react-icons/fa";
+import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Checkbox } from "flowbite-react";
+import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
@@ -9,29 +9,40 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
     const { currUser } = useSelector(state => state.user);
     const [formData, setFormData] = useState({
         title: "",
-        description: "",
         date: "",
         category: "",
         status: "",
         amount: 0,
         event: null
     });
-    const [events, setEvents] = useState([]); // State to store available events
+    const [events, setEvents] = useState([]); 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
-    const [showEventSelect, setShowEventSelect] = useState(false); // Checkbox to toggle event selection
+    const [showEventSelect, setShowEventSelect] = useState(false); 
+
+    const categories = [
+        "Rituals & Poojas",
+        "Festivals & Events",
+        "Maintenance & Repairs",
+        "Utilities",
+        "Staff Salaries",
+        "Charity & Donations",
+        "Food & Prasadam",
+        "Decorations & Flowers",
+        "Security",
+        "Miscellaneous"
+    ];
 
     useEffect(() => {
         if (expense) {
             setFormData({
                 ...formData,
                 title: expense.title || '',
-                description: expense.description || '',
                 amount: expense.amount || '',
                 date: expense.date || '',
                 category: expense.category || '',
-                status: expense.status || 0,
+                status: expense.status || 'pending',
                 event: expense.event?._id || ""
             });
 
@@ -68,13 +79,17 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
         e.preventDefault();
         setLoading(true);
         setError(null);
+        const updatedFormData = {
+            ...formData,
+            event: formData.event === "" ? null : formData.event,
+        };
         try {
             const response = await fetch(`/api/expense/edit/${expense._id}/${currUser.templeId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(updatedFormData)
             });
             const data = await response.json();
             if (!response.ok) {
@@ -90,13 +105,7 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
     };
 
     const handleEventToggle = () => {
-        if (!showEventSelect) {
-            // If the user is checking the box, reset the event field to allow selection
-            setFormData({ ...formData, event: "" });
-        } else {
-            // If the user is unchecking the box, set the event field to null
-            setFormData({ ...formData, event: null });
-        }
+        setFormData({ ...formData, event: "" });
         setShowEventSelect(!showEventSelect);
     };
 
@@ -147,32 +156,23 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                     />
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-4 my-2">
-                                <Label htmlFor="description" className="mb-4 text-sm font-medium flex items-center gap-2" >
-                                    <FaAlignLeft className="inline mr-2 text-xl text-gray-500" />
-                                    Description
-                                </Label>
-                                <Textarea
-                                    type="text"
-                                    id="description"
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                />
-                            </div>
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex flex-col gap-4 my-2 flex-1">
                                     <Label htmlFor="category" className="mb-4 text-sm font-medium flex items-center gap-2" >
                                         <FaListAlt className="inline mr-2 text-xl text-gray-500" />
                                         Category
                                     </Label>
-                                    <TextInput
-                                        type="text"
+                                    <Select
                                         id="category"
                                         name="category"
                                         value={formData.category}
                                         onChange={handleChange}
-                                    />
+                                    >
+                                        <option value="" disabled>Select Category</option>
+                                        {categories.map((category, index) => (
+                                            <option key={index} value={category}>{category}</option>
+                                        ))}
+                                    </Select>
                                 </div>
                                 <div className="flex flex-col gap-4 my-2 flex-1">
                                     <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2" >
@@ -185,7 +185,6 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                                         value={formData.status}
                                         onChange={handleChange}
                                     >
-                                        <option value="Select" disabled>Select</option>
                                         <option value="pending">Pending</option>
                                         <option value="approved">Approved</option>
                                         <option value="completed">Completed</option>

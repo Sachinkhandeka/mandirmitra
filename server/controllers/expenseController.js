@@ -10,9 +10,9 @@ module.exports.createController = async (req, res) => {
         throw new ExpressError(400, "Temple not found.");
     }
 
-    const { title, description, amount, date, category, status, event } = formData;
+    const { title, amount, date, category, status, event } = formData;
 
-    if (!title || !description || !amount || !date || !category || !status) {
+    if (!title || !amount || !date || !category || !status) {
         throw new ExpressError(400, "Please provide all required expense details.");
     }
 
@@ -26,13 +26,12 @@ module.exports.createController = async (req, res) => {
 
     const newExpense = new Expense({
         title,
-        description,
         amount,
         date,
         category,
         status,
         temple: templeId,
-        event: associatedEvent ? associatedEvent._id : null,
+        event: associatedEvent ? associatedEvent._id : "",
     });
 
     await newExpense.save();
@@ -59,7 +58,6 @@ module.exports.getController = async (req, res) => {
     if (req.query.searchTerm) {
         searchCriteria.$or = [
             { title: { $regex: req.query.searchTerm, $options: 'i' } },
-            { description: { $regex: req.query.searchTerm, $options: 'i' } },
         ];
     }
 
@@ -107,6 +105,14 @@ module.exports.editController = async (req, res) => {
 
     if (!expenseId) {
         throw new ExpressError(400, "Expense ID not found.");
+    }
+
+    let associatedEvent = null;
+    if (formData.event && formData.event !== "") {
+        associatedEvent = await Event.findById(formData.event);
+        if (!associatedEvent) {
+            throw new ExpressError(400, "Invalid event ID.");
+        }
     }
 
     // Find and update the expense

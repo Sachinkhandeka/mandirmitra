@@ -130,10 +130,8 @@ export default function DashExpenses() {
                 <>
                 <Table striped>
                     <Table.Head>
-                        <Table.HeadCell>Date</Table.HeadCell>
                         <Table.HeadCell>Expense Title</Table.HeadCell>
                         <Table.HeadCell>Category</Table.HeadCell>
-                        <Table.HeadCell>Short Description</Table.HeadCell>
                         <Table.HeadCell>Amount</Table.HeadCell>
                         <Table.HeadCell>Status</Table.HeadCell>
                         <Table.HeadCell>Event</Table.HeadCell>
@@ -145,14 +143,12 @@ export default function DashExpenses() {
                     <Table.Body>
                         { expenses && expenses.length > 0 && expenses.slice((currPage - 1) * 20, currPage * 20).map(expense => (
                             <Table.Row key={expense._id}>
-                                <Table.Cell>{new Date(expense.date).toLocaleDateString()}</Table.Cell>
                                 <Table.Cell>{expense.title}</Table.Cell>
                                 <Table.Cell>
                                     <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                         {expense.category}
                                     </span>
                                 </Table.Cell>
-                                <Table.Cell>{expense.description}</Table.Cell>
                                 <Table.Cell>
                                     {expense.amount ? parseFloat(expense.amount).toLocaleString('en-IN', { maximumFractionDigits: 2, style: 'currency', currency: 'INR' }) : ''}
                                 </Table.Cell>
@@ -194,10 +190,11 @@ export default function DashExpenses() {
                         ))}
                     </Table.Body>
                 </Table>
-                <ExpenseSummary expenses={expenses} />
                 </>
             )}
-            
+            <div className="mb-3 flex flex-row-reverse sticky left-0 my-4 z-20" >
+                <ExpenseSummary expenses={expenses} />
+            </div>
             { totalExpenses && totalExpenses > 20 && currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (
                 <div className="flex overflow-x-auto sm:justify-center mb-5 sticky left-0">
                     <Pagination currentPage={currPage} totalPages={Math.ceil(totalExpenses / 20)} onPageChange={onPageChange} showIcons />

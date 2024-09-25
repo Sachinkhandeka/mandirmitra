@@ -1,4 +1,4 @@
-import { Modal, Button, FloatingLabel, Select } from "flowbite-react";
+import { Modal, Button, Select } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { FaFilter } from "react-icons/fa";
 import { GoDash } from "react-icons/go";
@@ -9,12 +9,26 @@ import { useSelector } from "react-redux";
 export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilterCount }) {
     const { currUser } = useSelector(state => state.user);
     const navigate = useNavigate();
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('');  // Updated category state
     const [minAmount, setMinAmount] = useState('');
     const [maxAmount, setMaxAmount] = useState('');
     const [status, setStatus] = useState('');
     const [event, setEvent] = useState('');  // Event state for filtering
     const [events, setEvents] = useState([]); // Store list of events
+
+    // Predefined categories for filtering
+    const categories = [
+        "Rituals & Poojas",
+        "Festivals & Events",
+        "Maintenance & Repairs",
+        "Utilities",
+        "Staff Salaries",
+        "Charity & Donations",
+        "Food & Prasadam",
+        "Decorations & Flowers",
+        "Security",
+        "Miscellaneous"
+    ];
 
     // Fetch list of events when the component mounts
     useEffect(() => {
@@ -29,7 +43,7 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
         };
 
         fetchEvents();
-    }, []);
+    }, [currUser.templeId]);
 
     // Validate and set minAmount
     const handleMinAmountChange = (e) => {
@@ -110,15 +124,12 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
                         {/* Category Field */}
                         <div className="flex flex-col gap-4">
                             <h2 className="text-xl font-serif uppercase font-semibold">Category</h2>
-                            <FloatingLabel
-                                type="text"
-                                id="category"
-                                value={category}
-                                variant="outlined"
-                                label="Category"
-                                onChange={(e) => setCategory(e.target.value)}
-                                aria-labelledby="category-label"
-                            />
+                            <Select id="category" value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Select Category">
+                                <option value="">Select Category</option>
+                                {categories.map((cat, index) => (
+                                    <option key={index} value={cat}>{cat}</option>
+                                ))}
+                            </Select>
                         </div>
 
                         {/* Event Field */}
@@ -153,9 +164,23 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
                         <div className="flex flex-col gap-4">
                             <h2 className="text-xl font-serif uppercase font-semibold">Price Range</h2>
                             <div className="flex items-center justify-evenly gap-2">
-                                <FloatingLabel type="number" id="minAmount" value={minAmount} variant="outlined" label="Minimum" onChange={handleMinAmountChange} aria-labelledby="min-amount-label" />
+                                <input
+                                    type="number"
+                                    id="minAmount"
+                                    value={minAmount}
+                                    onChange={handleMinAmountChange}
+                                    placeholder="Minimum"
+                                    className="border rounded-lg p-2 w-full"
+                                />
                                 <GoDash size={20} />
-                                <FloatingLabel type="number" id="maxAmount" value={maxAmount} variant="outlined" label="Maximum" onChange={handleMaxAmountChange} aria-labelledby="max-amount-label" />
+                                <input
+                                    type="number"
+                                    id="maxAmount"
+                                    value={maxAmount}
+                                    onChange={handleMaxAmountChange}
+                                    placeholder="Maximum"
+                                    className="border rounded-lg p-2 w-full"
+                                />
                             </div>
                         </div>
                     </form>

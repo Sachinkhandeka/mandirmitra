@@ -76,10 +76,19 @@ const userSchema = Joi.object({
 //expense schema validations
 const expenseSchema = Joi.object({
     title: Joi.string().required().error(new Error('Title is required')),
-    description: Joi.string().required().error(new Error('Description is required')),
     amount: Joi.number().required().error(new Error('Amount is required')),
     date: Joi.date().default(Date.now),
-    category: Joi.string().required().error(new Error('Category is required')),
+    category: Joi.string()
+        .valid(
+            'Maintenance & Repairs',
+            'Utilities',
+            'Staff Salaries',
+            'Charity & Donations',
+            'Food & Prasadam',
+            'Decorations & Flowers',
+            'Security',
+            'Miscellaneous').
+        required().error(new Error('Category is required')),
     status: Joi.string().valid('pending', 'approved', 'completed', 'rejected').default('pending'),
     templeId: Joi.string().required().error(new Error('Temple ID is required')),
     event: Joi.string().optional().allow(null).error(new Error('Invalid Event ID'))

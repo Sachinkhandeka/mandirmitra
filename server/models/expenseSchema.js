@@ -5,9 +5,6 @@ const expenseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
-        type: String
-    },
     amount: {
         type: Number,
         required: true
@@ -17,7 +14,20 @@ const expenseSchema = new mongoose.Schema({
         default: Date.now
     },
     category: {
-        type: String
+        type: String,
+        enum: [
+            'Rituals & Poojas',
+            'Festivals & Events',
+            'Maintenance & Repairs',
+            'Utilities',
+            'Staff Salaries',
+            'Charity & Donations',
+            'Food & Prasadam',
+            'Decorations & Flowers',
+            'Security',
+            'Miscellaneous'
+        ],
+        required: true
     },
     status: {
         type: String,

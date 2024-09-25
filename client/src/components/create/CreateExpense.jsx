@@ -1,8 +1,8 @@
-import { Button, Datepicker, Label, Select, Spinner, TextInput, Textarea, Checkbox } from "flowbite-react";
+import { Button, Datepicker, Label, Select, Spinner, TextInput, Checkbox } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { GiMoneyStack, GiReceiveMoney, GiTakeMyMoney } from "react-icons/gi";
-import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaAlignLeft, FaCalendarAlt } from "react-icons/fa";
+import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
@@ -13,7 +13,6 @@ export default function CreateExpense() {
     const [error, setError] = useState(null);
     const [formData, setFormData] = useState({
         title: "",
-        description: "",
         amount: "",
         date: "",
         category: "",
@@ -22,6 +21,20 @@ export default function CreateExpense() {
     });
     const [events, setEvents] = useState([]);
     const [associateEvent, setAssociateEvent] = useState(false); // State to toggle event association
+
+    // Predefined expense categories (following the enum from the schema)
+    const categories = [
+        "Rituals & Poojas",
+        "Festivals & Events",
+        "Maintenance & Repairs",
+        "Utilities",
+        "Staff Salaries",
+        "Charity & Donations",
+        "Food & Prasadam",
+        "Decorations & Flowers",
+        "Security",
+        "Miscellaneous"
+    ];
 
     // Fetch events for the temple if associateEvent is true
     useEffect(() => {
@@ -70,14 +83,13 @@ export default function CreateExpense() {
             setSuccess("Expense added successfully.");
             setFormData({
                 title: "",
-                description: "",
                 amount: "",
                 date: "",
                 category: "",
                 status: "pending",
-                event: ""
+                event: null
             });
-            setAssociateEvent(false); // Reset the event association
+            setAssociateEvent(false);
         } catch (err) {
             setError(err.message);
         }
@@ -137,34 +149,23 @@ export default function CreateExpense() {
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col gap-4 my-2">
-                            <Label htmlFor="description" className="mb-4 text-sm font-medium flex items-center gap-2" >
-                                <FaAlignLeft className="inline mr-2 text-xl text-gray-500" />
-                                Description
-                            </Label>
-                            <Textarea
-                                type="text"
-                                id="description"
-                                name="description"
-                                placeholder="Small description about expense"
-                                value={formData.description}
-                                onChange={handleChange}
-                            />
-                        </div>
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex flex-col gap-4 my-2 flex-1">
                                 <Label htmlFor="category" className="mb-4 text-sm font-medium flex items-center gap-2" >
                                     <FaListAlt className="inline mr-2 text-xl text-gray-500" />
                                     Category
                                 </Label>
-                                <TextInput
-                                    type="text"
+                                <Select
                                     id="category"
                                     name="category"
-                                    placeholder="Expense category"
                                     value={formData.category}
                                     onChange={handleChange}
-                                />
+                                >
+                                    <option value="" disabled>Select Category</option>
+                                    {categories.map((category, index) => (
+                                        <option key={index} value={category}>{category}</option>
+                                    ))}
+                                </Select>
                             </div>
                             <div className="flex flex-col gap-4 my-2 flex-1">
                                 <Label htmlFor="status" className="mb-4 text-sm font-medium flex items-center gap-2" >
@@ -177,7 +178,6 @@ export default function CreateExpense() {
                                     value={formData.status}
                                     onChange={handleChange}
                                 >
-                                    <option value="Select" disabled>Select</option>
                                     <option value="pending">Pending</option>
                                     <option value="approved">Approved</option>
                                     <option value="completed">Completed</option>
