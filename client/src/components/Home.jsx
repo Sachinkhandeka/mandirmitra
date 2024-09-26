@@ -258,7 +258,7 @@ export default function Home() {
                     progressColor={"#4ade80"}
                 />
             </div>
-            <div className="flex flex-col md:flex-row gap-4 my-4 p-4" >
+            <div className="flex flex-col md:flex-row gap-4 my-4 w-full" >
                 <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >  
                     <BarChart 
                         amnt={donationAmnt}
@@ -304,7 +304,7 @@ export default function Home() {
                     progressColor={balance > 0 ? "#4ade80" : "#f87171"}
                 />
             </div>
-            <div className="flex flex-col md:flex-row gap-4 my-4 p-4" >
+            <div className="flex flex-col md:flex-row gap-4 my-4 w-full" >
                 <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]" >  
                     <BarChart 
                         amnt={expenseAmnt}
@@ -343,7 +343,7 @@ export default function Home() {
                     progressColor={"#f87171"}
                 />
             </div>
-            <div className="flex flex-col md:flex-row gap-4 my-4 p-4">
+            <div className="flex flex-col md:flex-row gap-4 my-4 w-full">
                 <div className="shadow-md rounded-md p-4 border w-full md:w-[50%]">
                     <InventoryBarChart
                         data={inventoryQuantities}
