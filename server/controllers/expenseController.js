@@ -31,7 +31,7 @@ module.exports.createController = async (req, res) => {
         category,
         status,
         temple: templeId,
-        event: associatedEvent ? associatedEvent._id : "",
+        event: associatedEvent ? associatedEvent._id : null,
     });
 
     await newExpense.save();

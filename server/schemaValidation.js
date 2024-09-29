@@ -80,6 +80,8 @@ const expenseSchema = Joi.object({
     date: Joi.date().default(Date.now),
     category: Joi.string()
         .valid(
+            'Rituals & Poojas',
+            'Festivals & Events',
             'Maintenance & Repairs',
             'Utilities',
             'Staff Salaries',
@@ -87,8 +89,8 @@ const expenseSchema = Joi.object({
             'Food & Prasadam',
             'Decorations & Flowers',
             'Security',
-            'Miscellaneous').
-        required().error(new Error('Category is required')),
+            'Miscellaneous'
+        ).required().error(new Error('Category is required')),
     status: Joi.string().valid('pending', 'approved', 'completed', 'rejected').default('pending'),
     templeId: Joi.string().required().error(new Error('Temple ID is required')),
     event: Joi.string().optional().allow(null).error(new Error('Invalid Event ID'))
