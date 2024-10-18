@@ -113,7 +113,7 @@ export default function ExpenseSummary({ expenses }) {
           <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
             {Object.entries(categoryBreakdown).map(([category, data]) => (
               <li key={category}>
-                {category}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
+                {category}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   style: "currency",
                   currency: "INR",
@@ -131,7 +131,7 @@ export default function ExpenseSummary({ expenses }) {
           <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
             {Object.entries(statusBreakdown).map(([status, data]) => (
               <li key={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
+                {status.charAt(0).toUpperCase() + status.slice(1)}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   style: "currency",
                   currency: "INR",
@@ -149,7 +149,7 @@ export default function ExpenseSummary({ expenses }) {
           <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
             {Object.entries(eventBreakdown).map(([eventName, data]) => (
               <li key={eventName}>
-                {eventName}: {data.count} expenses, ₹{data.totalAmount.toLocaleString("en-IN", {
+                {eventName}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   style: "currency",
                   currency: "INR",
