@@ -159,7 +159,7 @@ export default function PhoneOtpForm() {
                             </span>
                         </div>
                         <div className='flex items-center gap-2 text-sm text-black px-8'>
-                            Login with superAdmin email?
+                            Login with admin email?
                             <span className='text-blue-500 hover:underline'>
                                 <Link to="#" onClick={() => setShowComponent('signinSuperAdmin')}>Click here</Link>
                             </span>

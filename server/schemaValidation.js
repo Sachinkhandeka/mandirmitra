@@ -57,8 +57,51 @@ const superAdminSchema = Joi.object({
 //temple schema validations
 const templeSchema = Joi.object({
     name: Joi.string().required().error(new Error('Temple name is required')),
+    alternateName: Joi.string().optional(),
     location: Joi.string().required().error(new Error('Location is required')),
-    image: Joi.string().default('https://png.pngtree.com/png-vector/20230207/ourmid/pngtree-om-logo-design-with-flower-mandala-png-image_6590267.png')
+    image: Joi.string().uri().optional().default('https://png.pngtree.com/png-vector/20230207/ourmid/pngtree-om-logo-design-with-flower-mandala-png-image_6590267.png'),
+    description: Joi.string().optional(),
+    foundedYear: Joi.number().integer().optional(),
+    historyImages: Joi.array().items(Joi.string().uri()).optional(),
+    
+    // godsAndGoddesses validation
+    godsAndGoddesses: Joi.array().items(
+        Joi.object({
+            name: Joi.string().required().error(new Error('Username is required')),
+            description: Joi.string().required().error(new Error('Short description is required')),
+            image: Joi.string().uri().optional(),
+        })
+    ).optional(),
+    
+    // festivals validation
+    festivals: Joi.array().items(
+        Joi.object({
+            festivalName: Joi.string().required().error(new Error('Festival name is required')),
+            festivalImportance: Joi.string().optional(),
+            festivalImages: Joi.array().items(Joi.string().uri()).optional(),
+        })
+    ).optional(),
+
+    // pujari section validation
+    pujaris: Joi.array().items(
+        Joi.object({
+            name: Joi.string().required().error(new Error('Pujari name is required')),
+            profile: Joi.string().uri().optional(),
+            experience: Joi.number().integer().min(0).optional().error(new Error('Experience should be a valid number')),
+            designation: Joi.string().optional(),
+            specialization: Joi.string().optional(),
+            contactInfo: Joi.string().pattern(/^\d{10}$/).optional().error(new Error('Contact info must be a valid 10-digit number')),
+        })
+    ).optional(),
+
+    // management section validation
+    management: Joi.array().items(
+        Joi.object({
+            name: Joi.string().required().error(new Error('Person name is required')),
+            role: Joi.string().required().error(new Error('Person role is required')),
+            profile: Joi.string().uri().optional(),
+        })
+    ).optional(),
 }).required().options({ abortEarly: false });
 
 //user schema validations

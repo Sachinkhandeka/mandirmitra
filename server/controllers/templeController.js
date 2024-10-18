@@ -51,19 +51,34 @@ module.exports.editController = async (req, res) => {
     if (!templeId) {
         throw new ExpressError(400, "Temple id required.");
     }
-
     const updateObject = {};
+
+    // General temple details
     if (templeData.name) updateObject.name = templeData.name;
+    if (templeData.alternateName) updateObject.alternateName = templeData.alternateName;
     if (templeData.location) updateObject.location = templeData.location;
     if (templeData.image) updateObject.image = templeData.image;
     if (templeData.foundedYear) updateObject.foundedYear = templeData.foundedYear;
     if (templeData.description) updateObject.description = templeData.description;
+    if (templeData.historyImages) updateObject.historyImages = templeData.historyImages;
+
+    // Gods and Goddesses
     if (templeData.godsAndGoddesses) updateObject.godsAndGoddesses = templeData.godsAndGoddesses;
 
+    // Festivals
+    if (templeData.festivals) updateObject.festivals = templeData.festivals;
+    
+    // Pujaris
+    if (templeData.pujaris) updateObject.pujaris = templeData.pujaris;
+
+    // Management
+    if (templeData.management) updateObject.management = templeData.management;
+
+    // Find and update the temple by ID
     const updatedTemple = await Temple.findByIdAndUpdate(
         templeId,
-        updateObject,
-        { new: true }
+        { $set: updateObject }, // Update only the fields present in templeData
+        { new: true, runValidators: true } // Return the updated document
     );
 
     if (!updatedTemple) {

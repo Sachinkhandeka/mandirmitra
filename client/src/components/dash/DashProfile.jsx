@@ -144,9 +144,6 @@ export default function DashProfile() {
                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                 setTempImageUrl(downloadURL);
                 setFormData({ ...formData, profilePicture: downloadURL });
-    
-                console.log("Image uploaded, download URL: ", downloadURL);
-    
                 // Step 3: Update metadata (e.g., set the author_uid after the file upload is completed)
                 const metadata = {
                     customMetadata: {
@@ -156,15 +153,11 @@ export default function DashProfile() {
     
                 // Update the metadata
                 await updateMetadata(uploadTask.snapshot.ref, metadata);
-    
-                console.log("Metadata updated successfully.");
-    
                 // Step 4: Set the success message
                 setUploadSuccess("Profile picture uploaded successfully. Please save changes.");
             }
         } catch (error) {
             setUploadError(error.message);
-            console.error("Error during upload or metadata update: ", error);
         }
     };
     

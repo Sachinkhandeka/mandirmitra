@@ -17,6 +17,7 @@ const DashSeva = React.lazy(()=> import("../components/dash/DashSeva"));
 const DashAddress = React.lazy(()=> import("../components/dash/DashAddress"));
 const DashAssets = React.lazy(() => import("../components/dash/DashAssets"));
 const DashTenants = React.lazy(() => import("../components/dash/DashTenants"));
+const DashTempleInsights = React.lazy(()=> import("../components/dash/DashTempleInsights"));
 
 import DashSidebar from "../components/dash/DashSidebar";
 import Header from "../components/Header";
@@ -194,7 +195,7 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashAssets /></Suspense>}
-                    {/* assets */}
+                    {/* tenants */}
                     {tab === "tenants" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4">
                             <Spinner size={"xl"} />
@@ -215,6 +216,13 @@ export default function Dashboard() {
                             <div>Loading ...</div>
                         </div>
                     }><DashAddress /></Suspense>}
+                    {/* temple insights */}
+                    {tab === "templeinsights" && <Suspense fallback={
+                        <div className="flex justify-center items-center min-h-screen gap-4">
+                            <Spinner size={"xl"} />
+                            <div>Loading ...</div>
+                        </div>
+                    }><DashTempleInsights /></Suspense>}
                     {/* users */}
                     {tab === "users" && <Suspense fallback={
                         <div className="flex justify-center items-center min-h-screen gap-4">

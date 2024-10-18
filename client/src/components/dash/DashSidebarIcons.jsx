@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart, FaLandmark } from "react-icons/fa";
+import { FaUser, FaSignOutAlt, FaUsers, FaDonate, FaAddressCard, FaEdit, FaLuggageCart, FaLandmark, FaGopuram } from "react-icons/fa";
 import { FaMoneyBillTrendUp, FaMapLocationDot, FaBuildingUser  } from "react-icons/fa6";
 import { MdAnalytics } from "react-icons/md";
 import { SiEventbrite } from "react-icons/si";
@@ -42,6 +42,11 @@ export default function DashSidebarIcon() {
             <Link to={"/?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                 <FaUser />
             </Link>
+            { currUser.isAdmin && (
+                <Link to={"/?tab=templeinsights"} className={`${tab === 'templeinsights' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                    <FaGopuram />
+                </Link>
+            ) }
             <Link to={"/?tab=analytics"} className={`${tab === 'analytics' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                 <MdAnalytics />
             </Link>
