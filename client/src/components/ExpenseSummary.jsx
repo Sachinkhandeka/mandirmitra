@@ -1,5 +1,6 @@
 import React from "react";
-import { FaMoneyBillWave, FaChartLine, FaTrophy, FaMedal, FaCalendar, FaUsers } from "react-icons/fa";
+import { FaMoneyBillWave, FaChartLine, FaTrophy, FaMedal } from "react-icons/fa";
+import { Popover } from "flowbite-react";
 
 export default function ExpenseSummary({ expenses }) {
   // Calculations
@@ -34,15 +35,34 @@ export default function ExpenseSummary({ expenses }) {
     return acc;
   }, {});
 
-  const mostFrequentCategory = Object.entries(categoryBreakdown).reduce((max, curr) => {
-    return curr[1].count > max[1].count ? curr : max;
-  }, [null, { count: 0 }])[0];
+  // Helper to format currency
+  const formatCurrency = (amount) =>
+    amount.toLocaleString("en-IN", {
+      maximumFractionDigits: 2,
+      style: "currency",
+      currency: "INR",
+    });
 
-  // Top 3 Categories by Expense Count
-  const topCategories = Object.entries(categoryBreakdown)
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 3);
-
+    const PopoverContent = ({ breakdown }) => (
+      <div className="w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg text-sm text-gray-500 dark:text-gray-400 z-50">
+        <div className="p-4 space-y-4">
+          {Object.entries(breakdown).map(([key, data]) => (
+            <div
+              key={key}
+              className="flex justify-between items-center p-2 border-b last:border-none border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-all"
+            >
+              <div className="flex flex-col">
+                <strong className="text-gray-900 dark:text-gray-100 font-medium">{key}</strong>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{data.count} expenses</span>
+              </div>
+              <div className="text-right">
+                <span className="font-semibold text-gray-800 dark:text-gray-100">{formatCurrency(data.totalAmount)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );    
   return (
     <div className="p-5 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md w-full mx-auto mt-10 space-y-8">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">Expense Summary</h2>
@@ -56,11 +76,7 @@ export default function ExpenseSummary({ expenses }) {
             <div>
               <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">Total Expense</h3>
               <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">
-                {totalAmount.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
+                {formatCurrency(totalAmount)}
               </p>
             </div>
           </div>
@@ -69,11 +85,7 @@ export default function ExpenseSummary({ expenses }) {
             <div>
               <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">Average Expense</h3>
               <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">
-                {averageAmount.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
+                {formatCurrency(averageAmount)}
               </p>
             </div>
           </div>
@@ -82,11 +94,7 @@ export default function ExpenseSummary({ expenses }) {
             <div>
               <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">Largest Expense</h3>
               <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">
-                {largestExpense.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
+                {formatCurrency(largestExpense)}
               </p>
             </div>
           </div>
@@ -95,69 +103,26 @@ export default function ExpenseSummary({ expenses }) {
             <div>
               <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300">Smallest Expense</h3>
               <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">
-                {smallestExpense.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
+                {formatCurrency(smallestExpense)}
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Category-wise Breakdown */}
-      <div>
-        <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Category-wise Breakdown</h3>
-        <div className="bg-white dark:bg-gray-700 p-5 rounded-lg shadow-lg">
-          <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
-            {Object.entries(categoryBreakdown).map(([category, data]) => (
-              <li key={category}>
-                {category}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Status-wise Breakdown */}
-      <div>
-        <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Status-wise Breakdown</h3>
-        <div className="bg-white dark:bg-gray-700 p-5 rounded-lg shadow-lg">
-          <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
-            {Object.entries(statusBreakdown).map(([status, data]) => (
-              <li key={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Event-wise Breakdown */}
-      <div>
-        <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Event-wise Breakdown</h3>
-        <div className="bg-white dark:bg-gray-700 p-5 rounded-lg shadow-lg">
-          <ul className="text-sm font-semibold text-gray-800 dark:text-gray-100 space-y-2">
-            {Object.entries(eventBreakdown).map(([eventName, data]) => (
-              <li key={eventName}>
-                {eventName}: {data.count} expenses, {data.totalAmount.toLocaleString("en-IN", {
-                  maximumFractionDigits: 2,
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="flex gap-2" >
+        {/* Category-wise Breakdown with Popover */}
+        <Popover content={<PopoverContent breakdown={categoryBreakdown} />} trigger="hover" placement="top">
+          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Category</h3>
+        </Popover>
+        {/* Status-wise Breakdown with Popover */}
+        <Popover content={<PopoverContent breakdown={statusBreakdown} />} trigger="hover" placement="top">
+          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Status</h3>
+        </Popover>
+        {/* Event-wise Breakdown with Popover */}
+        <Popover content={<PopoverContent breakdown={eventBreakdown} />} trigger="hover" placement="top">
+          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Event</h3>
+        </Popover>
       </div>
     </div>
   );
