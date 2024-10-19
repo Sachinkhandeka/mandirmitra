@@ -109,19 +109,38 @@ export default function ExpenseSummary({ expenses }) {
           </div>
         </div>
       </div>
-
-      <div className="flex gap-2" >
+      <div className="flex sm:justify-around items-center gap-4 sm:gap-8 p-4 sm:p-8">
         {/* Category-wise Breakdown with Popover */}
-        <Popover content={<PopoverContent breakdown={categoryBreakdown} />} trigger="hover" placement="top">
-          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Category</h3>
+        <Popover 
+          content={<PopoverContent breakdown={categoryBreakdown} />} 
+          trigger="hover" 
+          placement={"top"}
+        >
+          <h3 className="text-lg sm:text-xl font-bold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 dark:hover:text-indigo-600 dark:hover:bg-indigo-100 p-1 rounded-md transition-all duration-300">
+            Category
+          </h3>
         </Popover>
+  
         {/* Status-wise Breakdown with Popover */}
-        <Popover content={<PopoverContent breakdown={statusBreakdown} />} trigger="hover" placement="top">
-          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Status</h3>
+        <Popover 
+          content={<PopoverContent breakdown={statusBreakdown} />} 
+          trigger="hover" 
+          placement={"top"}
+        >
+          <h3 className="text-lg sm:text-xl font-bold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 dark:hover:text-indigo-600 dark:hover:bg-indigo-100 p-1 rounded-md transition-all duration-300">
+            Status
+          </h3>
         </Popover>
+
         {/* Event-wise Breakdown with Popover */}
-        <Popover content={<PopoverContent breakdown={eventBreakdown} />} trigger="hover" placement="top">
-          <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-4 cursor-pointer">Event</h3>
+        <Popover 
+          content={<PopoverContent breakdown={eventBreakdown} />} 
+          trigger="hover" 
+          placement={"top"}
+        >
+          <h3 className="text-lg sm:text-xl font-bold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-indigo-600 hover:bg-indigo-100 dark:hover:text-indigo-600 dark:hover:bg-indigo-100 p-1 rounded-md transition-all duration-300">
+            Event
+          </h3>
         </Popover>
       </div>
     </div>
