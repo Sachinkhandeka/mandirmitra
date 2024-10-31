@@ -15,7 +15,7 @@ export default function FooterComp() {
                     <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
                         <div className=" object-cover rounded-md" >
                             <Footer.Brand
-                                href="/"
+                                href="/dashboard"
                                 src={brand}
                                 alt="MandirMitra Logo"
                                 name="mandirmitra"
@@ -26,21 +26,21 @@ export default function FooterComp() {
                             <div>
                                 <Footer.Title title="about" />
                                 <Footer.LinkGroup col>
-                                    <Footer.Link href="/?tab=about">About Us</Footer.Link>
+                                    <Footer.Link href="/dashboard?tab=about">About Us</Footer.Link>
                                 </Footer.LinkGroup>
                             </div>
                             <div>
                                 <Footer.Title title="Legal" />
                                 <Footer.LinkGroup col>
-                                    <Footer.Link href="/?tab=privacy">Privacy Policy</Footer.Link>
-                                    <Footer.Link href="/?tab=terms">Terms &amp; Conditions</Footer.Link>
+                                    <Footer.Link href="/dashboard?tab=privacy">Privacy Policy</Footer.Link>
+                                    <Footer.Link href="/dashboard?tab=terms">Terms &amp; Conditions</Footer.Link>
                                 </Footer.LinkGroup>
                             </div>
                     </div>
                 </div>
                     <Footer.Divider />
                     <div className="w-full sm:flex sm:items-center sm:justify-between">
-                        <Footer.Copyright href="/" by="MandirMitra™" year={new Date().getFullYear()} />
+                        <Footer.Copyright href="/dashboard" by="MandirMitra™" year={new Date().getFullYear()} />
                         <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
                             <Footer.Icon href=" https://www.facebook.com/profile.php?id=61561382858176&mibextid=ZbWKwL" icon={BsFacebook} target="_blank" rel="noopener noreferrer" />
                             <Footer.Icon href="https://www.instagram.com/mandirmitra/" icon={BsInstagram} target="_blank" rel="noopener noreferrer" />

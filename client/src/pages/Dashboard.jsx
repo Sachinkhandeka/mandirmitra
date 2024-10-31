@@ -33,7 +33,7 @@ export default function Dashboard() {
     const [showSidebar, setShowSidebar] = useState(false);
 
     // Check if the URL is exactly "/"
-    const isHomePage = location.pathname === "/";
+    const isHomePage = location.pathname === "/dashboard";
 
     // Function to toggle sidebar visibility
     const toggleSidebar = () => {

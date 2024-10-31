@@ -32,7 +32,7 @@ export default function Header() {
             <meta name="author" content="MandirMitra" />
         </Helmet>
         <Navbar className="border border-b-2 sticky top-0 z-20" >
-            <a href={"/"} className="cursor-pointer no-underline">
+            <a href={"/dashboard"} className="cursor-pointer no-underline">
                 <img src={brand} alt="MandirMitra" className="w-8 h-8 rounded-md object-cover object-center border border-gray-300"/>
             </a>
             <form>

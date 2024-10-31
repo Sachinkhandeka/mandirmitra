@@ -54,6 +54,15 @@ const superAdminSchema = Joi.object({
     phoneNumber: Joi.string().pattern(/^\+\d{1,3}\d{8,}$/).required().error(new Error('Invalid phone number')),
 }).required().options({ abortEarly: false });
 
+//devotee schema validations
+const devoteeSchema = Joi.object({
+    displayName : Joi.string().required().error(new Error('Display Name is required.')),
+    email: Joi.string().email().required().error(new Error('Invalid email')),
+    password: Joi.string().required().error(new Error('Password is required')),
+    phoneNumber: Joi.string().pattern(/^\+\d{1,3}\d{8,}$/).required().error(new Error('Invalid phone number')),
+    photoURL : Joi.string().optional().allow(''),
+}).required().options({ abortEarly : false });
+
 //temple schema validations
 const templeSchema = Joi.object({
     name: Joi.string().required().error(new Error('Temple name is required')),
@@ -207,6 +216,7 @@ module.exports = {
     permissionSchema,
     roleSchema,
     superAdminSchema,
+    devoteeSchema,
     templeSchema,
     userSchema,
     expenseSchema,

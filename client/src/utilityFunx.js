@@ -27,11 +27,7 @@ export const uploadImages = async (
                     'state_changed',
                     (snapshot) => {
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        setUploadProgress((prevProgress) => {
-                            const updatedProgress = [...prevProgress];
-                            updatedProgress[index] = Math.round(progress);
-                            return updatedProgress;
-                        });
+                        setUploadProgress(progress.toFixed(0));
                     },
                     (error) => {
                         setAlert({ type: "error", message: error.message });

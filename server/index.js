@@ -25,6 +25,7 @@ const sevaRoute = require("./routes/seva");
 const inventoryRoute = require("./routes/inventory");
 const tenantRoute = require("./routes/tenant");
 const assetRoute = require("./routes/asset");
+const devoteeRoute = require("./routes/devotee");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -57,6 +58,7 @@ app.use( "/api/seva", sevaRoute );
 app.use( "/api/inventory", inventoryRoute );
 app.use( "/api/tenant", tenantRoute );
 app.use( "/api/asset", assetRoute );
+app.use( "/api/devotee", devoteeRoute );
 
 
 //static folder for client side pages 

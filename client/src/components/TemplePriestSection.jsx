@@ -9,7 +9,7 @@ export default function TemplePujariSection({ temple, setTemple, setAlert }) {
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadingText, setUploadingText] = useState("");
-    const [uploadProgress, setUploadProgress] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState(null);
     const [priestImageFile, setPriestImageFile] = useState(null);
     const [priestImagePreview, setPriestImagePreview] = useState(null);
     const [priestInfo, setPriestInfo] = useState({

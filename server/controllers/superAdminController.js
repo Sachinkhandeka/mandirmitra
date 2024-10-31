@@ -2,11 +2,9 @@ const ExpressError = require("../utils/ExpressError");
 const Temple  = require("../models/temple");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/userSchema");
-const encryptDecrypt = require("../utils/encryptDecrypt");
 const bcryptjs = require("bcryptjs");
 const salt = bcryptjs.genSaltSync(10);
 const jwt = require("jsonwebtoken");
-const { model } = require("mongoose");
 const secret = process.env.JWT_SECRET ;
 
 
@@ -57,7 +55,6 @@ module.exports.singinWithPhoneNumber = async (req, res) => {
             return res.status(200).json({ needsSignup: true });
         }
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };

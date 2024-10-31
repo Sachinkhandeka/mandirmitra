@@ -39,15 +39,15 @@ export default function DashSidebarIcon() {
 
   return (
       <div className="h-[80%] overflow-y-auto scrollbar-hidden flex flex-col mt-6 items-center">
-            <Link to={"/?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+            <Link to={"/dashboard?tab=profile"} className={`${tab === 'profile' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                 <FaUser />
             </Link>
             { currUser.isAdmin && (
-                <Link to={"/?tab=templeinsights"} className={`${tab === 'templeinsights' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                <Link to={"/dashboard?tab=templeinsights"} className={`${tab === 'templeinsights' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                     <FaGopuram />
                 </Link>
             ) }
-            <Link to={"/?tab=analytics"} className={`${tab === 'analytics' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+            <Link to={"/dashboard?tab=analytics"} className={`${tab === 'analytics' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                 <MdAnalytics />
             </Link>
             {
@@ -56,28 +56,28 @@ export default function DashSidebarIcon() {
                     p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
                     )))) && (
                         <>
-                            <Link to={"/?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=daans"} className={`${tab === 'daans' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <FaDonate />
                             </Link>
-                            <Link to={"/?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=expenses"} className={`${tab === 'expenses' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <FaMoneyBillTrendUp />
                             </Link>
-                            <Link to={"/?tab=inventories"} className={`${tab === 'inventories' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=inventories"} className={`${tab === 'inventories' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <FaLuggageCart />
                             </Link>
-                            <Link to={"/?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=events"} className={`${tab === 'events' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <SiEventbrite />
                             </Link>
-                            <Link to={"/?tab=assets"} className={`${tab === 'assets' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=assets"} className={`${tab === 'assets' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <FaLandmark />
                             </Link>
-                            <Link to={"/?tab=tenants"} className={`${tab === 'tenants' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=tenants"} className={`${tab === 'tenants' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                 <FaBuildingUser />
                             </Link>
-                            <Link to={"/?tab=seva"} className={`${tab === 'seva' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=seva"} className={`${tab === 'seva' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                  <RiHandHeartFill />
                             </Link>
-                            <Link to={"/?tab=address"} className={`${tab === 'address' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                            <Link to={"/dashboard?tab=address"} className={`${tab === 'address' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                                  <FaMapLocationDot />
                             </Link>
                         </>
@@ -85,13 +85,13 @@ export default function DashSidebarIcon() {
             }
             {currUser.isAdmin && (
                 <>
-                    <Link to={"/?tab=users"} className={`${tab === 'users' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                    <Link to={"/dashboard?tab=users"} className={`${tab === 'users' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                         <FaUsers />
                     </Link>
-                    <Link to={"/?tab=roles"} className={`${tab === 'roles' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                    <Link to={"/dashboard?tab=roles"} className={`${tab === 'roles' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                         <FaAddressCard />
                     </Link>
-                    <Link to={"/?tab=permissions"} className={`${tab === 'permissions' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
+                    <Link to={"/dashboard?tab=permissions"} className={`${tab === 'permissions' ? ' bg-gray-300 dark:bg-gray-500 p-2 rounded-full' : ''} flex items-center my-4`}>
                         <FaEdit />
                     </Link>
                 </>

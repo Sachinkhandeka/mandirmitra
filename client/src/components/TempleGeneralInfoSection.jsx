@@ -8,7 +8,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false); 
     const [uploadingText, setUploadingText] = useState(""); 
-    const [uploadProgress, setUploadProgress] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState(null);
     const [imgFiles, setImgFiles] = useState([]); // New images to upload (File objects)
     const [imagePreviews, setImagePreviews] = useState([]); // For previewing selected images
     const [generalInfo, setGeneralInfo] = useState({

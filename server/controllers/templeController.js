@@ -25,6 +25,45 @@ module.exports.addController = async (req, res) => {
     });
 }
 
+// Get all temples for public view (no authentication needed)
+module.exports.getAllTemplesController = async (req, res) => {
+    try {
+        // Extract the search query from the request
+        const { search } = req.query;
+
+        // Define a query object
+        let query = {};
+
+        // If a search term is provided, search across multiple fields using $regex
+        if (search) {
+            query = {
+                $or: [
+                    { name: { $regex: search, $options: "i" } }, // Search by temple name (case-insensitive)
+                    { alternateName: { $regex: search, $options: "i" } }, // Search by alternate name
+                    { location: { $regex: search, $options: "i" } }, // Search by location
+                    { description: { $regex: search, $options: "i" } }, // Search by description
+                    { "godsAndGoddesses.name": { $regex: search, $options: "i" } }, // Search by deity name
+                ],
+            };
+        }
+
+        // Fetch all temples based on the query
+        const temples = await Temple.find(query);
+
+        // Return temples in the response
+        res.status(200).json({
+            message: "List of all temples",
+            temples,
+        });
+    } catch (err) {
+        // Handle error gracefully
+        res.status(500).json({
+            error: "An error occurred while fetching temples",
+            details: err.message,
+        });
+    }
+};
+
 //get temple route handler
 module.exports.getController = async (req, res) => {
     const { user } = req;
@@ -42,6 +81,33 @@ module.exports.getController = async (req, res) => {
 
     res.status(200).json({ temple });
 }
+
+// Get one temple for public view (no authentication needed)
+module.exports.getOneTempleController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        // Check if the ID parameter is provided
+        if (!id) {
+            throw new ExpressError(400, "Temple ID is required.");
+        }
+
+        // Find the temple by ID
+        const temple = await Temple.findById(id);
+
+        // If the temple is not found, throw an error
+        if (!temple) {
+            throw new ExpressError(404, "Temple not found.");
+        }
+
+        // If temple is found, send the response
+        res.status(200).json({
+            message: "Temple details fetched successfully",
+            temple,
+        });
+    } catch (err) {
+        throw new ExpressError(500, "An error occurred while fetching the temple details.");
+    }
+};
 
 //edit controller 
 module.exports.editController = async (req, res) => {

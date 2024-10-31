@@ -20,6 +20,18 @@ router.get(
     wrapAsync(temple.getController),
 );
 
+//get all temples
+router.get(
+    "/all",
+    wrapAsync(temple.getAllTemplesController),
+);
+
+//get one temple detail
+router.get(
+    "/:id",
+    wrapAsync(temple.getOneTempleController),
+);
+
 //edit temple 
 router.put(
     "/edit/:templeId",

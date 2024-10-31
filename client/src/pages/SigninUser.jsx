@@ -50,7 +50,7 @@ export default function SigninUser({ setShowComponent }) {
                 return;
             }
             dispatch(signinSuccess(data.rest));
-            navigate("/");
+            navigate("/dashboard");
         } catch (err) {
             dispatch(signinFailure(err.message));
         }

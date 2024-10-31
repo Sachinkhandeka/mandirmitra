@@ -14,7 +14,7 @@ export default function TempleFestivalsSection({ temple, setTemple, setAlert }) 
     const [selectedImage, setSelectedImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState(null);
     const [uploadingText, setUploadingText] = useState("");
 
     const handleImageSelection = (e) => {

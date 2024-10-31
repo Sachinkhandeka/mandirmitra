@@ -62,7 +62,7 @@ export default function CreateSuperAdmin() {
                 return;
             }
             dispatch(signinSuccess(data.currUser));
-            navigate("/");
+            navigate("/dashboard");
         } catch (err) {
             dispatch(signinFailure(err.message));
         }

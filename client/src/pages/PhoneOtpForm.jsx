@@ -45,7 +45,7 @@ export default function PhoneOtpForm() {
         const regex = /[^0-9]/g;
         const strippedPhoneNumber = phoneNumber.replace(regex, '');
         if (strippedPhoneNumber.length < 10 || regex.test(strippedPhoneNumber)) {
-            alert('Invalid Phone Number');
+            setError('Invalid Phone Number');
             setLoading(false);
             return;
         }
@@ -86,7 +86,6 @@ export default function PhoneOtpForm() {
 
             if (!response.ok) {
                 dispatch(signinFailure(data.message));
-                console.log(data.message);
                 setLoading(false);
                 return;
             }
@@ -96,7 +95,7 @@ export default function PhoneOtpForm() {
                 setShowComponent('addTemple');
             } else {
                 dispatch(signinSuccess(data.currUser));
-                navigate("/");
+                navigate("/dashboard");
             }
         } catch (err) {
             dispatch(signinFailure(err.message));

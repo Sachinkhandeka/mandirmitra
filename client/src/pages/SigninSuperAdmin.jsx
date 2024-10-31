@@ -52,7 +52,7 @@ export default function SigninSuperAdmin() {
                 return;
             }
             dispatch(signinSuccess(data.rest));
-            navigate("/");
+            navigate("/dashboard");
         } catch (err) {
             dispatch(signinFailure(err.message));
         }

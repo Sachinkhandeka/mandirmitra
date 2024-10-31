@@ -9,7 +9,7 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false); 
     const [uploadingText, setUploadingText] = useState(""); 
-    const [uploadProgress, setUploadProgress] = useState([]);
+    const [uploadProgress, setUploadProgress] = useState(null);
     const [dietyImageFile, setDietyImageFile] = useState(null); 
     const [dietyImagePreview, setDietyImagePreview] = useState(null);
     const [dietyInfo, setDietyInfo] = useState({

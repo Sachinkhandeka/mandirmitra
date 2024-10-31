@@ -1,6 +1,9 @@
 const ExpressError = require("./utils/ExpressError");
-const { daanSchema, permissionSchema, roleSchema, superAdminSchema, templeSchema, userSchema, expenseSchema, eventSchema, invitationSchema, inventorySchema, tenantSchema, assetSchema } = require("./schemaValidation");
-const { validate } = require("./models/eventSchema");
+const { 
+    daanSchema, permissionSchema, roleSchema, superAdminSchema,
+    templeSchema, userSchema, expenseSchema, eventSchema, 
+    invitationSchema, inventorySchema, tenantSchema, assetSchema, 
+    devoteeSchema} = require("./schemaValidation");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
     let { error } = daanSchema.validate(req.body.donation);
@@ -102,6 +105,29 @@ module.exports.validateSuperAdminSchema = (req ,res ,next)=> {
             let errMsg = error.message;
             throw new ExpressError(400, errMsg);
         }
+    }
+    next();
+}
+
+//validate userschema
+module.exports.validateDevoteeSchema = (req ,res ,next)=> {
+    const devotee = req.body;
+    let { error } = devoteeSchema.validate(devotee);
+
+    if(error) {
+        //if error is of joi but not related to field validation
+        if(error instanceof Error && error.isJoi) {
+            let errMsg = error.details.map(el => {
+                return el.message ; 
+            }).join(",");
+
+            throw new ExpressError(400 , errMsg);
+        } else {
+            //if error is related to field validation
+            let erroMsg = error.message ; 
+            throw new ExpressError(400, erroMsg);
+        }
+
     }
     next();
 }

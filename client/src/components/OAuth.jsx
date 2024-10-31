@@ -1,8 +1,8 @@
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../firebase";
-import { useDispatch }  from "react-redux";
+import { useDispatch, useSelector }  from "react-redux";
 import { signinStart, signinSuccess, signinFailure } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -10,6 +10,7 @@ import { Helmet } from "react-helmet-async";
 export default function OAuth({ templeId }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { loading } = useSelector( state => state.user );
     const auth = getAuth(app);
 
     const handleGoogleClick = async()=> {
@@ -39,7 +40,7 @@ export default function OAuth({ templeId }) {
                 return ;
             }
             dispatch(signinSuccess(data.currUser));
-            navigate("/");
+            navigate("/dashboard");
 
         }catch(err) {
             dispatch(signinFailure(err.message));
@@ -57,9 +58,10 @@ export default function OAuth({ templeId }) {
             outline 
             className="w-full my-8 text-sm"
             onClick={handleGoogleClick}
+            disabled={loading}
         >
-                <AiFillGoogleCircle className="w-6 h-6 mr-3" />
-                Continue with Google
+                { loading ? "" : <AiFillGoogleCircle className="w-6 h-6 mr-3" /> }
+                { loading ? <Spinner color="warning" aria-label="loading indicator" /> :  'Continue with Google' }
         </Button>
         </>
     );

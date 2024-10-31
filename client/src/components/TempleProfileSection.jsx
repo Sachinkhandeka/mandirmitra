@@ -8,7 +8,7 @@ export default function TempleProfileSection({ temple, setAlert }) {
   const inputRef = useRef();
   const [tempImgUrl, setTempImgUrl] = useState(null);
   const [imgFile, setImgFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState([]); 
+  const [uploadProgress, setUploadProgress] = useState(null); 
   const [uploadingText, setUploadingText] = useState("");  
 
   const handleImageChange = async (e) => {

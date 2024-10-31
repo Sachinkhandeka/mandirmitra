@@ -51,7 +51,7 @@ export default function DashSidebar() {
             <div className="h-[70%] md:h-[80%] overflow-y-auto scrollbar-hidden">
             <Sidebar.Items>
                 <Sidebar.ItemGroup>
-                    <Link to={"/?tab=profile"} >
+                    <Link to={"/dashboard?tab=profile"} >
                         <Sidebar.Item 
                             active={tab === "profile"} 
                             className="mt-6 cursor-pointer" 
@@ -62,7 +62,7 @@ export default function DashSidebar() {
                         >Profile</Sidebar.Item>
                     </Link>
                     { currUser.isAdmin && (
-                        <Link to={"/?tab=templeinsights"} >
+                        <Link to={"/dashboard?tab=templeinsights"} >
                             <Sidebar.Item
                                 active={tab === "templeinsights"}
                                 className="mt-6 cursor-pointer"
@@ -71,7 +71,7 @@ export default function DashSidebar() {
                             >Temple Insights</Sidebar.Item>
                         </Link>
                     ) }
-                    <Link to={"/?tab=analytics"} >
+                    <Link to={"/dashboard?tab=analytics"} >
                         <Sidebar.Item 
                             active={tab === "analytics"} 
                             className="mt-6 cursor-pointer" 
@@ -85,7 +85,7 @@ export default function DashSidebar() {
                                 p.actions.includes("read") || p.actions.includes("update") || p.actions.includes("delete")
                             )))) && (
                                 <>
-                                    <Link to={"/?tab=daans"} >
+                                    <Link to={"/dashboard?tab=daans"} >
                                         <Sidebar.Item
                                             active={tab === "daans"}
                                             className="mt-6 cursor-pointer"
@@ -93,7 +93,7 @@ export default function DashSidebar() {
                                             as={"div"}
                                         >Donations</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=expenses"} >
+                                    <Link to={"/dashboard?tab=expenses"} >
                                         <Sidebar.Item
                                             active={tab === "expenses"}
                                             className="mt-6 cursor-pointer"
@@ -101,7 +101,7 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Expenses</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=inventories"} >
+                                    <Link to={"/dashboard?tab=inventories"} >
                                         <Sidebar.Item
                                             active={tab === "inventories"}
                                             className="mt-6 cursor-pointer"
@@ -109,7 +109,7 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Inventories</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=events"} >
+                                    <Link to={"/dashboard?tab=events"} >
                                         <Sidebar.Item
                                             active={tab === "events"}
                                             className="mt-6 cursor-pointer"
@@ -117,7 +117,7 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Events</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=assets"} >
+                                    <Link to={"/dashboard?tab=assets"} >
                                         <Sidebar.Item
                                             active={tab === "assets"}
                                             className="mt-6 cursor-pointer"
@@ -125,7 +125,7 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Assets</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=tenants"} >
+                                    <Link to={"/dashboard?tab=tenants"} >
                                         <Sidebar.Item
                                             active={tab === "tenants"}
                                             className="mt-6 cursor-pointer"
@@ -133,7 +133,7 @@ export default function DashSidebar() {
                                             as={"div"} 
                                         >Tenants</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=seva"}>
+                                    <Link to={"/dashboard?tab=seva"}>
                                         <Sidebar.Item
                                             active={tab === "seva"}
                                             className="my-6 cursor-pointer"
@@ -141,7 +141,7 @@ export default function DashSidebar() {
                                             as={"div"}
                                         >Seva</Sidebar.Item>
                                     </Link>
-                                    <Link to={"/?tab=address"}>
+                                    <Link to={"/dashboard?tab=address"}>
                                         <Sidebar.Item
                                             active={tab === "address"}
                                             className="my-6 cursor-pointer"
@@ -156,7 +156,7 @@ export default function DashSidebar() {
                         currUser.isAdmin && 
                         (
                             <>
-                            <Link to={"/?tab=users"} >
+                            <Link to={"/dashboard?tab=users"} >
                                 <Sidebar.Item
                                     active={tab === "users"}
                                     className="mt-6 cursor-pointer"
@@ -164,7 +164,7 @@ export default function DashSidebar() {
                                     as={"div"}
                                 >Users</Sidebar.Item>
                             </Link>
-                            <Link to={"/?tab=roles"}>
+                            <Link to={"/dashboard?tab=roles"}>
                                 <Sidebar.Item 
                                     active={tab === "roles"}
                                     className="mt-6 cursor-pointer"
@@ -172,7 +172,7 @@ export default function DashSidebar() {
                                     as={"div"}
                                 >Roles</Sidebar.Item>
                             </Link>
-                            <Link to={"/?tab=permissions"}>
+                            <Link to={"/dashboard?tab=permissions"}>
                                 <Sidebar.Item
                                     active={tab === "permissions"}
                                     className="my-6 cursor-pointer"
