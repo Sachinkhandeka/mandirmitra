@@ -144,14 +144,14 @@ export default function Devotees() {
                 </div>
             )}
             {showComponent === "otpInput" && (
-                <>
+                <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10" >
                     <h2 className='text-2xl font-bold text-black px-4'>Enter OTP</h2>
                     <p className="text-lg text-black font-medium px-4">We have sent a temporary passcode to you at {phoneNumber}</p>
                     <div className="w-full px-10 max-w-md text-black">
                         <OtpInput length={6} onOtpSubmit={onOtpSubmit} />
                     </div>
                     <p className='text-sm text-gray-500'>* Do not share this OTP with anyone as it is confidential.</p>
-                </>
+                </div>
             )}
             {showComponent === 'createDevotee' && (
                 <Suspense fallback={<div className='flex items-center justify-center'><Spinner color="purple" aria-label="Loading spinner example" /></div>}>
