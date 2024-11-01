@@ -5,7 +5,7 @@ import { Avatar } from "flowbite-react";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaUsers, FaIdCard } from "react-icons/fa6";
 import { FaRupeeSign, FaBoxes, FaExclamationTriangle, FaTimesCircle, FaChartBar, FaChartPie  } from "react-icons/fa";
-import { CiEdit, CiLocationOn } from "react-icons/ci";
+import { CiLocationOn } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiCash, GiGearHammer } from "react-icons/gi";
@@ -15,7 +15,6 @@ import "../App.css";
 import BarChart from "./BarChart";
 import CardComponent from "./CardComponent";
 import PieChart from "./PieChart";
-import EditTemple from "./edit/EditTemple";
 import InventoryPieChart from "./InventoryPieChart";
 import InventoryBarChart from "./InventoryBarChart";
 import Alert from "./Alert";
@@ -72,7 +71,7 @@ export default function Home() {
     useEffect(()=>{
         getTempleData();
     },[currUser]);
-    
+
     //get analytics data
     const getAnalyticsData = useCallback( async()=> {
         try {
