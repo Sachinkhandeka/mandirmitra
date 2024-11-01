@@ -8,7 +8,7 @@ import TempleGods from "./navigationItems/TempleGods";
 import TemplePujaris from "./navigationItems/TemplePujaris";
 import TempleManagement from "./navigationItems/TempleManagment";
 
-const navigationItems = ['About', 'Festivals', 'Photos', 'Gods', 'Pujaris', 'Managment', 'Nearby Temples'];
+const navigationItems = ['About', 'Festivals', 'Photos', 'Gods', 'Pujaris', 'Managment'];
 
 export default function TempleDetailsSection({ temple }) {
     const [ activeNavItem, setActiveNavItem ] = useState('About');

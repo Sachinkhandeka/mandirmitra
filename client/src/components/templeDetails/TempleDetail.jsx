@@ -3,6 +3,7 @@ import TempleHeader from "./TempleHeader";
 import { useEffect, useState } from "react";
 import TempleDetailsSection from "./TempleDetailsSection";
 import FooterComp from "../FooterComp";
+import { Footer } from "flowbite-react";
 
 export default function TempleDetail() {
     const { id } = useParams();
@@ -29,7 +30,9 @@ export default function TempleDetail() {
         <section className="min-h-screen text-black" >
             <TempleHeader />
             { temple && <TempleDetailsSection temple={temple} /> }
-            <FooterComp />
+            <Footer container>
+                <Footer.Copyright href="/" by="mandirmitra™" year={2022} />
+            </Footer>
         </section>
     );
 }
