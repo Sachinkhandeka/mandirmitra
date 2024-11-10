@@ -61,7 +61,7 @@ export default function TempleManagementSection({ temple, setTemple, setAlert })
             };
 
             // Backend API call to update the management in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/management`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedManagement }),

@@ -100,7 +100,7 @@ export default function TemplePujariSection({ temple, setTemple, setAlert }) {
             };
             
             // Backend API call to update the Pujaris in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/pujaris`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedPujaris }),

@@ -49,7 +49,7 @@ module.exports.singinWithPhoneNumber = async (req, res) => {
             const { password, ...rest } = existingUser._doc;
             
             // Return response with token and user data
-            return res.status(200).cookie("access_token", token, { httpOnly: true }).json({ currUser: rest });
+            return res.status(200).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000  }).json({ currUser: rest });
         } else {
             // User does not exist, return a response indicating that they need to sign up
             return res.status(200).json({ needsSignup: true });
@@ -97,7 +97,7 @@ module.exports.createController = async(req ,res)=> {
         const { password: pass, ...rest } = superAdmin._doc;
 
         // Set token in cookie and send response
-        res.status(200).cookie("access_token", token, { httpOnly: true }).json({
+        res.status(200).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000  }).json({
             currUser: rest,
         });
     } catch (error) {
@@ -134,7 +134,7 @@ module.exports.signinController = async(req ,res)=> {
         superAdmin : true,
     }, secret,{ expiresIn: '7d' });
     const { password : pass, ...rest } = validUser._doc;
-    res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 
+    res.status(200).cookie("access_token", token, { httpOnly : true, maxAge : 7 * 24 * 3600 * 1000  }).json({ 
         rest,
     });
 }
@@ -192,7 +192,7 @@ module.exports.googleController = async(req ,res)=> {
         }, secret,{ expiresIn: '7d' });
         const { password : pass, ...rest } = superAdmin._doc;
 
-        res.status(200).cookie("access_token", token, { httpOnly : true }).json({
+        res.status(200).cookie("access_token", token, { httpOnly : true, maxAge : 7 * 24 * 3600 * 1000  }).json({
             currUser : rest,
         });
 

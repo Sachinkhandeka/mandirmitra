@@ -90,7 +90,7 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                 godsAndGoddesses : [...temple.godsAndGoddesses, newDiety]
             };
             // Backend API call to update the deities in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/gods`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedDieties }),

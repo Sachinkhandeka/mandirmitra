@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { signinSuccess } from "../../redux/user/userSlice";
-import FooterComp from "../FooterComp";
+import { BsFacebook, BsInstagram, BsLinkedin, BsTwitterX  } from "react-icons/bs";
 import TempleHeader from "./TempleHeader";
 import Alert from "../Alert";
-import { Avatar, TextInput, Button } from "flowbite-react";
+import { Avatar, TextInput, Button, Footer } from "flowbite-react";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { FiEdit3 } from "react-icons/fi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdPerson, MdEmail, MdPhone, MdLock } from "react-icons/md";
@@ -87,6 +88,44 @@ export default function DevoteeProfile() {
     };
 
     return (
+        <>
+        <Helmet>
+            {/* Helmet for SEO Meta Tags and Structured Data */}
+            <title>{currUser.displayName} - Profile Overview</title>
+            <meta 
+                name="description"
+                content="manage your profile details like displayname, email, phone number, password"
+            />
+            <meta
+                name="keywords"
+                content="manage profile, profile overview, profile settings, manage password, update profile, mandirmitra" 
+            />
+            <meta name="author" content="MandirMitra Team" />
+            <meta property="og:title" content={`${currUser.displayName} - Profile Overview`} />
+            <meta property="og:description" content="manage your profile details like displayname, email, phone number, password" />
+            <meta property="og:url" content="https://www.mandirmitra.co.in/profile" />
+            <meta property="og:type" content="website" />
+
+            {/* Structured Data for Login and Registration */}
+            <script type="application/ld+json" >
+                { JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": currUser.displayName,
+                    "description": "manage your profile details like displayname, email, phone number, password.",
+                    "url": "https://www.mandirmitra.co.in/profile",
+                    "potentialAction": [{
+                        "@type": "UpdateAction",
+                        "name": "manage your profile details, update your profile info",
+                        "target": "https://www.mandirmitra.co.in/profile",
+                        "result": {
+                            "@type": "UpdateAction",
+                            "name": "update your profile info"
+                        }
+                    }]
+                }) }
+            </script>
+        </Helmet>
         <section className="min-h-screen text-black dark:text-white">
             <TempleHeader />
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
@@ -214,7 +253,16 @@ export default function DevoteeProfile() {
                     </div>
                 </section>
             )}
-            <FooterComp />
+            <Footer container>
+                <Footer.Copyright href="/" by="mandirmitra™" year={2024} className="my-4" />
+                <div className="mt-4 flex gap-2 space-x-6 sm:mt-0 sm:justify-center">
+                    <Footer.Icon href=" https://www.facebook.com/profile.php?id=61561382858176&mibextid=ZbWKwL" icon={BsFacebook} target="_blank" rel="noopener noreferrer" />
+                    <Footer.Icon href="https://www.instagram.com/mandirmitra/" icon={BsInstagram} target="_blank" rel="noopener noreferrer" />
+                    <Footer.Icon href="https://www.linkedin.com/in/mandir-mitra/" icon={BsLinkedin} target="_blank" rel="noopener noreferrer" />
+                    <Footer.Icon href="https://x.com/MandirMitra" icon={BsTwitterX} target="_blank" rel="noopener noreferrer" />
+                </div>
+            </Footer>
         </section>
+        </>
     );
 }

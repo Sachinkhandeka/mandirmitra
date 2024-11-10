@@ -74,3 +74,11 @@ export const refreshToken = async () => {
         });
     });
 };
+
+// Utility function to extract video ID and convert to embeddable URL
+export const getYouTubeEmbedUrl = (url)=> {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.+\?v=)|youtu\.be\/)([^&\n?#]+)/;
+    const matches = url.match(regex);
+    const videoId = matches ? matches[1] : null;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}

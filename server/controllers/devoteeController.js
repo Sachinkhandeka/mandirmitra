@@ -41,7 +41,7 @@ module.exports.devoteeAuthController = async (req, res, next) => {
 
             // Return response with token and user data
             return res.status(200)
-                .cookie("access_token", token, { httpOnly: true })
+                .cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000 })
                 .json({ currUser: rest });
         } else {
             // If devotee does not exist, return a response indicating they need to sign up
@@ -95,7 +95,7 @@ module.exports.devoteeCreateController = async (req, res, next) => {
         const { password: pass, ...rest } = newDevotee._doc;
 
         // Set token in cookie and send response
-        res.status(201).cookie("access_token", token, { httpOnly: true }).json({
+        res.status(201).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000 }).json({
             currUser: rest,
         });
     } catch (error) {

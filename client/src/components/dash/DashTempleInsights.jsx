@@ -7,6 +7,7 @@ import TempleManagementSection from "../TempleManagmentSection";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import Alert from "../Alert";
+import TempleVideosSection from "../TempleVideosSection";
 
 export default function DashTempleInsights() {
     const { currUser } = useSelector( state => state.user );
@@ -46,16 +47,21 @@ export default function DashTempleInsights() {
                     />
                 )}
             </div>
-            <div className="flex flex-col flex-1" >
-                <TempleProfileSection temple={temple} setAlert={setAlert} />
-                <TempleDietySection temple={temple} setTemple={setTemple} setAlert={setAlert} />
-                <TemplePriestSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
-                <TempleManagementSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
-            </div>
-            <div className="flex-1" >
-                <TempleGeneralInfoSection temple={temple} setAlert={setAlert} />
-                <TempleFestivalsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
-            </div>
+            { currUser.isAdmin && (
+                <>
+                    <div className="flex flex-col flex-1" >
+                        <TempleProfileSection temple={temple} setAlert={setAlert} />
+                        <TempleDietySection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                        <TemplePriestSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                        <TempleManagementSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                    </div>
+                    <div className="flex-1" >
+                        <TempleGeneralInfoSection temple={temple} setAlert={setAlert} />
+                        <TempleFestivalsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                        <TempleVideosSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                    </div>
+                </>
+            ) }
         </section>
     );
 }

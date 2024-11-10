@@ -101,7 +101,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 historyImages: downloadURLs, // Only save Firebase URLs here
             };
 
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/genInfo`, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ templeData: updatedInfo }),

@@ -1,4 +1,5 @@
-import { FiX } from "react-icons/fi";
+import { Tooltip } from "flowbite-react";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function ManagementList({ temple, setTemple, setAlert }) {
     const handleRemoveManagement = async (index) => {
@@ -7,7 +8,7 @@ export default function ManagementList({ temple, setTemple, setAlert }) {
         };
 
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/management`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedManagement }),
@@ -38,7 +39,9 @@ export default function ManagementList({ temple, setTemple, setAlert }) {
                                 className="absolute top-2 right-2 bg-white text-black p-1 dark:bg-gray-600 dark:text-white rounded-full opacity-75 hover:opacity-100"
                                 onClick={() => handleRemoveManagement(index)}
                             >
-                                <FiX size={16} />
+                                <Tooltip content={"Delete"} trigger="hover" >
+                                    <MdDeleteForever size={16} className="text-red-600 dark:text-white" />
+                                </Tooltip>
                             </button>
                         </div>
 

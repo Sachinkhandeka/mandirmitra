@@ -105,12 +105,51 @@ export default function PhoneOtpForm() {
     };
 
     return (
-        <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800">
+        <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800" aria-labelledby="phone-otp-title">
+            {/* Helmet for SEO Meta Tags and Structured Data */}
             <Helmet>
-                <title>MandirMitra - Phone OTP Verification</title>
-                <meta name="description" content="mandirmitra helps you manage temple activities with ease and grace. Enter your phone number to log in or create a new account." />
-                <meta name="keywords" content="mandirmitra, MandirMitra, mandir mitra, Temple Management, OTP Verification, Phone Login" />
-                <meta name="author" content="mandirmitra Team" />
+                <title>MandirMitra - Admin Login and Temple Registration</title>
+                <meta
+                    name="description"
+                    content="Log in or sign up as a temple admin or employee with MandirMitra. Use phone verification or email login to access the temple dashboard or register a new temple."
+                />
+                <meta
+                    name="keywords"
+                    content="MandirMitra, temple management, admin login, temple registration, OTP verification, phone login, temple dashboard"
+                />
+                <meta name="author" content="MandirMitra Team" />
+                <meta property="og:title" content="MandirMitra - Admin Login and Temple Registration" />
+                <meta property="og:description" content="Log in or sign up as a temple admin or employee with MandirMitra. Use OTP verification to manage temple details and access the dashboard." />
+                <meta property="og:image" content={brand} />
+                <meta property="og:url" content="https://www.mandirmitra.co.in/login" />
+                <meta property="og:type" content="website" />
+
+                {/* Structured Data for Login and Registration */}
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "WebPage",
+                        "name": "Admin Login and Temple Registration",
+                        "description": "Log in or sign up to access temple details and management dashboard via MandirMitra.",
+                        "url": "https://www.mandirmitra.co.in/login",
+                        "potentialAction": [
+                            {
+                                "@type": "RegisterAction",
+                                "name": "Sign up as Admin or Employee",
+                                "target": "https://www.mandirmitra.co.in/login",
+                                "result": {
+                                    "@type": "RegisterAction",
+                                    "name": "Phone OTP Verification"
+                                }
+                            },
+                            {
+                                "@type": "LoginAction",
+                                "name": "Login with Phone or Email",
+                                "target": "https://www.mandirmitra.co.in/login"
+                            }
+                        ]
+                    })}
+                </script>
             </Helmet>
             <div className="flex flex-col items-center justify-center gap-2 p-4 md:hidden">
                 <img src={brand} alt="brand_image" className='h-16 w-16 border-2 rounded-md' />
@@ -123,7 +162,7 @@ export default function PhoneOtpForm() {
             <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10">
                 {showComponent === 'phoneInput' && (
                     <>
-                        <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4'>Log in or create an account</h1>
+                        <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4' id="phone-otp-title">Log in or create an account</h1>
                         <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                             {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
                         </div>

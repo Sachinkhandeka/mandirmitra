@@ -77,7 +77,7 @@ export default function TempleFestivalsSection({ temple, setTemple, setAlert }) 
                 festivals : [...temple.festivals, newFestival]
             };
             // Backend API call to update festivals
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/festivals`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedFestivals }),

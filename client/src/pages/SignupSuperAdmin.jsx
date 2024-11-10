@@ -30,11 +30,11 @@ export default function SignupSuperAdmin({ setShowComponent }) {
         try {
             setError(null);
             const response = await fetch(
-                "/api/temple/add",
+                "/api/temple/add/genInfo",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify({ templeData : formData })
                 }
             );
             const data = await response.json();

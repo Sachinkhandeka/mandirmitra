@@ -8,7 +8,7 @@ const { verifyAdmin } = require("../utils/verifyAdmin");
 
 //create temple
 router.post(
-    "/add",
+    "/add/:type",
     validateTempleSchema,
     wrapAsync(temple.addController),
 );
@@ -34,7 +34,8 @@ router.get(
 
 //edit temple 
 router.put(
-    "/edit/:templeId",
+    "/edit/:templeId/:type",
+    validateTempleSchema,
     verifyAdmin,
     wrapAsync(temple.editController),
 );
@@ -44,6 +45,12 @@ router.get(
     "/analytics/:templeId",
     verifyToken,
     wrapAsync(temple.analyticalController),
+);
+
+router.post(
+    "/:templeId/anuyayi/:devoteeId",
+    verifyToken,
+    wrapAsync(temple.anuyayi),
 );
 
 module.exports = router ;   

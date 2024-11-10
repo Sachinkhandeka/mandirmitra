@@ -1,6 +1,6 @@
-import { Avatar } from "flowbite-react";
+import { Avatar, Tooltip } from "flowbite-react";
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function DietyList({ temple, setTemple, setAlert }) {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -17,7 +17,7 @@ export default function DietyList({ temple, setTemple, setAlert }) {
         };
 
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}`, {
+            const response = await fetch(`/api/temple/edit/${temple._id}/gods`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ templeData: updatedDieties }),
@@ -50,7 +50,9 @@ export default function DietyList({ temple, setTemple, setAlert }) {
                                 className="absolute top-2 right-2 bg-white text-black p-1 dark:bg-gray-600 dark:text-white rounded-full opacity-75 hover:opacity-100"
                                 onClick={() => handleRemoveDiety(indx)}
                             >
-                                <FiX size={16} />
+                                <Tooltip content={"Delete"} trigger="hover" >
+                                    <MdDeleteForever size={16} className="text-red-600 dark:text-white" />
+                                </Tooltip>
                             </button>
                         </div>
 

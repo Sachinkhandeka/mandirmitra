@@ -23,6 +23,6 @@ const devoteeSchema = new mongoose.Schema({
     },
 });
 
-const Devotee = mongoose.model("devotee", devoteeSchema );
+const Devotee = mongoose.model("Devotee", devoteeSchema );
 
 module.exports = Devotee ; 

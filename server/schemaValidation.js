@@ -64,7 +64,7 @@ const devoteeSchema = Joi.object({
 }).required().options({ abortEarly : false });
 
 //temple schema validations
-const templeSchema = Joi.object({
+const templeGenInfo = Joi.object({
     name: Joi.string().required().error(new Error('Temple name is required')),
     alternateName: Joi.string().optional(),
     location: Joi.string().required().error(new Error('Location is required')),
@@ -72,28 +72,49 @@ const templeSchema = Joi.object({
     description: Joi.string().optional(),
     foundedYear: Joi.number().integer().optional(),
     historyImages: Joi.array().items(Joi.string().uri()).optional(),
-    
+}).required().options({ abortEarly: false });
+
+const templeGods = Joi.object({
     // godsAndGoddesses validation
     godsAndGoddesses: Joi.array().items(
         Joi.object({
+            _id: Joi.string().optional(),
             name: Joi.string().required().error(new Error('Username is required')),
             description: Joi.string().required().error(new Error('Short description is required')),
             image: Joi.string().uri().optional(),
         })
     ).optional(),
-    
+}).optional().options({ abortEarly : false });
+
+const TempleFestivals = Joi.object({
     // festivals validation
     festivals: Joi.array().items(
         Joi.object({
+            _id: Joi.string().optional(),
             festivalName: Joi.string().required().error(new Error('Festival name is required')),
             festivalImportance: Joi.string().optional(),
             festivalImages: Joi.array().items(Joi.string().uri()).optional(),
         })
     ).optional(),
+}).optional().options({ abortEarly : false });
 
+const templeVideos = Joi.object({
+    // videos validation
+    videos: Joi.array().items(
+        Joi.object({
+            _id: Joi.string().optional(),
+            title: Joi.string().required().error(new Error('Video title is required')),
+            description: Joi.string().required().error(new Error('Video description is required')),
+            url: Joi.string().pattern(/^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+$/).required().error(new Error('Video URL must be a valid YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)'))
+        })
+    ).optional(),
+}).optional().options({ abortEarly : false });
+
+const templePujaris = Joi.object({
     // pujari section validation
     pujaris: Joi.array().items(
         Joi.object({
+            _id: Joi.string().optional(),
             name: Joi.string().required().error(new Error('Pujari name is required')),
             profile: Joi.string().uri().optional(),
             experience: Joi.number().integer().min(0).optional().error(new Error('Experience should be a valid number')),
@@ -102,16 +123,20 @@ const templeSchema = Joi.object({
             contactInfo: Joi.string().pattern(/^\d{10}$/).optional().error(new Error('Contact info must be a valid 10-digit number')),
         })
     ).optional(),
+}).optional().options({ abortEarly : false });
 
+const templeManagment = Joi.object({
     // management section validation
     management: Joi.array().items(
         Joi.object({
+            _id: Joi.string().optional(),
             name: Joi.string().required().error(new Error('Person name is required')),
             role: Joi.string().required().error(new Error('Person role is required')),
             profile: Joi.string().uri().optional(),
         })
     ).optional(),
-}).required().options({ abortEarly: false });
+}).optional().options({ abortEarly : false });
+
 
 //user schema validations
 const userSchema = Joi.object({
@@ -217,7 +242,12 @@ module.exports = {
     roleSchema,
     superAdminSchema,
     devoteeSchema,
-    templeSchema,
+    templeGenInfo,
+    templeGods,
+    templeVideos,
+    TempleFestivals,
+    templePujaris,
+    templeManagment,
     userSchema,
     expenseSchema,
     eventSchema,

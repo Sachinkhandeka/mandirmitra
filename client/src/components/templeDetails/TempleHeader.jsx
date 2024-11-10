@@ -92,15 +92,17 @@ export default function TempleHeader() {
                 </Link>
                 <div className="flex gap-4 flex-row items-center">
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSmartSearchBar(!smartSearchBar)}>
-                        { smartSearchBar ? <MdOutlineCancel size={28} /> :  <IoMdSearch size={28} /> }
+                        { smartSearchBar ? <MdOutlineCancel size={28} /> :  <IoMdSearch size={28} aria-label="search-temples" /> }
                     </span>
-                    <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
-                        <Tooltip content="Register Mandir">
-                            <Link to={"/login"} >
-                                <GiShintoShrine size={28} />
-                            </Link>
-                        </Tooltip>
-                    </span>
+                    { !currUser && !currUser.displayName &&  (
+                        <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
+                            <Tooltip content="Register Mandir">
+                                <Link to={"/login"} >
+                                    <GiShintoShrine size={28} aria-label="register temple" />
+                                </Link>
+                            </Tooltip>
+                        </span>
+                    ) }
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => dispatch(toggleTheme())}>
                         <Tooltip content="Toggle Theme">
                             {theme === "light" ? <FaCloudMoon size={28} /> : <FaCloudSun size={28} />}
@@ -148,8 +150,8 @@ export default function TempleHeader() {
                             </Dropdown>
                         ) : (
                             <Link to={"/devotees"} className="p-2 rounded-md hover:bg-blue-200 dark:hover:bg-gray-600 font-medium flex items-center gap-3">
-                                <FaUserPlus size={28} />
-                                <span className="hidden md:block text-xs" >Login / Signup</span>
+                                <FaUserPlus size={28} aria-label="login-signup" />
+                                <span className="hidden md:block text-xs" aria-label="login-signup" >Login / Signup</span>
                             </Link>
                         ) }
                     </span>

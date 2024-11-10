@@ -7,10 +7,11 @@ const Permission = require("../models/permissionSchema");
 const Expense = require("../models/expenseSchema");
 const InventoryItem = require("../models/inventorySchema");
 const ExpressError = require("../utils/ExpressError");
+const Devotee = require("../models/devotee");
 
 //create temple route handler
 module.exports.addController = async (req, res) => {
-    const { name, location } = req.body;
+    const { name, location } = req.body.templeData;
 
     if (!name || !location) { 
         throw new ExpressError(400, "Please provide all the details.");
@@ -99,6 +100,7 @@ module.exports.getOneTempleController = async (req, res, next) => {
             throw new ExpressError(404, "Temple not found.");
         }
 
+        await temple.populate("anuyayi", "displayName photoURL");
         // If temple is found, send the response
         res.status(200).json({
             message: "Temple details fetched successfully",
@@ -112,39 +114,45 @@ module.exports.getOneTempleController = async (req, res, next) => {
 //edit controller 
 module.exports.editController = async (req, res) => {
     const { templeData } = req.body;
-    const { templeId } = req.params;
-
+    const { templeId, type } = req.params;
     if (!templeId) {
-        throw new ExpressError(400, "Temple id required.");
+        throw new ExpressError(400, "Temple ID required.");
     }
+
+    // Map the `type` parameter to the specific fields in the `Temple` model
+    const templeFields = {
+        genInfo: ["name", "alternateName", "location", "image", "foundedYear", "description", "historyImages"],
+        gods: "godsAndGoddesses",
+        festivals: "festivals",
+        pujaris: "pujaris",
+        management: "management",
+        videos: "videos",
+    };
+
+    // Check if `type` is valid
+    const fieldsToUpdate = templeFields[type];
+    if (!fieldsToUpdate) {
+        throw new ExpressError(400, "Invalid type provided.");
+    }
+
+    // Build the update object based on `type`
     const updateObject = {};
 
-    // General temple details
-    if (templeData.name) updateObject.name = templeData.name;
-    if (templeData.alternateName) updateObject.alternateName = templeData.alternateName;
-    if (templeData.location) updateObject.location = templeData.location;
-    if (templeData.image) updateObject.image = templeData.image;
-    if (templeData.foundedYear) updateObject.foundedYear = templeData.foundedYear;
-    if (templeData.description) updateObject.description = templeData.description;
-    if (templeData.historyImages) updateObject.historyImages = templeData.historyImages;
-
-    // Gods and Goddesses
-    if (templeData.godsAndGoddesses) updateObject.godsAndGoddesses = templeData.godsAndGoddesses;
-
-    // Festivals
-    if (templeData.festivals) updateObject.festivals = templeData.festivals;
-    
-    // Pujaris
-    if (templeData.pujaris) updateObject.pujaris = templeData.pujaris;
-
-    // Management
-    if (templeData.management) updateObject.management = templeData.management;
+    if (Array.isArray(fieldsToUpdate)) {
+        // If the `type` refers to general temple details, update multiple fields
+        fieldsToUpdate.forEach(field => {
+            if (templeData[field] !== undefined) updateObject[field] = templeData[field];
+        });
+    } else {
+        // If `type` refers to a specific array field, update that field directly
+        updateObject[fieldsToUpdate] = templeData[fieldsToUpdate];
+    }
 
     // Find and update the temple by ID
     const updatedTemple = await Temple.findByIdAndUpdate(
         templeId,
-        { $set: updateObject }, // Update only the fields present in templeData
-        { new: true, runValidators: true } // Return the updated document
+        { $set: updateObject },
+        { new: true, runValidators: true }
     );
 
     if (!updatedTemple) {
@@ -155,7 +163,8 @@ module.exports.editController = async (req, res) => {
         message: "Temple updated successfully",
         temple: updatedTemple
     });
-}
+};
+
 
 module.exports.analyticalController = async (req, res) => {
     try {
@@ -214,6 +223,37 @@ module.exports.analyticalController = async (req, res) => {
         throw new ExpressError(err.status || 400, err.message);
     }
 };
+
+module.exports.anuyayi = async (req , res)=> {
+    const { templeId, devoteeId } = req.params ; 
+    
+    const temple = await Temple.findById(templeId);
+
+    if(!temple) {
+        throw new ExpressError(404, "Temple not found.");
+    }
+
+    const devotee = await Devotee.findById(devoteeId);
+
+    if(!devotee) {
+        throw new ExpressError(404, "User not found.");
+    }
+
+    const isAnuyayi = temple.anuyayi.includes(devoteeId);
+
+    if(isAnuyayi) {
+        temple.anuyayi = temple.anuyayi.filter(id => id.toString() !== devoteeId);
+        await temple.save();
+    }else {
+        temple.anuyayi.push(devoteeId);
+        await temple.save();
+    }
+    await temple.populate("anuyayi", "displayName photoURL");
+    return res.status(200).json({
+        message: isAnuyayi ? "Successfully anutyaag the temple." : "Successfully anuyayi the temple.",
+        temple: temple
+    });
+}
 
 // Function to generate the start and end dates for each of the past seven months
 const generatePastSevenMonthsData = () => {

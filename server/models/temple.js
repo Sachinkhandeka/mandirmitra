@@ -1,3 +1,4 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const  templeSchema = new mongoose.Schema({
@@ -45,6 +46,11 @@ const  templeSchema = new mongoose.Schema({
             festivalImages : [{ type : String }],
         }
     ],
+    videos : [{
+        title : { type : String, required : true },
+        description : { type : String, required : true },
+        url : { type : String, required : true },
+    }],
     pujaris : [
         {
             name : { type : String, },
@@ -65,6 +71,10 @@ const  templeSchema = new mongoose.Schema({
             profile : { type : String },
         }
     ],
+    anuyayi: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Devotee',
+    }] 
 },{ timestamps : true });
 
 const Temple = mongoose.model("Temple", templeSchema);

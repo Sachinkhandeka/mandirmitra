@@ -10,6 +10,7 @@ import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth
 import { signinSuccess, signinFailure } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import CreateDevotee from "./CreateDevotee";
 import brand from "../assets/brand.jpg";
 
@@ -98,6 +99,43 @@ export default function Devotees() {
         }
     };
     return (
+        <>
+        {/* Helmet for SEO Meta Tags and Structured Data */}
+        <Helmet>
+            <title>Devotee Login and Signup | MandirMitra</title>
+            <meta
+                name="description"
+                content="Login or create an account to stay connected with your temple through MandirMitra. Discover temple history, events, and manage your profile."
+            />
+            <meta
+                name="keywords"
+                content="devotee login, signup, MandirMitra, temple app, phone verification, temple management"
+            />
+            <meta property="og:title" content="Devotee Login and Signup | MandirMitra" />
+            <meta property="og:description" content="Login or create an account to stay connected with your temple through MandirMitra. Get OTP verification and join the temple community." />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://www.mandirmitra.co.in/devotees" />
+            <meta property="og:image" content={brand} />
+
+            {/* Structured Data for Login Page */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": "Devotee Login and Signup",
+                    "description": "Login or sign up to access temple details, manage your profile, and stay connected with your temple.",
+                    "url": "https://www.mandirmitra.co.in/devotees",
+                    "potentialAction": {
+                        "@type": "RegisterAction",
+                        "target": "https://www.mandirmitra.co.in/devotees",
+                        "result": {
+                            "@type": "LoginAction",
+                            "name": "Phone Number Login"
+                        }
+                    }
+                })}
+            </script>
+        </Helmet>
         <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800">
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
@@ -159,5 +197,6 @@ export default function Devotees() {
                 </Suspense>
             )}
         </section>
+        </>
     );
 }

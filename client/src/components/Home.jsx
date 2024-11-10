@@ -148,7 +148,7 @@ export default function Home() {
             />
             <meta name="google-site-verification" content="VvYIu8ULwVvBXQX9D3xXhNJ_mVl9E7PKyae2OrlXMMQ" />
             <meta name="author" content="MandirMitra" />
-            <link rel="canonical" href="https://www.mandirmitra.co.in/" />
+            <link rel="canonical" href="https://www.mandirmitra.co.in/dashboard" />
         </Helmet>
         <div className="w-full" >  
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">

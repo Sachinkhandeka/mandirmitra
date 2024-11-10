@@ -1,7 +1,8 @@
 const ExpressError = require("./utils/ExpressError");
 const { 
     daanSchema, permissionSchema, roleSchema, superAdminSchema,
-    templeSchema, userSchema, expenseSchema, eventSchema, 
+    templeGenInfo, templeGods, templeVideos, TempleFestivals,
+    templePujaris, templeManagment, userSchema, expenseSchema, eventSchema, 
     invitationSchema, inventorySchema, tenantSchema, assetSchema, 
     devoteeSchema} = require("./schemaValidation");
 
@@ -133,30 +134,36 @@ module.exports.validateDevoteeSchema = (req ,res ,next)=> {
 }
 
 //validate templeschema
-module.exports.validateTempleSchema = (req ,res , next)=> {
-    const temple = {
-        name : req.body.name,
-        location : req.body.location,
+module.exports.validateTempleSchema = (req, res, next) => {
+    const templeSchemas = {
+        genInfo: templeGenInfo,
+        gods: templeGods,
+        videos: templeVideos,
+        festivals: TempleFestivals,
+        pujaris: templePujaris,
+        management: templeManagment,
+    };
+
+    const { type } = req.params;
+    const templeData = req.body.templeData;
+    const schema = templeSchemas[type];
+    if (!schema) {
+        throw new ExpressError(400, "Invalid type provided for temple data validation.");
     }
 
-    let { error } = templeSchema.validate(temple);
+    const { error } = schema.validate(templeData);
 
-    if(error) {
-        //if error is of joi but not related to field validation
-        if(error instanceof Error && error.isJoi) {
-            let errMsg = error.details.map(el => {
-                return el.message;
-            }).join(",");
+    if (error) {
+        if (error.isJoi) {
+            const errMsg = error.details.map(el => el.message).join(",");
             throw new ExpressError(400, errMsg);
-        }else {
-            //if error is related to field validation
-            let errMsg = error.message ; 
-            throw new ExpressError(400 , errMsg);
+        } else {
+            throw new ExpressError(400, error.message);
         }
-
     }
+
     next();
-}
+};
 
 //validate userschema
 module.exports.validateUserSchema = (req ,res ,next)=> {
