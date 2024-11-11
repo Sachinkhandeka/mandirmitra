@@ -1,4 +1,4 @@
-import { Button, Label, TextInput, Spinner, Tooltip } from "flowbite-react";
+import { Button, Label, TextInput, Spinner, Tooltip, Textarea } from "flowbite-react";
 import { useState } from "react";
 import { getYouTubeEmbedUrl } from "../utilityFunx";
 import { MdDeleteForever } from "react-icons/md";
@@ -98,23 +98,10 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="title">Video Title</Label>
                         <TextInput
-                            type="text"
                             placeholder="Enter video title"
                             name="title"
                             id="title"
                             value={videoInfo.title}
-                            onChange={handleOnChange}
-                            required
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="description">Video Description</Label>
-                        <TextInput
-                            type="text"
-                            placeholder="Enter video description"
-                            name="description"
-                            id="description"
-                            value={videoInfo.description}
                             onChange={handleOnChange}
                             required
                         />
@@ -127,6 +114,19 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
                             name="url"
                             id="url"
                             value={videoInfo.url}
+                            onChange={handleOnChange}
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2">
+                        <Label htmlFor="description">Video Description</Label>
+                        <Textarea
+                            type="text"
+                            placeholder="Enter video description"
+                            name="description"
+                            id="description"
+                            rows={6}
+                            value={videoInfo.description}
                             onChange={handleOnChange}
                             required
                         />
