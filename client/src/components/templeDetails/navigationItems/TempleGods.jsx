@@ -16,7 +16,7 @@ export default function TempleGods({ gods }) {
             {gods && gods.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {gods.map((god, index) => (
-                        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:border-4 hover:border-t-0 hover:border-l-0 hover:border-black hover:dark:border-yellow-300 overflow-hidden">
                             <img
                                 src={god.image}
                                 alt={god.name}
