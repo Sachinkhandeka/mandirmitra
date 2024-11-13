@@ -45,6 +45,7 @@ export default function TempleDetailsSection({ temple, setTemple }) {
             const data = await response.json();
             if(!response.ok) {
                 setLoading(false);
+                navigate("/devotees");
                 return setAlert({ type : "error", message : data.message });
             }
             setLoading(false);
