@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router({ mergeParams : true });
 const wrapAsync = require("../utils/wrapAsync");
-const { verifyToken } = require("../utils/verifyUser");
 const { validateDevoteeSchema } = require("../middleware");
 const devotees = require("../controllers/devoteeController");
+const { verifyDevoteeToken } = require("../utils/verifyDevotee");
 
 //login
 router.post(
@@ -20,18 +20,19 @@ router.post(
 
 router.put(
     "/:devoteeId",
-    verifyToken,
+    verifyDevoteeToken,
     wrapAsync(devotees.editDevoteeProfileController),
 );
 
 router.put(
     "/:devoteeId/password",
-    verifyToken,
+    verifyDevoteeToken,
     wrapAsync(devotees.updatePasswordController),
 );
 
 router.post(
     "/signout",
+    verifyDevoteeToken,
     wrapAsync(devotees.signOutController),
 );
 

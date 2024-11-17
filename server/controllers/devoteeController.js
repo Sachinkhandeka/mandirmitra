@@ -1,59 +1,74 @@
 const User = require("../models/userSchema");
 const SuperAdmin = require("../models/superAdmin");
 const Devotee = require("../models/devotee");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const ExpressError = require("../utils/ExpressError");
 
-const saltRounds = 10;
-const secret = process.env.JWT_SECRET;
+const generateAccessAndRefreshToken = async(devoteeId)=> {
+    try {
+        const devotee = await Devotee.findById(devoteeId);
+        if(!devotee) {
+            throw new ExpressError(401, "User not found");
+        }
+
+        const accessToken = await devotee.generateAccessToken();
+        const refreshToken = await devotee.generateRefreshToken();
+        devotee.refreshToken = refreshToken;
+        await devotee.save({ validateBeforeSave : false });
+
+        return { accessToken, refreshToken };
+        
+    } catch (error) {
+        throw new ExpressError(500, "Something went wrong while generating tokens");
+    }
+}
 
 // Controller for Devotee Authentication
-module.exports.devoteeAuthController = async (req, res, next) => {
-    const { phoneNumber } = req.body;
+module.exports.devoteeAuthController = async (req, res) => {
+    const { phoneNumber, password } = req.body;
 
-    try {
-        // Check if user already exists in SuperAdmin or User collections
-        let existingUser = await SuperAdmin.findOne({ phoneNumber });
-        if (!existingUser) {
-            existingUser = await User.findOne({ phoneNumber });
-        }
-
-        // If user exists in either SuperAdmin or User, prevent duplicate account creation
-        if (existingUser) {
-            return res.status(400).json({ message: "User with this phone number already exists." });
-        }
-
-        // Check if a devotee with this phone number already exists
-        let existingDevotee = await Devotee.findOne({ phoneNumber });
-
-        if (existingDevotee) {
-            // If the devotee exists, log them in by generating a JWT token
-            const payload = {
-                id: existingDevotee._id,
-                devotee: true,
-            };
-
-            const token = jwt.sign(payload, secret, { expiresIn: "7d" });
-
-            // Omit password from response
-            const { password, ...rest } = existingDevotee._doc;
-
-            // Return response with token and user data
-            return res.status(200)
-                .cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000 })
-                .json({ currUser: rest });
-        } else {
-            // If devotee does not exist, return a response indicating they need to sign up
-            return res.status(200).json({ needsSignup: true });
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal Server Error" });
+    if(!(phoneNumber && password)) {
+        throw new ExpressError(401, "Please provide your phone number and password");
     }
+    // Check if user already exists in SuperAdmin or User collections
+    let existingUser = await SuperAdmin.findOne({ phoneNumber });
+    if (!existingUser) {
+        existingUser = await User.findOne({ phoneNumber });
+    }
+
+    // If user exists in either SuperAdmin or User, prevent duplicate account creation
+    if (existingUser) {
+        return res.status(400).json({ message: "User with this phone number already exists." });
+    }
+
+    // Check if a devotee with this phone number already exists
+    let existingDevotee = await Devotee.findOne({ phoneNumber });
+
+    if(!existingDevotee) {
+        return res.status(200).json({ needsSignup: true })
+    }
+
+    const isPassCorrect = await existingDevotee.isPasswordCorrect(password);
+
+    if(!isPassCorrect) {
+        throw new ExpressError(401, "Invalid Password");
+    }
+
+    const { accessToken, refreshToken } =  await generateAccessAndRefreshToken(existingDevotee._id);
+
+    const loggedInDevotee = await Devotee.findById(existingDevotee._id).select("-password -refreshToken");
+
+    const options = {
+        httpOnly : true,
+        secure : true,
+    }
+
+    return res.status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_token", refreshToken, options)
+    .json({ message : "User logged in successfully", currUser : loggedInDevotee, accessToken, refreshToken });
 };
 
-module.exports.devoteeCreateController = async (req, res, next) => {
+module.exports.devoteeCreateController = async (req, res) => {
     const devotee = req.body;
     // Extract fields from devotee object
     const { displayName, email, password, phoneNumber, photoURL } = devotee;
@@ -73,31 +88,30 @@ module.exports.devoteeCreateController = async (req, res, next) => {
             throw new ExpressError(400, "A user with this email or phone number already exists.");
         }
 
-        // Hash the password before saving
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-
         // Create new Devotee
         let newDevotee = new Devotee({
             displayName,
             email,
             phoneNumber,
-            password: hashedPassword,
+            password,
             photoURL,
         });
 
         // Save Devotee
         newDevotee = await newDevotee.save();
 
-        // Generate JWT token for the new Devotee
-        const token = jwt.sign({ id: newDevotee._id, devotee: true }, secret, { expiresIn: '7d' });
+        const registeredDevotee = await Devotee.findById(newDevotee._id).select("-password -refreshToken");
 
-        // Omit password from response
-        const { password: pass, ...rest } = newDevotee._doc;
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(newDevotee._id);
+        const options = {
+            httpOnly : true,
+            secure : true,
+        }
+        return res.status(200)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_Token", refreshToken, options)
+        .json({ message : "User registered successfully", currUser : registeredDevotee });
 
-        // Set token in cookie and send response
-        res.status(201).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000 }).json({
-            currUser: rest,
-        });
     } catch (error) {
         if (error.code === 11000) {
             // Handle duplicate key error
@@ -146,7 +160,7 @@ module.exports.editDevoteeProfileController = async (req, res, next) => {
         const updatedDevotee = await existingDevotee.save();
 
         // Omit password from response
-        const { password, ...rest } = updatedDevotee._doc;
+        const { password, refreshToken, ...rest } = updatedDevotee._doc;
 
         // Return updated profile data
         res.status(200).json({ currUser: rest, message: "Profile updated successfully!" });
@@ -173,13 +187,11 @@ module.exports.updatePasswordController = async (req, res, next) => {
         }
 
         // Verify old password
-        const isMatch = await bcrypt.compare(oldPassword, existingDevotee.password);
+        const isMatch = await existingDevotee.isPasswordCorrect(oldPassword);
         if (!isMatch) {
             throw new ExpressError(400, "Incorrect old password.");
         }
-
-        // Hash and set the new password
-        existingDevotee.password = await bcrypt.hash(newPassword, saltRounds);
+        existingDevotee.password = newPassword ; 
 
         // Save the updated devotee profile
         await existingDevotee.save();
@@ -196,5 +208,20 @@ module.exports.updatePasswordController = async (req, res, next) => {
 
 //signout devotee
 module.exports.signOutController = async(req,res)=> {
-    res.clearCookie('access_token').status(200).json('User signout successfully.');
+    await Devotee.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set : {
+                refreshToken : undefined,
+            }
+        },{ new : true });
+
+        const options = {
+            httpOnly : true,
+            secure : true,
+        }
+    return res.status(200)
+    .clearCookie("access_token", options)
+    .clearCookie("refresh_token", options)
+    .json({ message : "User logged out successfully" });
 }
