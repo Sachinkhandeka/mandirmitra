@@ -2,7 +2,7 @@ import React, { useState, Suspense } from "react";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import "../css/PhoneInputCostom.css";
-import { Button, Spinner } from 'flowbite-react';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import Alert from '../components/Alert';
 import OtpInput from "../components/OtpInput";
 import { app } from '../firebase';
@@ -20,6 +20,7 @@ export default function Devotees() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
     const [confirmationResult, setConfirmationResult] = useState(null);
     const [showComponent, setShowComponent] = useState('phoneInput'); // 'phoneInput', 'otpInput', 'createDevotee'
     const auth = getAuth(app);
@@ -38,6 +39,11 @@ export default function Devotees() {
     const handlePhoneSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        if(!password) { 
+            setError("Please enter password");
+            return setLoading(false);
+        }
 
         const regex = /[^0-9]/g;
         const strippedPhoneNumber = phoneNumber.replace(regex, '');
@@ -70,11 +76,16 @@ export default function Devotees() {
     };
 
     const logInWithPhoneNumber = async (phoneNumber) => {
+
+        if(!password) { 
+            setError("Please enter password");
+            return setLoading(false);
+        }
         try {
             const response = await fetch("/api/devotee/auth", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phoneNumber }),
+                body: JSON.stringify({ phoneNumber, password }),
             });
             const data = await response.json();
 
@@ -92,10 +103,8 @@ export default function Devotees() {
                 dispatch(signinSuccess(data.currUser));
                 navigate("/");
             }
-            console.log("Login or signup decision complete:", data);
         } catch (error) {
             setError("Login API call failed: " + error.message);
-            console.error("Login error:", error);
         }
     };
     return (
@@ -172,6 +181,18 @@ export default function Devotees() {
                             dropdownClass="custom-dropdown-container"
                             searchClass="custom-search-field"
                         />
+                        <div className="flex flex-col gap-2 text-black" >
+                            <label htmlFor="password">Password</label>
+                            <input 
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="******"
+                                value={password}
+                                onChange={(e)=> setPassword(e.target.value)}
+                                className="text-black bg-white border border-gray-200 p-4 shadow-lg hover:shadow-xl rounded-md"
+                            />
+                        </div>
                         <div id='recaptcha-container' className='my-2' />
                         <div>
                             <Button type="submit" color={`${phoneNumber.length >= 10 ? 'warning' : 'light'}`} disabled={phoneNumber.length < 10 || loading}>
