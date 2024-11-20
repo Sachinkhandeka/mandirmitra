@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const ExpressError = require("../utils/ExpressError");
-const { populate } = require("./superAdmin");
 
 const userSchema =  new mongoose.Schema({
     username : {
