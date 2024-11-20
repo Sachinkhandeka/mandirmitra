@@ -47,11 +47,11 @@ superAdminSchema.pre("save", async function (next) {
     next();
 });
 
-superAdminSchema.isPasswordCorrect = async function (password) {
+superAdminSchema.methods.isPasswordCorrect = async function (password) {
     return await bcryptjs.compare(password, this.password);
 }
 
-superAdminSchema.generateAccessToken = function () {
+superAdminSchema.methods.generateAccessToken = async function () {
     try {
         return jwt.sign(
             {
@@ -69,7 +69,7 @@ superAdminSchema.generateAccessToken = function () {
     }
 }
 
-superAdminSchema.generateRefreshToken = function () {
+superAdminSchema.methods.generateRefreshToken = async function () {
     try {
         return jwt.sign(
             {

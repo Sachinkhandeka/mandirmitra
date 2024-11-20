@@ -51,11 +51,11 @@ userSchema.pre("save", async function(next) {
     next();
 });
 
-userSchema.isPasswordCorrect = async function(password) {
+userSchema.methods.isPasswordCorrect = async function(password) {
     return await bcryptjs.compare(password, this.password);
 }
 
-userSchema.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken = async function () {
     try {
         // populating roles and permissions
         const userRoles = await this.populate({
@@ -67,7 +67,7 @@ userSchema.generateAccessToken = async function () {
         });
 
         //extracting permissions
-        const permissions = userRoles.roles.flatmap( role => role.permissions.flatmap(permission => permission.actions) );
+        const permissions = userRoles.roles.flatMap( role => role.permissions.flatMap(permission => permission.actions) );
         return  jwt.sign(
             {
                 _id : this._id,
@@ -85,7 +85,7 @@ userSchema.generateAccessToken = async function () {
     }
 }
 
-userSchema.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = async function () {
     try {
         // populating roles and permissions
         const userRoles = await this.populate({
@@ -97,7 +97,7 @@ userSchema.generateRefreshToken = async function () {
         });
 
         //extracting permissions
-        const permissions = userRoles.roles.flatmap(role => role.permissions.flatmap(permission => permission.actions));
+        const permissions = userRoles.roles.flatMap(role => role.permissions.flatMap(permission => permission.actions));
 
         return jwt.sign(
             {
