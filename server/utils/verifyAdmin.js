@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const ExpressError = require("./ExpressError");
+const SuperAdmin = require("../models/superAdmin");
 
-module.exports.verifyReadPermission = (req, res, next) => {
+module.exports.verifyAdmin = async (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
@@ -9,106 +10,24 @@ module.exports.verifyReadPermission = (req, res, next) => {
     }
 
     try {
+        // Verify the JWT token
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
         // Check if the user is a SuperAdmin
-        if (decodedToken.superAdmin) {
-            req.user = decodedToken;
-            return next(); // SuperAdmins have full access
+        if (!decodedToken.superAdmin) {
+            throw new ExpressError(403, "Forbidden. Admin access only.");
         }
 
-        // Check if the user has 'read' permission
-        if (!decodedToken.permissions.includes("read")) {
-            throw new ExpressError(403, "You do not have permission to read.");
+        // Fetch the SuperAdmin from the database
+        const superAdmin = await SuperAdmin.findById(decodedToken._id).select("-password -refreshToken");
+
+        if (!superAdmin) {
+            throw new ExpressError(401, "Invalid token. Admin not found.");
         }
 
-        req.user = decodedToken;
+        req.user = superAdmin;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
-    }
-};
-
-module.exports.verifyCreatePermission = (req, res, next) => {
-    const token = req.cookies.access_token;
-
-    if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
-    }
-
-    try {
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        // Check if the user is a SuperAdmin
-        if (decodedToken.superAdmin) {
-            req.user = decodedToken;
-            return next(); // SuperAdmins have full access
-        }
-
-        // Check if the user has 'create' permission
-        if (!decodedToken.permissions.includes("create")) {
-            throw new ExpressError(403, "You do not have permission to create.");
-        }
-
-        req.user = decodedToken;
-        next();
-    } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
-    }
-};
-
-module.exports.verifyUpdatePermission = (req, res, next) => {
-    const token = req.cookies.access_token;
-
-    if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
-    }
-
-    try {
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        // Check if the user is a SuperAdmin
-        if (decodedToken.superAdmin) {
-            req.user = decodedToken;
-            return next(); // SuperAdmins have full access
-        }
-
-        // Check if the user has 'update' permission
-        if (!decodedToken.permissions.includes("update")) {
-            throw new ExpressError(403, "You do not have permission to update.");
-        }
-
-        req.user = decodedToken;
-        next();
-    } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
-    }
-};
-
-module.exports.verifyDeletePermission = (req, res, next) => {
-    const token = req.cookies.access_token;
-
-    if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
-    }
-
-    try {
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        // Check if the user is a SuperAdmin
-        if (decodedToken.superAdmin) {
-            req.user = decodedToken;
-            return next(); // SuperAdmins have full access
-        }
-
-        // Check if the user has 'delete' permission
-        if (!decodedToken.permissions.includes("delete")) {
-            throw new ExpressError(403, "You do not have permission to delete.");
-        }
-
-        req.user = decodedToken;
-        next();
-    } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        throw new ExpressError(401, error?.message || "Unauthorized request.");
     }
 };
