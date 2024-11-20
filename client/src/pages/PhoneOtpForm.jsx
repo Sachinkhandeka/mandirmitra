@@ -22,6 +22,7 @@ export default function PhoneOtpForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [showComponent, setShowComponent] = useState('phoneInput'); // 'phoneInput', 'otpInput', 'addTemple', 'signin', 'createSuperAdmin', 'signinSuperAdmin'
     const [loading, setLoading] = useState(false);
@@ -41,6 +42,11 @@ export default function PhoneOtpForm() {
     const handlePhoneSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        if(!password) { 
+            setError("Please enter password");
+            return setLoading(false);
+        }
 
         const regex = /[^0-9]/g;
         const strippedPhoneNumber = phoneNumber.replace(regex, '');
@@ -73,13 +79,17 @@ export default function PhoneOtpForm() {
     };
 
     const LogInWithPhoneNumber = async (phoneNumber) => {
+        if(!password) { 
+            setError("Please enter password");
+            return setLoading(false);
+        }
         try {
             const response = await fetch(
                 '/api/superadmin/login',
                 {
                     method: "POST",
                     headers: { "content-type": "application/json" },
-                    body: JSON.stringify({ phoneNumber: phoneNumber }),
+                    body: JSON.stringify({ phoneNumber, password }),
                 }
             );
             const data = await response.json();
@@ -180,6 +190,18 @@ export default function PhoneOtpForm() {
                                 dropdownClass="custom-dropdown-container"
                                 searchClass="custom-search-field"
                             />
+                            <div className="flex flex-col gap-2 text-black" >
+                                <label htmlFor="password">Password</label>
+                                <input 
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="******"
+                                    value={password}
+                                    onChange={(e)=> setPassword(e.target.value)}
+                                    className="text-black bg-white border border-gray-200 p-4 shadow-lg hover:shadow-xl rounded-md"
+                                />
+                            </div>
                             <div id='recaptcha-container' className='my-2' />
                             <div>
                                 <Button type="submit" color={`${phoneNumber.length >= 10 ? 'warning' : 'light'}`} disabled={phoneNumber.length < 10 || loading}>
