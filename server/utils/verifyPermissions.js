@@ -1,117 +1,114 @@
-const jwt  = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const ExpressError = require("./ExpressError");
-const secret = process.env.JWT_SECRET ; 
 
 module.exports.verifyReadPermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized.");
+        throw new ExpressError(401, "Unauthorized request. Token not found.");
     }
 
-    jwt.verify(token, secret, (err, user) => {
-        if (err) {
-            throw new ExpressError(401, "Unauthorized.");
+    try {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        // Check if the user is a SuperAdmin
+        if (decodedToken.superAdmin) {
+            req.user = decodedToken;
+            return next(); // SuperAdmins have full access
         }
 
-        // Check if the user is a superAdmin
-        if (user.superAdmin) {
-            req.user = user ;
-            return next(); // Allow access for superAdmin
+        // Check if the user has 'read' permission
+        if (!decodedToken.permissions.includes("read")) {
+            throw new ExpressError(403, "You do not have permission to read.");
         }
 
-        // Check if the user has read permission
-        if (!user.permissions.includes("read")) {
-            throw new ExpressError(401, "You do not have permission to read.");
-        }
-
-        req.user = user;
+        req.user = decodedToken;
         next();
-    });
-}
+    } catch (error) {
+        throw new ExpressError(401, error?.message || "Invalid token.");
+    }
+};
 
 module.exports.verifyCreatePermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized.");
+        throw new ExpressError(401, "Unauthorized request. Token not found.");
     }
 
-    jwt.verify(token, secret, (err, user) => {
-        if (err) {
-            throw new ExpressError(401, "Unauthorized.");
+    try {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        // Check if the user is a SuperAdmin
+        if (decodedToken.superAdmin) {
+            req.user = decodedToken;
+            return next(); // SuperAdmins have full access
         }
 
-        // Check if the user is a superAdmin
-        if (user.superAdmin) {
-            req.user = user;
-            return next(); // Allow access for superAdmin
+        // Check if the user has 'create' permission
+        if (!decodedToken.permissions.includes("create")) {
+            throw new ExpressError(403, "You do not have permission to create.");
         }
 
-        // Check if the user has create permission
-        if (!user.permissions.includes("create")) {
-            throw new ExpressError(401, "You do not have permission to create.");
-        }
-
-        req.user = user;
+        req.user = decodedToken;
         next();
-    });
-}
+    } catch (error) {
+        throw new ExpressError(401, error?.message || "Invalid token.");
+    }
+};
 
 module.exports.verifyUpdatePermission = (req, res, next) => {
-    const token  = req.cookies.access_token; 
+    const token = req.cookies.access_token;
 
-    if(!token) {
-        throw new ExpressError(401 , "Unauthorized.");
+    if (!token) {
+        throw new ExpressError(401, "Unauthorized request. Token not found.");
     }
 
-    jwt.verify(token, secret, (err, user)=> {
-        if(err) {
-            throw new ExpressError(401, "Unauthorized.");
+    try {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        // Check if the user is a SuperAdmin
+        if (decodedToken.superAdmin) {
+            req.user = decodedToken;
+            return next(); // SuperAdmins have full access
         }
 
-         // Check if the user is a superAdmin
-         if (user.superAdmin) {
-            req.user = user;
-            return next(); // Allow access for superAdmin
+        // Check if the user has 'update' permission
+        if (!decodedToken.permissions.includes("update")) {
+            throw new ExpressError(403, "You do not have permission to update.");
         }
 
-        // Check if the user has create permission
-        if (!user.permissions.includes("update")) {
-            throw new ExpressError(401, "You do not have permission to update.");
-        }
-
-        req.user = user;
+        req.user = decodedToken;
         next();
-    });
-
-}
+    } catch (error) {
+        throw new ExpressError(401, error?.message || "Invalid token.");
+    }
+};
 
 module.exports.verifyDeletePermission = (req, res, next) => {
-    const token  = req.cookies.access_token; 
+    const token = req.cookies.access_token;
 
-    if(!token) {
-        throw new ExpressError(401 , "Unauthorized.");
+    if (!token) {
+        throw new ExpressError(401, "Unauthorized request. Token not found.");
     }
 
-    jwt.verify(token, secret, (err, user)=> {
-        if(err) {
-            throw new ExpressError(401, "Unauthorized.");
+    try {
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        // Check if the user is a SuperAdmin
+        if (decodedToken.superAdmin) {
+            req.user = decodedToken;
+            return next(); // SuperAdmins have full access
         }
 
-         // Check if the user is a superAdmin
-         if (user.superAdmin) {
-            req.user = user;
-            return next(); // Allow access for superAdmin
+        // Check if the user has 'delete' permission
+        if (!decodedToken.permissions.includes("delete")) {
+            throw new ExpressError(403, "You do not have permission to delete.");
         }
 
-        // Check if the user has create permission
-        if (!user.permissions.includes("delete")) {
-            throw new ExpressError(401, "You do not have permission to delete.");
-        }
-
-        req.user = user;
+        req.user = decodedToken;
         next();
-    });
-
-}
+    } catch (error) {
+        throw new ExpressError(401, error?.message || "Invalid token.");
+    }
+};
