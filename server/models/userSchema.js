@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const ExpressError = require("../utils/ExpressError");
+const { populate } = require("./superAdmin");
 
 const userSchema =  new mongoose.Schema({
     username : {
@@ -32,11 +36,86 @@ const userSchema =  new mongoose.Schema({
         required: true,
         unique: true,
     },
+    refreshToken : {
+        type : String,
+    },
     roles : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Role"
     }]
 },{ timestamps : true });
+
+userSchema.pre("save", async function(next) {
+    if(!this.isModified("password")) return next();
+
+    this.password = await bcryptjs.hash(this.password, 10);
+    next();
+});
+
+userSchema.isPasswordCorrect = async function(password) {
+    return await bcryptjs.compare(password, this.password);
+}
+
+userSchema.generateAccessToken = async function () {
+    try {
+        // populating roles and permissions
+        const userRoles = await this.populate({
+            path : "roles",
+            populate : {
+                path : "permissions",
+                model : "permission",
+            }
+        });
+
+        //extracting permissions
+        const permissions = userRoles.roles.flatmap( role => role.permissions.flatmap(permission => permission.actions) );
+        return  jwt.sign(
+            {
+                _id : this._id,
+                superAdmin : false,
+                permissions,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn : process.env.ACCESS_TOKEN_EXPIRY || '1d'
+            }
+        );
+        
+    } catch (error) {
+        throw new ExpressError(401, "Error generating access token: " + error.message);
+    }
+}
+
+userSchema.generateRefreshToken = async function () {
+    try {
+        // populating roles and permissions
+        const userRoles = await this.populate({
+            path : "roles",
+            populate : {
+                path : "permissions",
+                populate : "permission",
+            }
+        });
+
+        //extracting permissions
+        const permissions = userRoles.roles.flatmap(role => role.permissions.flatmap(permission => permission.actions));
+
+        return jwt.sign(
+            {
+                _id : this._id,
+                superAdmin : false,
+                permissions,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn : REFRESH_TOKEN_EXPIRY || '14d'
+            }
+        )
+        
+    } catch (error) {
+        throw new ExpressError(401, "Error generating access token: " + error.message);
+    }
+}
 
 const User = mongoose.model("User", userSchema);
 

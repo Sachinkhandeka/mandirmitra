@@ -2,256 +2,316 @@ const ExpressError = require("../utils/ExpressError");
 const Temple  = require("../models/temple");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/userSchema");
-const bcryptjs = require("bcryptjs");
-const salt = bcryptjs.genSaltSync(10);
-const jwt = require("jsonwebtoken");
-const secret = process.env.JWT_SECRET ;
 
-
-module.exports.singinWithPhoneNumber = async (req, res) => {
-    const { phoneNumber } = req.body;
-
+const generateAccessAndRefreshToken = async (userId, userType) => {
     try {
-        // Check in SuperAdmin collection
-        let existingUser = await SuperAdmin.findOne({ phoneNumber: phoneNumber });
-        let admin = true;
-        
-        // If not found in SuperAdmin, check in User collection
-        if (!existingUser) {
-            existingUser = await User.findOne({ phoneNumber: phoneNumber }).populate({
-                path : "roles",
-                populate : {
-                    path : "permissions",
-                    model : "Permission",
-                }
+        // Dynamically determine the model based on userType
+        const user = userType === "Admin" 
+            ? await SuperAdmin.findById(userId) 
+            : await User.findById(userId).populate({
+                path: "roles",
+                populate: {
+                    path: "permissions",
+                    model: "Permission",
+                },
             });
-            admin = false;
+
+        if (!user) {
+            throw new ExpressError(401, "User not found");
         }
 
-        if (existingUser) {
-            // Prepare the payload for the JWT token
-            const payload = {
-                id : existingUser._id,
-                superAdmin : admin,
-            }
-            
-            if (!admin && Array.isArray(existingUser.roles)) {
-                // If the user is not an admin, include permissions in the payload
-                payload.permissions = existingUser.roles.flatMap(role => 
-                    Array.isArray(role.permissions) ? role.permissions.flatMap(permission => permission.actions) : []
-                );
-            }
+        // Generate tokens using schema methods
+        const accessToken = await user.generateAccessToken();
+        const refreshToken = await user.generateRefreshToken();
 
-            //generate  GWT token
-            const token = jwt.sign(payload, secret, { expiresIn : '7d' });
+        // Save refresh token
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
 
-            // Omit password field from response
-            const { password, ...rest } = existingUser._doc;
-            
-            // Return response with token and user data
-            return res.status(200).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000  }).json({ currUser: rest });
-        } else {
-            // User does not exist, return a response indicating that they need to sign up
-            return res.status(200).json({ needsSignup: true });
-        }
+        return { accessToken, refreshToken };
     } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error" });
+        throw new ExpressError(500, "Error generating tokens: " + error.message);
     }
 };
 
-//create route handler
-module.exports.createController = async(req ,res)=> {
-    const { templeId, username , email , password, phoneNumber } = req.body ; 
+module.exports.singinWithPhoneNumber = async (req, res) => {
+    const { phoneNumber, password } = req.body;
 
-    try {
-        // Check if temple exists
-        const temple = await Temple.findById(templeId);
-        if (!temple) {
-            throw new ExpressError(404, "Temple not found");
-        }
-
-        // Check if a super admin already exists for the temple
-        const isSuperAdmin = await SuperAdmin.findOne({ templeId });
-        if (isSuperAdmin) {
-            throw new ExpressError(400, "A super admin already exists for this temple");
-        }
-        // Create super admin
-        let superAdmin = new SuperAdmin({
-            username,
-            email,
-            templeId: temple._id,
-            phoneNumber : phoneNumber,
-            password: bcryptjs.hashSync(password, salt),
-        });
-
-        // Save super admin
-        superAdmin = await superAdmin.save();
-
-        // Generate JWT token
-        const token = jwt.sign({
-            id: superAdmin._id,
-            superAdmin: true,
-        }, secret,{ expiresIn: '7d' });
-
-        // Omit password field from response
-        const { password: pass, ...rest } = superAdmin._doc;
-
-        // Set token in cookie and send response
-        res.status(200).cookie("access_token", token, { httpOnly: true, maxAge : 7 * 24 * 3600 * 1000  }).json({
-            currUser: rest,
-        });
-    } catch (error) {
-        if (error.code === 11000) {
-            // Duplicate key error, indicating that username or email is already taken
-            throw new ExpressError(400, "Username or Email already taken. Please try with a new one.");
-        } else {
-            // Other errors
-            throw new ExpressError(500, "Internal Server Error");
-        }
+    if (!(phoneNumber && password)) {
+        throw new ExpressError(401, "Please provide phone number and password");
     }
-}
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    // Check for SuperAdmin first, then fall back to User
+    let existingUser = await SuperAdmin.findOne({ phoneNumber }) || 
+                       await User.findOne({ phoneNumber }).populate({
+                           path: "roles",
+                           populate: {
+                               path: "permissions",
+                               model: "Permission",
+                           },
+                       });
+
+    if (!existingUser) {
+        return res.status(200).json({ needsSignup: true });
+    }
+
+    // Check password validity
+    const isPassCorrect = await existingUser.isPasswordCorrect(password);
+    if (!isPassCorrect) {
+        throw new ExpressError(401, "Invalid user credentials");
+    }
+
+    // Determine user type
+    const userType = existingUser instanceof SuperAdmin ? "Admin" : "User";
+
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(existingUser._id, userType);
+
+    // Remove sensitive data (like refreshToken and password) before sending response
+    const { password: pass, refreshToken: rt, ...rest } = existingUser._doc;
+
+    return res
+        .status(200)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_token", refreshToken, options)
+        .json({ message: "User logged in successfully", currUser: rest, accessToken, refreshToken });
+};
+
+//create route handler
+module.exports.createController = async (req, res) => {
+    const { templeId, username, email, password, phoneNumber } = req.body;
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    // Check if temple exists
+    const temple = await Temple.findById(templeId);
+    if (!temple) {
+        throw new ExpressError(404, "Temple not found");
+    }
+
+    // Check if a super admin already exists for the temple
+    const isSuperAdmin = await SuperAdmin.findOne({ templeId });
+    if (isSuperAdmin) {
+        throw new ExpressError(400, "A super admin already exists for this temple");
+    }
+
+    // Create and save the SuperAdmin
+    const superAdmin = new SuperAdmin({
+        username,
+        email,
+        templeId: temple._id,
+        phoneNumber,
+        password, 
+    });
+
+    await superAdmin.save();
+
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(superAdmin._id, "Admin");
+
+    // Save the refresh token to the database
+    superAdmin.refreshToken = refreshToken;
+    await superAdmin.save();
+
+    // Omit sensitive data
+    const { password: pass, refreshToken: rt, ...rest } = superAdmin._doc;
+
+    res.status(201)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_token", refreshToken, options)
+        .json({ 
+            message : "Admin created/loggedin successfully",
+            currUser: rest, accessToken, refreshToken 
+        });
+};
+
 
 //signin route handler
-module.exports.signinController = async(req ,res)=> {
-    const { email , password } = req.body ; 
-    if(!email || !password  || email === '' || password === '') {
-        throw new ExpressError(400 , "All fields are required.");
+module.exports.signinController = async (req, res) => {
+    const { email, password } = req.body;
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    if (!(email && password)) {
+        throw new ExpressError(400, "User credentials is required");
     }
 
-    const validUser = await SuperAdmin.findOne({email});
-
-    if(!validUser) {
-        throw new ExpressError(404 , "User not found.");
-    }
-    const validPass = bcryptjs.compareSync( password , validUser.password );
-
-    if(!validPass) {
-        throw new ExpressError(400 , "Invalid Password.");
+    // Find the SuperAdmin by email
+    const superAdmin = await SuperAdmin.findOne({ email });
+    if (!superAdmin) {
+        throw new ExpressError(404, "Invalid user credentials");
     }
 
-    const token = jwt.sign({
-        id : validUser._id,
-        superAdmin : true,
-    }, secret,{ expiresIn: '7d' });
-    const { password : pass, ...rest } = validUser._doc;
-    res.status(200).cookie("access_token", token, { httpOnly : true, maxAge : 7 * 24 * 3600 * 1000  }).json({ 
-        rest,
-    });
-}
+    // Validate the password
+    const isPassCorrect = await superAdmin.isPasswordCorrect(password);
+    if (!isPassCorrect) {
+        throw new ExpressError(400, "Invalid user credentials");
+    }
+
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(superAdmin._id, "Admin");
+
+    // Save the refresh token to the database
+    superAdmin.refreshToken = refreshToken;
+    await superAdmin.save();
+
+    // Omit sensitive data
+    const { password: pass, refreshToken: rt, ...rest } = superAdmin._doc;
+
+    res.status(200)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_token", refreshToken, options)
+        .json({
+            message : "Admin logged in successfully", 
+            currUser: rest , accessToken, refreshToken
+        });
+};
+
 
 //google auth route handler
-module.exports.googleController = async(req ,res)=> {
-    const { email , name , googlePhotoUrl, phoneNumber, templeId } = req.body ; 
+module.exports.googleController = async (req, res) => {
+    const { email, name, googlePhotoUrl, phoneNumber, templeId } = req.body;
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
 
-    //if superAdmin present -> login 
-    const isSuperAdmin = await SuperAdmin.findOne({email});
-    if(isSuperAdmin) {
-        const token = jwt.sign({ 
-            id : isSuperAdmin._id,
-            superAdmin : true, 
-        }, secret );
-        
-        const { password , ...rest } = isSuperAdmin._doc ; 
+    // Check if the SuperAdmin already exists
+    let superAdmin = await SuperAdmin.findOne({ email });
 
-        return res.status(200).cookie("access_token", token, { httpOnly : true }).json({
-            currUser : rest,
-        });
+    if (superAdmin) {
+        // Existing SuperAdmin: Generate tokens
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(superAdmin._id, "Admin");
 
-    }else {
-        const genRandomPass = Math.random().toString(36).slice(-8) + Math.random().toString().slice(-8);
-        const hashPass = bcryptjs.hashSync(genRandomPass , salt);
+        // Save the refresh token to the database
+        superAdmin.refreshToken = refreshToken;
+        await superAdmin.save();
 
-        // Check if temple exists
-        const temple = await Temple.findById(templeId);
-        if (!temple) {
-            throw new ExpressError(404, "Temple not found");
-        }
+        const { password: pass, refreshToken: rt, ...rest } = superAdmin._doc;
 
-        // Check if a super admin already exists for the temple
-        const isSuperAdmin = await SuperAdmin.findOne({templeId});
-        if(isSuperAdmin) {
-            throw new ExpressError(400, "A super admin already exists for this temple");
-        }
-
-         // Create super admin
-        let superAdmin = new SuperAdmin({
-            username : name.trim().split(' ').join('').toLowerCase() + Math.random().toString(4).slice(-3) ,
-            email,
-            profilePicture : googlePhotoUrl,
-            phoneNumber : phoneNumber,
-            templeId : temple._id,
-            password : hashPass
-        });
-
-        // Save super admin
-        superAdmin  = await superAdmin.save();
-
-        const token = jwt.sign({
-            id : superAdmin._id,
-            superAdmin : true,
-        }, secret,{ expiresIn: '7d' });
-        const { password : pass, ...rest } = superAdmin._doc;
-
-        res.status(200).cookie("access_token", token, { httpOnly : true, maxAge : 7 * 24 * 3600 * 1000  }).json({
-            currUser : rest,
-        });
-
+        return res.status(200)
+            .cookie("access_token", accessToken, options)
+            .cookie("refresh_token", refreshToken, options)
+            .json({ 
+                message : "Admin logged in successfully",
+                currUser: rest, accessToken, refreshToken
+            });
     }
 
-}
+    // If not found, create a new SuperAdmin
+    const temple = await Temple.findById(templeId);
+    if (!temple) {
+        throw new ExpressError(404, "Temple not found");
+    }
+
+    const existingAdmin = await SuperAdmin.findOne({ templeId });
+    if (existingAdmin) {
+        throw new ExpressError(400, "A super admin already exists for this temple");
+    }
+
+    // Generate a random password for the new SuperAdmin
+    const genRandomPass = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+
+    superAdmin = new SuperAdmin({
+        username: name.trim().split(" ").join("").toLowerCase() + Math.random().toString(4).slice(-3),
+        email,
+        profilePicture: googlePhotoUrl,
+        phoneNumber,
+        templeId: temple._id,
+        password: genRandomPass,
+    });
+
+    await superAdmin.save();
+
+    // Generate tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(superAdmin._id, "Admin");
+
+    // Save the refresh token to the database
+    superAdmin.refreshToken = refreshToken;
+    await superAdmin.save();
+
+    const { password: pass, refreshToken: rt, ...rest } = superAdmin._doc;
+
+    res.status(201)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_token", refreshToken, options)
+        .json({
+            message : "Admin logged in successfully",
+            currUser: rest, accessToken, refreshToken, 
+        });
+};
+
 
 //edit superAdmin rooute handler
-module.exports.editController = async(req ,res)=> {
-    const user = req.user ; 
-    const { username , email , phoneNumber, password, profilePicture } = req.body ; 
-    const { templeId, id }   = req.params; 
-    
-    if(user.id !== id && !templeId ) {
-        throw new ExpressError(403 , "You are not allowed to update this user.");
-    }
-    if(password) {
-        if(password.length < 6) {
-            throw new ExpressError(400 , "Password atleast have 6 characters.")
-        }
+module.exports.editController = async (req, res) => {
+    const user = req.user; // Logged-in user
+    const { username, email, phoneNumber, password, profilePicture } = req.body;
+    const { templeId, id } = req.params;
+
+    // Ensure the logged-in user has permissions to edit this SuperAdmin
+    if (user.id !== id && !templeId) {
+        throw new ExpressError(403, "You are not allowed to update this user.");
     }
 
-    if(username) {
-        if(username.length < 7 || username.length > 20) {
-            throw new ExpressError(400 , "Username must be in between 7 & 20 characters.")
-        }
+    // Find the SuperAdmin by ID and Temple ID
+    const isSuperAdmin = await SuperAdmin.findOne({ _id: id, templeId });
+    if (!isSuperAdmin) {
+        throw new ExpressError(404, "SuperAdmin not found.");
     }
 
-    const isSuperAdmin = await SuperAdmin.findOne({_id: id, templeId : templeId});
-
-    if(!isSuperAdmin) {
-        throw new ExpressError(404 , "SuperAdmin not found.");
-    }
-
-    // Update only the fields that are present and not empty
+    // Update fields only if provided in the request and different from existing values
     const updateFields = {};
     if (username && username !== isSuperAdmin.username) updateFields.username = username;
     if (email && email !== isSuperAdmin.email) updateFields.email = email;
-    if(phoneNumber && phoneNumber !== isSuperAdmin.phoneNumber) updateFields.phoneNumber = phoneNumber ; 
+    if (phoneNumber && phoneNumber !== isSuperAdmin.phoneNumber) updateFields.phoneNumber = phoneNumber;
     if (password) {
-        const hashPass = bcryptjs.hashSync(password, salt);
-        if (hashPass !== isSuperAdmin.password) updateFields.password = hashPass;
+        updateFields.password = password; 
     }
     if (profilePicture && profilePicture !== isSuperAdmin.profilePicture) updateFields.profilePicture = profilePicture;
 
+    // Check if there's anything to update
     if (Object.keys(updateFields).length === 0) {
-        throw new ExpressError(400 ,"No fields to update." );
+        throw new ExpressError(400, "No fields to update.");
     }
 
-    const updatedSuperAdmin = await SuperAdmin.findOneAndUpdate({_id:id , templeId : templeId },{ $set: updateFields }, { new : true });
+    // Update the SuperAdmin and return the updated document
+    const updatedSuperAdmin = await SuperAdmin.findOneAndUpdate(
+        { _id: id, templeId },
+        { $set: updateFields },
+        { new: true, runValidators: true }
+    );
 
-    const { password : pass, ...rest } =  updatedSuperAdmin._doc ;  
-    res.status(200).json({
-        currUser : rest 
-    });
+    const { password: pass, refreshToken, ...rest } = updatedSuperAdmin._doc;
+    res.status(200).json({ currUser: rest });
+};
 
-}
 
 //signout route handler
-module.exports.signoutController = (req ,res)=> {
-    res.clearCookie('access_token').status(200).json('User signout successfully.');
+module.exports.signoutController = async (req ,res)=> {
+    await SuperAdmin.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set : {
+                refreshToken : undefined,
+            }
+        },{ new : true });
+
+        const options = {
+            httpOnly : true,
+            secure : true,
+        }
+    return res.status(200)
+    .clearCookie("access_token", options)
+    .clearCookie("refresh_token", options)
+    .json({ message : "Admin logged out successfully" });
 }

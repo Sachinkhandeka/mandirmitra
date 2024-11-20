@@ -41,6 +41,7 @@ router.put(
 //signout  route
 router.post(
     "/signout",
+    verifyToken,
     superAdmin.signoutController,
 );
 

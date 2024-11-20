@@ -5,12 +5,31 @@ const salt = 10 ;
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET ;
 
+const generateAccessAndRefreshToken = async(userId)=> {
+    try {
+        const user = await User.findById(userId);
+        if(!user) {
+            throw new ExpressError(401, "User not found");
+        }
+
+        const accessToken = await user.generateAccessToken();
+        const refreshToken = await user.generateRefreshToken();
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave : false });
+
+        return { accessToken, refreshToken };
+        
+    } catch (error) {
+        throw new ExpressError(500, "Something went wrong while generating tokens");
+    }
+}
+
 
 //signin controller
 module.exports.signinController = async(req ,res)=> {
     const { email , password } = req.body ; 
     if(!email || !password  || email === '' || password === '') {
-        throw new ExpressError(400 , "All fields are required.");
+        throw new ExpressError(400 , "User credentials is required");
     }
 
     const validUser = await User.findOne({email}).populate({
@@ -24,20 +43,24 @@ module.exports.signinController = async(req ,res)=> {
     if(!validUser) {
         throw new ExpressError(404 , "User not found.");
     }
-    const validPass = bcryptjs.compareSync( password , validUser.password );
+    const validPass = await validUser.isPasswordCorrect(password);
 
     if(!validPass) {
         throw new ExpressError(400 , "Invalid Password.");
     }
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
 
-    const token = jwt.sign({
-        id : validUser._id,
-        superAdmin : false,
-        permissions :  validUser.roles.flatMap(role => role.permissions.flatMap(permission => permission.actions)),
-    }, secret);
-    const { password : pass, ...rest } = validUser._doc;
-    res.status(200).cookie("access_token", token, { httpOnly : true }).json({ 
-        rest,
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(validUser._id);
+    const { password : pass, refreshToken: rt, ...rest } = validUser._doc;
+    res.status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_token", refreshToken, options)
+    .json({ 
+        message : "User logged in successfully",
+        rest, accessToken, refreshToken
     });
 }
 
@@ -65,12 +88,10 @@ module.exports.createController = async(req ,res)=> {
         throw new ExpressError(400 , "Access denied.");
     }
 
-    const hashPass = bcryptjs.hashSync(formData.password , salt);
-
     const newUser = new User({
         username : formData.username,
         email : formData.email,
-        password : hashPass,
+        password : formData.password,
         phoneNumber : formData.phoneNumber,
         roles : formData.roles,
         templeId : templeId ,
@@ -115,26 +136,30 @@ module.exports.getController =  async(req ,res)=> {
 }
 
 //edit user roure handler
-module.exports.editController = async(req ,res)=> {
-    const user = req.user ; 
-    const formData = req.body ; 
-    const { templeId, userId } = req.params ; 
+module.exports.editController = async (req, res) => {
+    const user = req.user; // Logged-in user (from middleware)
+    const formData = req.body; // Data to update
+    const { templeId, userId } = req.params;
 
-    const userToUpdate = await User.findOne({ _id: userId, templeId : templeId });
-    if(!userToUpdate) {
-        throw new ExpressError(400 , "User not found.");
+    // Find the user to update
+    const userToUpdate = await User.findOne({ _id: userId, templeId });
+    if (!userToUpdate) {
+        throw new ExpressError(400, "User not found.");
     }
 
-    if(!userToUpdate._id.equals(userId)) {
-        if(!user.superAdmin) {
-        throw new ExpressError(401 , "Permission not granted to update this user.");
+    // Check permissions
+    if (!userToUpdate._id.equals(userId)) {
+        if (!user) {
+            throw new ExpressError(401, "Permission not granted to update this user.");
         }
     }
-    if(!formData) {
-        throw new ExpressError(400 , "Invalid form data.");
+
+    // Ensure there is data to update
+    if (!formData || Object.keys(formData).length === 0) {
+        throw new ExpressError(400, "Invalid form data.");
     }
 
-    // preparing fields to  be updated 
+    // Prepare fields to be updated
     const updateObj = {};
     if (formData.username) {
         updateObj.username = formData.username;
@@ -142,7 +167,7 @@ module.exports.editController = async(req ,res)=> {
     if (formData.email) {
         updateObj.email = formData.email;
     }
-    if(formData.phoneNumber) {
+    if (formData.phoneNumber) {
         updateObj.phoneNumber = formData.phoneNumber;
     }
     if (formData.profilePicture) {
@@ -150,26 +175,31 @@ module.exports.editController = async(req ,res)=> {
     }
     if (formData.password) {
         if (formData.password.length < 6) {
-            throw new ExpressError(400, "Password must contain atleast 6 characters.");
+            throw new ExpressError(400, "Password must contain at least 6 characters.");
         }
-        const hashPass = bcryptjs.hashSync(formData.password, salt);
-        updateObj.password = hashPass;
+        // Assign password directly; pre-save middleware will handle hashing
+        updateObj.password = formData.password;
     }
     if (formData.roles) {
         updateObj.roles = formData.roles;
     }
 
-    // Update the user with the provided fields
-    const updatedUser = await User.findByIdAndUpdate( { _id: userId , templeId : templeId }, updateObj, { new: true }).populate({
-        path : "roles",
-        populate : {
-            path : "permissions",
-            model : "Permission",
-        }
+    // Update the user document
+    Object.assign(userToUpdate, updateObj);
+    await userToUpdate.save();
+
+    // Populate roles and permissions
+    const updatedUser = await User.findById(userToUpdate._id).populate({
+        path: "roles",
+        populate: {
+            path: "permissions",
+            model: "Permission",
+        },
     });
 
     res.status(200).json({ updatedUser });
-}
+};
+
 
 //delete user route handler
 module.exports.deleteController = async(req ,res)=> {
@@ -185,7 +215,7 @@ module.exports.deleteController = async(req ,res)=> {
         throw new ExpressError(400 , "User not found.");
     }
 
-    if(!user.superAdmin || !userToDelete.equals(userId)) {
+    if(!(user && userToDelete.equals(userId))) {
         throw new ExpressError(401 , "Permission not granted to update this user.");
     }
 
