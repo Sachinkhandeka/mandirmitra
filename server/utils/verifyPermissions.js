@@ -5,7 +5,7 @@ module.exports.verifyReadPermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
+        return res.status(401).json({ message : "Unauthorized request. Token not found." });
     }
 
     try {
@@ -19,13 +19,13 @@ module.exports.verifyReadPermission = (req, res, next) => {
 
         // Check if the user has 'read' permission
         if (!decodedToken.permissions.includes("read")) {
-            throw new ExpressError(403, "You do not have permission to read.");
+            return res.status(403).json({ message : "You do not have permission to read." });
         }
 
         req.user = decodedToken;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 };
 
@@ -33,7 +33,7 @@ module.exports.verifyCreatePermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
+        return res.status(401).json({ message : "Unauthorized request. Token not found." });
     }
 
     try {
@@ -47,13 +47,13 @@ module.exports.verifyCreatePermission = (req, res, next) => {
 
         // Check if the user has 'create' permission
         if (!decodedToken.permissions.includes("create")) {
-            throw new ExpressError(403, "You do not have permission to create.");
+            return res.status(403).json({ message : "You do not have permission to create." });
         }
 
         req.user = decodedToken;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 };
 
@@ -61,7 +61,7 @@ module.exports.verifyUpdatePermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
+        return res.status(401).json({ message : "Unauthorized request. Token not found." });
     }
 
     try {
@@ -75,13 +75,13 @@ module.exports.verifyUpdatePermission = (req, res, next) => {
 
         // Check if the user has 'update' permission
         if (!decodedToken.permissions.includes("update")) {
-            throw new ExpressError(403, "You do not have permission to update.");
+            return res.status(403).json({ message : "You do not have permission to update." });
         }
 
         req.user = decodedToken;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 };
 
@@ -89,7 +89,7 @@ module.exports.verifyDeletePermission = (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
+        return res.status(401).json({ message : "Unauthorized request. Token not found." });
     }
 
     try {
@@ -103,12 +103,12 @@ module.exports.verifyDeletePermission = (req, res, next) => {
 
         // Check if the user has 'delete' permission
         if (!decodedToken.permissions.includes("delete")) {
-            throw new ExpressError(403, "You do not have permission to delete.");
+            return res.status(403).json({ message : "You do not have permission to delete." });
         }
 
         req.user = decodedToken;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 };
