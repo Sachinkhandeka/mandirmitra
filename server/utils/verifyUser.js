@@ -7,7 +7,7 @@ module.exports.verifyToken = async (req, res, next) => {
     const token = req.cookies.access_token;
 
     if (!token) {
-        throw new ExpressError(401, "Unauthorized request. Token not found.");
+        return res.status(401).json({ message : "Unauthorized request. Token not found." });
     }
 
     try {
@@ -23,12 +23,12 @@ module.exports.verifyToken = async (req, res, next) => {
         }
 
         if (!user) {
-            throw new ExpressError(401, "Invalid token. User not found.");
+            return res.status(401).json({ message : "Invalid token. User not found." })
         }
 
         req.user = user;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid token.");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 };

@@ -15,7 +15,7 @@ router.post(
 //create route
 router.post(
     "/create/:templeId",
-    verifyAdmin,
+    wrapAsync(verifyAdmin),
     validateUserSchema,
     wrapAsync(user.createController),
 );
@@ -23,7 +23,7 @@ router.post(
 //get route
 router.get(
     "/get/:templeId",
-    verifyAdmin,
+    wrapAsync(verifyAdmin),
     wrapAsync(user.getController),
 );
 

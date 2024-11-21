@@ -62,17 +62,16 @@ userSchema.methods.generateAccessToken = async function () {
             path : "roles",
             populate : {
                 path : "permissions",
-                model : "permission",
+                model : "Permission",
             }
         });
-
         //extracting permissions
         const permissions = userRoles.roles.flatMap( role => role.permissions.flatMap(permission => permission.actions) );
         return  jwt.sign(
             {
                 _id : this._id,
                 superAdmin : false,
-                permissions,
+                permissions : permissions,
             },
             process.env.ACCESS_TOKEN_SECRET,
             {
@@ -92,10 +91,10 @@ userSchema.methods.generateRefreshToken = async function () {
             path : "roles",
             populate : {
                 path : "permissions",
-                populate : "permission",
+                model : "Permission",
             }
         });
-
+ 
         //extracting permissions
         const permissions = userRoles.roles.flatMap(role => role.permissions.flatMap(permission => permission.actions));
 
@@ -103,11 +102,11 @@ userSchema.methods.generateRefreshToken = async function () {
             {
                 _id : this._id,
                 superAdmin : false,
-                permissions,
+                permissions : permissions,
             },
             process.env.REFRESH_TOKEN_SECRET,
             {
-                expiresIn : REFRESH_TOKEN_EXPIRY || '14d'
+                expiresIn : process.env.REFRESH_TOKEN_EXPIRY || '14d'
             }
         )
         

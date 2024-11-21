@@ -15,7 +15,6 @@ const generateAccessAndRefreshToken = async (userId, userType) => {
                     model: "Permission",
                 },
             });
-
         if (!user) {
             throw new ExpressError(401, "User not found");
         }
@@ -23,7 +22,6 @@ const generateAccessAndRefreshToken = async (userId, userType) => {
         // Generate tokens using schema methods
         const accessToken = await user.generateAccessToken();
         const refreshToken = await user.generateRefreshToken();
-
         // Save refresh token
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false });
@@ -48,13 +46,7 @@ module.exports.singinWithPhoneNumber = async (req, res) => {
 
     // Check for SuperAdmin first, then fall back to User
     let existingUser = await SuperAdmin.findOne({ phoneNumber }) || 
-                       await User.findOne({ phoneNumber }).populate({
-                           path: "roles",
-                           populate: {
-                               path: "permissions",
-                               model: "Permission",
-                           },
-                       });
+                       await User.findOne({ phoneNumber });
 
     if (!existingUser) {
         return res.status(200).json({ needsSignup: true });
