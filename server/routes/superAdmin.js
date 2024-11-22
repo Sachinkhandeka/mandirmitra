@@ -45,5 +45,10 @@ router.post(
     superAdmin.signoutController,
 );
 
+//refresh token
+router.post(
+    "/refresh-token",
+    wrapAsync(superAdmin.refreshTokenController),
+);
 
 module.exports = router ; 

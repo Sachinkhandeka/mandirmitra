@@ -35,5 +35,9 @@ router.post(
     verifyDevoteeToken,
     wrapAsync(devotees.signOutController),
 );
+router.post(
+    "/refresh-token",
+    wrapAsync(devotees.refreshTokenController),
+);
 
 module.exports = router ; 

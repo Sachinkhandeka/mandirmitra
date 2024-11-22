@@ -2,6 +2,7 @@ const ExpressError = require("../utils/ExpressError");
 const Temple  = require("../models/temple");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/userSchema");
+const jwt = require("jsonwebtoken");
 
 const generateAccessAndRefreshToken = async (userId, userType) => {
     try {
@@ -306,4 +307,42 @@ module.exports.signoutController = async (req ,res)=> {
     .clearCookie("access_token", options)
     .clearCookie("refresh_token", options)
     .json({ message : "Admin logged out successfully" });
+}
+
+module.exports.refreshTokenController = async (req, res)=> {
+    const incomingRefreshToken = req.cookies.refresh_token;
+
+    if(!incomingRefreshToken) {
+        throw new ExpressError(401, "Unautharized request");
+    }
+
+    const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    if(!decodedToken.superAdmin) {
+        throw new ExpressError(401, "Unautharized request");
+    }
+    const admin = await SuperAdmin.findById(decodedToken?._id);
+
+    if(!admin) {
+        throw new ExpressError(401, "Invalid refresh token");
+    }
+
+    if(incomingRefreshToken !== admin.refreshToken) {
+        throw new ExpressError(401, "Refresh token expired or used");
+    }
+
+    const options = {
+        httpOnly : true,
+        secure : true,
+    }
+
+    const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(admin._id, "Admin");
+
+    return res.status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_token", newRefreshToken, options)
+    .json({
+        message : "Access token refreshed successfully",
+        accessToken, refreshToken : newRefreshToken,
+    });
 }

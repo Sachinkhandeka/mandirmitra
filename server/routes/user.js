@@ -42,4 +42,10 @@ router.delete(
     wrapAsync(user.deleteController),
 );
 
+//refresh Token route
+router.post(
+    "/refresh-token",
+    wrapAsync(user.refreshTokenController),
+);
+
 module.exports = router ; 

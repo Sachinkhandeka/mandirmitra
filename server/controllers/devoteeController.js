@@ -2,6 +2,7 @@ const User = require("../models/userSchema");
 const SuperAdmin = require("../models/superAdmin");
 const Devotee = require("../models/devotee");
 const ExpressError = require("../utils/ExpressError");
+const jwt = require("jsonwebtoken");
 
 const generateAccessAndRefreshToken = async(devoteeId)=> {
     try {
@@ -224,4 +225,38 @@ module.exports.signOutController = async(req,res)=> {
     .clearCookie("access_token", options)
     .clearCookie("refresh_token", options)
     .json({ message : "User logged out successfully" });
+}
+
+module.exports.refreshTokenController = async(req,res)=> {
+    const incomingRefreshToken = req.cookies.refresh_token;
+
+    if(!incomingRefreshToken) {
+        throw new ExpressError(401, "Unautharized request");
+    }
+
+    const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const devotee = await Devotee.findById(decodedToken?._id);
+
+    if(!devotee) {
+        throw new ExpressError(401, "Invalid refresh token");
+    }
+
+    if(incomingRefreshToken !== devotee.refreshToken) {
+        throw new ExpressError(401, "Refresh token expired or used");
+    }
+
+    const options = {
+        httpOnly : true,
+        secure : true,
+    }
+    const { accessToken, newrefreshToken } = await generateAccessAndRefreshToken(devotee._id);
+
+    return res.status(200)
+    .cookie("access_token", accessToken, options )
+    .cookie("refresh_token", newrefreshToken, options)
+    .json({
+        message : "Access token refreshed successfully",
+        accessToken, refreshToken : newrefreshToken,
+    });
 }

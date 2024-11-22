@@ -1,9 +1,6 @@
 const User = require("../models/userSchema");
 const ExpressError = require("../utils/ExpressError");
-const bcryptjs = require("bcryptjs");
-const salt = 10 ;
 const jwt = require("jsonwebtoken");
-const secret = process.env.JWT_SECRET ;
 
 const generateAccessAndRefreshToken = async(userId)=> {
     try {
@@ -221,4 +218,43 @@ module.exports.deleteController = async(req ,res)=> {
 
     await User.findOneAndDelete({_id : userId , templeId : templeId });
     res.status(200).json("User delete Successfully.");
+}
+
+//refresh token handler
+module.exports.refreshTokenController = async(req, res)=> {
+    const incomingRefreshToken = req.cookies.refresh_token;
+
+    if(!incomingRefreshToken) {
+        throw new ExpressError(401, "Unautharized request");
+    }
+    const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    if(!decodedToken.permissions) {
+        throw new ExpressError(401, "Unautharized request");
+    }
+
+    const user = await User.findById(decodedToken?._id);
+
+    if(!user) {
+        throw new ExpressError(401, "Invalid refresh token");
+    }
+
+    if(!incomingRefreshToken !== user.refreshToken) {
+        throw new ExpressError(401, "Refresh token expired or used");
+    }
+
+    const options = {
+        httpOnly : true,
+        secure : true,
+    }
+
+    const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id);
+
+    return res.status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_token", newRefreshToken, options)
+    .json({
+        message : "Access token refreshed successfully",
+        accessToken, refreshToken : newRefreshToken,
+    });
 }
