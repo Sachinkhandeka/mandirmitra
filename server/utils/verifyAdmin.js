@@ -4,7 +4,7 @@ const SuperAdmin = require("../models/superAdmin");
 module.exports.verifyAdmin = async (req, res, next) => {
     const token = req.cookies.access_token;
     if (!token) {
-        return res.status(401).json({ message : "Unauthorized request. Token not found." });
+        return res.status(401).json({ message : "Unauthorized request" });
     }
 
     try {

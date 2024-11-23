@@ -1,5 +1,5 @@
 // Function to make a GET request to retrieve all countries
-export async function getCountries(templeId) {
+export async function getCountries(templeId, navigate) {
     try {
         const response = await fetch(`/api/location/countries/${templeId}`);
         const data = await response.json();
@@ -11,7 +11,7 @@ export async function getCountries(templeId) {
 }
 
 // Function to make a GET request to retrieve states by country ID
-export async function getStatesByCountry(templeId,countryId) {
+export async function getStatesByCountry(templeId,countryId, navigate) {
     try {
         const response = await fetch(`/api/location/states/${templeId}/${countryId}`);
         const data = await response.json();
@@ -23,7 +23,7 @@ export async function getStatesByCountry(templeId,countryId) {
 }
 
 // Function to make a GET request to retrieve districts by state ID
-export async function getDistrictsByState(templeId,stateId) {
+export async function getDistrictsByState(templeId,stateId, navigate) {
     try {
         const response = await fetch(`/api/location/districts/${templeId}/${stateId}`);
         const data = await response.json();
@@ -35,7 +35,7 @@ export async function getDistrictsByState(templeId,stateId) {
 }
 
 // Function to make a GET request to retrieve tehsils by district ID
-export async function getTehsilsByDistrict(templeId,districtId) {
+export async function getTehsilsByDistrict(templeId,districtId, navigate) {
     try {
         const response = await fetch(`/api/location/tehsils/${templeId}/${districtId}`);
         const data = await response.json();
@@ -47,7 +47,7 @@ export async function getTehsilsByDistrict(templeId,districtId) {
 }
 
 // Function to make a GET request to retrieve villages by tehsil ID
-export async function getVillagesByTehsil(templeId,tehsilId) {
+export async function getVillagesByTehsil(templeId,tehsilId, navigate) {
     try {
         const response = await fetch(`/api/location/villages/${templeId}/${tehsilId}`);
         const data = await response.json();

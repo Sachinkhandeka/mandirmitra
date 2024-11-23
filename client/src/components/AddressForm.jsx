@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { getCountries, getStatesByCountry, getDistrictsByState, getTehsilsByDistrict, getVillagesByTehsil } from "../locationApi";
 import { Label, Select } from "flowbite-react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function AddressForm ({ selectedCountry, selectedState, selectedDistrict, selectedTehsil, selectedVillage, currUser, locationAdded, handleChange }) {
+    const navigate = useNavigate();
     const [ countries , setCountries ] = useState([]);
     const [ states , setStates ] = useState([]);
     const [ districts , setDistricts ] = useState([]);
@@ -12,7 +15,7 @@ export default function AddressForm ({ selectedCountry, selectedState, selectedD
 
     // get countries
     const getCountriesData = async () => {
-        const response = await getCountries(currUser.templeId);
+        const response = await getCountries(currUser.templeId, navigate);
         setCountries(response.countries.sort((a, b) => a.name.localeCompare(b.name)));
     }
     useEffect(() => {
@@ -21,7 +24,7 @@ export default function AddressForm ({ selectedCountry, selectedState, selectedD
 
     // get states
     const getStatesData = async () => {
-        const response = await getStatesByCountry(currUser.templeId, selectedCountry);
+        const response = await getStatesByCountry(currUser.templeId, selectedCountry, navigate);
         setStates(response.states.sort((a, b) => a.name.localeCompare(b.name)));
     }
     useEffect(() => {
@@ -32,7 +35,7 @@ export default function AddressForm ({ selectedCountry, selectedState, selectedD
 
     // get districts
     const getDistrictData = async () => {
-        const response = await getDistrictsByState(currUser.templeId, selectedState);
+        const response = await getDistrictsByState(currUser.templeId, selectedState, navigate);
         setDistricts(response.districts.sort((a, b) => a.name.localeCompare(b.name)));
     }
     useEffect(() => {
@@ -43,7 +46,7 @@ export default function AddressForm ({ selectedCountry, selectedState, selectedD
 
     // get tehsils
     const getTehsilsData = async () => {
-        const response = await getTehsilsByDistrict(currUser.templeId, selectedDistrict);
+        const response = await getTehsilsByDistrict(currUser.templeId, selectedDistrict, navigate);
         setTehsils(response.tehsils.sort((a, b) => a.name.localeCompare(b.name)));
     }
     useEffect(() => {
@@ -54,7 +57,7 @@ export default function AddressForm ({ selectedCountry, selectedState, selectedD
 
     // get villages
     const getVillagesData = async () => {
-        const response = await getVillagesByTehsil(currUser.templeId, selectedTehsil);
+        const response = await getVillagesByTehsil(currUser.templeId, selectedTehsil, navigate);
         setVillages(response.villages.sort((a, b) => a.name.localeCompare(b.name)));
     }
     useEffect(() => {

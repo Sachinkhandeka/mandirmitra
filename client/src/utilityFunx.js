@@ -82,3 +82,109 @@ export const getYouTubeEmbedUrl = (url)=> {
     const videoId = matches ? matches[1] : null;
     return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
 }
+
+//utility function to get devotee refresh token 
+export const refreshDevoteeAccessToken = async ()=> {
+    try {
+        const response = await fetch("/api/devotee/refresh-token", {
+            method: "POST",
+            headers : { "content-type": "application/json" }
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            return { errorData : data };
+        }
+        return true;
+    } catch (error) {
+        return { errorData : error };
+    }
+}
+
+//utility function to get super-admin or user refresh token
+export const refreshSuperAdminOrUserAccessToken = async ()=> {
+    try {
+        const response = await fetch(
+            "/api/superadmin/refresh-token",
+            {
+                method : "POST",
+                headers : { "content-type" : "application/json" },
+            }
+        );
+        const data = await response.json();
+        if(!response.ok) {
+            return { errorData : data };
+        }
+        return true;
+    } catch (error) {
+        return { errorData : error};
+    }
+}
+
+//utility function to call secure routes with refresh token checks
+export const fetchWithAuth = async (
+    endpoint,
+    options,
+    refreshTokenFunction,
+    userType,
+    setLoading,
+    setAlert,
+    navigate,
+    retry = false,
+) => {
+    try {
+        // initial API request
+        const response = await fetch(`${endpoint}`, options);
+        const data = await response.json();
+
+        // unauthorized responses
+        if (!response.ok) {
+            if (response.status === 401 && (data.message === "jwt expired" || data.message === "Unauthorized request")) {
+                // Attempt token refresh
+                const refreshTokens = await refreshTokenFunction();
+                if (refreshTokens !== true && refreshTokens.errorData) {
+                    setAlert({
+                        type: "error",
+                        message: refreshTokens.errorData.message || "Failed to refresh tokens.",
+                    });
+                    if(userType === "Devotee"){
+                        navigate("/devotees"); // Redirect if token refresh fails
+                        return;
+                    }else {
+                        navigate("/login"); // Redirect if token refresh fails
+                        return;
+                    }
+                }
+                // Retry logic for token refresh failure
+                if (retry) {
+                    setAlert({ type: "error", message: "Token request failed multiple times." });
+                    return;
+                }
+
+                // Retry the original request after token refresh
+                return await fetchWithAuth(
+                    endpoint,
+                    options,
+                    refreshTokenFunction,
+                    setLoading,
+                    setAlert,
+                    navigate,
+                    true,
+                );
+            }
+
+            // Handle other backend errors
+            setAlert({ type: "error", message: data.message });
+            return;
+        }
+
+        // Return successful response data
+        return data;
+    } catch (error) {
+        // Handle network or unexpected errors
+        setAlert({ type: "error", message: error.message || "Error while fetching data." });
+        return;
+    } finally {
+        // Ensure loading state is managed at the caller level
+        setLoading(false);
+    }
+};

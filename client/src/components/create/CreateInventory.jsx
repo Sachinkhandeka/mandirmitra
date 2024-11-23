@@ -5,8 +5,11 @@ import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, 
 import { BsFillBox2HeartFill, BsBoxFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
+import { useNavigate } from 'react-router-dom';
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from '../../utilityFunx';
 
 export default function CreateInventory() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [inventoryData, setInventoryData] = useState({
         name: '',
@@ -43,32 +46,31 @@ export default function CreateInventory() {
         try {
             setAlert({ type: "", message: "" });
             setLoading(true);
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/inventory/create/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(inventoryData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
+            if(data) {
+                setAlert({ type: "success", message: data.message });
                 setLoading(false);
-                return;
+                setInventoryData({
+                    name: '',
+                    category: '',
+                    quantity: '',
+                    unit: '',
+                    unitPrice: '',
+                    totalPrice: '',
+                });
             }
-
-            setAlert({ type: "success", message: data.message });
-            setLoading(false);
-            setInventoryData({
-                name: '',
-                category: '',
-                quantity: '',
-                unit: '',
-                unitPrice: '',
-                totalPrice: '',
-            });
         } catch (err) {
             setAlert({ type: "error", message: err.message });
             setLoading(false);

@@ -6,8 +6,11 @@ import { HiOutlineCollection, HiOutlineDocumentText, HiOutlineCalendar, HiOutlin
     HiOutlineCurrencyRupee, HiOutlineLocationMarker, HiOutlineMap, HiOutlineStatusOnline } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Alert from '../Alert';
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx"
+import { useNavigate } from 'react-router-dom';
 
 export default function AssetsForm() {
+    const navigate = useNavigate()
     const { currUser } = useSelector(state => state.user);
     const [assetData, setAssetData] = useState({
         assetType: '',
@@ -37,35 +40,34 @@ export default function AssetsForm() {
         try {
             setAlert({ type: "", message: "" });
             setLoading(true);
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/asset/create/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(assetData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
+            if(data) {
+                setAlert({ type: "success", message: data.message });
                 setLoading(false);
-                return;
+                setAssetData({
+                    assetType: '',
+                    name: '',
+                    description: '',
+                    acquisitionDate: '',
+                    acquisitionCost: '',
+                    currentValue: '',
+                    address: '',
+                    pincode: '',
+                    status: '',
+                });
             }
-
-            setAlert({ type: "success", message: data.message });
-            setLoading(false);
-            setAssetData({
-                assetType: '',
-                name: '',
-                description: '',
-                acquisitionDate: '',
-                acquisitionCost: '',
-                currentValue: '',
-                address: '',
-                pincode: '',
-                status: '',
-            });
             
         } catch (err) {
             setAlert({ type: "error", message: err.message });

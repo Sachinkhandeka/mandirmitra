@@ -1,17 +1,20 @@
 import { useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
-import { Button, Card, Checkbox, Label, Modal, Select } from "flowbite-react";
+import { Button, Card, Checkbox, Label, Modal, Select, Spinner } from "flowbite-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreatePermissions({ setUpdated }) {
+    const navigate = useNavigate();
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ permissionName , setPermissionName ] = useState('donation-creator');
     const [ actions , setActions ] = useState([]);
-    const [ success , setSuccess ] = useState(null);
-    const [ error , setError ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
 
     //handle actions 
     const handleChange = (e)=> {
@@ -26,26 +29,28 @@ export default function CreatePermissions({ setUpdated }) {
     }
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
+        setLoading(true);
         try {
-            const  response = await fetch(
+            const data = await fetchWithAuth(
                 "/api/permission/create",
                 {
                     method : "POST",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify({ permissionName , actions , templeId : currUser.templeId }),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data =  await response.json();
-
-            if(!response.ok) {
-                return  setError(data.message);
+            if(data) {
+                setUpdated(true);
+                setAlert({ type : "success", message :  data });
             }
-            setUpdated(true);
-            setSuccess(data);
         }catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message :  err.message });
         }
     }
 
@@ -74,8 +79,15 @@ export default function CreatePermissions({ setUpdated }) {
                     <Modal.Body>
                         <div className="space-y-6">
                             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                                { success  && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                                {alert.message && (
+                                    <Alert 
+                                        type={alert.type}
+                                        message={alert.message}
+                                        autoDismiss
+                                        duration={6000}
+                                        onClose={()=> setAlert({ type : "", message : "" })}
+                                    />
+                                )}
                             </div>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-8" >
                         <div >
@@ -112,7 +124,14 @@ export default function CreatePermissions({ setUpdated }) {
                             </div>
                          </div>
                          <div className="w-full my-3">
-                            <Button onClick={handleSubmit} gradientMonochrome={"purple"} outline >Add Permission</Button>
+                            <Button 
+                                onClick={handleSubmit} 
+                                gradientMonochrome={"purple"} 
+                                outline
+                                disabled={loading} 
+                            >
+                                { loading ? <Spinner color={"purple"} /> :  'Add Permission' }
+                            </Button>
                          </div>
                          </form>
                      </div>

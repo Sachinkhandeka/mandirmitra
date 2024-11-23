@@ -1,16 +1,19 @@
 import { useSelector } from "react-redux";
 import { FaAddressCard } from "react-icons/fa6";
-import { Button, Card, Label, Modal, TextInput, Checkbox } from "flowbite-react";
+import { Button, Card, Label, Modal, TextInput, Checkbox, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateRoles({ updated, setRoleUpdated }) {
+    const navigate = useNavigate();
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ permissions , setPermissions ]  = useState({});
-    const [ error , setError ] = useState(null);
-    const [ success , setSuccess ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
     const [ formData , setFormData ] =  useState({
         name : '',
         permissions : [],
@@ -18,22 +21,31 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
 
     const getPermissionsData = async()=> {
         try {
-            setError(null);
-            setSuccess(null);
+            setLoading(true);
+            setAlert({ type : "", message : "" });
 
             if (!currUser || !currUser.templeId) {
-                setError("Invalid user or templeId");
+                setAlert({ type : "error", message : "Invalid user or templeId" });
+                setLoading(false);
                 return;
             }
-            const response = await fetch(`/api/permission/get/${currUser.templeId.toString()}`);
-            const data = await response.json();
-            
-            if(!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/permission/get/${currUser.templeId.toString()}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setPermissions( data.permissions );
+                setLoading(false);
             }
-            setPermissions( data.permissions );
         }catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
+            setLoading(false);
+            return;
         }
     }
 
@@ -65,24 +77,31 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
     }
     const handleSubmit = async(e)=> {
         e.preventDefault();
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const  response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/role/create/${currUser.templeId}`,
                 {
                     method : "POST",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data =  await response.json();
-
-            if(!response.ok) {
-                return setError(data.message);
+            console.log(data);
+            if(data){ 
+                setRoleUpdated(true);
+                setAlert({ type : "success", message : data });
+                setLoading(false);
             }
-            setRoleUpdated(true);
-            setSuccess(data);
         }catch(err) {
-            setError(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return (
@@ -110,8 +129,15 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
                     <Modal.Body>
                         <div className="space-y-6">
                             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                                {alert.message && (
+                                    <Alert 
+                                        type={alert.type}
+                                        message={alert.message}
+                                        autoDismiss
+                                        duration={6000}
+                                        onClose={()=> setAlert({ type : "", message : "" })}
+                                    />
+                                )}
                             </div>
                             <form onSubmit={handleSubmit} >
                             <div>
@@ -139,7 +165,14 @@ export default function CreateRoles({ updated, setRoleUpdated }) {
                                 </div>
                             )}
                             <div className="w-full mt-3 ">
-                                <Button onClick={handleSubmit} gradientMonochrome={"failure"} outline >Add Role</Button>
+                                <Button 
+                                    onClick={handleSubmit} 
+                                    gradientMonochrome={"failure"} 
+                                    outline 
+                                    disabled={loading}
+                                >
+                                    { loading ? <Spinner color={"failure"} /> :  'Add Role' }
+                                </Button>
                             </div>
                             </form>
                         </div>

@@ -9,8 +9,11 @@ import { Helmet } from "react-helmet-async";
 import { FiEdit3 } from "react-icons/fi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdPerson, MdEmail, MdPhone, MdLock } from "react-icons/md";
+import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
+import { useNavigate } from "react-router-dom";
 
 export default function DevoteeProfile() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { currUser } = useSelector(state => state.user);
     const [edit, setEdit] = useState(false);
@@ -36,26 +39,35 @@ export default function DevoteeProfile() {
         setPasswordUpdate({ ...passwordUpdate, [id]: value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, retry = false) => {
         e.preventDefault();
         setLoading(true);
         setAlert({ type: "", message: "" });
         try {
+            const data = await fetchWithAuth(
+                `/api/devotee/${currUser._id}`,
+                {
+                    method: "PUT",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify(updatedDevotee),
+                },
+                refreshDevoteeAccessToken,
+                'Devotee',
+                setLoading,
+                setAlert,
+                navigate
+            );
             const response = await fetch(`/api/devotee/${currUser._id}`, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify(updatedDevotee),
             });
-            const data = await response.json();
-
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
-                return setLoading(false);
+            if(data) {
+                dispatch(signinSuccess(data.currUser));
+                setAlert({ type: "success", message: "Profile updated successfully!" });
+                setLoading(false);
+                setEdit(false);
             }
-            dispatch(signinSuccess(data.currUser));
-            setAlert({ type: "success", message: "Profile updated successfully!" });
-            setLoading(false);
-            setEdit(false);
         } catch (error) {
             setAlert({ type: "error", message: error.message });
             setLoading(false);
@@ -67,20 +79,25 @@ export default function DevoteeProfile() {
         setLoading(true);
         setAlert({ type: "", message: "" });
         try {
-            const response = await fetch(`/api/devotee/${currUser._id}/password`, {
-                method: "PUT",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(passwordUpdate),
-            });
-            const data = await response.json();
 
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
-                return setLoading(false);
+            const data = await fetchWithAuth(
+                `/api/devotee/${currUser._id}/password`,
+                {
+                    method: "PUT",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify(passwordUpdate),
+                },
+                refreshDevoteeAccessToken,
+                "Devotee",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
+                setAlert({ type: "success", message: "Password updated successfully!" });
+                setLoading(false);
+                setPasswordUpdate({ oldPassword: "", newPassword: "" });
             }
-            setAlert({ type: "success", message: "Password updated successfully!" });
-            setLoading(false);
-            setPasswordUpdate({ oldPassword: "", newPassword: "" });
         } catch (error) {
             setAlert({ type: "error", message: error.message });
             setLoading(false);

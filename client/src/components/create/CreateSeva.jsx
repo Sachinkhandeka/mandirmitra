@@ -3,41 +3,43 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateSeva({ setSevaUpdated }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [seva, setSeva] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const addSeva = async(e)=> {
         e.preventDefault();
         setLoading(false);
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/seva/create/${currUser.templeId}`,
                 { 
                     method : "POST",
                     headers : { "content-type" : "application/json" },
                     body : JSON.stringify({ seva }),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate   
             );
-            const data = await response.json();
-
-            if(!response.ok) {
-                setLoading(false); 
-                return setError(data.messsage);
+            if(data) {
+                setAlert({ type : "success", message : data.message });
+                setLoading(false);
+                setSevaUpdated(true);
+                setSeva('');
             }
-            setSuccess(data.message);
-            setLoading(false);
-            setSevaUpdated(true);
-            setSeva('');
         }catch(err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message});
         };
     }
 
@@ -49,8 +51,9 @@ export default function CreateSeva({ setSevaUpdated }) {
             </Helmet>
             <div className="flex-1 border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4" >
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                    { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                    { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }  
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
                 </div>
                 <h2 className="text-xl font-mono uppercase text-center" >Add Seva</h2>
                 <form onSubmit={addSeva}>

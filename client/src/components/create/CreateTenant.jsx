@@ -7,12 +7,14 @@ import 'react-phone-input-2/lib/style.css';
 import "../../css/PhoneInputCostom.css";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshDevoteeAccessToken, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateTenant() {
+    const navigate = useNavigate();
     const [openModal, setOpenModal] = useState(false);
     const { currUser } = useSelector(state => state.user);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [formData, setFormdata] = useState({
         name: '',
@@ -39,37 +41,37 @@ export default function CreateTenant() {
     };
 
     const handleSubmit = async (e) => {
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         setLoading(true);
         e.preventDefault();
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/tenant/create/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
+                setAlert({ type : "success", message :  data.message });
                 setLoading(false);
-                return setError(data.message);
+                setFormdata({
+                    name: '',
+                    contactInfo: '',
+                    email: '',
+                    address: '',
+                    pinCode: '',
+                });
             }
-            setSuccess(data.message);
-            setLoading(false);
-            setFormdata({
-                name: '',
-                contactInfo: '',
-                email: '',
-                address: '',
-                pinCode: '',
-            });
         } catch (err) {
+            setAlert({ type : "error", message : "" });
             setLoading(false);
-            setError(err.message);
         }
     };
     return (
@@ -97,8 +99,15 @@ export default function CreateTenant() {
                             <Modal.Body>
                                 <div className="space-y-6">
                                     <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} />)}
-                                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> )}
+                                        {alert.message && (
+                                            <Alert 
+                                                type={alert.type}
+                                                message={alert.message}
+                                                autoDismiss
+                                                duration={6000}
+                                                onClose={()=> setAlert({ type : "", message : "" })}
+                                            />
+                                        )}
                                     </div>
                                     <form className="my-3" onSubmit={handleSubmit}>
                                         <div className="flex flex-col gap-3 mt-2">

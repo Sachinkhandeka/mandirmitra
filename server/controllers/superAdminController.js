@@ -309,40 +309,54 @@ module.exports.signoutController = async (req ,res)=> {
     .json({ message : "Admin logged out successfully" });
 }
 
-module.exports.refreshTokenController = async (req, res)=> {
+module.exports.refreshTokenController = async (req, res) => {
     const incomingRefreshToken = req.cookies.refresh_token;
 
-    if(!incomingRefreshToken) {
-        throw new ExpressError(401, "Unautharized request");
+    if (!incomingRefreshToken) {
+        throw new ExpressError(401, "Unauthorized request");
     }
 
-    const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-
-    if(!decodedToken.superAdmin) {
-        throw new ExpressError(401, "Unautharized request");
-    }
-    const admin = await SuperAdmin.findById(decodedToken?._id);
-
-    if(!admin) {
-        throw new ExpressError(401, "Invalid refresh token");
+    let decodedToken;
+    try {
+        decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    } catch (error) {
+        throw new ExpressError(401, "Invalid or expired refresh token");
     }
 
-    if(incomingRefreshToken !== admin.refreshToken) {
-        throw new ExpressError(401, "Refresh token expired or used");
+    let user, userType;
+
+    // Check if the token belongs to a SuperAdmin
+    user = await SuperAdmin.findById(decodedToken._id);
+    if (user && user.refreshToken === incomingRefreshToken) {
+        userType = "Admin"; // Set user type for token generation
+    } else {
+        // If not a SuperAdmin, check for a regular User
+        user = await User.findById(decodedToken._id);
+        if (user && user.refreshToken === incomingRefreshToken) {
+            userType = "User"; // Set user type for token generation
+        }
     }
 
+    // If no valid user is found
+    if (!user || user.refreshToken !== incomingRefreshToken) {
+        throw new ExpressError(401, "Refresh token expired or invalid");
+    }
+
+    // Generate new tokens
     const options = {
-        httpOnly : true,
-        secure : true,
-    }
+        httpOnly: true,
+        secure: true,
+    };
 
-    const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(admin._id, "Admin");
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id, userType);
 
-    return res.status(200)
-    .cookie("access_token", accessToken, options)
-    .cookie("refresh_token", newRefreshToken, options)
-    .json({
-        message : "Access token refreshed successfully",
-        accessToken, refreshToken : newRefreshToken,
-    });
-}
+    return res
+        .status(200)
+        .cookie("access_token", accessToken, options)
+        .cookie("refresh_token", refreshToken, options)
+        .json({
+            message: "Access token refreshed successfully",
+            accessToken,
+            refreshToken,
+        });
+};

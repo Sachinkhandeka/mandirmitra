@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Button, Card, Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import { Button, Card, Checkbox, Label, Modal, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { FiUserPlus } from "react-icons/fi";
@@ -8,13 +8,16 @@ import 'react-phone-input-2/lib/style.css';
 import "../../css/PhoneInputCostom.css";
 import { Helmet } from  "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateUser({ roleUpdated }) {
+    const navigate = useNavigate();
     const [ openModal, setOpenModal ] = useState(false);
     const { currUser } = useSelector(state => state.user);
     const [ viewPass , setViewPass ] = useState(false);
-    const [ error ,  setError ] =  useState(null);
-    const [ success ,  setSuccess ] =  useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
     const [ roles , setRoles ] = useState([]);
     const [ formData , setFormdata ] = useState({
         username : '',
@@ -25,17 +28,24 @@ export default function CreateUser({ roleUpdated }) {
     });
 
     const  getRolesData = async()=> {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            setError(null);
-            const  response = await fetch(`/api/role/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if(!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/role/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setRoles(data.roles);
+                setLoading(false);
             }
-            setRoles(data.roles);
         }catch(err){
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 
@@ -76,23 +86,27 @@ export default function CreateUser({ roleUpdated }) {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/user/create/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-    
-            if (!response.ok) {
-                return setError(data.message);
+            if(data) {
+                setAlert({ type : "success", message :  data });
             }
-            setSuccess(data);
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
     return (
@@ -129,8 +143,15 @@ export default function CreateUser({ roleUpdated }) {
                     <Modal.Body>
                         <div className="space-y-6">
                             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                                {alert.message && (
+                                    <Alert 
+                                        type={alert.type}
+                                        message={alert.message}
+                                        autoDismiss
+                                        duration={6000}
+                                        onClose={()=> setAlert({ type : "", message : "" })}
+                                    />
+                                )}
                             </div>
                             <form className="my-3" onSubmit={handleSubmit} >
                                 <div className="flex flex-col gap-3 mt-2" >
@@ -189,7 +210,15 @@ export default function CreateUser({ roleUpdated }) {
                                         </div>
                                     )
                                 }
-                                <Button onClick={handleSubmit} className="mt-4" gradientMonochrome={"lime"} outline>Create new user</Button>
+                                <Button 
+                                    onClick={handleSubmit} 
+                                    className="mt-4" 
+                                    gradientMonochrome={"lime"} 
+                                    outline
+                                    disabled={loading}
+                                >
+                                    {  loading ? <Spinner color={"success"} /> :  'Create new user' }
+                                </Button>
                             </form>
                         </div>
                      </Modal.Body>

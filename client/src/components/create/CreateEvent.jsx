@@ -6,11 +6,13 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateEvent() {
+    const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [eventData, setEventData] = useState({
         name: "",
@@ -33,35 +35,35 @@ export default function CreateEvent() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSuccess(null);
-        setError(null);
+        setAlert({ type : "", message : "" });
         setLoading(true);
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/event/create/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(eventData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
+                setAlert({ type : "success", message : "Event created successfully!" });
                 setLoading(false);
-                return setError(data.message);
+                setEventData({
+                    name: "",
+                    date: "",
+                    location: "",
+                    status: "pending",
+                });
             }
-            setSuccess("Event created successfully!");
-            setLoading(false);
-            setEventData({
-                name: "",
-                date: "",
-                location: "",
-                status: "pending",
-            });
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message :  err.message });
         }
     };
 
@@ -76,8 +78,15 @@ export default function CreateEvent() {
                     <div className="flex justify-center items-center">
                         <div className="w-full flex flex-col md:flex-row gap-4 border-2 border-gray-300 dark:border-gray-700 rounded-md my-10 relative">
                             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+                                {alert.message && (
+                                    <Alert 
+                                       type={alert.type}
+                                       message={alert.message}
+                                       autoDismiss={true}
+                                       duration={6000}
+                                       onClose={()=> setAlert({ type : "", message : "" })}
+                                    />
+                                )}
                             </div>
                             <div
                                 className="min-h-20 md:min-h-full w-full md:w-40 flex md:flex-col 

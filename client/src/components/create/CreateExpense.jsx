@@ -5,12 +5,14 @@ import { GiMoneyStack, GiReceiveMoney, GiTakeMyMoney } from "react-icons/gi";
 import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function CreateExpense() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [formData, setFormData] = useState({
         title: "",
         amount: "",
@@ -41,9 +43,18 @@ export default function CreateExpense() {
         if (associateEvent) {
             const fetchEvents = async () => {
                 try {
-                    const response = await fetch(`/api/event/get/${currUser.templeId}`);
-                    const data = await response.json();
-                    setEvents(data.events || []); // Set fetched events
+                    const data = await fetchWithAuth(
+                        `/api/event/get/${currUser.templeId}`,
+                        {},
+                        refreshSuperAdminOrUserAccessToken,
+                        "User",
+                        setLoading,
+                        setAlert,
+                        navigate,
+                    )
+                    if(data) {
+                        setEvents(data.events || []); // Set fetched events
+                    }
                 } catch (err) {
                     console.error(err);
                 }
@@ -64,34 +75,36 @@ export default function CreateExpense() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/expense/create/${currUser.templeId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
+            const data = await fetchWithAuth(
+                `/api/expense/create/${currUser.templeId}`,
+                {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(formData)
                 },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            if (!response.ok) {
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+             if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setSuccess("Expense added successfully.");
+                setFormData({
+                    title: "",
+                    amount: "",
+                    date: "",
+                    category: "",
+                    status: "pending",
+                    event: null
+                });
+                setAssociateEvent(false);
             }
-            setLoading(false);
-            setSuccess("Expense added successfully.");
-            setFormData({
-                title: "",
-                amount: "",
-                date: "",
-                category: "",
-                status: "pending",
-                event: null
-            });
-            setAssociateEvent(false);
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -114,8 +127,15 @@ export default function CreateExpense() {
                 </div>
                 <div className="flex-1 p-4 md:p-10">
                     <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                        {error && (<Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} />)}
-                        {success && (<Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} />)}
+                        {alert.message && (
+                            <Alert 
+                                type={alert.type}
+                                message={alert.message}
+                                autoDismiss={true}
+                                duration={6000}
+                                onClose={()=> setAlert({ type : "", message : "" })}
+                            />
+                        )}
                     </div>
                     <h1 className="bg-gradient-to-bl from-pink-500 to-orange-500 bg-clip-text text-transparent dark:text-white font-mono uppercase font-bold p-2 mb-4 text-3xl flex gap-3">
                         Add Expense

@@ -250,13 +250,13 @@ module.exports.refreshTokenController = async(req,res)=> {
         httpOnly : true,
         secure : true,
     }
-    const { accessToken, newrefreshToken } = await generateAccessAndRefreshToken(devotee._id);
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(devotee._id);
 
     return res.status(200)
     .cookie("access_token", accessToken, options )
-    .cookie("refresh_token", newrefreshToken, options)
+    .cookie("refresh_token", refreshToken, options)
     .json({
         message : "Access token refreshed successfully",
-        accessToken, refreshToken : newrefreshToken,
+        accessToken, refreshToken,
     });
 }

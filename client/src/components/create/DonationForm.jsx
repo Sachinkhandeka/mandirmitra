@@ -12,8 +12,11 @@ import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdated }) {
+    const navigate = useNavigate();
     const [selectedCountry, setSelectedCountry] = useState({});
     const [selectedState, setSelectedState] = useState({});
     const [selectedDistrict, setSelectedDistrict] = useState({});
@@ -21,8 +24,7 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
     const [selectedVillage, setSelectedVillage] = useState({});
     const [seva, setSeva] = useState([]);
     const { currUser } = useSelector((state) => state.user);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [donation, setDonation] = useState({
         donorName: "",
@@ -40,15 +42,20 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
 
     const getSeva = useCallback(async () => {
         try {
-            const response = await fetch(`/api/seva/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/seva/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setSeva(data.seva);
             }
-            setSeva(data.seva);
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }, [currUser.templeId]);
 
@@ -100,25 +107,25 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            setLoading(true);
-            setError(null);
-            setSuccess(null);
-
-            const response = await fetch(`/api/donation/create/${currUser.templeId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(donation),
-            });
-            const data = await response.json();
-
-            if (!response.ok) {
-                setLoading(false);
-                return setError(data.message);
-            }
+            const data = await fetchWithAuth(
+                `/api/donation/create/${currUser.templeId}`, 
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(donation),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
 
             setLoading(false);
-            setSuccess("Donation added successfully.");
+            setAlert({ type : "success", message : "Donation added successfully." });
             setReceiptData(data.newDaan);
             setDonation({
                 donorName: "",
@@ -138,7 +145,7 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
             setSelectedTehsil({});
             setSelectedVillage({});
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
             setLoading(false);
         }
     }, [currUser.templeId, donation]);
@@ -256,8 +263,15 @@ export default function DonationForm({ locationAdded, sevaUpdated, setSevaUpdate
                 </form>
             </div>
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> )}
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> )}
+                {alert.message && (
+                    <Alert 
+                        type={alert.type}
+                        message={alert.message}
+                        autoDismiss
+                        duration={6000}
+                        onClose={()=> setAlert({ type : "", message : "" })}
+                    />
+                )}
             </div>
         </div>
     );
