@@ -57,11 +57,6 @@ export default function DevoteeProfile() {
                 setAlert,
                 navigate
             );
-            const response = await fetch(`/api/devotee/${currUser._id}`, {
-                method: "PUT",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(updatedDevotee),
-            });
             if(data) {
                 dispatch(signinSuccess(data.currUser));
                 setAlert({ type: "success", message: "Profile updated successfully!" });

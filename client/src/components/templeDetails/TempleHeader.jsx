@@ -11,7 +11,7 @@ import SmartSearch from "./SmartSearch";
 import Alert from "../Alert";
 import brand from "../../assets/brand.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { refreshToken, uploadImages } from "../../utilityFunx";
+import { fetchWithAuth, refreshDevoteeAccessToken, refreshToken, uploadImages } from "../../utilityFunx";
 import { signinSuccess, signoutSuccess } from "../../redux/user/userSlice";
 
 export default function TempleHeader() {
@@ -47,22 +47,25 @@ export default function TempleHeader() {
                     setLoading,
                     setAlert
                 );
-
-                const response = await fetch(`/api/devotee/${currUser._id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ photoURL: downloadURLs[0] })
-                });
-
-                const data = await response.json();
-                if (!response.ok) {
-                    setSelectedImg(downloadURLs[0]);
-                    console.error("Error updating profile:", data.message);
+                const  data = await fetchWithAuth(
+                    `/api/devotee/${currUser._id}`, 
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ photoURL: downloadURLs[0] })
+                    },
+                    refreshDevoteeAccessToken,
+                    "Devotee",
+                    setLoading,
+                    setAlert,
+                    navigate
+                );
+                if(data) {
+                    dispatch(signinSuccess(data.currUser));
+                    setUploadProgress(null);
                 }
-                dispatch(signinSuccess(data.currUser));
-                setUploadProgress(null);
             } catch (error) {
-                console.error("Upload failed:", error.message);
+                setAlert({ type : "error", message : error.message });
             } finally {
                 setLoading(false);
             }
@@ -71,12 +74,16 @@ export default function TempleHeader() {
 
     const handleSignOut = async()=> {
         try {
-            const response = await fetch("/api/devotee/signout", { method : "POST"});
-            const data = await response.json();
-
-            if(!response.ok) {
-                return setAlert({ type : "error", message : data.message });
-            }else {
+            const data = await fetchWithAuth(
+                "/api/devotee/signout", 
+                { method : "POST"},
+                refreshDevoteeAccessToken,
+                "Devotee",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
                 dispatch(signoutSuccess());
                 navigate("/");
             }

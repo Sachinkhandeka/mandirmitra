@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 import ShowAnuyayi from "./ShowAnuyayi";
+import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
 
 const TempleDescription = React.lazy(()=> import("./navigationItems/TempleDescription"));
 const TempleFestivals = React.lazy(()=> import("./navigationItems/TempleFestivals"));
@@ -36,21 +37,24 @@ export default function TempleDetailsSection({ temple, setTemple }) {
            return navigate("/devotees");
         }
         try {
-            const response = await fetch(`/api/temple/${temple._id}/anuyayi/${currUser._id}`,
+            const data = await fetchWithAuth(
+                `/api/temple/${temple._id}/anuyayi/${currUser._id}`,
                 {
                     method : "POST",
                     headers : { "content-type" : "application/json" }
-                }
+                },
+                refreshDevoteeAccessToken,
+                "Devotee",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-            if(!response.ok) {
+            
+            if(data) {
                 setLoading(false);
-                navigate("/devotees");
-                return setAlert({ type : "error", message : data.message });
+                setTemple(data.temple);
+                setAlert({ type : "success", message : data.message });
             }
-            setLoading(false);
-            setTemple(data.temple);
-            setAlert({ type : "success", message : data.message });
         }catch(error) {
             setLoading(false);
             setAlert({ type : "error", message: error.message });
