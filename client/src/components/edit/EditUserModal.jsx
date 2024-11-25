@@ -4,12 +4,14 @@ import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditUserModal({ showModalEdit, setShowModalEdit, userData, setUserData, setUserDataUpdated }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [viewPass, setViewPass] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -23,16 +25,21 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
 
     const getRolesData = async () => {
         try {
-            setError(null);
-            const response = await fetch(`/api/role/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return setError(data.message);
+            setAlert({ type : "", message : "" });
+            const data = await fetchWithAuth(
+                `/api/role/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setRoles(data.roles);
             }
-            setRoles(data.roles);
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -79,37 +86,36 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
+        setAlert({ type : "", message : "" });
         if (!isFormUpdated) {
             setLoading(false);
-            return setError("No changes detected to update user");
+            return setAlert({ type : "", message : "No changes detected to update user" });
         }
 
         try {
-            setError(null);
-            setSuccess(null);
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/user/edit/${currUser.templeId}/${userData._id}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
+                setUserData(data.updatedUser);
                 setLoading(false);
-                return setError(data.message);
+                setAlert({ type : "success", message : "User updated successfully." });
+                setUserDataUpdated(true);
+                setIsFormUpdated(false);
             }
-            setUserData(data.updatedUser);
-            setLoading(false);
-            setSuccess("User updated successfully.");
-            setUserDataUpdated(true);
-            setIsFormUpdated(false);
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -157,9 +163,10 @@ export default function EditUserModal({ showModalEdit, setShowModalEdit, userDat
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
                     </div>
                     <form>
                         <div className="flex-1 flex flex-col gap-4 my-4">

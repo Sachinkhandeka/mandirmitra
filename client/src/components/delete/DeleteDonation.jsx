@@ -3,34 +3,38 @@ import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
-export default function DeleteDonation({ showDeleteModal, setShowDeleteModal, setIsDonationUpdated, donationId, setError, setSuccess }) {
+export default function DeleteDonation({ showDeleteModal, setShowDeleteModal, setIsDonationUpdated, donationId, setAlert }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
 
     //function to halde delete donation
     const handleDelete = async()=> {
-        console.log("delete");
         try{
-            setError(null);
+            setAlert({ type : "", message : "" });
             setLoading(true);
-            setSuccess(null);
-            const  response = await fetch(`/api/donation/delete/${currUser.templeId}/${donationId}`, { method : "DELETE" });
-            const data = await response.json();
-
-            if(!response.ok) {
+            const data = await fetchWithAuth(
+                `/api/donation/delete/${currUser.templeId}/${donationId}`, 
+                { method : "DELETE" },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
                 setLoading(false);
+                setIsDonationUpdated(true);
+                setAlert({ type : "success", message : "Donation Deleted Successfully." });
                 setShowDeleteModal(false);
-                return setError(data.message);
             }
-            setLoading(false);
-            setIsDonationUpdated(true);
-            setSuccess("Donation Deleted Successfully.");
-            setShowDeleteModal(false);
         }
         catch(err){
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", meesage : err.message });
         }
     }
     return (

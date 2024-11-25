@@ -260,10 +260,6 @@ export default function DashDonations() {
                 setShowEditModal={setShowEditModal}
                 donation={donation}
                 setIsDonationUpdated={setIsDonationUpdated}
-                error={error}
-                setError={setError}
-                success={success}
-                setSuccess={setSuccess}
             />
         )}
         {/* Delete Donation Modal */}
@@ -273,8 +269,7 @@ export default function DashDonations() {
                 setShowDeleteModal={setShowDeleteModal}
                 setIsDonationUpdated={setIsDonationUpdated}
                 donationId={donation._id}
-                setError={setError}
-                setSuccess={setSuccess}
+                setAlert={setAlert}
             />
         ) }
         { totalDonations && totalDonations > 20 && (

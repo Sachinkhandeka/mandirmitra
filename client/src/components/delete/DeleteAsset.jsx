@@ -4,35 +4,40 @@ import { Helmet } from "react-helmet-async";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import Alert from "../Alert";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import { useNavigate } from "react-router-dom";
 
-export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets }) {
+export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets, alert, setAlert }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
 
     const handleDelete = async () => {
         setLoading(true);
-        setError(null);
+        setAlert({ type : "", message : "" });
 
         try {
-            const response = await fetch(`/api/asset/delete/${currUser.templeId}/${assetId}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
+            const data = await fetchWithAuth(
+                `/api/asset/delete/${currUser.templeId}/${assetId}`, 
+                {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setAlert({ type : "success", message : "Asset deleted successfully" });
+                refreshAssets();
+                onClose();
             }
-
-            setLoading(false);
-            refreshAssets();
-            onClose();
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message :  err.message });
         }
     };
 
@@ -50,8 +55,10 @@ export default function DeleteAsset({ assetId, isOpen, onClose, refreshAssets })
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Are you sure you want to delete this Asset?
                         </h3>
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
                         </div>
                         <div className="flex justify-center gap-4">
                             <Button color="failure" onClick={handleDelete} disabled={loading}>

@@ -4,8 +4,11 @@ import { Button, Datepicker, Label, Modal, Select, Spinner, TextInput, Checkbox 
 import { FaFileAlt, FaMoneyBillWave, FaClipboardCheck, FaListAlt, FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditExpense({ showModal, setShowModal, setIsUpdated, expense }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [formData, setFormData] = useState({
         title: "",
@@ -17,8 +20,7 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
     });
     const [events, setEvents] = useState([]); 
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [showEventSelect, setShowEventSelect] = useState(false); 
 
     const categories = [
@@ -52,15 +54,22 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
         // Fetch events from the backend
         const fetchEvents = async () => {
             try {
-                const response = await fetch(`/api/event/get/${currUser.templeId}`);
-                const data = await response.json();
-                if (response.ok) {
+                const data = await fetchWithAuth(
+                    `/api/event/get/${currUser.templeId}`,
+                    {},
+                    refreshSuperAdminOrUserAccessToken,
+                    "User",
+                    setLoading,
+                    setAlert,
+                    navigate
+                );
+                if(data){
                     setEvents(data.events); 
                 } else {
-                    setError("Failed to fetch events");
+                    setAlert({ type : "error", message : "Failed to fetch events" });
                 }
             } catch (err) {
-                setError("Error fetching events:", err.message);
+                setAlert({ type : "error", message : err.message });
             }
         };
 
@@ -78,29 +87,33 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError(null);
+        setAlert({ type : "", message : "" });
         const updatedFormData = {
             ...formData,
             event: formData.event === "" ? null : formData.event,
         };
         try {
-            const response = await fetch(`/api/expense/edit/${expense._id}/${currUser.templeId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
+            const data = await fetchWithAuth(
+                `/api/expense/edit/${expense._id}/${currUser.templeId}`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedFormData)
                 },
-                body: JSON.stringify(updatedFormData)
-            });
-            const data = await response.json();
-            if (!response.ok) {
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setIsUpdated(true);
+                setAlert({ type : "success", message : "Expense updated successfully." });
             }
-            setLoading(false);
-            setIsUpdated(true);
-            setSuccess("Expense updated successfully.");
         } catch (err) {
-            setError(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -119,9 +132,10 @@ export default function EditExpense({ showModal, setShowModal, setIsUpdated, exp
                 <Modal.Header>{expense.category}</Modal.Header>
                 <Modal.Body className="w-full flex flex-col" >
                     <div>
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                            {success && (<Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} />)}
-                            {error && (<Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} />)}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
                         </div>
                         <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row gap-4">

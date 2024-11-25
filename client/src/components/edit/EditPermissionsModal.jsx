@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default  function EditPermissionsModal({ showModal , setShowModal , setAlert, permissionData , setPermissionUpdated }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [ loading ,  setLoading ] =  useState(false);
     const [ isPermissionUpdated , setIsPermissionUpdate ] = useState(false);
@@ -56,26 +59,26 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setAl
         try {
             setLoading(true);
             setAlert({ type : "", message : "" });
-
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/permission/edit/${currUser.templeId}/${permissionData._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if(!response.ok) {
+            if(data) {
                 setLoading(false);
-                return setAlert({ type : "", message : data.message });    
+                setPermissionUpdated(true);
+                setShowModal(false);
+                setIsPermissionUpdate(false);
+                setAlert({ type : "success", message : "Permission updated successfully." });
             }
-            setLoading(false);
-            setPermissionUpdated(true);
-            setShowModal(false);
-            setIsPermissionUpdate(false);
-            setAlert({ type : "success", message : "Permission updated successfully." });
         } catch(err) {
             setAlert({ type : "error", message : err.message });
         }

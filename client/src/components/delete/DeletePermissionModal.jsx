@@ -4,31 +4,38 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DeletePermissionModal({ deleteModal , setDeleteModal , permissionId , setPermissionUpdated }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
-    const [ error , setError ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     //function to handle delete
     const handleDelete = async(e)=> {
         e.preventDefault();
         setLoading(true);
-        setError(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/permission/delete/${currUser.templeId}/${permissionId}`, { method : "DELETE" });
-            const data = await response.json();
-
-            if(!response.ok) {
+            const data = await fetchWithAuth(
+                `/api/permission/delete/${currUser.templeId}/${permissionId}`, 
+                { method : "DELETE" },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setPermissionUpdated(true);
+                setDeleteModal(false);
             }
-            setLoading(false);
-            setPermissionUpdated(true);
-            setDeleteModal(false);
         } catch(err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return (
@@ -40,8 +47,10 @@ export default function DeletePermissionModal({ deleteModal , setDeleteModal , p
         <Modal show={deleteModal} dismissible onClose={()=> setDeleteModal(false)} size={"md"} popup >
             <Modal.Header />
             <Modal.Body>
-                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
                 </div>
                 <form>
                     <div className="text-center">

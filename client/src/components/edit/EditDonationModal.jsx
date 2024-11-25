@@ -22,8 +22,7 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
     const [seva, setSeva] = useState([]);
     const { currUser } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [formData, setFormData] = useState({
         donorName: "",
         sevaName: "",

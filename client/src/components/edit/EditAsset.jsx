@@ -6,11 +6,13 @@ import { HiOutlineCollection, HiOutlineDocumentText, HiOutlineCalendar, HiOutlin
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         assetType: '',
@@ -48,29 +50,32 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
         });
     };
     const handleSubmit = async (e) => {
-        setError(null);
-        setSuccess(null);
-        setLoading(true);
         e.preventDefault();
+        setError(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/asset/update/${currUser.templeId}/${asset._id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-
-            if (!response.ok) {
+            const data = await fetchWithAuth(
+                `/api/asset/update/${currUser.templeId}/${asset._id}`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setAlert({ type : "success", meaage : data.message });
                 setLoading(false);
-                return setError(data.message);
+                refreshAssets();
+                onClose();
             }
-            setSuccess(data.message);
-            setLoading(false);
-            refreshAssets();
-            onClose();
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -86,9 +91,10 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                            {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
                         </div>
                         <form className="my-3" onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-3 mt-2">

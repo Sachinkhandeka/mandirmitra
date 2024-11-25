@@ -3,8 +3,11 @@ import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DeleteRoleModal({ deleteModal , setDeleteModal , setAlert , setRoleUpdated , roleId }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
 
@@ -13,17 +16,21 @@ export default function DeleteRoleModal({ deleteModal , setDeleteModal , setAler
         setLoading(true);
         setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/role/delete/${currUser.templeId}/${roleId}`, { method : "DELETE" });
-            const data = await response.json();
-
-            if(!response.ok) {
-                setLoading(false); 
-                return setAlert({ type : "error", message : data.message });
+            const data = await fetchWithAuth(
+                `/api/role/delete/${currUser.templeId}/${roleId}`, 
+                { method : "DELETE" },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setLoading(false);
+                setRoleUpdated(true);
+                setDeleteModal(false);
+                setAlert({ type : "success", message : "Role deleted successfully" });
             }
-            setLoading(false);
-            setRoleUpdated(true);
-            setDeleteModal(false);
-            setAlert({ type : "success", message : "Role deleted successfully" });
         } catch(err) {
             setLoading(false);
             setAlert({ type : "error", message : err.message });

@@ -460,6 +460,8 @@ export default function DashAssets() {
                         isOpen={isDeleteAssetOpen}
                         onClose={()=> setIsDeleteAssetOpen(false)}
                         refreshAssets={()=> getAssetsData()}
+                        alert={alert}
+                        setAlert={setAlert}
                     />
                 )
             }

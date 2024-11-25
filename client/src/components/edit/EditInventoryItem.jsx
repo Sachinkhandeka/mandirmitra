@@ -4,8 +4,11 @@ import { FaLuggageCart } from "react-icons/fa";
 import { HiOutlineClipboardList, HiOutlineHashtag, HiOutlineCube, HiOutlineTag, HiOutlineCalculator } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditInventoryItem({ editModal, setEditModal, inventory, setIsInventoryUpdated }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [inventoryData, setInventoryData] = useState({
         name: inventory.name || '',
@@ -42,24 +45,24 @@ export default function EditInventoryItem({ editModal, setEditModal, inventory, 
         setLoading(true);
         setAlert({ type : "", message : "" });
         try {
-            const  response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/inventory/edit/${inventory._id}/${currUser.templeId}`,
                 {
                     method : "PUT",
                     headers : { "content-type" : "application/json" },
                     body : JSON.stringify(inventoryData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const  data =  await response.json();
-
-            if(!response.ok) {
-                setAlert({ type : "error", message : data.message });
+            if(data) {
+                setAlert({ type : "success", message : "Inventory updated successfully" });
+                setIsInventoryUpdated(true);
                 setLoading(false);
-                return ;
             }
-            setAlert({ type : "success", message : "Inventory updated successfully" });
-            setIsInventoryUpdated(true);
-            setLoading(false);
 
         }catch(err) {
             setAlert({ type : "error", message : err.message });

@@ -3,8 +3,11 @@ import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setAlert, setUserDataUpdated }) {
+  const navigate = useNavigate();
   const { currUser } = useSelector(state  => state.user);
     const [ loading , setLoading ] = useState(false);
     
@@ -12,18 +15,21 @@ export default function DeleteUserModal({ showModalDelete, setShowModalDelete , 
         try {
             setLoading(true);
             setAlert({ type : "", message : "" });
-            const response = await fetch(`/api/user/delete/${currUser.templeId}/${userId}`, { method : "DELETE" });
-            const data = await response.json();
-
-            if(!response.ok) {
-                setLoading(false);
-                setShowModalDelete(false);
-                return setAlert({ type : "error", message : data.message });
+            const data = await fetchWithAuth(
+              `/api/user/delete/${currUser.templeId}/${userId}`,
+              { method : "DELETE" },
+              refreshSuperAdminOrUserAccessToken,
+              "User",
+              setLoading,
+              setAlert,
+              navigate,
+            );
+            if(data) {
+              setLoading(false);
+              setShowModalDelete(false);
+              setAlert({ type : "success", message : "User delete successfully." });
+              setUserDataUpdated(true);
             }
-            setLoading(false);
-            setShowModalDelete(false);
-            setAlert({ type : "success", message : "User delete successfully." });
-            setUserDataUpdated(true);
         }catch(err) {
             setLoading(true);
             setShowModalDelete(false);

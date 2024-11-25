@@ -3,31 +3,38 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DeleteInventory({ deleteModal, setDeleteModal, inventoryId, setIsDeleted, }) {
+    const navigate = useNavigate();
     const  { currUser } = useSelector(state => state.user);
     const [ loading, setLoading ] = useState(false);
-    const [ error, setError ]  = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     //handle Delete functionality
     const handleDelete = async()=> {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/inventory/delete/${inventoryId}/${currUser.templeId}`,
                 {
                     method : "DELETE"
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data =  await response.json();
-
-            if(!response.ok){
-                setLoading(false);
-                return setError(data.message);
+            if(data) {
+                setIsDeleted(true);
+                setDeleteModal(false);
             }
-            setIsDeleted(true);
-            setDeleteModal(false);
         }catch(err) {
-            setError(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return (
@@ -36,8 +43,10 @@ export default function DeleteInventory({ deleteModal, setDeleteModal, inventory
                 
                 <Modal.Body>
                     <div className="text-center">
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
                         </div>
                         <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">

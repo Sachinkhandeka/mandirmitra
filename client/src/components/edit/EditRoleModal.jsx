@@ -4,11 +4,13 @@ import { HiCheck } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditRoleModal({ roleData , setRoleData ,  showModal , setShowModal ,  setRoleUpdated }) {
+    const navigate = useNavigate();
     const {  currUser } = useSelector(state => state.user);
-    const [ error , setError ] = useState(null);
-    const [ success , setSuccess ] = useState(null);
+    const [ alert , setAlert ] = useState({ type : "", message : "" });
     const [ loading , setLoading ] = useState(false);
     const [ permissions , setPermissions ] = useState([]);
     const [ formData , setFormData ] = useState({
@@ -27,21 +29,26 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
     // Fetch permissions data
     const getPermissionsData = async () => {
         try {
-            setError(null);
+            setAlert({ type : "", message : "" });
 
             if (!currUser || !currUser.templeId) {
-                setError("Invalid user or templeId");
+                setAlert({ type : "error", message : "Invalid user or templeId" });
                 return;
             }
-            const response = await fetch(`/api/permission/get/${currUser.templeId.toString()}`);
-            const data = await response.json();
-            
-            if(!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/permission/get/${currUser.templeId.toString()}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
+                setPermissions(data.permissions);
             }
-            setPermissions(data.permissions);
         } catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 
@@ -83,30 +90,31 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
     const handleUpdate = async(e)=> {
         e.preventDefault();
         try {
-            setError(null);
             setLoading(true);
+            setAlert({ type : "", message : "" });
 
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/role/edit/${currUser.templeId}/${roleData._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if(!response.ok) {
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setAlert({ type  : "success", message : "Role Updated Successfully." });
+                setRoleData(data.updatedRole);
+                setRoleUpdated(true);
+                setShowModal(false);
             }
-            setLoading(false);
-            setSuccess("Role Updated Successfully.");
-            setRoleData(data.updatedRole);
-            setRoleUpdated(true);
-            setShowModal(false);
         }catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 
@@ -126,9 +134,10 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
                 </div>
                 <div className="space-y-6" >
                     <h3 className="text-xl font-medium text-gray-900 dark:text-white">Edit Role</h3>
