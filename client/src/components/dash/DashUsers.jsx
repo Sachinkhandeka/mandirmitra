@@ -5,16 +5,19 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import { useNavigate } from "react-router-dom";
 
 const EditUserModal = React.lazy(() => import("../edit/EditUserModal"));
 const DeleteUserModal = React.lazy(() => import("../delete/DeleteUserModal"));
 const ImageModal = React.lazy(()=> import("../ImageModal"));
 
 export default function DashUsers() {
+    const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
     const [users, setUsers] = useState([]);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
+    const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState({});
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
@@ -32,19 +35,25 @@ export default function DashUsers() {
     // Get-fetch all users data
     const getUsers = async () => {
         try {
-            setError(null);
-            setSuccess(null);
+            setLoading(true);
+            setAlert({ type : "", message : "" });
 
-            const response = await fetch(`/api/user/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/user/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setUsers(data.allUser);
+                setLoading(false);
             }
-            setUsers(data.allUser);
-            setSuccess("users data fetched successfully");
         } catch (err) {
-            setError(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -74,9 +83,10 @@ export default function DashUsers() {
                 <title>Users Management - Dashboard</title>
                 <meta name="description" content="Manage users efficiently. View, edit, and delete user at your temple." />
             </Helmet>
-            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
             </div>
             {currUser.isAdmin && users.length > 0 ? (
                 <Table striped>
@@ -167,8 +177,7 @@ export default function DashUsers() {
                 showModalDelete={showModalDelete}
                 setShowModalDelete={setShowModalDelete}
                 userId={userData && userData._id}
-                setError={setError}
-                setSuccess={setSuccess}
+                setAlert={setAlert}
                 setUserDataUpdated={setUserDataUpdated}
             />
             { imageModal && (

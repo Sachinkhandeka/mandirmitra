@@ -5,14 +5,17 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from 'react-helmet-async';
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 const EditPermissionsModal = React.lazy(()=> import("../edit/EditPermissionsModal"));
 const DeletePermissionModal = React.lazy(()=> import("../delete/DeletePermissionModal"));
 
 export default function DashPermissions() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
-    const [ error , setError ] = useState(null);
-    const [ success , setSuccess ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
     const [ permissions, setPermissions ] = useState({});
     const [ showModal , setShowModal ] = useState(false);
     const [ deleteModal , setDeleteModal ] = useState(false);
@@ -21,23 +24,31 @@ export default function DashPermissions() {
 
     const getPermissionsData = async()=> {
         try {
-            setError(null);
-            setSuccess(null);
+            setLoading(true);
+            setAlert({ type : "", message : "" });
 
             if (!currUser || !currUser.templeId) {
-                setError("Invalid user or templeId");
-                return;
+                setAlert({ type : "error", message : "Invalid user or templeId" });
+                return setLoading(false);;
             }
-            const response = await fetch(`/api/permission/get/${currUser.templeId.toString()}`);
-            const data = await response.json();
-            
-            if(!response.ok) {
-                return setError(data.message);
+
+            const data = await fetchWithAuth(
+                `/api/permission/get/${currUser.templeId.toString()}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setPermissions( data.permissions );
+                setAlert({ type : "success", message: "Permissions data fetched successfully." });
+                setLoading(false);
             }
-            setPermissions( data.permissions );
-            setSuccess("Permissions data fetched successfully.");
         }catch(err) {
-            setError(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message: err.message });
         }
     }
 
@@ -64,9 +75,10 @@ export default function DashPermissions() {
                 <title>Manage Permissions - Dashboard</title>
                 <meta name="description" content="View, edit, and delete permissions for your temple. Manage user access rights efficiently." />
             </Helmet>
-            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> ) }
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
             </div>
             {/* Displaying permissions table if isAdmin and permissions array has length > 0 */}
             {currUser.isAdmin && permissions.length > 0 ? (
@@ -116,7 +128,7 @@ export default function DashPermissions() {
             <EditPermissionsModal 
                 showModal={showModal}
                 setShowModal={setShowModal}
-                setSuccess={setSuccess}
+                setAlert={setAlert}
                 permissionData={permissionData}
                 setPermissionUpdated={setPermissionUpdated}
             />

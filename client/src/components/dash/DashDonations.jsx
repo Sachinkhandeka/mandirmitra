@@ -10,6 +10,8 @@ import { Helmet } from 'react-helmet-async';
 import { debounce } from "lodash";
 import Alert from "../Alert";
 import Summary from "../Summary";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 // importing components when needed or used
 const EditDonationModal = React.lazy(()=> import("../edit/EditDonationModal"));
@@ -17,12 +19,12 @@ const DeleteDonation = React.lazy(()=> import("../delete/DeleteDonation"));
 const FilterDrawer = React.lazy(()=> import("../FilterDrawer"));
 
 export default function DashDonations() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const { searchTerm } =  useSelector(state => state.searchTerm);
     const location = useLocation();
     const [ loading , setLoading ] =  useState(false);
-    const [ success , setSuccess ] =  useState(null);
-    const [ error ,  setError ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
     const [ donations , setDonations ] =  useState([]);
     const [ showEditModal , setShowEditModal ] = useState(false);
     const [ showDeleteModal , setShowDeleteModal ] = useState(false);
@@ -44,27 +46,26 @@ export default function DashDonations() {
         const searchParam = tab === 'daans' ? `&searchTerm=${searchTerm}` : '';
         try {
             setLoading(true);
-            setError(null);
-            setSuccess(null);
+            setAlert({ type : "", message : "" });
             
             // Fetch donation data from the API endpoint
-            const response = await fetch(
-                `/api/donation/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`
+            const data = await fetchWithAuth(
+                `/api/donation/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            
-            const data = await response.json();
-
-            if(!response.ok) {
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setTotalDonations(data.total);
+                setDonations(data.daans);
             }
-
-            setLoading(false);
-            setTotalDonations(data.total);
-            setDonations(data.daans);
             
         }catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 
@@ -117,9 +118,16 @@ export default function DashDonations() {
             <meta name="keywords" content="donations, manage donations, temple donations, donation management" />
         </Helmet>
         <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                { error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> ) }
-                { success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=>  setSuccess(null)} /> ) }
-            </div>
+            {alert.message && (
+                <Alert 
+                    type={alert.type}
+                    message={alert.message}
+                    autoDismiss
+                    duration={6000}
+                    onClose={()=> setAlert({ type : "", message : "" })}
+                />
+            )}
+        </div>
         {/* Drawer toggler */}
         {
             (currUser && currUser.isAdmin || 

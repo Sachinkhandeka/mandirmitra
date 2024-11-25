@@ -6,80 +6,88 @@ import { MdModeEdit } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import { useNavigate } from "react-router-dom";
 
 export default function DashSeva() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [seva, setSeva] = useState([]);
     const [editSevaId, setEditSevaId] = useState(null);
     const [editSevaName, setEditSevaName] = useState("");
     const [loading, setLoading] = useState(false);
     const [delLoading, setDelLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type  : "", message : "" });
 
     const getSeva = useCallback(async () => {
         try {
-            const response = await fetch(`/api/seva/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.message);
-                return;
+            const data = await fetchWithAuth(
+                `/api/seva/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setSeva(data.seva);
             }
-            setSeva(data.seva);
         } catch (err) {
-            console.error(err);
+            setAlert({ type : "error", message : err.message });
         }
     }, [currUser.templeId]);
 
     const handleEditSeva = async (sevaId) => {
         setLoading(true);
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/seva/edit/${sevaId}/${currUser.templeId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
+            const data = await fetchWithAuth(
+                `/api/seva/edit/${sevaId}/${currUser.templeId}`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sevaName: editSevaName })
                 },
-                body: JSON.stringify({ sevaName: editSevaName })
-            });
-
-            if (!response.ok) {
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+           if(data) {
+                setAlert({ type : "success", message : "Seva edited successfully" });
                 setLoading(false);
-                setError("Failed to edit Seva");
-                return;
-            }
-            setSuccess("Seva edited successfully");
-            setLoading(false);
-            getSeva();
-            setEditSevaId(null);
+                getSeva();
+                setEditSevaId(null);
+           }
         } catch (err) {
             setLoading(false);
-            console.error(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
     const handleDeleteSeva = async (sevaId) => {
         setDelLoading(true);
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/seva/delete/${sevaId}/${currUser.templeId}`, {
-                method: "DELETE"
-            });
-
-            if (!response.ok) {
+            const data = await fetchWithAuth(
+                `/api/seva/delete/${sevaId}/${currUser.templeId}`, 
+                { method: "DELETE" },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setDelLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                getSeva();
+                setAlert({ type : "success", message : "Seva deleted successfully" });
                 setDelLoading(false);
-                setError("Failed to delete Seva.");
-                return;
             }
-            getSeva();
-            setSuccess("Seva deleted successfully");
-            setDelLoading(false);
         } catch (err) {
             setDelLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -102,10 +110,11 @@ export default function DashSeva() {
                 <title>Seva Management - Dashboard</title>
                 <meta name="description" content="Manage Seva offerings efficiently. View, edit, and delete Seva offerings at your temple." />
             </Helmet>
-            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
-            </div>
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
+                </div>
                 {seva.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {seva.map((sevaItem, index) => (

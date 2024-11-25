@@ -5,13 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineAttachEmail, MdOutlineCall } from "react-icons/md";
 import { useDispatch , useSelector } from "react-redux";
-import { updateStart, updateSuccess, updateFailure, resetError } from "../../redux/user/userSlice";
+import { updateStart, updateSuccess, updateFailure } from "../../redux/user/userSlice";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, updateMetadata } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import { Helmet } from "react-helmet-async";
 import 'react-circular-progressbar/dist/styles.css';
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 import CreateUser from "../create/CreateUser";
 import CreateRoles from "../create/CreateRoles";
@@ -30,15 +32,15 @@ import ImageModal from "../ImageModal";
 
 export default function DashProfile() {
     const dispatch = useDispatch();
+    const  navigate = useNavigate();
     const [ showModal , setShowModal ] = useState(false);
     const [ viewPass , setViewPass ] = useState(false);
-    const { currUser, loading , error } = useSelector(state => state.user);
+    const { currUser } = useSelector(state => state.user);
     const [ imageFile , setImageFile ] = useState(null);
     const [ tempImageUrl , setTempImageUrl ] = useState(null);
     const [ uploadProgress , setUploadProgress ] = useState(0);
-    const [ uploadError , setUploadError ] = useState(null);
-    const [ uploadSuccess , setUploadSuccess ] = useState(null);
-    const [ success , setSuccess ] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loadingState, setLoadingState ] = useState(false);
     const [ updated, setUpdated ] = useState(false);
     const [ roleUpdated, setRoleUpdated ] = useState(false);
     const inputRef = useRef();
@@ -73,27 +75,30 @@ export default function DashProfile() {
     //update super admin function
     const handleSubmit = async(e)=> {
         e.preventDefault();
-        dispatch(updateStart());
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
+        setLoadingState(true);
         try {
-            const response =  await  fetch(
+            const data = await fetchWithAuth(
                 currUser && currUser.isAdmin ? `/api/superadmin/edit/${currUser.templeId}/${currUser._id}` : `/api/user/edit/${currUser.templeId}/${currUser._id}`,
                 {
                     method : "PUT",
                     headers : { "Content-Type" : "application/json" },
                     body : JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoadingState,
+                setAlert,
+                navigate
             );
-            const  data = await response.json();
-
-            if(!response.ok) {
-                dispatch(updateFailure(data.message));
-                return ;
+            if(data) {
+                setAlert({ type : "success", message : "Profile updated successfully." });
+                dispatch(updateSuccess( currUser && currUser.isAdmin ? data.currUser : data.updatedUser));
+                setLoadingState(false);
             }
-            setSuccess("Profile updated successfully.");
-            dispatch(updateSuccess( currUser && currUser.isAdmin ? data.currUser : data.updatedUser));
         } catch(err) {
-            dispatch(updateFailure(err.message));
+            setAlert({ type : "error", message : err.message });
+            return setLoadingState(false);
         }
     }
 
@@ -108,8 +113,7 @@ export default function DashProfile() {
     //upload image file
     const uploadImage = async () => {
         try {
-            setUploadError(null);
-            setUploadSuccess(null);
+            setAlert({ type : "", message : "" });
     
             const storage = getStorage(app);
             const fileName = `${currUser.isAdmin ? 'adminProfiles' : 'userProfiles'}/${new Date().getTime()}_${imageFile.name}`;
@@ -130,7 +134,7 @@ export default function DashProfile() {
                             setUploadProgress(progress.toFixed(0));
                         },
                         (error) => {
-                            setUploadError(error.message);
+                            setAlert({ type : "error", message : error.message });
                             setUploadProgress(0);
                             setImageFile(null);
                             setTempImageUrl(null);
@@ -154,10 +158,10 @@ export default function DashProfile() {
                 // Update the metadata
                 await updateMetadata(uploadTask.snapshot.ref, metadata);
                 // Step 4: Set the success message
-                setUploadSuccess("Profile picture uploaded successfully. Please save changes.");
+                setAlert({ type : "success", message : "Profile picture uploaded successfully. Please save changes." });
             }
         } catch (error) {
-            setUploadError(error.message);
+            setAlert({ type : "error", message : error.message });
         }
     };
     
@@ -177,9 +181,10 @@ export default function DashProfile() {
         <div className="w-full" >
             { currUser && (
                 <div className="w-full" >
-                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm"  >
-                        { uploadError && (<Alert type="error" message={uploadError} autoDismiss duration={6000} onClose={()=> setUploadError(null)} />) }
-                        { uploadSuccess && ( <Alert type="success" message={uploadSuccess} autoDismiss={false} onClose={setUploadSuccess(null)} /> ) }
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
                     </div>
                     <div className="w-full bg-gradient-to-b from-blue-800 to-blue-300 rounded-lg h-16 relative" >
                         <input type="file" accept="image/*" onChange={handleImageChange} ref={inputRef} hidden/>
@@ -228,10 +233,11 @@ export default function DashProfile() {
                     <Modal show={showModal} onClose={() => setShowModal(false)} position={"top-right"} >
                        <Modal.Header>Edit Details</Modal.Header>
                        <Modal.Body>
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm"  >
-                            { error && ( <Alert type={"error"} message={error} autoDismiss duration={6000} onClose={() => dispatch(resetError())} /> ) }
-                            { success && ( <Alert type={"success"} message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> ) }
-                       </div>
+                       <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
+                        </div>
                          <div className="space-y-6">
                                 <div className="flex flex-col gap-4 my-4" >
                                     <Label htmlFor="username" >username: </Label>
@@ -267,8 +273,8 @@ export default function DashProfile() {
                          </div>
                        </Modal.Body>
                        <Modal.Footer>
-                            <Button onClick={handleSubmit} disabled={loading}>
-                                {loading ? <Spinner /> :'Save'}
+                            <Button onClick={handleSubmit} disabled={loadingState}>
+                                {loadingState ? <Spinner /> :'Save'}
                             </Button>
                             <Button color="gray" onClick={() => setShowModal(false)}>
                                 Decline

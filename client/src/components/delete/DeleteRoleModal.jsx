@@ -4,28 +4,29 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 
-export default function DeleteRoleModal({ deleteModal , setDeleteModal , setError , setRoleUpdated , roleId }) {
+export default function DeleteRoleModal({ deleteModal , setDeleteModal , setAlert , setRoleUpdated , roleId }) {
     const { currUser } = useSelector(state => state.user);
     const [ loading , setLoading ] = useState(false);
 
     //function to delete role
     const handleDelete = async()=> {
         setLoading(true);
-        setError(null);
+        setAlert({ type : "", message : "" });
         try {
             const response = await fetch(`/api/role/delete/${currUser.templeId}/${roleId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {
-                setLoading(false);
-                return setError(data.message);
+                setLoading(false); 
+                return setAlert({ type : "error", message : data.message });
             }
             setLoading(false);
             setRoleUpdated(true);
             setDeleteModal(false);
+            setAlert({ type : "success", message : "Role deleted successfully" });
         } catch(err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return (

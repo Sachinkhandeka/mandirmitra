@@ -8,11 +8,15 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Modal, Button, Spinner } from "flowbite-react";
 import { PopOver } from "../PopOver";
 import { Helmet } from "react-helmet-async";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import { useNavigate } from "react-router-dom";
+import Alert from "../Alert";
 
 const EditAsset = React.lazy(()=> import("../edit/EditAsset"));
 const DeleteAsset = React.lazy(()=> import("../delete/DeleteAsset"));
 
 export default function DashAssets() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [assets, setAssets] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +26,7 @@ export default function DashAssets() {
     const [openModal, setOpenModal] = useState(false);
     const [assetToRemove, setAssetToRemove] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isEditAssetOpen, setIsEditAssetOpen] =  useState(false);
     const [assetId, setAssetId] = useState("");
@@ -29,32 +34,37 @@ export default function DashAssets() {
 
 
     const getAssetsData = async (searchQuery = '') => {
+        setAlert({ type : "", message : "" });
         try {
             let url = `/api/asset/get/${currUser.templeId}`;
             if (searchQuery) {
                 url += `?search=${searchQuery}`;
             }
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.log(data.message);
-                return;
+            const data = await fetchWithAuth(
+                url,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
+                setAssets(data.assets);
+                const newRentDetails = {};
+                data.assets.forEach(asset => {
+                    newRentDetails[asset._id] = {
+                        tenant: asset.rentDetails?.tenant || "",
+                        rentAmount: asset.rentDetails?.rentAmount || "",
+                        leaseStartDate: asset.rentDetails?.leaseStartDate || "",
+                        leaseEndDate: asset.rentDetails?.leaseEndDate || "",
+                        paymentStatus: asset.rentDetails?.paymentStatus || "Pending"
+                    };
+                });
+                setRentDetails(newRentDetails);
             }
-            setAssets(data.assets);
-            const newRentDetails = {};
-            data.assets.forEach(asset => {
-                newRentDetails[asset._id] = {
-                    tenant: asset.rentDetails?.tenant || "",
-                    rentAmount: asset.rentDetails?.rentAmount || "",
-                    leaseStartDate: asset.rentDetails?.leaseStartDate || "",
-                    leaseEndDate: asset.rentDetails?.leaseEndDate || "",
-                    paymentStatus: asset.rentDetails?.paymentStatus || "Pending"
-                };
-            });
-            setRentDetails(newRentDetails);
         } catch (err) {
-            console.log(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -83,65 +93,68 @@ export default function DashAssets() {
     };
 
     const addTenantToAsset = async (assetId, details) => {
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/asset/addTenant/${currUser.templeId}/${assetId}`,
                 {
                     method: "PUT",
                     headers: { "content-type": "application/json" },
                     body: JSON.stringify({ rentDetails: details })
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-
-            if (!response.ok) {
-                const data = await response.json();
-                console.log(data.message);
-                return;
-            }
-
-            setRentDetails(prevDetails => ({
-                ...prevDetails,
-                [assetId]: {
-                    tenant: "",
-                    rentAmount: "",
-                    leaseStartDate: "",
-                    leaseEndDate: "",
-                    paymentStatus: "Pending"
-                }
-            }));
-            setDropdownVisible(prevState => ({
-                ...prevState,
-                [assetId]: false
-            }));
+            if(data) {
+                setRentDetails(prevDetails => ({
+                    ...prevDetails,
+                    [assetId]: {
+                        tenant: "",
+                        rentAmount: "",
+                        leaseStartDate: "",
+                        leaseEndDate: "",
+                        paymentStatus: "Pending"
+                    }
+                }));
+                setDropdownVisible(prevState => ({
+                    ...prevState,
+                    [assetId]: false
+                }));
             
-            getAssetsData(searchTerm);
+                getAssetsData(searchTerm);
+            }
         } catch (err) {
-            console.log(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
     const removeTenantFromAsset = async (assetId) => {
         setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/asset/removeTenant/${currUser.templeId}/${assetId}`,
                 {
                     method: "PUT",
                     headers: { "content-type": "application/json" }
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-
-            if (!response.ok) {
-                const data = await response.json();
+            if(data) {
                 setLoading(false);
-                return;
+                getAssetsData(searchTerm);
+                setOpenModal(false);
             }
-
-            setLoading(false);
-            getAssetsData(searchTerm);
-            setOpenModal(false);
         } catch (err) {
             setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -205,6 +218,17 @@ export default function DashAssets() {
                 <meta name="description" content={description} />
                 <meta name="keywords" content={keywords} />
             </Helmet>
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert.message && (
+                    <Alert 
+                        type={alert.type}
+                        message={alert.message}
+                        autoDismiss
+                        duration={6000}
+                        onClose={()=> setAlert({ type : "", message : "" })}
+                    />
+                )}
+            </div>
             <div className="pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
                 <div className="relative mt-1">

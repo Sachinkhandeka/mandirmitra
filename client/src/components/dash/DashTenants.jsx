@@ -3,11 +3,15 @@ import { useSelector } from "react-redux";
 import debounce from "lodash/debounce";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import Alert from "../Alert";
 
 const EditTenant = React.lazy(()=> import("../edit/EditTenant"));
 const DeleteTenant = React.lazy(()=> import("../delete/DeleteTenant"));
 
 export default function DashTenants() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [tenants, setTenants] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -15,23 +19,33 @@ export default function DashTenants() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedTenantId, setSelectedTenantId] = useState('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const getTenantsData = async (searchQuery) => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
             let url = `/api/tenant/get/${currUser.templeId}`;
             if (searchQuery) {
                 url += `?search=${searchQuery}`;
             }
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.log(data);
-                return;
+            const data = await fetchWithAuth(
+                url,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setLoading(false);
+                setTenants(data.tenants);
             }
-            setTenants(data.tenants);
         } catch (err) {
-            console.log(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -106,6 +120,11 @@ export default function DashTenants() {
                 <meta name="description" content={metaTags.description} />
                 <meta name="keywords" content={metaTags.keywords} />
             </Helmet>
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
             <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">Search</label>
                 <div className="relative">

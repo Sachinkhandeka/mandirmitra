@@ -9,8 +9,12 @@ import ToggleSwitch from "../ToggleSwitch";
 import { useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { debounce } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
+import Alert from "../Alert";
 
 export default function DashEvents() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const { searchTerm } = useSelector(state => state.searchTerm);
     const location = useLocation();
@@ -18,6 +22,8 @@ export default function DashEvents() {
     const [isEventUpdated, setIsEventUpdated] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState('');
     const [guests, setGuests] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const queryParams = new URLSearchParams(location.search);
 
@@ -33,17 +39,25 @@ export default function DashEvents() {
 
     // Get events
     const getEvents = async () => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/event/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return console.log(data.message);
+            const data = await fetchWithAuth(
+                `/api/event/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
+                setLoading(false);
+                setEvents(data.events);
             }
-
-            setEvents(data.events);
         } catch (err) {
-            console.log(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -68,17 +82,24 @@ export default function DashEvents() {
         const searchParam = tab === 'events' ? `?searchTerm=${searchTerm}` : '';
         
         try {
-            const response = await fetch(
-                `/api/invitation/get/${currUser.templeId}/${selectedEventId}/${searchParam !== '' ?  searchParam : '' }`
+            setLoading(true);
+            setAlert({ type : "", message : "" });
+            const data = await fetchWithAuth(
+                `/api/invitation/get/${currUser.templeId}/${selectedEventId}/${searchParam !== '' ?  searchParam : '' }`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                return console.error("Error while fetching guests data.");
+            if(data) {
+                setLoading(false);
+                setGuests(data.guests);
             }
-            setGuests(data.guests);
         } catch (err) {
-            console.error("Error while fetching guests data.", err);
+            setAlert({ type : "error", message : err.message });
+            setLoading(false);
         }
     };
 
@@ -91,21 +112,32 @@ export default function DashEvents() {
 
     // Handle verification toggle
     const handleVerificationToggle = async (guestId, verified) => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/invitation/edit/${currUser.templeId}/${selectedEventId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
+            const data = await fetchWithAuth(
+                `/api/invitation/edit/${currUser.templeId}/${selectedEventId}`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json"},
+                    body: JSON.stringify({ guestId, attended: verified }),
                 },
-                body: JSON.stringify({ guestId, attended: verified }),
-            });
-            if (response.ok) {
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            
+            if (data) {
+                setLoading(false);
                 setIsEventUpdated(true); 
             } else {
-                console.error("Failed to update invitation status");
+                setLoading(false);
+                setAlert({ type : "error", message : "Failed to update invitation status" });
             }
         } catch (err) {
-            console.error("Error while updating invitation status", err);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -115,6 +147,17 @@ export default function DashEvents() {
                 <title>Manage Temple Events - Dashboard</title>
                 <meta name="description" content="Manage and track temple events in your dashboard. View, edit, and delete events with ease." />
             </Helmet>
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert.message && (
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        autoDismiss
+                        duration={6000}
+                        onClose={()=> setAlert({ type : "", message : "" })}
+                    />
+                )}
+            </div>
             {events && events.length > 0 && (
                 (currUser && currUser.isAdmin) ||
                 (currUser.roles && currUser.roles.some(role =>

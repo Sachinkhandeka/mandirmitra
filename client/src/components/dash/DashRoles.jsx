@@ -5,14 +5,17 @@ import { MdOutlineEdit, MdDeleteOutline } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 const EditRoleModal = React.lazy(()=> import("../edit/EditRoleModal"));
 const DeleteRoleModal = React.lazy(()=> import("../delete/DeleteRoleModal"));
 
 export default function DashRoles() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
     const [roles, setRoles] = useState([]);
     const [ showModal , setShowModal ] = useState(false);
     const [ deleteModal , setDeleteModal ] = useState(false);
@@ -30,19 +33,22 @@ export default function DashRoles() {
     // Function to fetch roles data
     const getRolesData = async () => {
         try {
-            setError(null);
-            setSuccess(null);
+            setAlert({ type : "", message : "" });
 
-            const response = await fetch(`/api/role/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return setError(data.message);
+            const data = await fetchWithAuth(
+                `/api/role/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setRoles(data.roles);
             }
-            setRoles(data.roles);
-            setSuccess("Role data fetched successfully.");
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
     // Fetch roles data on component mount or when currUser changes
@@ -69,10 +75,9 @@ export default function DashRoles() {
                 <meta name="description" content="View, edit, and delete roles for your temple. Manage user access rights efficiently." />
             </Helmet>
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                {/* Success toast */}
-                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={()=> setSuccess(null)} /> )}
-                {/* Error toast */}
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={()=> setError(null)} /> )}
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
             </div>
             {/* Displaying roles table if isAdmin and roles array has length > 0 */}
             {currUser.isAdmin && roles.length > 0 ? (
@@ -131,7 +136,7 @@ export default function DashRoles() {
             <DeleteRoleModal 
                 deleteModal={deleteModal}
                 setDeleteModal={setDeleteModal}
-                setError={setError}
+                setAlert={setAlert}
                 setRoleUpdated={setRoleUpdated}
                 roleId={ roleData && roleData._id }
             />

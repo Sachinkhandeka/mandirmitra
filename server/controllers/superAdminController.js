@@ -325,9 +325,9 @@ module.exports.refreshTokenController = async (req, res) => {
 
     let user, userType;
 
-    // Check if the token belongs to a SuperAdmin
-    user = await SuperAdmin.findById(decodedToken._id);
-    if (user && user.refreshToken === incomingRefreshToken) {
+    if (decodedToken.superAdmin) {
+        // Check if the token belongs to a SuperAdmin
+        user = await SuperAdmin.findById(decodedToken._id);
         userType = "Admin"; // Set user type for token generation
     } else {
         // If not a SuperAdmin, check for a regular User
@@ -336,7 +336,6 @@ module.exports.refreshTokenController = async (req, res) => {
             userType = "User"; // Set user type for token generation
         }
     }
-
     // If no valid user is found
     if (!user || user.refreshToken !== incomingRefreshToken) {
         throw new ExpressError(401, "Refresh token expired or invalid");

@@ -6,21 +6,24 @@ import { Button, Pagination, Table, Tooltip } from "flowbite-react";
 import { FaPencil } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { IoFilterCircleOutline } from "react-icons/io5";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 import InventorySummary from "../InventorySummary";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 const EditInventoryItem = React.lazy(() => import("../edit/EditInventoryItem"));
 const DeleteInventory = React.lazy(() => import("../delete/DeleteInventory"));
 const InventoryFilter = React.lazy(() => import("../InventoryFilter"));
 
 export default function DashInventories() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const { searchTerm } = useSelector(state => state.searchTerm);
     const location = useLocation();
     const [alert, setAlert] = useState({ type: "", message: "" });
+    const [loading, setLoading] = useState(false);
     const [inventories, setInventories] = useState([]);
     const [totalInventories, setTotalInventories] = useState(null);
     const [editModal, setEditModal] = useState(false);
@@ -44,24 +47,27 @@ export default function DashInventories() {
 
         setAlert({ type: "", message: "" });
         try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
+            const data = await fetchWithAuth(
+                apiUrl,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data){
+                const sortedInventories = data.inventoryItems.sort((a, b) => {
+                    if (a.quantity === 0) return -1;
+                    if (b.quantity === 0) return 1;
+                    if (a.quantity < 5 && b.quantity >= 5) return -1;
+                    if (b.quantity < 5 && a.quantity >= 5) return 1;
+                    return a.quantity - b.quantity;
+                });
 
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
-                return;
+                setInventories(sortedInventories);
+                setTotalInventories(data.totalInventories);
             }
-
-            const sortedInventories = data.inventoryItems.sort((a, b) => {
-                if (a.quantity === 0) return -1;
-                if (b.quantity === 0) return 1;
-                if (a.quantity < 5 && b.quantity >= 5) return -1;
-                if (b.quantity < 5 && a.quantity >= 5) return 1;
-                return a.quantity - b.quantity;
-            });
-
-            setInventories(sortedInventories);
-            setTotalInventories(data.totalInventories);
         } catch (err) {
             setAlert({ type: "error", message: err.message });
         }

@@ -1,20 +1,23 @@
 import { Table, Pagination, Tooltip, Button } from "flowbite-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TbFaceIdError } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
 import { IoFilterCircleOutline } from "react-icons/io5";
 import { Helmet } from "react-helmet-async";
 import { debounce } from "lodash";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 import ExpenseSummary from "../ExpenseSummary";
+import Alert from "../Alert";
 
 const EditExpense = React.lazy(()=> import("../edit/EditExpense"));
 const DeleteExpense = React.lazy(()=> import("../delete/DeleteExpense"));
 const ExpenseFilter = React.lazy(()=> import("../ExpenseFilter"));
 
 export default function DashExpenses() {
+    const navigate = useNavigate();
     const { searchTerm } = useSelector(state=> state.searchTerm);
     const { currUser } = useSelector(state => state.user);
     const location = useLocation();
@@ -28,6 +31,8 @@ export default function DashExpenses() {
     const [ currPage, setCurrPage ] = useState(1);
     const [ isDrawerOpen , setIsDrawerOpen ] = useState(false);
     const [ filterCount, setFilterCount ] = useState(0);
+    const [ loading, setLoading ] = useState(false);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     const onPageChange = (page)=> setCurrPage(page);
     const queryParams = new URLSearchParams(location.search);
@@ -39,19 +44,25 @@ export default function DashExpenses() {
         const searchParam = tab === 'expenses' ? `&searchTerm=${searchTerm}` : '';
        
         try {
-            const response = await fetch(
-                `/api/expense/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`
+            setLoading(true);
+            setAlert({ type : "", message : "" });
+            const data = await fetchWithAuth(
+                `/api/expense/get/${currUser.templeId}${queryParams ? '?' + queryParams.toString() : ''}${searchParam}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.log(data.message);
-                return;
+            if(data) {
+                setLoading(false);
+                setExpenses(data.allExpenses);
+                setTotalExpenses(data.totalExpenses);
             }
-            setExpenses(data.allExpenses);
-            setTotalExpenses(data.totalExpenses);
         } catch (err) {
-            console.log(err.message);
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -96,6 +107,17 @@ export default function DashExpenses() {
                 <title>Manage Temple Expenses - Dashboard</title>
                 <meta name="description" content="View and manage expenses for your temple. Edit or delete expenses as needed." />
             </Helmet>
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert.message && (
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        autoDismiss
+                        duration={6000}
+                        onClose={()=> setAlert({ type : "", message : "" })}
+                    />
+                )}
+            </div>
             
             {/* Drawer toggler */}
             {currUser && (currUser.isAdmin || currUser.roles.some(role => role.permissions.some(p => p.actions.includes("read")))) && (

@@ -5,20 +5,22 @@ import { MdWrongLocation } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "./Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function LocationCard({ label, data, getLocation }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
     const [selectedLetter, setSelectedLetter] = useState("");
     const [editId, setEditId] = useState(null);
     const [editName, setEditName] = useState("");
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
+    const [loading, setLoading] = useState(false);
 
     const editLocation = async (id) => {
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/location/edit/${id}/${currUser.templeId}`,
                 {
                     method: "PUT",
@@ -27,43 +29,51 @@ export default function LocationCard({ label, data, getLocation }) {
                         entityType: label.toLowerCase(),
                         data: { name: editName.toLowerCase() },
                     }),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-            if (response.ok) {
+            
+            if (data) {
                 getLocation(); // Refresh data after edit
                 setEditId(null);
                 setEditName("");
-                setSuccess("Address updated successfully");
+                setAlert({ type : "success", message : "Address updated successfully" });
             } else {
-                setError(data.message);
+                setAlert({ type : "", message :  data.message });
             }
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "", message :  err.message });
         }
     };
 
     const deleteLocation = async (id) => {
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/location/delete/${id}/${currUser.templeId}`,
                 {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ entityType: label.toLowerCase() }),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-            if (response.ok) {
+            if (data) {
                 getLocation(); // Refresh data after delete
-                setSuccess("Address deleted successfully");
+                setAlert({ type : "success", message :  "Address deleted successfully" });
             } else {
-                setError(data.message);
+                setAlert({ type : "error", message : data.message });
             }
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -126,9 +136,16 @@ export default function LocationCard({ label, data, getLocation }) {
                 </div>
             ) : (
                 <>
-                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                        {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert.message && (
+                            <Alert 
+                                type={alert.type}
+                                message={alert.message}
+                                autoDismiss
+                                duration={6000}
+                                onClose={()=> setAlert({ type : "", message : "" })}
+                            />
+                        )}
                     </div>
                     <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                         <thead className="bg-gray-100 dark:bg-gray-700 sticky top-8 z-10">

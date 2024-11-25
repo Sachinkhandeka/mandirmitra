@@ -4,29 +4,30 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 
-export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setError , setSuccess , setUserDataUpdated }) {
+export default function DeleteUserModal({ showModalDelete, setShowModalDelete , userId , setAlert, setUserDataUpdated }) {
   const { currUser } = useSelector(state  => state.user);
     const [ loading , setLoading ] = useState(false);
     
     const handleDelete = async()=> {
         try {
             setLoading(true);
+            setAlert({ type : "", message : "" });
             const response = await fetch(`/api/user/delete/${currUser.templeId}/${userId}`, { method : "DELETE" });
             const data = await response.json();
 
             if(!response.ok) {
                 setLoading(false);
                 setShowModalDelete(false);
-                return setError(data.message);
+                return setAlert({ type : "error", message : data.message });
             }
             setLoading(false);
             setShowModalDelete(false);
-            setSuccess("User delete successfully.");
+            setAlert({ type : "success", message : "User delete successfully." });
             setUserDataUpdated(true);
         }catch(err) {
             setLoading(true);
             setShowModalDelete(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return(

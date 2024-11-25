@@ -2,29 +2,38 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import LocationCard from "../LocationCard";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DashAddress() {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [ countries, setCountries ] =  useState([]);
     const [ states, setStates ] = useState([]);
     const [ districts, setDistricts ] =  useState([]);
     const [ tehsils, setTehsils ] = useState([]);
     const [ villages, setVillages ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     const getLocation = async ()=> {
         try {
-            const response = await fetch(`/api/location/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if(!response.ok) {
-                console.log(`Error while getting ${region} info`);
-                return ;
+            const data = await fetchWithAuth(
+                `/api/location/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setCountries(data.countries);
+                setStates(data.states);
+                setDistricts(data.districts);
+                setTehsils(data.tehsils);
+                setVillages(data.villages);
             }
-            setCountries(data.countries);
-            setStates(data.states);
-            setDistricts(data.districts);
-            setTehsils(data.tehsils);
-            setVillages(data.villages);
         }catch(err) {
             console.log(err.message);
         }

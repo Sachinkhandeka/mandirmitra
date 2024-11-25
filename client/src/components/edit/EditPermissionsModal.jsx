@@ -4,9 +4,8 @@ import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 
-export default  function EditPermissionsModal({ showModal , setShowModal , setSuccess, permissionData , setPermissionUpdated }) {
+export default  function EditPermissionsModal({ showModal , setShowModal , setAlert, permissionData , setPermissionUpdated }) {
     const { currUser } = useSelector(state => state.user);
-    const [ error , setError ] = useState(null);
     const [ loading ,  setLoading ] =  useState(false);
     const [ isPermissionUpdated , setIsPermissionUpdate ] = useState(false);
     const [ formData , setFormData ] = useState({
@@ -52,11 +51,11 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
         e.preventDefault();
         if(!isPermissionUpdated) {
             setLoading(false);
-           return setError("Changes not detected to update.");
+           return setAlert({ type : "error", message : "Changes not detected to update." });
         }
         try {
             setLoading(true);
-            setError(null);
+            setAlert({ type : "", message : "" });
 
             const response = await fetch(
                 `/api/permission/edit/${currUser.templeId}/${permissionData._id}`,
@@ -70,15 +69,15 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
 
             if(!response.ok) {
                 setLoading(false);
-                return setError(data.message);    
+                return setAlert({ type : "", message : data.message });    
             }
             setLoading(false);
             setPermissionUpdated(true);
             setShowModal(false);
             setIsPermissionUpdate(false);
-            setSuccess("Permission updated successfully.");
+            setAlert({ type : "success", message : "Permission updated successfully." });
         } catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
     return (
@@ -92,8 +91,10 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setSu
                     <p>Edit Permission</p>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                        {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
                     </div>
                     <form>
                         <div >
