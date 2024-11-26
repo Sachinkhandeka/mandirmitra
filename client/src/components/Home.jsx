@@ -18,15 +18,18 @@ import PieChart from "./PieChart";
 import InventoryPieChart from "./InventoryPieChart";
 import InventoryBarChart from "./InventoryBarChart";
 import Alert from "./Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 const GodCard = React.lazy(()=> import("./GodCard"));
 
 export default function Home() {
+    const  navigate = useNavigate();
     const {currUser} = useSelector(state=> state.user);
     const [temple, setTemple] =  useState({});
     const [loading ,  setLoading] = useState(false);
-    const [error , setError] =  useState(null);
-    const [success, setSuccess] = useState(null);
+    const [analyticsLoading, setAnalyticsLoading] = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [donationAmnt, setDonationAmnt] = useState([]);
     const [expenseAmnt, setExpenseAmnt] = useState([]);
     const [donationCounts, setDonationCounts] = useState([]);
@@ -51,21 +54,23 @@ export default function Home() {
     const getTempleData = async()=> {
         try {
             setLoading(true);
-            setError(null);
-            setSuccess(null);
-            const response = await fetch(`/api/temple/get/${currUser.templeId}`);
-            const  data = await response.json();
-
-            if(!response.ok) {
+            setAlert({ type : "", message : "" });
+            const data = await fetchWithAuth(
+                `/api/temple/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate,
+            );
+            if(data) {
                 setLoading(false);
-                return  setError(data.message);
+                setTemple(data.temple);
             }
-
-            setLoading(false);
-            setTemple(data.temple);
         }catch(err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
     useEffect(()=>{
@@ -75,29 +80,36 @@ export default function Home() {
     //get analytics data
     const getAnalyticsData = useCallback( async()=> {
         try {
-            const response = await fetch(`/api/temple/analytics/${currUser.templeId}`);
-            const data = await response.json();
+            setAnalyticsLoading(true);
+            setAlert({ type : "", message : "" });
 
-            if(!response.ok) {
-                setError(data.message);
-                return ; 
+            const  data = await fetchWithAuth(
+                `/api/temple/analytics/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setDonationAmnt(data.donationData);
+                setExpenseAmnt(data.expenseData);
+                setDonationCounts(data.donationCounts);
+                setExpenseCounts(data.expenseCounts);
+                setTotalDonationCount(data.totalDonationCount);
+                setTotalExpenseCount(data.totalExpenseCount);
+                setTotalUserCount(data.totalUserCount);
+                setTotalRoleCount(data.totalRoleCount);
+                setTotalPermissionCount(data.totalPermissionCount);
+                setTotalInventoryValue(data.totalInventoryValue);
+                setLowStockItemsCount(data.lowStockItemsCount);
+                setOutOfStockItemsCount(data.outOfStockItemsCount);
+                setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
+                setInventoryQuantities(data.inventoryQuantities);
             }
-            setDonationAmnt(data.donationData);
-            setExpenseAmnt(data.expenseData);
-            setDonationCounts(data.donationCounts);
-            setExpenseCounts(data.expenseCounts);
-            setTotalDonationCount(data.totalDonationCount);
-            setTotalExpenseCount(data.totalExpenseCount);
-            setTotalUserCount(data.totalUserCount);
-            setTotalRoleCount(data.totalRoleCount);
-            setTotalPermissionCount(data.totalPermissionCount);
-            setTotalInventoryValue(data.totalInventoryValue);
-            setLowStockItemsCount(data.lowStockItemsCount);
-            setOutOfStockItemsCount(data.outOfStockItemsCount);
-            setInventoryCategoryBreakdown(data.inventoryCategoryBreakdown);
-            setInventoryQuantities(data.inventoryQuantities);
         }catch(err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     },[currUser.templeId]);
     useEffect(()=> {
@@ -151,9 +163,10 @@ export default function Home() {
             <link rel="canonical" href="https://www.mandirmitra.co.in/dashboard" />
         </Helmet>
         <div className="w-full" >  
-            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
             </div>
             <div className="bg-cover bg-center bg-no-repeat h-full md:h-36 rounded-lg flex p-10 relative" style={{ backgroundImage: `url(${banner})` }}>
                 <h1 
