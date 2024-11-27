@@ -5,6 +5,8 @@ import { SiEventbrite } from 'react-icons/si';
 import { useSelector } from 'react-redux';
 import AttendanceStats from './AttendenceStats';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from '../utilityFunx';
 
 // Function to get a random gradient color
 function getRandomGradient() {
@@ -27,6 +29,8 @@ const EditEvent = React.lazy(() => import("../components/edit/EditEvent"));
 const Invite = React.lazy(() => import("./Invite"));
 
 export default function EventCard({ name, date, location, status, id, setIsEventUpdated, isSelected, onClick }) {
+    const navigate = useNavigate();
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const { currUser } = useSelector(state => state.user);
     const [editModal, setEditModal] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -36,21 +40,26 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
     const [notAttended, setNotAttended] = useState(0);
 
     const getGuestCount = async () => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
-                `/api/invitation/get/${currUser.templeId}/${id}`
+            const data = await fetchWithAuth(
+                `/api/invitation/get/${currUser.templeId}/${id}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                return console.error("Error while fetching guests data.");
+            if(data) {
+                setLoading(false);
+                setGuestCount(data.guestCount);
+                setAttended(data.attendedCount);
+                setNotAttended(data.notAttendedCount);
             }
-
-            setGuestCount(data.guestCount);
-            setAttended(data.attendedCount);
-            setNotAttended(data.notAttendedCount);
         } catch (err) {
-            console.error("Error while fetching guests data.", err);
+            setAlert({ type : "error", message : err.message });
         }
     };
 
@@ -60,24 +69,26 @@ export default function EventCard({ name, date, location, status, id, setIsEvent
 
     const handleDelete = async () => {
         setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/event/delete/${id}/${currUser.templeId}`,
                 {
                     method: "DELETE",
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
                 setLoading(false);
-                return console.log(data.message);
+                setIsEventUpdated(true);
             }
-            setLoading(false);
-            setIsEventUpdated(true);
         } catch (err) {
             setLoading(false);
-            console.log(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 

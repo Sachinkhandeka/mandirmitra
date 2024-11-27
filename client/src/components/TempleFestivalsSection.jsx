@@ -3,8 +3,11 @@ import { FiX } from "react-icons/fi";
 import { useState } from "react";
 import { refreshToken ,uploadImages } from "../utilityFunx"; // Firebase image upload function
 import FestivalList from "./FestivalList";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function TempleFestivalsSection({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [festivals, setFestivals] = useState({
         festivalName: "",
         festivalImportance: "",
@@ -77,25 +80,30 @@ export default function TempleFestivalsSection({ temple, setTemple, setAlert }) 
                 festivals : [...temple.festivals, newFestival]
             };
             // Backend API call to update festivals
-            const response = await fetch(`/api/temple/edit/${temple._id}/festivals`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedFestivals }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
-            }
-
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/festivals`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedFestivals }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            
             // Update temple with new festivals
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Festival added successfully!" });
-            setFestivals({
-                festivalName: "",
-                festivalImportance: "",
-                festivalImages: [],
-            });
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Festival added successfully!" });
+                setFestivals({
+                    festivalName: "",
+                    festivalImportance: "",
+                    festivalImages: [],
+                });
+            }
         } catch (error) {
             setAlert({ type: "error", message: "Error saving festival information. Please try again." });
         } finally {

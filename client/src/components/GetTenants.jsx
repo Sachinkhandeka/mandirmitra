@@ -2,27 +2,37 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
 import { TbFaceIdError } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import Alert from "./Alert";
 
 export default function GetTenants({ rentDetails, setRentDetails, onConfirm, selectedAssetId }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [tenants, setTenants] = useState([]);
     const [selectedTenant, setSelectedTenant] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const getTenantsData = async () => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/tenant/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.log(data);
-                return;
+            const data = await fetchWithAuth(
+                `/api/tenant/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTenants(data.tenants);
             }
-            setTenants(data.tenants);
         } catch (err) {
-            console.log(err.message);
+            setAlert({ type : "error", message : err.message });
+            setLoading(false);
         }
     };
 
@@ -198,8 +208,11 @@ export default function GetTenants({ rentDetails, setRentDetails, onConfirm, sel
                     ))}
                 </ul>
             )}
-            {error && <p className="text-sm text-red-600 bg-red-300">{error}</p>}
-            {success && <p className="text-sm text-green-600 bg-green-300">{success}</p>}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
         </>
     );
 }

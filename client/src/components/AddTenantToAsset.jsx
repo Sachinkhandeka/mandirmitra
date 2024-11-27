@@ -3,8 +3,11 @@ import { Button, Label, Select, TextInput, Spinner } from 'flowbite-react';
 import { useSelector } from 'react-redux';
 import GetTenants from './GetTenants';
 import Alert from './Alert';
+import { useNavigate } from 'react-router-dom';
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from '../utilityFunx';
 
 export default function AddTenantToAsset({ assetId, fetchAssets }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [tenantDetails, setTenantDetails] = useState({
         tenant: '',
@@ -29,25 +32,24 @@ export default function AddTenantToAsset({ assetId, fetchAssets }) {
         try {
             setAlert({ type: "", message: "" });
             setLoading(true);
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/assets/${assetId}/addTenant/${currUser.templeId}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(tenantDetails),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
+            if(data) {
+                setAlert({ type: "success", message: data.message });
                 setLoading(false);
-                return;
+                fetchAssets();
             }
-
-            setAlert({ type: "success", message: data.message });
-            setLoading(false);
-            fetchAssets();
         } catch (err) {
             setAlert({ type: "error", message: err.message });
             setLoading(false);

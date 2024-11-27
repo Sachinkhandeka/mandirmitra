@@ -1,27 +1,40 @@
 import { Tooltip } from "flowbite-react";
+import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function ManagementList({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
+    const [ loading, setLoading ] = useState(false);
+
     const handleRemoveManagement = async (index) => {
         const updatedManagement = {
             management: temple.management.filter((_, i) => i !== index),
         };
-
+        setLoading(false);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/management`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedManagement }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/management`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedManagement }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setLoading(false);
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Management member removed successfully!" });
             }
-
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Management member removed successfully!" });
         } catch (error) {
+            setLoading(false);
             setAlert({ type: "error", message: "Error removing management member." });
         }
     };

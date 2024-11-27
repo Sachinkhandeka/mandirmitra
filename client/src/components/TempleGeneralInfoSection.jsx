@@ -1,9 +1,11 @@
 import { Avatar, Button, FileInput, Label, Modal, Textarea, TextInput, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { refreshToken, uploadImages } from "../utilityFunx";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken, refreshToken, uploadImages } from "../utilityFunx";
+import { useNavigate } from "react-router-dom";
 
 export default function TempleGeneralInfoSection({ temple, setAlert }) {
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false); 
     const [selectedImage, setSelectedImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false); 
@@ -100,21 +102,23 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 foundedYear: generalInfo.founded,
                 historyImages: downloadURLs, // Only save Firebase URLs here
             };
-
-            const response = await fetch(`/api/temple/edit/${temple._id}/genInfo`, {
-                method: "PUT",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({ templeData: updatedInfo }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/genInfo`, 
+                {
+                    method: "PUT",
+                    headers: { "content-type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedInfo }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setAlert({ type: "success", message: "Information saved successfully!" });
             }
-
-            setAlert({ type: "success", message: "Information saved successfully!" });
         } catch (error) {
-            console.log(error.message);
             setAlert({ type: "error", message: "Error saving information. Please try again." });
         } finally {
             setIsSubmitting(false);

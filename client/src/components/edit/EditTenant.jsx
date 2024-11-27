@@ -75,7 +75,6 @@ export default function EditTenant({ tenant, isOpen, onClose, refreshTenants }) 
                 setAlert({ type : "success", message : data.message });
                 setLoading(false);
                 refreshTenants();
-                onClose();
             }
         } catch (err) {
             setLoading(false);

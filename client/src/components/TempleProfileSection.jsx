@@ -1,9 +1,11 @@
 import { Avatar, Button, Spinner } from "flowbite-react";
 import { useRef, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { uploadImages, refreshToken } from "../utilityFunx"; 
+import { uploadImages, refreshToken, fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx"; 
+import { useNavigate } from "react-router-dom";
 
 export default function TempleProfileSection({ temple, setAlert }) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const inputRef = useRef();
   const [tempImgUrl, setTempImgUrl] = useState(null);
@@ -39,17 +41,22 @@ export default function TempleProfileSection({ temple, setAlert }) {
   const SaveImgInDb = async (downloadURL) => {
     const updatedTempleInfo = { ...temple, image: downloadURL };
     try {
-      const response = await fetch(`/api/temple/edit/${temple._id}/genInfo`, {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ templeData: updatedTempleInfo }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
+      const data = await fetchWithAuth(
+        `/api/temple/edit/${temple._id}/genInfo`, 
+          {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ templeData: updatedTempleInfo }),
+          },
+          refreshSuperAdminOrUserAccessToken,
+          "User",
+          setLoading,
+          setAlert,
+          navigate
+      );
+      if(data) {
         setLoading(false);
-        return setAlert({ type: "error", message: data.message });
+        setAlert({ type : "success", message : "Profile data updated successfully" });
       }
     } catch (err) {
       setLoading(false);

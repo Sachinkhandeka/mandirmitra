@@ -5,6 +5,7 @@ import { GoDash } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilterCount }) {
     const { currUser } = useSelector(state => state.user);
@@ -13,8 +14,10 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
     const [minAmount, setMinAmount] = useState('');
     const [maxAmount, setMaxAmount] = useState('');
     const [status, setStatus] = useState('');
-    const [event, setEvent] = useState('');  // Event state for filtering
-    const [events, setEvents] = useState([]); // Store list of events
+    const [event, setEvent] = useState(''); 
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading]  = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     // Predefined categories for filtering
     const categories = [
@@ -33,12 +36,23 @@ export default function ExpenseFilter({ isDrawerOpen, setIsDrawerOpen, setFilter
     // Fetch list of events when the component mounts
     useEffect(() => {
         const fetchEvents = async () => {
+            setLoading(true);
+            setAlert({ type : "", message : "" });
             try {
-                const response = await fetch(`/api/event/get/${currUser.templeId}`); // Adjust API endpoint accordingly
-                const data = await response.json();
-                setEvents(data.events); // Set fetched events
+                const data = await fetchWithAuth(
+                    `/api/event/get/${currUser.templeId}`,
+                    {},
+                    refreshSuperAdminOrUserAccessToken,
+                    "User",
+                    setLoading,
+                    setAlert,
+                    navigate
+                );
+                if(data) {
+                    setEvents(data.events);
+                }
             } catch (err) {
-                console.error("Error fetching events:", err);
+                setAlert({type : "error", message : err.message});
             }
         };
 

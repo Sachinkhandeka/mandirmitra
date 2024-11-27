@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import Alert from "./Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function AddTehsilGaam({ setLocationAdded }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         country: '',
@@ -52,30 +54,29 @@ export default function AddTehsilGaam({ setLocationAdded }) {
         e.preventDefault();
         try {
             setLoading(true);
-            setError(null);
-            setSuccess(null);
+            setAlert({ type : "", message : "" });
 
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/location/add/${currUser.templeId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
+                setAlert({ type : "success", message : data.message });
+                setLocationAdded(true);
                 setLoading(false);
-                setError(data.message);
-                return;
             }
-            setSuccess(data.message);
-            setLocationAdded(true);
-            setLoading(false);
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }
 
@@ -88,9 +89,10 @@ export default function AddTehsilGaam({ setLocationAdded }) {
 
             <div className="border-2 rounded-lg dark:border-gray-500 dark:bg-gray-800 p-4">
                 <h1 className="text-xl font-mono uppercase text-center">Add Location</h1>
-                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                    {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                    {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 justify-stretch gap-10 p-4">

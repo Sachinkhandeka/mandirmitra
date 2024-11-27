@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { refreshToken, uploadImages } from "../utilityFunx";
 import DietyList from "./DietyList";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function TempleDietySection({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null); 
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false); 
@@ -90,18 +93,23 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                 godsAndGoddesses : [...temple.godsAndGoddesses, newDiety]
             };
             // Backend API call to update the deities in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}/gods`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedDieties }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/gods`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedDieties }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Deity added successfully!" });
             }
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Deity added successfully!" });
         } catch (error) {
             setAlert({ type: "error", message: "Error saving deity information. Please try again." });
         } finally {

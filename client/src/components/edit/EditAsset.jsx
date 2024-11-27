@@ -51,7 +51,7 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
+        setLoading(true);
         setAlert({ type : "", message : "" });
         try {
             const data = await fetchWithAuth(
@@ -68,10 +68,9 @@ export default function EditAsset({ asset, isOpen, onClose, refreshAssets }) {
                 navigate
             );
             if(data) {
-                setAlert({ type : "success", meaage : data.message });
                 setLoading(false);
                 refreshAssets();
-                onClose();
+                setAlert({ type : "success", message : data.message });
             }
         } catch (err) {
             setLoading(false);

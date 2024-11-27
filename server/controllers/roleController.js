@@ -51,7 +51,7 @@ module.exports.editController = async(req ,res)=> {
 
     const role = await Role.findOne({_id : roleId , templeId : templeId});
 
-    if(!user.superAdmin) {
+    if(!user) {
         throw new ExpressError(400 , "Permission not granted.");
     }
 
@@ -73,10 +73,9 @@ module.exports.editController = async(req ,res)=> {
 module.exports.deleteController = async(req ,res)=> {
     const user = req.user ; 
     const { templeId, roleId } = req.params; 
-    
     const roleToDelete = await Role.findOne({ _id : roleId , templeId : templeId });
 
-    if(!user.superAdmin) {
+    if(!user) {
         throw new ExpressError(400 , "Permission not granted.");
     }
 

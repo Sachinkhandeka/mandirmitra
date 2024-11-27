@@ -3,8 +3,11 @@ import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { refreshToken, uploadImages } from "../utilityFunx";
 import ManagementList from "./ManagementList";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function TempleManagementSection({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,25 +64,29 @@ export default function TempleManagementSection({ temple, setTemple, setAlert })
             };
 
             // Backend API call to update the management in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}/management`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedManagement }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/management`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedManagement }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Management member added successfully!" });
+                setTempleManagement({
+                    personName: "",
+                    role: "",
+                    image: {},
+                });
             }
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Management member added successfully!" });
-            setTempleManagement({
-                personName: "",
-                role: "",
-                image: {},
-            });
         } catch (error) {
-            console.log(error.message);
             setAlert({ type: "error", message: "Error saving management information. Please try again." });
         } finally {
             setIsSubmitting(false);

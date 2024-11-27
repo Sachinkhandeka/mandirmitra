@@ -43,7 +43,6 @@ export default function DashPermissions() {
             );
             if(data) {
                 setPermissions( data.permissions );
-                setAlert({ type : "success", message: "Permissions data fetched successfully." });
                 setLoading(false);
             }
         }catch(err) {

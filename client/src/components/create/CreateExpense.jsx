@@ -92,7 +92,7 @@ export default function CreateExpense() {
             );
              if(data) {
                 setLoading(false);
-                setSuccess("Expense added successfully.");
+                setAlert({ type : "success", message : "Expense added successfully." });
                 setFormData({
                     title: "",
                     amount: "",

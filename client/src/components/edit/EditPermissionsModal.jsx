@@ -94,11 +94,6 @@ export default  function EditPermissionsModal({ showModal , setShowModal , setAl
                     <p>Edit Permission</p>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
-                        {alert && alert.message && (
-                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
-                        )}
-                    </div>
                     <form>
                         <div >
                             <div className="mb-2 block">

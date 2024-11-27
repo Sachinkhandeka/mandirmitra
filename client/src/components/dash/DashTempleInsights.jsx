@@ -8,24 +8,33 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import Alert from "../Alert";
 import TempleVideosSection from "../TempleVideosSection";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function DashTempleInsights() {
+    const  navigate = useNavigate();
     const { currUser } = useSelector( state => state.user );
     const [ temple, setTemple ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
     const [alert, setAlert] = useState({ type: "", message: "" });
 
     // Function to get temple data
     const getTempleData = async () => {
         try {
+            setLoading(true);
             setAlert({ type: "", message: "" });
-            const response = await fetch(`/api/temple/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
             }
-
-            setTemple(data.temple);
         } catch (err) {
             setAlert({ type: "error", message: err.message });
         }

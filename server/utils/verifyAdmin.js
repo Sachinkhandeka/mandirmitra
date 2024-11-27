@@ -20,7 +20,6 @@ module.exports.verifyAdmin = async (req, res, next) => {
         if (!superAdmin) {
             return res.status(401).json({ message : "Invalid token. Admin not found." });
         }
-
         req.user = superAdmin;
         next();
     } catch (error) {

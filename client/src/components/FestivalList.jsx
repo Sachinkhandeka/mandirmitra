@@ -1,9 +1,13 @@
 import { Carousel, Tooltip } from "flowbite-react";
 import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function FestivalList({ temple, setTemple, setAlert }) {
-    const [isExpanded, setIsExpanded] = useState({}); // To handle "Show More/Show Less" per festival
+    const navigate = useNavigate();
+    const [isExpanded, setIsExpanded] = useState({});
+    const [loading, setLoading] = useState(false);
 
     // Toggle the "Show More/Show Less" for each festival description
     const toggleExpanded = (index) => {
@@ -15,24 +19,30 @@ export default function FestivalList({ temple, setTemple, setAlert }) {
 
     // Remove a festival from the list
     const handleRemoveFestival = async (index) => {
+        setLoading(true);
+        setAlert({ type : "", message : "" })
         const updatedFestivals = {
             festivals: temple.festivals.filter((_, i) => i !== index),
         };
 
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/festivals`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedFestivals }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/festivals`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedFestivals }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Festival removed successfully!" });
             }
-
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Festival removed successfully!" });
         } catch (error) {
             setAlert({ type: "error", message: "Error removing festival." });
         }

@@ -1,20 +1,23 @@
-import { Modal, Card, Button, Spinner, Toast } from "flowbite-react";
+import { Modal, Card, Button, Spinner } from "flowbite-react";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import { FaFilePdf } from "react-icons/fa6";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
+import { HiCheckCircle } from "react-icons/hi";
 import Invitation from "../pdf/Invitation";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import Alert from "./Alert";
 
 export default function Invite({ inviteModal, setInviteModal, name, location, date, id }) {
+    const navigate = useNavigate();
     const { currUser } = useSelector(state => state.user);
     const [donations, setDonations] = useState([]);
     const [selectedDonors, setSelectedDonors] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const [temple, setTemple] = useState({});
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [invitationsPdf, setInvitationsPdf] = useState([]);
     const [downloaded, setDownloaded] = useState([]);
@@ -25,18 +28,24 @@ export default function Invite({ inviteModal, setInviteModal, name, location, da
     };
 
     const getAllDonations = useCallback(async () => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/donation/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                console.log(data.message);
-                return;
+            const  data = await fetchWithAuth(
+                `/api/donation/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setDonations(data.daans);
+                setTemple(data.daans[0].temple);
             }
-            setDonations(data.daans);
-            setTemple(data.daans[0].temple);
         } catch (err) {
-            console.log(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     }, [currUser.templeId]);
 
@@ -63,19 +72,22 @@ export default function Invite({ inviteModal, setInviteModal, name, location, da
 
     const sendInvitations = async () => {
         setLoading(true);
-        setError(null);
-        setSuccess(null);
+        setAlert({ type : "", message : "" });
 
         try {
             let selectedDonorDetails = await Promise.all(selectedDonors.map(async (donorId) => {
-                const response = await fetch(`/api/donation/${currUser.templeId}/${donorId}`);
-                const data = await response.json();
-                if (!response.ok) {
-                    setLoading(false);
-                    setError(data.message);
-                    return null;
+                const data = await fetchWithAuth(
+                    `/api/donation/${currUser.templeId}/${donorId}`,
+                    {},
+                    refreshSuperAdminOrUserAccessToken,
+                    "User",
+                    setLoading,
+                    setAlert,
+                    navigate
+                )
+                if(data) {
+                    return data.daan;
                 }
-                return data.daan;
             }));
 
             selectedDonorDetails = selectedDonorDetails.flat();
@@ -95,32 +107,31 @@ export default function Invite({ inviteModal, setInviteModal, name, location, da
                         donor: donor.donorName,
                         passCode: passCode,
                     };
-
-                    const response = await fetch(
+                    const data = await fetchWithAuth(
                         `/api/invitation/save/${currUser.templeId}/${id}`,
                         {
                             method: "POST",
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(invitation),
-                        }
+                        },
+                        refreshSuperAdminOrUserAccessToken,
+                        "User",
+                        setLoading,
+                        setAlert,
+                        navigate
                     );
-                    const data = await response.json();
-                    if (!response.ok) {
-                        setLoading(false);
-                        setError(data.message);
-                        return;
+                    if(data) {
+                        pdfs.push({ document, fileName });
                     }
-
-                    pdfs.push({ document, fileName });
                 })
             );
 
             setInvitationsPdf(pdfs);
             setLoading(false);
-            setSuccess("Invitations generated successfully.");
+            setAlert({ type : "success", message : "Invitations generated successfully." });
         } catch (err) {
             setLoading(false);
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
     const donorList = useMemo(() => (
@@ -157,28 +168,11 @@ export default function Invite({ inviteModal, setInviteModal, name, location, da
             <Modal show={inviteModal} dismissible onClose={() => setInviteModal(false)}>
                 <Modal.Header>Invite Your Special Donors</Modal.Header>
                 <Modal.Body>
-                    {success && (
-                        <div className="fixed bottom-4 right-4 z-50">
-                            <Toast>
-                                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                                    <HiCheckCircle className="h-5 w-5" />
-                                </div>
-                                <div className="ml-3 text-sm font-normal">{success}</div>
-                                <Toast.Toggle />
-                            </Toast>
-                        </div>
-                    )}
-                    {error && (
-                        <div className="fixed bottom-4 right-4 z-50">
-                            <Toast>
-                                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
-                                <HiXCircle className="h-5 w-5" />
-                                </div>
-                                <div className="ml-3 text-sm font-normal">{error}</div>
-                                <Toast.Toggle />
-                            </Toast>
-                        </div>
-                    )}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
+                    </div>
                     <div className="bg-gradient-to-br from-green-100 to-blue-100 p-4 rounded-md">
                         <div className="flex gap-2 items-center">
                             <h3 className="text-2xl font-bold font-serif text-blue-600">{name}</h3>

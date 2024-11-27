@@ -1,23 +1,36 @@
 import { Button, Label, TextInput, Spinner, Tooltip, Textarea } from "flowbite-react";
 import { useState } from "react";
-import { getYouTubeEmbedUrl } from "../utilityFunx";
+import { fetchWithAuth, getYouTubeEmbedUrl, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export default function TempleVideosSection({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [videoInfo, setVideoInfo] = useState({
         title: "",
         description: "",
         url: "",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [expandedTitleIndex, setExpandedTitleIndex] = useState(null); 
+    const [expandedDescIndex, setExpandedDescIndex] = useState(null);
 
-    // Handle input changes
+    const MAX_TITLE_LENGTH = 30;
+    const MAX_DESC_LENGTH = 60;
+
+    const toggleExpandTitle = (index) => {
+        setExpandedTitleIndex(expandedTitleIndex === index ? null : index); 
+    };
+
+    const toggleExpandDesc = (index) => {
+        setExpandedDescIndex(expandedDescIndex === index ? null : index); 
+    };
+
     const handleOnChange = (e) => {
         const { id, value } = e.target;
         setVideoInfo({ ...videoInfo, [id]: value });
     };
 
-    // Handle form submission for adding a new video
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -40,16 +53,20 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
         };
 
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/videos`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedVideos }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
-            } else {
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/videos`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedVideos }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if (data) {
                 setTemple(data.temple);
                 setAlert({ type: "success", message: "Video added successfully!" });
                 setVideoInfo({ title: "", description: "", url: "" });
@@ -62,23 +79,26 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
         }
     };
 
-    // Handle video deletion
     const handleDeleteVideo = async (index) => {
         const updatedVideos = {
             videos: temple.videos.filter((_, i) => i !== index),
         };
 
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/videos`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedVideos }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                setAlert({ type: "error", message: data.message });
-            } else {
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/videos`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedVideos }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if (data) {
                 setTemple(data.temple);
                 setAlert({ type: "success", message: "Video removed successfully!" });
             }
@@ -125,7 +145,7 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
                             placeholder="Enter video description"
                             name="description"
                             id="description"
-                            rows={6}
+                            rows={4}
                             value={videoInfo.description}
                             onChange={handleOnChange}
                             required
@@ -145,47 +165,75 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
                 </Button>
             </form>
 
-            {/* Display the list of existing videos */}
+            {/* Horizontal scrollable video cards */}
             {temple.videos && temple.videos.length > 0 && (
-                <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hidden mt-4 pb-4">
-                    {temple.videos.map((video, index) => (
-                        <div
-                            key={index}
-                            className="min-w-[90%] md:min-w-[45%] xl:min-w-[30%] flex-shrink-0 snap-center relative overflow-hidden group rounded-lg shadow-lg"
-                        >
-                            {/* Video iframe */}
-                            <iframe
-                                width="100%"
-                                height="215"
-                                src={video.url}
-                                title={video.title}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded-t-lg"
-                            ></iframe>
+                <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hidden pb-4">
+                    {temple.videos.map((video, index) => {
+                        const isTitleExpanded = expandedTitleIndex === index;
+                        const isDescExpanded = expandedDescIndex === index;
 
-                            {/* Video details */}
-                            <div className="p-4 bg-white dark:bg-gray-800">
-                                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-1">
-                                    {video.title}
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">
-                                    {video.description}
-                                </p>
-                            </div>
+                        const truncatedTitle = video.title.length > MAX_TITLE_LENGTH
+                            ? `${video.title.slice(0, MAX_TITLE_LENGTH)}...`
+                            : video.title;
 
-                            {/* Delete icon button */}
-                            <button
-                                className="absolute top-2 right-2 bg-gray-200 dark:bg-gray-500 dark:hover:bg-gray-600 text-black p-1 rounded-full hover:bg-white"
-                                onClick={() => handleDeleteVideo(index)}
-                                aria-label="Delete video"
+                        const truncatedDescription = video.description.length > MAX_DESC_LENGTH
+                            ? `${video.description.slice(0, MAX_DESC_LENGTH)}...`
+                            : video.description;
+
+                        return (
+                            <div
+                                key={index}
+                                className="min-w-[90%] md:min-w-[45%] xl:min-w-[30%] flex-shrink-0 snap-center relative bg-gray-100 dark:bg-gray-700 rounded-lg shadow-lg"
                             >
-                                <Tooltip content={"Delete Video"} trigger="hover" >
-                                    <MdDeleteForever size={20} className="text-red-600 dark:text-white" />
-                                </Tooltip>
-                            </button>
-                        </div>
-                    ))}
+                                {/* Video iframe */}
+                                <iframe
+                                    width="100%"
+                                    height="200"
+                                    src={video.url}
+                                    title={video.title}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="rounded-t-lg"
+                                ></iframe>
+
+                                {/* Video details */}
+                                <div className="p-4 max-w-80">
+                                    <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
+                                        {isTitleExpanded ? video.title : truncatedTitle}
+                                        {video.title.length > MAX_TITLE_LENGTH && (
+                                            <button
+                                                onClick={() => toggleExpandTitle(index)}
+                                                className="text-blue-700 dark:text-yellow-300 hover:underline text-xs font-extralight ml-2"
+                                            >
+                                                {isTitleExpanded ? "Show less" : "Read more"}
+                                            </button>
+                                        )}
+                                    </h3>
+                                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                        {isDescExpanded ? video.description : truncatedDescription}
+                                        {video.description.length > MAX_DESC_LENGTH && (
+                                            <button
+                                                onClick={() => toggleExpandDesc(index)}
+                                                className="text-blue-700 dark:text-yellow-300 hover:underline text-xs font-extralight ml-2"
+                                            >
+                                                {isDescExpanded ? "Show less" : "Read more"}
+                                            </button>
+                                        )}
+                                    </p>
+                                </div>
+
+                                {/* Delete icon button */}
+                                <button
+                                    className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-500 dark:hover:bg-gray-600 text-red-600 p-2 rounded-full"
+                                    onClick={() => handleDeleteVideo(index)}
+                                >
+                                    <Tooltip content="Delete Video">
+                                        <MdDeleteForever size={20} />
+                                    </Tooltip>
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </section>

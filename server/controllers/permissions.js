@@ -47,7 +47,7 @@ module.exports.editController = async(req ,res)=> {
 
     const permissionToUpdate = await Permission.findOne({ _id:permissionId, templeId : templeId });
 
-    if(!user.superAdmin) {
+    if(!user) {
         throw new ExpressError(403 , "Permission not granted.");
     }
 
@@ -79,7 +79,7 @@ module.exports.deleteController = async(req ,res)=> {
     
     const permissionToDelete = await Permission.findOne({ _id: permissionId , templeId : templeId });
 
-    if(!user.superAdmin) {
+    if(!user) {
         throw new ExpressError(400 , "Permission not granted.");
     }
 

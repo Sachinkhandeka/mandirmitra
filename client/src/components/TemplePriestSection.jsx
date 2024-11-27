@@ -1,10 +1,12 @@
 import { Button, FileInput, Label, TextInput, Avatar, Spinner, Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
-import { refreshToken, uploadImages } from "../utilityFunx";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken, refreshToken, uploadImages } from "../utilityFunx";
 import PriestList from "./PriestList";
+import { useNavigate } from "react-router-dom";
 
 export default function TemplePujariSection({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,21 +102,24 @@ export default function TemplePujariSection({ temple, setTemple, setAlert }) {
             };
             
             // Backend API call to update the Pujaris in the temple
-            const response = await fetch(`/api/temple/edit/${temple._id}/pujaris`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedPujaris }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/pujaris`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedPujaris }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setIsSubmitting,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Pujari added successfully!" });
             }
-
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Pujari added successfully!" });
         } catch (error) {
-            console.log(error.message);
             setAlert({ type: "error", message: "Error saving Pujari information. Please try again." });
         } finally {
             setIsSubmitting(false);

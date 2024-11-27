@@ -111,7 +111,6 @@ export default function EditRoleModal({ roleData , setRoleData ,  showModal , se
                 setAlert({ type  : "success", message : "Role Updated Successfully." });
                 setRoleData(data.updatedRole);
                 setRoleUpdated(true);
-                setShowModal(false);
             }
         }catch(err) {
             setAlert({ type : "error", message : err.message });

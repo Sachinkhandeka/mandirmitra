@@ -1,27 +1,39 @@
 import { Avatar, Tooltip } from "flowbite-react";
+import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function PujariList({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     // Remove a Pujari from the list
     const handleRemovePujari = async (index) => {
         const updatedPujaris = {
             pujaris: temple.pujaris.filter((_, i) => i !== index),
         };
 
+        setLoading(false);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/pujaris`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedPujaris }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/pujaris`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedPujaris }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Pujari removed successfully!" });
             }
-
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Pujari removed successfully!" });
         } catch (error) {
             setAlert({ type: "error", message: "Error removing Pujari." });
         }

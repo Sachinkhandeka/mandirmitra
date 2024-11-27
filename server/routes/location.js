@@ -2,8 +2,7 @@ const express = require("express");
 const  router = express.Router({ mergeParams : true });
 const location = require("../controllers/LocationController");
 const wrapAsyn = require("../utils/wrapAsync");
-const { verifyCreatePermission, verifyUpdatePermission, verifyDeletePermission } = require("../utils/verifyPermissions");
-const { route } = require("./temple");
+const { verifyCreatePermission, verifyReadPermission, verifyUpdatePermission, verifyDeletePermission } = require("../utils/verifyPermissions");
 const { verifyToken } = require("../utils/verifyUser");
 
 //add location 
@@ -16,7 +15,7 @@ router.post(
 //get all 
 router.get(
     "/get/:templeId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getAll),
 );
 
@@ -37,42 +36,42 @@ router.delete(
 //get countries
 router.get(
     "/countries/:templeId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getAllCountry),
 );
 
 //get states
 router.get(
     "/states/:templeId/:countryId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getStatesByCountry),
 );
 
 //get districts
 router.get(
     "/districts/:templeId/:stateId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getDistrictsByState),
 );
 
 //get tehsils
 router.get(
     "/tehsils/:templeId/:districtId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getTehsilsByDistrict),
 );
 
 //get villages
 router.get(
     "/villages/:templeId/:tehsilId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getVillagesByTehsil),
 );
 
 //get all data
 router.get(
     "/get/:templeId",
-    verifyToken,
+    verifyReadPermission,
     wrapAsyn(location.getAllController),
 );
 

@@ -7,6 +7,7 @@ import { FaFilter } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount, setFilterCount}) {
     const { currUser } = useSelector(state => state.user);
@@ -21,18 +22,28 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
     const [ maxAmount, setMaxAmount ] = useState('');
     const [ locationParams, setLocationParams ] = useState('');
     const [ seva, setSeva ] = useState([]);
+    const [ loading, setLoading ] = useState(false);
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     const getSeva = useCallback(async () => {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/seva/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                return ;
+            const data = await fetchWithAuth(
+                `/api/seva/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setSeva(data.seva);
             }
-            setSeva(data.seva);
         } catch (err) {
-            return ;
+            setLoading(false);
+            return setAlert({ type : "error", message : err.message }) ;
         }
     }, [currUser.templeId]);
 
@@ -42,20 +53,28 @@ export default function FilterDrawer({isDrawerOpen, setIsDrawerOpen, filterCount
 
     //get address data
     const getlocationData = async()=> {
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try{
-            const response = await fetch(`/api/location/get/${currUser.templeId}`);
-            const data = await response.json();
-
-            if(!response.ok) {
-                return ; 
+            const data = await fetchWithAuth(
+                `/api/location/get/${currUser.templeId}`,
+                {},
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setVillages(data.villages);
+                setTehsils(data.tehsils);
+                setDistricts(data.districts);
+                setStates(data.states);
+                setCountries(data.countries);
             }
-            setVillages(data.villages);
-            setTehsils(data.tehsils);
-            setDistricts(data.districts);
-            setStates(data.states);
-            setCountries(data.countries);
         } catch(err) {
-            return ;
+            setLoading(false);
+            return setAlert({ type : "error", message : err.message }) ;
         }
     }
     useEffect(()=> {

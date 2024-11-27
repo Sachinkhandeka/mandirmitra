@@ -1,9 +1,13 @@
-import { Avatar, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
 
 export default function DietyList({ temple, setTemple, setAlert }) {
+    const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     // Function to toggle description length
     const toggleExpanded = () => {
@@ -15,21 +19,26 @@ export default function DietyList({ temple, setTemple, setAlert }) {
         const updatedDieties = {
             godsAndGoddesses: temple.godsAndGoddesses.filter((_, i) => i !== index),
         };
-
+        setLoading(true);
+        setAlert({ type : "", message : "" });
         try {
-            const response = await fetch(`/api/temple/edit/${temple._id}/gods`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ templeData: updatedDieties }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                return setAlert({ type: "error", message: data.message });
+            const data = await fetchWithAuth(
+                `/api/temple/edit/${temple._id}/gods`, 
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ templeData: updatedDieties }),
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
+            );
+            if(data) {
+                setTemple(data.temple);
+                setAlert({ type: "success", message: "Deity removed successfully!" });
             }
-
-            setTemple(data.temple);
-            setAlert({ type: "success", message: "Deity removed successfully!" });
         } catch (error) {
             setAlert({ type: "error", message: "Error removing deity." });
         }

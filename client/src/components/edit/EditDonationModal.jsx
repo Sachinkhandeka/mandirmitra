@@ -12,8 +12,11 @@ import { Helmet } from "react-helmet-async";
 import Receipt from "../../pdf/Receipt";
 import AddressForm from "../AddressForm";
 import Alert from "../Alert";
+import { useNavigate } from "react-router-dom";
+import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
 export default function EditDonationModal({ showEditModal, setShowEditModal, donation, setIsDonationUpdated }) {
+    const navigate = useNavigate();
     const [selectedCountry, setSelectedCountry] = useState({});
     const [selectedState, setSelectedState] = useState({});
     const [selectedDistrict, setSelectedDistrict] = useState({});
@@ -120,29 +123,29 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
         e.preventDefault();
         try {
             setLoading(true);
-            setError(null);
-            setSuccess(null);
+            setAlert({ type : "", message : "" });
 
-            const response = await fetch(
+            const data = await fetchWithAuth(
                 `/api/donation/edit/${currUser.templeId}/${donation._id}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
-                }
+                },
+                refreshSuperAdminOrUserAccessToken,
+                "User",
+                setLoading,
+                setAlert,
+                navigate
             );
-            const data = await response.json();
-
-            if (!response.ok) {
+            if(data) {
                 setLoading(false);
-                return setError(data.message);
+                setIsDonationUpdated(true);
+                setAlert({ type : "success", message : "Donation updated successfully." });
+                setReceiptData(data.updatedDonation);
             }
-            setLoading(false);
-            setIsDonationUpdated(true);
-            setSuccess("Donation updated successfully.");
-            setReceiptData(data.updatedDonation);
         } catch (err) {
-            setError(err.message);
+            setAlert({ type : "error", message : err.message });
         }
     };
     return (
@@ -243,9 +246,10 @@ export default function EditDonationModal({ showEditModal, setShowEditModal, don
                                 </div>
                             </form>
                         </div>
-                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                            {success && ( <Alert type="success" message={success} autoDismiss duration={6000} onClose={() => setSuccess(null)} /> )}
-                            {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                        <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                            {alert && alert.message && (
+                                <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                            )}
                         </div>
                 </Modal.Body>
             </Modal>
