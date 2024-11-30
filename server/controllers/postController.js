@@ -40,8 +40,10 @@ module.exports.getAllPostsController = async (req, res) => {
 
     // Fetch all posts for the temple
     const posts = await Post.find({ temple: templeId })
-        .populate("temple", "name image")
-        .populate("comments.user", "name")
+        .populate([
+            { path: "comments.user", select: "displayName photoURL" },
+            { path: "temple", select: "name image" },
+        ])
         .sort({ createdAt: -1 });
 
     res.status(200).json({ count: posts.length, posts });
@@ -160,5 +162,5 @@ module.exports.addCommentController = async (req, res) => {
 
     const populatedPost = await Post.findById(postId).populate("comments.user", "displayName photoURL");
 
-    res.status(201).json({ message: "Comment added successfully", comments: populatedPost.comments });
+    res.status(201).json({ message: "Comment added successfully", post: populatedPost });
 };

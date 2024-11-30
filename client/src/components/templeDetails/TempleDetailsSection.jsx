@@ -124,7 +124,7 @@ export default function TempleDetailsSection({ temple, setTemple }) {
                         <img
                             src={temple.image}
                             alt={temple.name}
-                            className="w-full h-auto max-h-[300px] object-cover rounded-lg"
+                            className="w-full h-auto max-h-[300px] object-fill rounded-lg"
                         />
                     </div>
                     <div className="flex flex-col w-full md:w-2/3">

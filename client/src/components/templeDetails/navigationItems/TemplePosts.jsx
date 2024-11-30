@@ -5,6 +5,8 @@ import PostImageCarousel from "../../PostImageCarousel";
 import EmptyState from "../../EmptyState";
 import LikeButton from "../LikeButton";
 import Alert from "../../Alert";
+import CommentModal from "../../CommentModal";
+import { FaRegShareSquare } from "react-icons/fa";
 
 export default function TemplePosts({ templeId }) {
     const [posts, setPosts] = useState([]);
@@ -62,6 +64,7 @@ export default function TemplePosts({ templeId }) {
 }
 
 function PostCard({ post, setAlert }) {
+    const [commentsModal, setCommentsModal] = useState(false);
     const [expanded, setExpanded] = useState(false);
     const MAX_CONTENT_LENGTH = 100;
 
@@ -75,6 +78,20 @@ function PostCard({ post, setAlert }) {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative">
+            <div className="flex justify-between items-center px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                    <Avatar
+                        img={post.temple.image}
+                        rounded
+                        size="md"
+                        alt="Temple Image"
+                        
+                    />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {post.temple.name || "Unknown Temple"}
+                    </span>
+                </div>
+            </div>
             {/* Image Carousel */}
             {post.images && post.images.length > 0 && (
                 <PostImageCarousel images={post.images} postType={post.postType} />
@@ -100,30 +117,26 @@ function PostCard({ post, setAlert }) {
 
             {/* Post Footer */}
             <div className="flex justify-between items-center px-4 py-2 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-3">
-                    <Avatar
-                        img={post.temple.image}
-                        rounded
-                        size="sm"
-                        alt="Temple Image"
-                        className="w-8 h-8"
-                    />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                        By: {post.temple.name || "Unknown Temple"}
-                    </span>
-                </div>
-
                 <div className="flex items-center gap-4">
                     {/* Likes */}
                     <LikeButton post={post} setAlert={setAlert} />
 
                     {/* Comments */}
-                    <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                    <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400" onClick={()=> setCommentsModal(true)}>
                         <FiMessageSquare className="text-lg" />
                         <span className="text-sm">{post.comments.length}</span>
                     </button>
                 </div>
+                {/* share */}
+                <div className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <FaRegShareSquare className="text-lg" />
+                </div>
             </div>
+            {
+                commentsModal && (
+                    <CommentModal post={post} isOpen={commentsModal} onClose={()=> setCommentsModal(false)} setAlert={setAlert} />
+                )
+            }
         </div>
     );
 }

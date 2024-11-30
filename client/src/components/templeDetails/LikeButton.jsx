@@ -16,7 +16,7 @@ export default function LikeButton({ post, setAlert }) {
             return ;
         }
         if( post.likes && post.likes.length > 0 ) {
-            setLiked(post.likes.includes(currUser.id));
+            setLiked(post.likes.includes(currUser._id));
         }
     },[post, currUser]);
 

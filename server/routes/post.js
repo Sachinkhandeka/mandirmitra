@@ -38,6 +38,7 @@ router.post(
 );
 router.post(
     '/:postId/comment/:devoteeId', 
+    verifyDevoteeToken,
     wrapAsync(posts.addCommentController)
 );
 

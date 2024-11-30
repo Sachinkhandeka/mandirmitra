@@ -14,7 +14,7 @@ export default function PostImageCarousel({ images, postType, isEditing, post, s
     };
 
     return (
-        <div className="relative w-full overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-800">
+        <div className="relative w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
             {/* Image Container */}
             <div className="w-full h-96 flex items-center justify-center bg-black">
                 <img
