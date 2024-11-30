@@ -27,6 +27,7 @@ const inventoryRoute = require("./routes/inventory");
 const tenantRoute = require("./routes/tenant");
 const assetRoute = require("./routes/asset");
 const devoteeRoute = require("./routes/devotee");
+const postRoute = require("./routes/post");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -61,6 +62,7 @@ app.use( "/api/inventory", inventoryRoute );
 app.use( "/api/tenant", tenantRoute );
 app.use( "/api/asset", assetRoute );
 app.use( "/api/devotee", devoteeRoute );
+app.use( "/api/post", postRoute );
 
 
 //static folder for client side pages 

@@ -103,7 +103,6 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
                 setAlert({ type: "success", message: "Video removed successfully!" });
             }
         } catch (error) {
-            console.error(error);
             setAlert({ type: "error", message: "Error removing video. Please try again." });
         }
     };

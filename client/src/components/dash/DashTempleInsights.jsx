@@ -4,10 +4,11 @@ import TempleGeneralInfoSection from "../TempleGeneralInfoSection";
 import TempleProfileSection from "../TempleProfileSection";
 import TemplePriestSection from "../TemplePriestSection";
 import TempleManagementSection from "../TempleManagmentSection";
+import TempleVideosSection from "../TempleVideosSection";
+import TemplePostsSection from "../TemplePostSection";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import Alert from "../Alert";
-import TempleVideosSection from "../TempleVideosSection";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../../utilityFunx";
 
@@ -68,6 +69,7 @@ export default function DashTempleInsights() {
                         <TempleGeneralInfoSection temple={temple} setAlert={setAlert} />
                         <TempleFestivalsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
                         <TempleVideosSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
+                        <TemplePostsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
                     </div>
                 </>
             ) }

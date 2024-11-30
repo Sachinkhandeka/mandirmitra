@@ -10,6 +10,7 @@ import ShowAnuyayi from "./ShowAnuyayi";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
 
 const TempleDescription = React.lazy(() => import("./navigationItems/TempleDescription"));
+const TemplePosts = React.lazy(()=> import("./navigationItems/TemplePosts"));
 const TempleFestivals = React.lazy(() => import("./navigationItems/TempleFestivals"));
 const TempleVideos = React.lazy(() => import("./navigationItems/TempleVideos"));
 const TemplePhotos = React.lazy(() => import("./navigationItems/TemplePhotos"));
@@ -17,12 +18,12 @@ const TempleGods = React.lazy(() => import("./navigationItems/TempleGods"));
 const TemplePujaris = React.lazy(() => import("./navigationItems/TemplePujaris"));
 const TempleManagement = React.lazy(() => import("./navigationItems/TempleManagment"));
 
-const navigationItems = ['About', 'Festivals', 'Videos', 'Photos', 'Gods', 'Pujaris', 'Managment'];
+const navigationItems = ['Posts', 'Videos', 'Photos', 'Festivals', 'Gods', 'Pujaris', 'Managment', 'About'];
 
 export default function TempleDetailsSection({ temple, setTemple }) {
     const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
-    const [activeNavItem, setActiveNavItem] = useState('About');
+    const [activeNavItem, setActiveNavItem] = useState('Posts');
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [loading, setLoading] = useState(false);
     const [showAnuyayi, setShowAnuyayi] = useState(false);
@@ -194,6 +195,9 @@ export default function TempleDetailsSection({ temple, setTemple }) {
                 <div className="p-3">
                     {activeNavItem === "About" && (
                         <TempleDescription description={temple.description} images={temple.historyImages} />
+                    )}
+                    {activeNavItem === "Posts" && (
+                        <TemplePosts templeId={temple._id} />
                     )}
                     {activeNavItem === "Festivals" && <TempleFestivals festivals={temple.festivals} />}
                     {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} />}

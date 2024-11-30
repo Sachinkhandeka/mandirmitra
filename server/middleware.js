@@ -4,7 +4,7 @@ const {
     templeGenInfo, templeGods, templeVideos, TempleFestivals,
     templePujaris, templeManagment, userSchema, expenseSchema, eventSchema, 
     invitationSchema, inventorySchema, tenantSchema, assetSchema, 
-    devoteeSchema} = require("./schemaValidation");
+    devoteeSchema, postSchemaValidation} = require("./schemaValidation");
 
 module.exports.validateDaanSchema = (req ,res ,next)=> {
     let { error } = daanSchema.validate(req.body.donation);
@@ -307,3 +307,19 @@ module.exports.validateAssetSchema = (req, res, next) => {
     }
     next();
 };
+
+module.exports.validatePostSchema = (req, res, next)=> {
+    const { post } = req.body;
+    let { error } = postSchemaValidation.validate(post);
+
+    if (error) {
+        if (error.isJoi) {
+            let errMsg = error.details.map(el => el.message).join(",");
+            throw new ExpressError(400, errMsg);
+        } else {
+            let errMsg = error.message;
+            throw new ExpressError(400, errMsg);
+        }
+    }
+    next();
+}

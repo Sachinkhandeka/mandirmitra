@@ -236,6 +236,28 @@ const assetSchema = Joi.object({
     }).optional()
 }).options({ abortEarly: false });
 
+const postSchemaValidation = Joi.object({
+    title: Joi.string().required().trim().max(100).error(new Error('Title is required and must be at most 100 characters')),
+    content: Joi.string().required().max(1000).error(new Error('Content is required and must be at most 1000 characters')),
+    images: Joi.array()
+        .items(Joi.string().uri().error(new Error('Each image must be a valid URL'))).max(5)
+        .error(new Error('You can upload a maximum of 5 images')),
+    postType: Joi.string()
+        .valid('general', 'announcement').default('general').error(new Error('Invalid post type')),
+    likes: Joi.array()
+        .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+        .error(new Error('Likes must be an array of valid Devotee IDs')),
+    comments: Joi.array()
+        .items(
+            Joi.object({
+                user: Joi.string().required().error(new Error('User ID is required for comments')),
+                comment: Joi.string().required().max(500)
+                    .error(new Error('Comment is required and must be at most 500 characters')),
+                createdAt: Joi.date().error(new Error('Invalid date format')),
+            })
+        ).error(new Error('Comments must be an array of valid objects')),
+});
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -255,4 +277,5 @@ module.exports = {
     inventorySchema,
     tenantSchema,
     assetSchema,
+    postSchemaValidation,
 }

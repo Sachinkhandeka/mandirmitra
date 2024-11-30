@@ -3,24 +3,24 @@ const Devotee = require("../models/devotee");
 const ExpressError = require("./ExpressError");
 
 module.exports.verifyDevoteeToken = async( req, res, next )=> {
+    const token = req.cookies.access_token ; 
+    
     try {
-        const token = req.cookies.access_token ; 
-    
         if(!token) {
-            throw new ExpressError(401, "Unauthorized request");
+            return res.status(401).json({ message : "Unauthorized request" });
         }
-    
+        
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    
+        
         const user = await Devotee.findById(decodedToken?._id).select("-password -refreshToken");
-    
+        
         if(!user) {
-            throw new ExpressError(401, "Invalid access token");
+            return res.status(401).json({ message : "Invalid access token" });
         }
-    
+        
         req.user = user;
         next();
     } catch (error) {
-        throw new ExpressError(401, error?.message || "Invalid access token");
+        res.status(401).json({ message : error?.message || "Invalid token." });
     }
 }
