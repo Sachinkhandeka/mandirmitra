@@ -35,7 +35,7 @@ const generateAccessAndRefreshToken = async (userId, userType) => {
 
 module.exports.singinWithPhoneNumber = async (req, res) => {
     const { phoneNumber, password } = req.body;
-
+console.log(password);
     if (!(phoneNumber && password)) {
         throw new ExpressError(401, "Please provide phone number and password");
     }
@@ -52,7 +52,7 @@ module.exports.singinWithPhoneNumber = async (req, res) => {
     if (!existingUser) {
         return res.status(200).json({ needsSignup: true });
     }
-
+console.log(existingUser);
     // Check password validity
     const isPassCorrect = await existingUser.isPasswordCorrect(password);
     if (!isPassCorrect) {
@@ -246,6 +246,7 @@ module.exports.googleController = async (req, res) => {
 
 
 //edit superAdmin rooute handler
+// Edit SuperAdmin route handler
 module.exports.editController = async (req, res) => {
     const user = req.user; // Logged-in user
     const { username, email, phoneNumber, password, profilePicture } = req.body;
@@ -263,31 +264,17 @@ module.exports.editController = async (req, res) => {
     }
 
     // Update fields only if provided in the request and different from existing values
-    const updateFields = {};
-    if (username && username !== isSuperAdmin.username) updateFields.username = username;
-    if (email && email !== isSuperAdmin.email) updateFields.email = email;
-    if (phoneNumber && phoneNumber !== isSuperAdmin.phoneNumber) updateFields.phoneNumber = phoneNumber;
-    if (password) {
-        updateFields.password = password; 
-    }
-    if (profilePicture && profilePicture !== isSuperAdmin.profilePicture) updateFields.profilePicture = profilePicture;
+    if (username && username !== isSuperAdmin.username) isSuperAdmin.username = username;
+    if (email && email !== isSuperAdmin.email) isSuperAdmin.email = email;
+    if (phoneNumber && phoneNumber !== isSuperAdmin.phoneNumber) isSuperAdmin.phoneNumber = phoneNumber;
+    if (password) isSuperAdmin.password = password; 
+    if (profilePicture && profilePicture !== isSuperAdmin.profilePicture) isSuperAdmin.profilePicture = profilePicture;
 
-    // Check if there's anything to update
-    if (Object.keys(updateFields).length === 0) {
-        throw new ExpressError(400, "No fields to update.");
-    }
+    await isSuperAdmin.save();
 
-    // Update the SuperAdmin and return the updated document
-    const updatedSuperAdmin = await SuperAdmin.findOneAndUpdate(
-        { _id: id, templeId },
-        { $set: updateFields },
-        { new: true, runValidators: true }
-    );
-
-    const { password: pass, refreshToken, ...rest } = updatedSuperAdmin._doc;
+    const { password: pass, refreshToken, ...rest } = isSuperAdmin._doc;
     res.status(200).json({ currUser: rest });
 };
-
 
 //signout route handler
 module.exports.signoutController = async (req ,res)=> {
