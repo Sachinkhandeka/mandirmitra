@@ -134,7 +134,7 @@ function PostCard({ post, setAlert }) {
             </div>
             {
                 commentsModal && (
-                    <CommentModal post={post} isOpen={commentsModal} onClose={()=> setCommentsModal(false)} setAlert={setAlert} />
+                    <CommentModal post={post} isOpen={commentsModal} onClose={()=> setCommentsModal(false)}/>
                 )
             }
         </div>

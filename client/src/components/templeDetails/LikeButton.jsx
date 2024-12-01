@@ -13,7 +13,7 @@ export default function LikeButton({ post, setAlert }) {
 
     useEffect(()=> {
         if(!currUser) {
-            return ;
+            return setAlert({ type : "info", message : "Please Signup/Login to like posts" });
         }
         if( post.likes && post.likes.length > 0 ) {
             setLiked(post.likes.includes(currUser._id));
@@ -24,7 +24,10 @@ export default function LikeButton({ post, setAlert }) {
         setAlert({ type : "", message : "" });
         setLoading(true);
         try {
-            
+            if(!currUser) {
+                setLoading(false);
+                return setAlert({ type : "info", message : "Please Signup/Login to like posts" });
+            }
             const data = await fetchWithAuth(
                 `/api/post/${post._id}/like/${currUser._id}`,
                 {

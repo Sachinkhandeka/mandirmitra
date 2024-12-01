@@ -4,12 +4,14 @@ import { FiSend } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../utilityFunx";
 import { useNavigate } from "react-router-dom";
+import Alert from "./Alert";
 
-export default function CommentModal({ post, isOpen, onClose, setAlert }) {
+export default function CommentModal({ post, isOpen, onClose }) {
     const { currUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
     const [newComment, setNewComment] = useState("");
     const [addingComment, setAddingComment] = useState(false);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
@@ -18,7 +20,8 @@ export default function CommentModal({ post, isOpen, onClose, setAlert }) {
         setAlert({ type: "", message: "" });
 
         if(!currUser) {
-            return navigate("/devotees");
+            setAddingComment(false);
+            return setAlert({ type : "info", message : "Please Signup/Login to comment on posts" });
         }
         try {
             const data = await fetchWithAuth(
@@ -52,6 +55,12 @@ export default function CommentModal({ post, isOpen, onClose, setAlert }) {
         <Modal show={isOpen} size="lg" onClose={onClose}>
             <Modal.Header>Comments</Modal.Header>
             <Modal.Body>
+                {/* alert */}
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
+                    {alert && alert.message && (
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    )}
+                </div>
                 {/* Comments List */}
                 {post.comments.length > 0 ? (
                     <div>
