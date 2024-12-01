@@ -7,14 +7,14 @@ export default function TempleCard({ temple }) {
         <div className="max-w-sm w-full mx-auto md:mx-3 h-96 overflow-hidden">
             {/* Thumbnail (Image) */}
             <div className="relative w-full h-44">
-                <img src={temple.image} alt={temple.name} className="w-full h-full object-cover rounded-md" />
+                <img src={temple.image} alt={temple.name} className="w-full h-full object-fill rounded-md" />
             </div>
 
             {/* Temple Information */}
             <div className="flex p-4">
                 {/* Profile Picture or Icon */}
                 <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 flex-shrink-0">
-                    <img src={temple.image} alt="Temple Icon" className="rounded-full object-cover w-full h-full" />
+                    <img src={temple.image} alt="Temple Icon" className="rounded-full object-fill w-full h-full" />
                 </div>
 
                 {/* Temple Info */}

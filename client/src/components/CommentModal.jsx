@@ -16,6 +16,10 @@ export default function CommentModal({ post, isOpen, onClose, setAlert }) {
 
         setAddingComment(true);
         setAlert({ type: "", message: "" });
+
+        if(!currUser) {
+            return navigate("/devotees");
+        }
         try {
             const data = await fetchWithAuth(
                 `/api/post/${post._id}/comment/${currUser._id}`,
@@ -59,7 +63,7 @@ export default function CommentModal({ post, isOpen, onClose, setAlert }) {
                                 <div className="flex items-center gap-2 mb-1">
                                     <Avatar
                                         rounded
-                                        placeholderInitials={currUser.displayName[0]}
+                                        placeholderInitials={currUser?.displayName[0] || ""}
                                         img={comment.user?.photoURL}
                                         alt={comment.user?.displayName || "Anonymous"}
                                         size="sm"
