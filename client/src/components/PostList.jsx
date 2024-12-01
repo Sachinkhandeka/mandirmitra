@@ -71,14 +71,14 @@ export default function PostList({ templeId, setAlert, fetchPosts, setFetchPosts
                 {posts.map((post) => (
                     <div
                         key={post._id}
-                        className="w-full flex-shrink-0 snap-center relative bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg"
+                        className="flex-shrink-0 snap-center relative bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg"
                     >
                         <PostImageCarousel images={post.images} postType={post.postType} />
                         <div className="p-4">
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white my-2">
                                 {post.title}
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-3">
+                            <p className="text-sm text-gray-600 max-w-md dark:text-gray-300 mb-3 line-clamp-3">
                                 {post.content}
                             </p>
                             <div className="flex justify-between items-center mt-4">

@@ -97,7 +97,7 @@ export default function PhoneOtpForm() {
             if (!response.ok) {
                 dispatch(signinFailure(data.message));
                 setLoading(false);
-                return;
+                return setError(data.message);
             }
 
             if (data.needsSignup) {
