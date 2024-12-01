@@ -76,8 +76,29 @@ function PostCard({ post, setAlert }) {
         ? `${post.content.slice(0, MAX_CONTENT_LENGTH)}...`
         : post.content;
 
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: post.title,
+                    text: post.content,
+                    url: window.location.href, // Share the current page URL, or replace with a specific post URL
+                });
+                setAlert({ type: "success", message: "Post shared successfully!" });
+            } catch (error) {
+                setAlert({ type: "error", message: "Failed to share the post!" });
+            }
+        } else {
+            setAlert({
+                type: "error",
+                message: "Your browser does not support the share functionality.",
+            });
+        }
+    };
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative">
+            {/* Post content */}
             <div className="flex justify-between items-center px-4 py-2 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3">
                     <Avatar
@@ -85,7 +106,6 @@ function PostCard({ post, setAlert }) {
                         rounded
                         size="md"
                         alt="Temple Image"
-                        
                     />
                     <span className="text-xs text-gray-500 dark:text-gray-400">
                         {post.temple.name || "Unknown Temple"}
@@ -122,21 +142,29 @@ function PostCard({ post, setAlert }) {
                     <LikeButton post={post} setAlert={setAlert} />
 
                     {/* Comments */}
-                    <button className="flex items-center gap-1 text-gray-500 dark:text-gray-400" onClick={()=> setCommentsModal(true)}>
+                    <button
+                        className="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+                        onClick={() => setCommentsModal(true)}
+                    >
                         <FiMessageSquare className="text-lg" />
                         <span className="text-sm">{post.comments.length}</span>
                     </button>
                 </div>
-                {/* share */}
-                <div className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                {/* Share */}
+                <div
+                    onClick={handleShare}
+                    className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
                     <FaRegShareSquare className="text-lg" />
                 </div>
             </div>
-            {
-                commentsModal && (
-                    <CommentModal post={post} isOpen={commentsModal} onClose={()=> setCommentsModal(false)}/>
-                )
-            }
+            {commentsModal && (
+                <CommentModal
+                    post={post}
+                    isOpen={commentsModal}
+                    onClose={() => setCommentsModal(false)}
+                />
+            )}
         </div>
     );
 }
