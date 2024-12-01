@@ -13,7 +13,7 @@ export default function LikeButton({ post, setAlert }) {
 
     useEffect(()=> {
         if(!currUser) {
-            return setAlert({ type : "info", message : "Please Signup/Login to like posts" });
+            return setAlert({ type : "info", message : "Please Signup/Login to like or comment on posts" });
         }
         if( post.likes && post.likes.length > 0 ) {
             setLiked(post.likes.includes(currUser._id));
