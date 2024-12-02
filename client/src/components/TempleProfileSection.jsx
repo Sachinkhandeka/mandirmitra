@@ -39,7 +39,11 @@ export default function TempleProfileSection({ temple, setAlert }) {
   };
 
   const SaveImgInDb = async (downloadURL) => {
-    const updatedTempleInfo = { ...temple, image: downloadURL };
+    const updatedTempleInfo = {
+      name : temple.name,
+      location : temple.location,
+      image: downloadURL 
+    };
     try {
       const data = await fetchWithAuth(
         `/api/temple/edit/${temple._id}/genInfo`, 
