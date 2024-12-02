@@ -35,7 +35,7 @@ const generateAccessAndRefreshToken = async (userId, userType) => {
 
 module.exports.singinWithPhoneNumber = async (req, res) => {
     const { phoneNumber, password } = req.body;
-console.log(password);
+
     if (!(phoneNumber && password)) {
         throw new ExpressError(401, "Please provide phone number and password");
     }
@@ -52,7 +52,7 @@ console.log(password);
     if (!existingUser) {
         return res.status(200).json({ needsSignup: true });
     }
-console.log(existingUser);
+
     // Check password validity
     const isPassCorrect = await existingUser.isPasswordCorrect(password);
     if (!isPassCorrect) {
