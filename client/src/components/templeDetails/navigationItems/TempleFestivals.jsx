@@ -18,7 +18,7 @@ export default function TempleFestivals({ festivals }) {
                                 <div className="relative h-64 sm:h-72 lg:h-80 xl:h-96 my-4">
                                     {fest.festivalImages && fest.festivalImages.length > 0 && (
                                         <>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                                 Festival Images
                                             </h3>
                                             <Carousel slide={false} className="rounded-lg overflow-hidden">
@@ -27,7 +27,7 @@ export default function TempleFestivals({ festivals }) {
                                                         src={url}
                                                         alt={`temple_festival_image_${indx}`}
                                                         key={indx}
-                                                        className="w-full h-full object-cover"
+                                                        className="w-full h-60 object-fill rounded-lg"
                                                     />
                                                 ))}
                                             </Carousel>

@@ -10,7 +10,7 @@ export default function TemplePujaris({ pujaris }) {
                             <img
                                 src={pujari.profile}
                                 alt={pujari.name}
-                                className="w-full h-48 object-cover rounded-t-lg"
+                                className="w-full h-60 object-fill rounded-t-lg"
                             />
                             <div className="p-4">
                                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">

@@ -20,7 +20,7 @@ export default function TempleGods({ gods }) {
                             <img
                                 src={god.image}
                                 alt={god.name}
-                                className="w-full h-48 object-cover rounded-t-lg"
+                                className="w-full h-60 object-fill rounded-t-lg"
                             />
                             <div className="p-4">
                                 <div className="flex items-center justify-between my-4" >

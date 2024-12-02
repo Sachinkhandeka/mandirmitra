@@ -10,7 +10,7 @@ export default function TempleManagement({ management }) {
                             <img
                                 src={member.profile}
                                 alt={member.name}
-                                className="w-full h-48 object-cover rounded-t-lg"
+                                className="w-full h-60 object-fill rounded-t-lg"
                             />
                             <div className="p-4">
                                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
