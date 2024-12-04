@@ -12,7 +12,7 @@ export default function TempleGods({ gods }) {
         }));
     }
     return (
-        <section className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             {gods && gods.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {gods.map((god, index) => (

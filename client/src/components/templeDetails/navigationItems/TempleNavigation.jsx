@@ -1,0 +1,87 @@
+import React, { useState } from "react";
+const TempleDescription = React.lazy(() => import("./TempleDescription"));
+const TemplePosts = React.lazy(()=> import("./TemplePosts"));
+const TempleFestivals = React.lazy(() => import("./TempleFestivals"));
+const TempleVideos = React.lazy(() => import("./TempleVideos"));
+const TemplePhotos = React.lazy(() => import("./TemplePhotos"));
+const TempleGods = React.lazy(() => import("./TempleGods"));
+const TemplePujaris = React.lazy(() => import("./TemplePujaris"));
+const TempleManagement = React.lazy(() => import("./TempleManagment"));
+
+const navigationItems = [
+    "Posts",
+    "Videos",
+    "Photos",
+    "Festivals",
+    "Gods",
+    "Pujaris",
+    "Managment",
+    "About",
+];
+
+export default function TempleNavigation({ temple }) {
+    const [activeNavItem, setActiveNavItem] = useState("Posts");
+
+    return (
+        <div>
+            {/* Navigation Tabs */}
+            <div
+                className="flex items-center gap-4 overflow-x-auto scrollbar-hidden mx-3"
+                role="tablist"
+                aria-label="Navigation Items"
+            >
+                {navigationItems.map((item) => (
+                    <h3
+                        className={`flex items-center pl-3 cursor-pointer
+                        hover:bg-indigo-100 hover:text-indigo-800 me-2 px-2.5 py-0.5 rounded-full hover:dark:bg-indigo-900 hover:dark:text-indigo-300 
+                        ${
+                            activeNavItem === item
+                                ? "bg-blue-100 text-blue-800 me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 border border-blue-400"
+                                : "text-gray-600 dark:text-gray-400"
+                        } 
+                        text-lg font-semibold my-2 px-3 whitespace-nowrap`}
+                        key={item}
+                        onClick={() => setActiveNavItem(item)}
+                        role="tab"
+                        aria-selected={activeNavItem === item}
+                    >
+                        {item}
+                    </h3>
+                ))}
+            </div>
+
+            {/* Render Active Component */}
+            <div className="p-3">
+                {activeNavItem === "About" && (
+                    <TempleDescription
+                        description={temple.description}
+                        images={temple.historyImages}
+                    />
+                )}
+                {activeNavItem === "Posts" && <TemplePosts templeId={temple._id} />}
+                {activeNavItem === "Festivals" && (
+                    <TempleFestivals festivals={temple.festivals} />
+                )}
+                {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} />}
+                {activeNavItem === "Photos" && (
+                    <TemplePhotos
+                        photos={[
+                            ...temple.historyImages,
+                            ...temple.festivals.flatMap(
+                                (festival) => festival.festivalImages
+                            ),
+                        ]}
+                    />
+                )}
+                {activeNavItem === "Gods" && (
+                    <TempleGods gods={temple.godsAndGoddesses} />
+                )}
+                {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} />}
+                {activeNavItem === "Managment" && (
+                    <TempleManagement management={temple.management} />
+                )}
+            </div>
+        </div>
+    );
+};
+

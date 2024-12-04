@@ -2,7 +2,7 @@ import EmptyState from "../../EmptyState";
 
 export default function TempleDescription({ description, images }) {
     return (
-        <div className="mt-4 p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
             {description ? (
                 <>
                     {/* Temple Description */}
@@ -17,7 +17,7 @@ export default function TempleDescription({ description, images }) {
                                 <h3 className="text-2xl font-semibold my-4 text-gray-900 dark:text-white">
                                     Related Images
                                 </h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
                                     {images.map((url, indx) => (
                                         <div
                                             key={indx}

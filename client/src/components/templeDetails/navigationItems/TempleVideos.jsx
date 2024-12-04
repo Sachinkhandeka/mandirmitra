@@ -17,7 +17,7 @@ export default function TempleVideos({ videos }) {
     };
 
     return (
-        <section className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="py-6 px-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             {videos && videos.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {videos.map((video, index) => {

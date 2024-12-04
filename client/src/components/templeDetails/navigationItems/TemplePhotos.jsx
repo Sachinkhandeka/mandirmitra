@@ -2,9 +2,9 @@ import EmptyState from "../../EmptyState";
 
 export default function TemplePhotos({ photos }) {
     return (
-        <section className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
             {photos && photos.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
                     {photos.map((photo, index) => (
                         <div 
                             key={index} 

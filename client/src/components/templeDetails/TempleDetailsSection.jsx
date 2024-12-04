@@ -8,22 +8,11 @@ import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
 import ShowAnuyayi from "./ShowAnuyayi";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
-
-const TempleDescription = React.lazy(() => import("./navigationItems/TempleDescription"));
-const TemplePosts = React.lazy(()=> import("./navigationItems/TemplePosts"));
-const TempleFestivals = React.lazy(() => import("./navigationItems/TempleFestivals"));
-const TempleVideos = React.lazy(() => import("./navigationItems/TempleVideos"));
-const TemplePhotos = React.lazy(() => import("./navigationItems/TemplePhotos"));
-const TempleGods = React.lazy(() => import("./navigationItems/TempleGods"));
-const TemplePujaris = React.lazy(() => import("./navigationItems/TemplePujaris"));
-const TempleManagement = React.lazy(() => import("./navigationItems/TempleManagment"));
-
-const navigationItems = ['Posts', 'Videos', 'Photos', 'Festivals', 'Gods', 'Pujaris', 'Managment', 'About'];
+import TempleNavigation from "./navigationItems/TempleNavigation";
 
 export default function TempleDetailsSection({ temple, setTemple }) {
     const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
-    const [activeNavItem, setActiveNavItem] = useState('Posts');
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [loading, setLoading] = useState(false);
     const [showAnuyayi, setShowAnuyayi] = useState(false);
@@ -80,16 +69,25 @@ export default function TempleDetailsSection({ temple, setTemple }) {
                     name="keywords"
                     content={`temple, ${temple.name}, ${temple.location}, temple festivals, temple priests, temple management`}
                 />
-                <meta property="og:title" content={`${temple.name} - Temple Details | MandirMitra`} />
+                <meta
+                    property="og:title"
+                    content={`${temple.name} - Temple Details | MandirMitra`}
+                />
                 <meta
                     property="og:description"
                     content={`Learn about ${temple.name}, founded in ${temple.foundedYear}. Discover festivals, gods, priests, and more.`}
                 />
                 <meta
                     property="og:image"
-                    content={temple.image || 'https://www.mandirmitra.co.in/images/temple-banner.jpg'}
+                    content={
+                        temple.image ||
+                        "https://www.mandirmitra.co.in/images/temple-banner.jpg"
+                    }
                 />
-                <meta property="og:url" content={`https://www.mandirmitra.co.in/temple/${temple._id}`} />
+                <meta
+                    property="og:url"
+                    content={`https://www.mandirmitra.co.in/temple/${temple._id}`}
+                />
             </Helmet>
 
             {/* Confirmation Modal for Unfollowing */}
@@ -113,10 +111,18 @@ export default function TempleDetailsSection({ temple, setTemple }) {
                 </Modal.Body>
             </Modal>
 
-            <section className="text-black dark:text-white min-h-screen mb-8" aria-labelledby="temple-details-title">
+            <section
+                className="text-black dark:text-white min-h-screen mb-8"
+                aria-labelledby="temple-details-title"
+            >
                 <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                     {alert && alert.message && (
-                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        <Alert
+                            type={alert.type}
+                            message={alert.message}
+                            autoDismiss
+                            onClose={() => setAlert(null)}
+                        />
                     )}
                 </div>
                 <div className="flex flex-col md:flex-row items-start gap-6 p-6">
@@ -172,48 +178,11 @@ export default function TempleDetailsSection({ temple, setTemple }) {
                         </button>
                     </div>
                 </div>
-                <div className="flex items-center gap-4 overflow-x-auto scrollbar-hidden mx-3" role="tablist" aria-label="Navigation Items">
-                    {navigationItems.map((item) => (
-                        <h3
-                            className={`flex items-center pl-3 cursor-pointer
-                            hover:bg-indigo-100 hover:text-indigo-800 me-2 px-2.5 py-0.5 rounded-full hover:dark:bg-indigo-900 hover:dark:text-indigo-300 
-                            ${
-                                activeNavItem === item
-                                    ? "bg-blue-100 text-blue-800 me-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 border border-blue-400"
-                                    : "text-gray-600 dark:text-gray-400"
-                            } 
-                            text-lg font-semibold my-2 px-3 whitespace-nowrap`}
-                            key={item}
-                            onClick={() => setActiveNavItem(item)}
-                            role="tab"
-                            aria-selected={activeNavItem === item}
-                        >
-                            {item}
-                        </h3>
-                    ))}
-                </div>
-                <div className="p-3">
-                    {activeNavItem === "About" && (
-                        <TempleDescription description={temple.description} images={temple.historyImages} />
-                    )}
-                    {activeNavItem === "Posts" && (
-                        <TemplePosts templeId={temple._id} />
-                    )}
-                    {activeNavItem === "Festivals" && <TempleFestivals festivals={temple.festivals} />}
-                    {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} />}
-                    {activeNavItem === "Photos" && (
-                        <TemplePhotos
-                            photos={[
-                                ...temple.historyImages,
-                                ...temple.festivals.flatMap((festival) => festival.festivalImages),
-                            ]}
-                        />
-                    )}
-                    {activeNavItem === "Gods" && <TempleGods gods={temple.godsAndGoddesses} />}
-                    {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} />}
-                    {activeNavItem === "Managment" && <TempleManagement management={temple.management} />}
-                </div>
+
+                {/* Navigation and Content */}
+                <TempleNavigation temple={temple} />
             </section>
+
             {showAnuyayi && (
                 <ShowAnuyayi
                     anuyayiList={temple.anuyayi}
