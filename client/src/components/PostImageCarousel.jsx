@@ -4,24 +4,39 @@ import { Select } from "flowbite-react";
 
 export default function PostImageCarousel({ images, postType, isEditing, post, setPost }) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState("right"); // To track slide direction
 
     const goToPrevious = () => {
+        setDirection("left");
         setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : images.length - 1));
     };
 
     const goToNext = () => {
+        setDirection("right");
         setCurrentIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0));
     };
 
     return (
         <div className="relative w-full overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-t-lg">
             {/* Image Container */}
-            <div className="w-full h-96 flex items-center justify-center bg-black">
-                <img
-                    src={images[currentIndex]}
-                    alt={`Post image ${currentIndex + 1}`}
-                    className="w-full h-full object-fill"
-                />
+            <div className="relative w-full h-96 flex items-center justify-center overflow-hidden">
+                <div
+                    className={`flex w-full h-full transition-transform duration-500 ease-in-out ${
+                        direction === "right" ? "-translate-x-0" : "translate-x-full"
+                    }`}
+                    style={{
+                        transform: `translateX(-${currentIndex * 100}%)`,
+                    }}
+                >
+                    {images.map((image, index) => (
+                        <img
+                            key={index}
+                            src={image}
+                            alt={`Post image ${index + 1}`}
+                            className="w-full h-full object-fill flex-shrink-0"
+                        />
+                    ))}
+                </div>
             </div>
 
             {/* Navigation Buttons */}
@@ -45,7 +60,7 @@ export default function PostImageCarousel({ images, postType, isEditing, post, s
             )}
 
             {/* Post Type Badge */}
-            { isEditing ? (
+            {isEditing ? (
                 <Select
                     name="postType"
                     id="postType"
@@ -66,7 +81,7 @@ export default function PostImageCarousel({ images, postType, isEditing, post, s
                 >
                     {postType.toUpperCase()}
                 </span>
-            ) }
+            )}
 
             {/* Image Counter */}
             {images.length > 1 && (
