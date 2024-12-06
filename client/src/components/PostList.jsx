@@ -64,14 +64,14 @@ export default function PostList({ templeId, setAlert, fetchPosts, setFetchPosts
     }
 
     return (
-        <section className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-4">Temple Posts ({postCount || 0})</h2>
+        <section className="p-1 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md">
+            <h2 className="p-4 text-xl font-bold mb-4">Temple Posts ({postCount || 0})</h2>
 
-            <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-2">
+            <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hidden pb-4">
                 {posts.map((post) => (
                     <div
                         key={post._id}
-                        className="flex-shrink-0 snap-center relative bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg"
+                        className="w-[300px] flex-shrink-0 snap-center relative bg-gray-100 dark:bg-gray-700 rounded-lg shadow-lg"
                     >
                         <PostImageCarousel images={post.images} postType={post.postType} />
                         <div className="p-4">

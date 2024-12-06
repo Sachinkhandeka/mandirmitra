@@ -45,20 +45,20 @@ export default function DashTempleInsights() {
     }, [currUser]);
     
     return(
-        <section className="h-full flex flex-col md:flex-row gap-4" >
-            {/* Alert Message */}
-            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {alert && alert.message && (
-                    <Alert
-                        type={alert.type}
-                        message={alert.message}
-                        autoDismiss
-                        onClose={() => setAlert(null)}
-                    />
-                )}
-            </div>
+        <>
             { currUser.isAdmin && (
-                <>
+                <section className="h-full flex flex-col md:flex-row gap-4">
+                    {/* Alert Message */}
+                    <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                        {alert && alert.message && (
+                            <Alert
+                                type={alert.type}
+                                message={alert.message}
+                                autoDismiss
+                                onClose={() => setAlert(null)}
+                            />
+                        )}
+                    </div>
                     <div className="flex flex-col flex-1" >
                         <TempleProfileSection temple={temple} setAlert={setAlert} />
                         <TempleDietySection temple={temple} setTemple={setTemple} setAlert={setAlert} />
@@ -69,10 +69,10 @@ export default function DashTempleInsights() {
                         <TempleGeneralInfoSection temple={temple} setAlert={setAlert} />
                         <TempleFestivalsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
                         <TempleVideosSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
-                        <TemplePostsSection temple={temple} setTemple={setTemple} setAlert={setAlert} />
                     </div>
-                </>
+                </section>
             ) }
-        </section>
+            { currUser.isAdmin && ( <TemplePostsSection temple={temple} setTemple={setTemple} setAlert={setAlert} /> ) }
+        </>
     );
 }

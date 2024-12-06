@@ -113,7 +113,7 @@ export default function TemplePostsSection({ temple, setTemple, setAlert }) {
     };
 
     return (
-        <section className="p-4 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
+        <section className="p-1 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
             <h3 className="text-xl font-bold mb-4">Add Post</h3>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -202,7 +202,7 @@ export default function TemplePostsSection({ temple, setTemple, setAlert }) {
                     {isSubmitting && uploadingText}
                 </Button>
             </form>
-            <div >
+            <div>
                 <PostList templeId={temple._id} setAlert={setAlert} fetchPosts={fetchPosts} setFetchPosts={setFetchPosts} />
             </div>
         </section>
