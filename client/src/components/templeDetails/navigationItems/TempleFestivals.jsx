@@ -13,12 +13,58 @@ export default function TempleFestivals({ festivals, templeId }) {
         setExpandedIndex(expandedIndex === index ? null : index);
     };
 
+    const handleShare = (fest) => {
+        // Truncate the description for sharing
+        const truncatedDescription =
+            fest.festivalImportance.length > 150
+                ? fest.festivalImportance.substring(0, 150) + "..."
+                : fest.festivalImportance;
+
+        // Get the current page URL
+        const currentUrl = window.location.href;
+
+        if (navigator.share) {
+            // Use the Web Share API if available
+            navigator
+                .share({
+                    title: fest.festivalName,
+                    text: `${fest.festivalName}: ${truncatedDescription}`,
+                    url: currentUrl,
+                })
+                .then(() => {
+                    setAlert({ type: "success", message: "Festival shared successfully!" });
+                })
+                .catch((error) => {
+                    setAlert({ type: "error", message: `Failed to share: ${error.message}` });
+                });
+        } else {
+            // Fallback: Copy the URL to the clipboard
+            const shareText = `${fest.festivalName}: ${truncatedDescription}\n\nCheck it out here: ${currentUrl}`;
+            navigator.clipboard
+                .writeText(shareText)
+                .then(() => {
+                    setAlert({ type: "success", message: "Shareable link copied to clipboard!" });
+                })
+                .catch((error) => {
+                    setAlert({
+                        type: "error",
+                        message: `Failed to copy link: ${error.message}`,
+                    });
+                });
+        }
+    };
+
     return (
         <div className="w-full p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
             {/* Alert */}
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
-                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    <Alert
+                        type={alert.type}
+                        message={alert.message}
+                        autoDismiss
+                        onClose={() => setAlert(null)}
+                    />
                 )}
             </div>
 
@@ -87,7 +133,7 @@ export default function TempleFestivals({ festivals, templeId }) {
 
                                 {/* Share Button */}
                                 <button
-                                    onClick={() => {}}
+                                    onClick={() => handleShare(fest)}
                                     className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 hover:text-indigo-500"
                                 >
                                     <FaRegShareSquare className="text-xl" />

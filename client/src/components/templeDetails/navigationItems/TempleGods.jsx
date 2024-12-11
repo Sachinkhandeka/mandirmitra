@@ -16,6 +16,30 @@ export default function TempleGods({ gods, templeId }) {
             [index] : !prev[index]
         }));
     }
+
+    const handleShare = (god)=> {
+        const truncatedDesc = god.description.lenght > 150 ? 
+            god.description.subString(0, 150) + "..." :
+            god.description ; 
+        const currentUrl = window.location.href ; 
+        
+        if(navigator.share) {
+            navigator.share({
+                title : god.name,
+                text : truncatedDesc,
+                url : currentUrl
+            })
+            .then(()=> {setAlert({ type: "success", message: "God card shared successfully!" });})
+            .catch(()=> {setAlert({ type: "error", message: `Failed to share: ${error.message}` });})
+        } else {
+            const shareText = `${god.name}: ${truncatedDesc}\n\nCheck it out here: ${currentUrl}`
+            navigator.clipboard
+            .writeText(shareText)
+            .then(()=> {setAlert({ type: "success", message: "Shareable link copied to clipboard!" });})
+            .catch((error)=>{setAlert({ type: "error", message: `Failed to copy link: ${error.message}` });});
+        }
+
+    }
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
@@ -61,21 +85,10 @@ export default function TempleGods({ gods, templeId }) {
                                             setAlert={setAlert}
                                             templeId={templeId} 
                                         />
-
-                                        {/* Comments */}
-                                        <button
-                                            className="flex items-center gap-1 text-gray-500 dark:text-gray-400"
-                                            onClick={() => {}}
-                                        >
-                                            <div className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600" >
-                                                <FiMessageSquare className="text-lg rounded-full" />
-                                                <span className="text-sm">{12}</span>
-                                            </div>
-                                        </button>
                                     </div>
                                     {/* Share */}
                                     <div
-                                        onClick={()=> {}}
+                                        onClick={()=> {handleShare(god)}}
                                         className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
                                     >
                                         <FaRegShareSquare className="text-lg" />

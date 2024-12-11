@@ -40,7 +40,7 @@ export default function TempleNavigation({ temple }) {
                 aria-label="Navigation Items"
             >
                 {navigationItems.map((item) => (
-                    <h3
+                    <a
                         className={`flex items-center pl-3 cursor-pointer
                         hover:bg-indigo-100 hover:text-indigo-800 me-2 px-2.5 py-0.5 rounded-full hover:dark:bg-indigo-900 hover:dark:text-indigo-300 
                         ${
@@ -55,7 +55,7 @@ export default function TempleNavigation({ temple }) {
                         aria-selected={activeNavItem === item}
                     >
                         {item}
-                    </h3>
+                    </a>
                 ))}
             </div>
 

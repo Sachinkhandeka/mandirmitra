@@ -1,7 +1,6 @@
 import { useState } from "react";
 import EmptyState from "../../EmptyState";
 import { FaRegShareSquare } from "react-icons/fa";
-import { FiMessageSquare } from "react-icons/fi";
 import Alert from "../../Alert";
 import EntityLikeButton from "../EntityLikeButton";
 
@@ -20,6 +19,35 @@ export default function TempleVideos({ videos, templeId }) {
     const toggleExpandDesc = (index) => {
         setExpandedDescIndex(expandedDescIndex === index ? null : index);
     };
+
+    const handleShare = (video)=> {
+        const truncatedVideoDesc = 
+            video.description.length > 150 ?
+            video.description.subString(0,150) + "..." :
+            video.description ; 
+        const currentUrl = window.location.href ; 
+
+        if(navigator.share) {
+            navigator.share({
+                title : video.title,
+                description : truncatedVideoDesc,
+                url : currentUrl,
+                videoUrl : video.url
+            })
+            .then(()=> {
+                setAlert({ type: "success", message: "Video shared successfully!" });
+            })
+            .catch((error)=> {
+                setAlert({ type: "error", message: `Failed to share: ${error.message}` });
+            })
+        } else {
+            const shareText = `${video.title}: ${truncatedVideoDesc}\n\nCheck it out here: ${currentUrl}`
+            navigator.clipboard
+            .writeText(shareText)
+            .then(()=> {setAlert({ type: "success", message: "Shareable link copied to clipboard!" });})
+            .catch((error)=>{setAlert({ type: "error", message: `Failed to copy link: ${error.message}` });})
+        }
+    }
     return (
         <section className="py-6 px-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
@@ -91,7 +119,7 @@ export default function TempleVideos({ videos, templeId }) {
                                         </div>
                                         {/* Share */}
                                         <div
-                                            onClick={()=> {}}
+                                            onClick={()=> { handleShare(video) }}
                                             className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
                                         >
                                             <FaRegShareSquare className="text-lg" />
