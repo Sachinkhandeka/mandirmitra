@@ -1,21 +1,19 @@
-import { Spinner, Modal, Button } from "flowbite-react";
-import { FaMapMarkerAlt, FaRegCalendarAlt } from "react-icons/fa";
+import { Modal, Button } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Alert from "../Alert";
-import ShowAnuyayi from "./ShowAnuyayi";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
 import TempleNavigation from "./navigationItems/TempleNavigation";
+import TempleProfile from "./TempleProfile";
 
 export default function TempleDescription({ temple, setTemple }) {
     const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [loading, setLoading] = useState(false);
-    const [showAnuyayi, setShowAnuyayi] = useState(false);
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
     const isAnuyayi = temple.anuyayi.some((anuyayi) => anuyayi._id === currUser?._id);
@@ -115,81 +113,25 @@ export default function TempleDescription({ temple, setTemple }) {
                 className="text-black dark:text-white min-h-screen mb-8"
                 aria-labelledby="temple-details-title"
             >
-                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm" >
                     {alert && alert.message && (
-                        <Alert
-                            type={alert.type}
-                            message={alert.message}
-                            autoDismiss
-                            onClose={() => setAlert(null)}
-                        />
+                        <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
                     )}
                 </div>
-                <div className="flex flex-col md:flex-row items-start gap-6 p-6">
-                    <div className="flex-shrink-0 w-full md:w-1/3">
-                        <img
-                            src={temple.image}
-                            alt={temple.name}
-                            className="w-full h-auto max-h-[300px] object-fill rounded-lg"
-                        />
-                    </div>
-                    <div className="flex flex-col w-full md:w-2/3">
-                        <h2
-                            className="text-3xl font-extrabold text-gray-900 dark:text-white my-2"
-                            id="temple-details-title"
-                        >
-                            {temple.name}
-                        </h2>
-                        {temple.alternateName && (
-                            <h3 className="text-lg text-gray-600 dark:text-gray-300 my-2">
-                                {temple.alternateName}
-                            </h3>
-                        )}
-                        <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm my-2">
-                            <FaMapMarkerAlt className="mr-2 text-xl" />
-                            <span>{temple.location}</span>
-                            {temple.foundedYear && (
-                                <>
-                                    <span className="mx-2">•</span>
-                                    <FaRegCalendarAlt className="mr-2 text-xl" />
-                                    <span>Founded in {temple.foundedYear}</span>
-                                </>
-                            )}
-                        </div>
-                        <div
-                            className="flex items-center text-gray-600 dark:text-gray-400 text-sm my-2 cursor-pointer hover:underline"
-                            onClick={() => setShowAnuyayi(true)}
-                        >
-                            <span className="mx-2">•</span>
-                            <span className="font-semibold">{temple.anuyayi.length} Anuyayi</span>
-                        </div>
-                        <button
-                            className="px-6 py-2 my-3 md:max-w-40 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md flex items-center justify-center gap-2"
-                            onClick={() => (isAnuyayi ? setOpenConfirmModal(true) : handleAnuyayi())}
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <Spinner color="failure" size="sm" aria-label="Loading spinner" />
-                            ) : isAnuyayi ? (
-                                "Anutyaag"
-                            ) : (
-                                "Anu"
-                            )}
-                        </button>
-                    </div>
-                </div>
+                {/* Profile Section */}
+                <TempleProfile
+                    temple={temple}
+                    isAnuyayi={isAnuyayi}
+                    loading={loading}
+                    onFollowToggle={() =>
+                        isAnuyayi ? setOpenConfirmModal(true) : handleAnuyayi()
+                    }
+                />
 
                 {/* Navigation and Content */}
                 <TempleNavigation temple={temple} />
             </section>
 
-            {showAnuyayi && (
-                <ShowAnuyayi
-                    anuyayiList={temple.anuyayi}
-                    showAnuyayi={showAnuyayi}
-                    setShowAnuyayi={setShowAnuyayi}
-                />
-            )}
         </>
     );
 }

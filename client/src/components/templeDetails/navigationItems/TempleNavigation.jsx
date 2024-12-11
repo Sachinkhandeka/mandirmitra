@@ -1,21 +1,14 @@
-import React, { useState } from "react";
-// const TempleAbout = React.lazy(() => import("./TempleAbout"));
-// const TemplePosts = React.lazy(()=> import("./TemplePosts"));
-// const TempleFestivals = React.lazy(() => import("./TempleFestivals"));
-// const TempleVideos = React.lazy(() => import("./TempleVideos"));
-// const TemplePhotos = React.lazy(() => import("./TemplePhotos"));
-// const TempleGods = React.lazy(() => import("./TempleGods"));
-// const TemplePujaris = React.lazy(() => import("./TemplePujaris"));
-// const TempleManagement = React.lazy(() => import("./TempleManagment"));
+import React, { useState, Suspense } from "react";
 
-import TempleAbout from "./TempleAbout";
-import TemplePosts from "./TemplePosts";
-import TempleFestivals from "./TempleFestivals";
-import TempleVideos from "./TempleVideos";
-import TemplePhotos from "./TemplePhotos";
-import TempleGods from "./TempleGods";
-import TemplePujaris from "./TemplePujaris";
-import TempleManagement from "./TempleManagment";
+// Lazy loading components
+const TempleAbout = React.lazy(() => import("./TempleAbout"));
+const TemplePosts = React.lazy(() => import("./TemplePosts"));
+const TempleFestivals = React.lazy(() => import("./TempleFestivals"));
+const TempleVideos = React.lazy(() => import("./TempleVideos"));
+const TemplePhotos = React.lazy(() => import("./TemplePhotos"));
+const TempleGods = React.lazy(() => import("./TempleGods"));
+const TemplePujaris = React.lazy(() => import("./TemplePujaris"));
+const TempleManagement = React.lazy(() => import("./TempleManagment"));
 
 const navigationItems = [
     "Posts",
@@ -27,6 +20,13 @@ const navigationItems = [
     "Managment",
     "About",
 ];
+
+// Loading Spinner Component
+const LoadingSpinner = () => (
+    <div className="flex items-center justify-center py-10">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+    </div>
+);
 
 export default function TempleNavigation({ temple }) {
     const [activeNavItem, setActiveNavItem] = useState("Posts");
@@ -61,37 +61,38 @@ export default function TempleNavigation({ temple }) {
 
             {/* Render Active Component */}
             <div className="p-3">
-                {activeNavItem === "About" && (
-                    <TempleAbout
-                        description={temple.description}
-                        images={temple.historyImages}
-                    />
-                )}
-                {activeNavItem === "Posts" && <TemplePosts templeId={temple._id} />}
-                {activeNavItem === "Festivals" && (
-                    <TempleFestivals festivals={temple.festivals} templeId={temple._id} />
-                )}
-                {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} templeId={temple._id} />}
-                {activeNavItem === "Photos" && (
-                    <TemplePhotos
-                        photos={[
-                            ...temple.historyImages,
-                            ...temple.festivals.flatMap(
-                                (festival) => festival.festivalImages
-                            ),
-                        ]}
-                        templeId={temple._id}
-                    />
-                )}
-                {activeNavItem === "Gods" && (
-                    <TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} />
-                )}
-                {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} templeId={temple._id} />}
-                {activeNavItem === "Managment" && (
-                    <TempleManagement management={temple.management} templeId={temple._id} />
-                )}
+                <Suspense fallback={<LoadingSpinner />}>
+                    {activeNavItem === "About" && (
+                        <TempleAbout
+                            description={temple.description}
+                            images={temple.historyImages}
+                        />
+                    )}
+                    {activeNavItem === "Posts" && <TemplePosts templeId={temple._id} />}
+                    {activeNavItem === "Festivals" && (
+                        <TempleFestivals festivals={temple.festivals} templeId={temple._id} />
+                    )}
+                    {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} templeId={temple._id} />}
+                    {activeNavItem === "Photos" && (
+                        <TemplePhotos
+                            photos={[
+                                ...temple.historyImages,
+                                ...temple.festivals.flatMap(
+                                    (festival) => festival.festivalImages
+                                ),
+                            ]}
+                            templeId={temple._id}
+                        />
+                    )}
+                    {activeNavItem === "Gods" && (
+                        <TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} />
+                    )}
+                    {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} templeId={temple._id} />}
+                    {activeNavItem === "Managment" && (
+                        <TempleManagement management={temple.management} templeId={temple._id} />
+                    )}
+                </Suspense>
             </div>
         </div>
     );
-};
-
+}
