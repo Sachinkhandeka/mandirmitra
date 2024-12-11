@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsync");
 const { validateTempleSchema } = require("../middleware");
 const { verifyToken } = require("../utils/verifyUser");
 const { verifyAdmin } = require("../utils/verifyAdmin");
+const { verifyDevoteeToken } = require("../utils/verifyDevotee");
 
 //create temple
 router.post(
@@ -49,8 +50,14 @@ router.get(
 
 router.post(
     "/:templeId/anuyayi/:devoteeId",
-    verifyToken,
+    verifyDevoteeToken,
     wrapAsync(temple.anuyayi),
+);
+
+router.post(
+    "/:templeId/:entityType/:entityId/like",
+    verifyDevoteeToken,
+    wrapAsync(temple.likeDislikeController)
 );
 
 module.exports = router ;   

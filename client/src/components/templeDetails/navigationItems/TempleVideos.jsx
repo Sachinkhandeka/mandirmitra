@@ -1,9 +1,14 @@
 import { useState } from "react";
 import EmptyState from "../../EmptyState";
+import { FaRegShareSquare } from "react-icons/fa";
+import { FiMessageSquare } from "react-icons/fi";
+import Alert from "../../Alert";
+import EntityLikeButton from "../EntityLikeButton";
 
-export default function TempleVideos({ videos }) {
+export default function TempleVideos({ videos, templeId }) {
     const [expandedTitleIndex, setExpandedTitleIndex] = useState(null); 
     const [expandedDescIndex, setExpandedDescIndex] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
 
     const MAX_TITLE_LENGTH = 30;
     const MAX_DESC_LENGTH = 100; 
@@ -15,9 +20,13 @@ export default function TempleVideos({ videos }) {
     const toggleExpandDesc = (index) => {
         setExpandedDescIndex(expandedDescIndex === index ? null : index);
     };
-
     return (
         <section className="py-6 px-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
             {videos && videos.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {videos.map((video, index) => {
@@ -69,6 +78,25 @@ export default function TempleVideos({ videos }) {
                                             </button>
                                         )}
                                     </p>
+                                    <div className="flex justify-between items-center px-4 py-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                                        <div className="flex items-center gap-4">
+                                            {/* Likes */}
+                                            <EntityLikeButton 
+                                                templeId={templeId} 
+                                                entityType={"videos"} 
+                                                entityId={video._id} 
+                                                setAlert={setAlert}
+                                                initialLikes={video.likes} 
+                                            />
+                                        </div>
+                                        {/* Share */}
+                                        <div
+                                            onClick={()=> {}}
+                                            className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                        >
+                                            <FaRegShareSquare className="text-lg" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         );

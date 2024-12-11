@@ -114,8 +114,8 @@ export default function TemplePostsSection({ temple, setTemple, setAlert }) {
 
     return (
         <section className="p-1 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
-            <h3 className="text-xl font-bold mb-4">Add Post</h3>
-            <form onSubmit={handleSubmit}>
+            <h3 className="p-4 text-xl font-bold mb-4">Add Post</h3>
+            <form onSubmit={handleSubmit} className="md:p-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="title">Post Title</Label>

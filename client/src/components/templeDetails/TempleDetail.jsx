@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import TempleHeader from "./TempleHeader";
 import { useEffect, useState } from "react";
-import TempleDetailsSection from "./TempleDetailsSection";
+import TempleDescription from "./TempleDescription";
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitterX  } from "react-icons/bs";
 import { Footer } from "flowbite-react";
 
@@ -29,7 +29,7 @@ export default function TempleDetail() {
     return (
         <section className="min-h-screen text-black" >
             <TempleHeader />
-            { temple && <TempleDetailsSection temple={temple} setTemple={setTemple} /> }
+            { temple && <TempleDescription temple={temple} setTemple={setTemple} /> }
             <Footer container>
                 <Footer.Copyright href="/" by="mandirmitra™" year={2024} className="my-4" />
                 <div className="mt-4 flex gap-2 space-x-6 sm:mt-0 sm:justify-center">

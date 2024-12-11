@@ -255,6 +255,55 @@ module.exports.anuyayi = async (req , res)=> {
     });
 }
 
+module.exports.likeDislikeController = async (req, res) => {
+    const { templeId, entityId, entityType } = req.params;
+    const devoteeId = req.user._id;
+
+    if (!devoteeId) {
+        throw new ExpressError(401, "Unauthorized request");
+    }
+
+    const temple = await Temple.findById(templeId);
+    if (!temple) {
+        throw new ExpressError(404, "Temple not found");
+    }
+
+    // Validate user
+    const devotee = await Devotee.findById(devoteeId);
+    if (!devotee) {
+        throw new ExpressError(401, "Please signup/login to like");
+    }
+
+    // Validate entityType and find the entity
+    const validEntityTypes = ["godsAndGoddesses", "festivals", "videos", "pujaris", "management"];
+    if (!validEntityTypes.includes(entityType)) {
+        throw new ExpressError(400, `Invalid entity type: ${entityType}`);
+    }
+
+    // Locate the specific entity within the temple
+    const entity = temple[entityType].id(entityId);
+    if (!entity) {
+        throw new ExpressError(404, `${entityType} not found`);
+    }
+
+    // Check if the user already liked the entity
+    const isLiked = entity.likes.some((like) => like.toString() === devoteeId.toString());
+    if (isLiked) {
+        entity.likes.pull(devoteeId); // Remove like
+    } else {
+        entity.likes.push(devoteeId); // Add like
+    }
+
+    await temple.save();
+
+    res.status(200).json({
+        message: isLiked
+            ? `${entityType.slice(0, -1)} unliked successfully` // Remove plural for readability
+            : `${entityType.slice(0, -1)} liked successfully`,
+            entity
+    });
+}
+
 // Function to generate the start and end dates for each of the past seven months
 const generatePastSevenMonthsData = () => {
     const pastSevenMonthsData = [];

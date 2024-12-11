@@ -1,9 +1,14 @@
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import EmptyState from "../../EmptyState";
 import { useState } from "react";
+import { FaRegShareSquare } from "react-icons/fa";
+import { FiMessageSquare } from "react-icons/fi";
+import Alert from "../../Alert";
+import EntityLikeButton from "../EntityLikeButton";
 
-export default function TempleGods({ gods }) {
+export default function TempleGods({ gods, templeId }) {
     const [ showMore, setShowMore ] = useState({});
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
 
     const toggleShowMore = (index)=> {
         setShowMore((prev)=> ({
@@ -13,10 +18,20 @@ export default function TempleGods({ gods }) {
     }
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
             {gods && gods.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {gods.map((god, index) => (
-                        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:border-4 hover:border-t-0 hover:border-l-0 hover:border-black hover:dark:border-yellow-300 overflow-hidden">
+                        <div 
+                            key={index}
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-transparent 
+                            hover:border-2 hover:border-t-0 hover:border-l-0 hover:border-black hover:dark:border-yellow-300 
+                            transition-all duration-500 ease-in-out"
+                        >
                             <img
                                 src={god.image}
                                 alt={god.name}
@@ -37,6 +52,35 @@ export default function TempleGods({ gods }) {
                                 <p className="text-sm text-gray-600 dark:text-gray-300">
                                     { showMore[index] ? god.description : `${god.description.slice(0,100)}...`}
                                 </p>
+                                <div className="flex justify-between items-center px-4 py-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                                    <div className="flex items-center gap-4">
+                                        {/* Likes */}
+                                        <EntityLikeButton 
+                                            entityType={"godsAndGoddesses"} 
+                                            entityId={god._id} 
+                                            setAlert={setAlert}
+                                            templeId={templeId} 
+                                        />
+
+                                        {/* Comments */}
+                                        <button
+                                            className="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+                                            onClick={() => {}}
+                                        >
+                                            <div className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600" >
+                                                <FiMessageSquare className="text-lg rounded-full" />
+                                                <span className="text-sm">{12}</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    {/* Share */}
+                                    <div
+                                        onClick={()=> {}}
+                                        className="flex items-center justify-center cursor-pointer gap-1 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                    >
+                                        <FaRegShareSquare className="text-lg" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}

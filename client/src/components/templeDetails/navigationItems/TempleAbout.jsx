@@ -1,6 +1,6 @@
 import EmptyState from "../../EmptyState";
 
-export default function TempleDescription({ description, images }) {
+export default function TempleAbout({ description, images }) {
     return (
         <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
             {description ? (

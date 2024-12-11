@@ -1,4 +1,4 @@
-import { Avatar, Spinner, Modal, Button } from "flowbite-react";
+import { Spinner, Modal, Button } from "flowbite-react";
 import { FaMapMarkerAlt, FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useState } from "react";
@@ -10,7 +10,7 @@ import ShowAnuyayi from "./ShowAnuyayi";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
 import TempleNavigation from "./navigationItems/TempleNavigation";
 
-export default function TempleDetailsSection({ temple, setTemple }) {
+export default function TempleDescription({ temple, setTemple }) {
     const navigate = useNavigate();
     const { currUser } = useSelector((state) => state.user);
     const [alert, setAlert] = useState({ type: "", message: "" });

@@ -1,4 +1,3 @@
-const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const  templeSchema = new mongoose.Schema({
@@ -29,7 +28,20 @@ const  templeSchema = new mongoose.Schema({
             image: {
                 type : String,
                 required : true,
-            }
+            },
+            likes: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Devotee',
+                },
+            ],
+            comments: [
+                {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Devotee' },
+                    comment: { type: String, required: true, maxlength: 500 },
+                    createdAt: { type: Date, default: Date.now },
+                },
+            ],
         }
     ],
     description: {
@@ -44,12 +56,38 @@ const  templeSchema = new mongoose.Schema({
             festivalName : { type : String },
             festivalImportance : { type : String },
             festivalImages : [{ type : String }],
+            likes: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Devotee',
+                },
+            ],
+            comments: [
+                {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Devotee' },
+                    comment: { type: String, required: true, maxlength: 500 },
+                    createdAt: { type: Date, default: Date.now },
+                },
+            ],
         }
     ],
     videos : [{
         title : { type : String, required : true },
         description : { type : String, required : true },
         url : { type : String, required : true },
+        likes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Devotee',
+            },
+        ],
+        comments: [
+            {
+                user: { type: mongoose.Schema.Types.ObjectId, ref: 'Devotee' },
+                comment: { type: String, required: true, maxlength: 500 },
+                createdAt: { type: Date, default: Date.now },
+            },
+        ],
     }],
     pujaris : [
         {
@@ -62,6 +100,19 @@ const  templeSchema = new mongoose.Schema({
                 type: String, 
                 match: [/^\d{10}$/, 'Phone number is invalid'],
             },
+            likes: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Devotee',
+                },
+            ],
+            comments: [
+                {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Devotee' },
+                    comment: { type: String, required: true, maxlength: 500 },
+                    createdAt: { type: Date, default: Date.now },
+                },
+            ],
         }
     ],
     management : [
@@ -69,6 +120,19 @@ const  templeSchema = new mongoose.Schema({
             name : { type : String },
             role : { type : String },
             profile : { type : String },
+            likes: [
+                {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Devotee',
+                },
+            ],
+            comments: [
+                {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: 'Devotee' },
+                    comment: { type: String, required: true, maxlength: 500 },
+                    createdAt: { type: Date, default: Date.now },
+                },
+            ],
         }
     ],
     anuyayi: [{

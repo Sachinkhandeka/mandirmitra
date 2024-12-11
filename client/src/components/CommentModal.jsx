@@ -81,7 +81,9 @@ export default function CommentModal({ post, isOpen, onClose }) {
                                         {comment.user?.displayName || "Anonymous"}
                                     </span>
                                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {new Date(comment.createdAt).toLocaleString()}
+                                        {new Date(comment.createdAt).toLocaleDateString("en-IN",{ day : "numeric", month : "short", year : "numeric"})}
+                                        <span className="mx-2">•</span>
+                                        {new Date(comment.createdAt).toLocaleTimeString("en-IN", { hour : "numeric", minute : "2-digit" })}
                                     </span>
                                 </div>
                                 <p className="text-sm">

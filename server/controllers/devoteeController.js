@@ -74,56 +74,43 @@ module.exports.devoteeCreateController = async (req, res) => {
     // Extract fields from devotee object
     const { displayName, email, password, phoneNumber, photoURL } = devotee;
 
-    try {
-        // Validate that all required fields are provided
-        if (!displayName || !email || !password || !phoneNumber) {
-            throw new ExpressError(400, "All required fields (displayName, email, password, phoneNumber) must be provided.");
-        }
-
-        // Check if the email or phone number exists in User, SuperAdmin, or Devotee collections
-        let existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
-        let existingAdmin = await SuperAdmin.findOne({ $or: [{ email }, { phoneNumber }] });
-        let existingDevotee = await Devotee.findOne({ $or: [{ email }, { phoneNumber }] });
-
-        if (existingUser || existingAdmin || existingDevotee) {
-            throw new ExpressError(400, "A user with this email or phone number already exists.");
-        }
-
-        // Create new Devotee
-        let newDevotee = new Devotee({
-            displayName,
-            email,
-            phoneNumber,
-            password,
-            photoURL,
-        });
-
-        // Save Devotee
-        newDevotee = await newDevotee.save();
-
-        const registeredDevotee = await Devotee.findById(newDevotee._id).select("-password -refreshToken");
-
-        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(newDevotee._id);
-        const options = {
-            httpOnly : true,
-            secure : true,
-        }
-        return res.status(200)
-        .cookie("access_token", accessToken, options)
-        .cookie("refresh_Token", refreshToken, options)
-        .json({ message : "User registered successfully", currUser : registeredDevotee });
-
-    } catch (error) {
-        if (error.code === 11000) {
-            // Handle duplicate key error
-            return res.status(400).json({ message: "Email or phone number already taken. Please try with a new one." });
-        } else if (error instanceof ExpressError) {
-            // Custom error handling
-            return res.status(error.statusCode).json({ message: error.message });
-        } else {
-            return res.status(500).json({ message: "Internal Server Error" });
-        }
+    // Validate that all required fields are provided
+    if (!displayName || !email || !password || !phoneNumber) {
+        throw new ExpressError(400, "All required fields (displayName, email, password, phoneNumber) must be provided.");
     }
+
+    // Check if the email or phone number exists in User, SuperAdmin, or Devotee collections
+    let existingUser = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+    let existingAdmin = await SuperAdmin.findOne({ $or: [{ email }, { phoneNumber }] });
+    let existingDevotee = await Devotee.findOne({ $or: [{ email }, { phoneNumber }] });
+
+    if (existingUser || existingAdmin || existingDevotee) {
+        throw new ExpressError(400, "A user with this email or phone number already exists.");
+    }
+
+    // Create new Devotee
+    let newDevotee = new Devotee({
+        displayName,
+        email,
+        phoneNumber,
+        password,
+        photoURL,
+    });
+
+    // Save Devotee
+    newDevotee = await newDevotee.save();
+
+    const registeredDevotee = await Devotee.findById(newDevotee._id).select("-password -refreshToken");
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(newDevotee._id);
+    const options = {
+        httpOnly : true,
+        secure : true,
+    }
+    return res.status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_Token", refreshToken, options)
+    .json({ message : "User registered successfully", currUser : registeredDevotee });
 };
 
 // Controller for Editing Devotee Profile

@@ -17,7 +17,7 @@ import brand from "../assets/brand.jpg";
 export default function Devotees() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
+    const [alert, setAlert] = useState({ type : "", message : "" });
     const [loading, setLoading] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
@@ -41,14 +41,14 @@ export default function Devotees() {
         setLoading(true);
 
         if(!password) { 
-            setError("Please enter password");
+            setAlert({ type : "error", message : "Please enter password" });
             return setLoading(false);
         }
 
         const regex = /[^0-9]/g;
         const strippedPhoneNumber = phoneNumber.replace(regex, '');
         if (strippedPhoneNumber.length < 10 || regex.test(strippedPhoneNumber)) {
-            setError('Invalid Phone Number');
+            setAlert({ type : "error", message : "Invalid Phone Number" });
             setLoading(false);
             return;
         }
@@ -58,7 +58,7 @@ export default function Devotees() {
             setConfirmationResult(response);
             setShowComponent('otpInput');
         } catch (error) {
-            setError("Error during OTP setup: " + error.message);
+            setAlert({ type : "error", message : error.message });
             setLoading(false);
         }
     };
@@ -70,7 +70,7 @@ export default function Devotees() {
                 const phoneNumber = result.user.phoneNumber;
                 await logInWithPhoneNumber(phoneNumber);
             } catch (error) {
-                setError("Error during OTP verification: " + error.message);
+                setAlert({ type : "error", message : error.message });
             }
         }
     };
@@ -78,7 +78,7 @@ export default function Devotees() {
     const logInWithPhoneNumber = async (phoneNumber) => {
 
         if(!password) { 
-            setError("Please enter password");
+            setAlert({ type : "info", message : "Please enter password" });
             return setLoading(false);
         }
         try {
@@ -91,7 +91,7 @@ export default function Devotees() {
 
             if (!response.ok) {
                 dispatch(signinFailure(data.message));
-                setError("Login failed: " + data.message);
+                setAlert({ type : "error", message : data.message });
                 setLoading(false);
                 return;
             }
@@ -104,7 +104,7 @@ export default function Devotees() {
                 navigate("/");
             }
         } catch (error) {
-            setError("Login API call failed: " + error.message);
+            setAlert({ type : "error", message :error.message });
         }
     };
     return (
@@ -147,7 +147,9 @@ export default function Devotees() {
         </Helmet>
         <section className="phone-otp-section w-full bg-white h-screen flex flex-col md:flex-row items-center md:bg-gradient-to-tr md:from-blue-400 md:via-sky-600 md:to-indigo-800">
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                {error && ( <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} /> )}
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
             </div>
             <div className="flex flex-col items-center justify-center gap-2 p-4 md:hidden">
                 <img src={brand} alt="brand_image" className='h-16 w-16 border-2 rounded-md' />
@@ -165,7 +167,9 @@ export default function Devotees() {
                 <div className="flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 md:pt-1 md:p-10" >
                     <h1 className='text-black font-bold text-2xl font-serif md:hidden px-4'>Log in or create an account</h1>
                     <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
-                        {error && <Alert type="error" message={error} autoDismiss duration={6000} onClose={() => setError(null)} />}
+                        {alert && alert.message && (
+                            <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                        )}
                     </div>
                     <h1 className='text-black font-bold text-4xl font-serif hidden md:block pt-4'>Login / Signup</h1>
                     <h2 className='text-gray-500 md:text-black text-sm font-serif md:font-bold px-8 md:px-1'>Please enter your phone number to continue</h2>

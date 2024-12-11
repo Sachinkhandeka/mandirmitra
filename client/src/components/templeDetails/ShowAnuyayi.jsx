@@ -1,4 +1,4 @@
-import { Modal } from "flowbite-react";
+import { Avatar, Modal } from "flowbite-react";
 
 export default function ShowAnuyayi({ anuyayiList, showAnuyayi, setShowAnuyayi }) {
     return (
@@ -15,10 +15,11 @@ export default function ShowAnuyayi({ anuyayiList, showAnuyayi, setShowAnuyayi }
                                 className="flex items-center gap-4 p-3 rounded-md bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-150 ease-in-out shadow-sm"
                             >
                                 {/* Display profile picture */}
-                                <img
-                                    src={anuyayi.photoURL || "https://via.placeholder.com/40"}
+                                <Avatar
+                                    img={anuyayi.photoURL}
+                                    placeholderInitials={anuyayi.displayName[0]}
                                     alt={`${anuyayi.displayName}'s profile`}
-                                    className="w-12 h-12 rounded-full object-cover shadow-md"
+                                    rounded
                                 />
 
                                 {/* Display devotee's name */}
@@ -30,7 +31,7 @@ export default function ShowAnuyayi({ anuyayiList, showAnuyayi, setShowAnuyayi }
                     </div>
                 ) : (
                     <p className="text-center text-gray-600 dark:text-gray-400 py-4">
-                        This temple currently has no anuyayi.
+                        No anuyayi yet. Be the first to anuyayi this temple!
                     </p>
                 )}
             </Modal.Body>

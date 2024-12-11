@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-const TempleDescription = React.lazy(() => import("./TempleDescription"));
-const TemplePosts = React.lazy(()=> import("./TemplePosts"));
-const TempleFestivals = React.lazy(() => import("./TempleFestivals"));
-const TempleVideos = React.lazy(() => import("./TempleVideos"));
-const TemplePhotos = React.lazy(() => import("./TemplePhotos"));
-const TempleGods = React.lazy(() => import("./TempleGods"));
-const TemplePujaris = React.lazy(() => import("./TemplePujaris"));
-const TempleManagement = React.lazy(() => import("./TempleManagment"));
+// const TempleAbout = React.lazy(() => import("./TempleAbout"));
+// const TemplePosts = React.lazy(()=> import("./TemplePosts"));
+// const TempleFestivals = React.lazy(() => import("./TempleFestivals"));
+// const TempleVideos = React.lazy(() => import("./TempleVideos"));
+// const TemplePhotos = React.lazy(() => import("./TemplePhotos"));
+// const TempleGods = React.lazy(() => import("./TempleGods"));
+// const TemplePujaris = React.lazy(() => import("./TemplePujaris"));
+// const TempleManagement = React.lazy(() => import("./TempleManagment"));
+
+import TempleAbout from "./TempleAbout";
+import TemplePosts from "./TemplePosts";
+import TempleFestivals from "./TempleFestivals";
+import TempleVideos from "./TempleVideos";
+import TemplePhotos from "./TemplePhotos";
+import TempleGods from "./TempleGods";
+import TemplePujaris from "./TemplePujaris";
+import TempleManagement from "./TempleManagment";
 
 const navigationItems = [
     "Posts",
@@ -53,16 +62,16 @@ export default function TempleNavigation({ temple }) {
             {/* Render Active Component */}
             <div className="p-3">
                 {activeNavItem === "About" && (
-                    <TempleDescription
+                    <TempleAbout
                         description={temple.description}
                         images={temple.historyImages}
                     />
                 )}
                 {activeNavItem === "Posts" && <TemplePosts templeId={temple._id} />}
                 {activeNavItem === "Festivals" && (
-                    <TempleFestivals festivals={temple.festivals} />
+                    <TempleFestivals festivals={temple.festivals} templeId={temple._id} />
                 )}
-                {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} />}
+                {activeNavItem === "Videos" && <TempleVideos videos={temple.videos} templeId={temple._id} />}
                 {activeNavItem === "Photos" && (
                     <TemplePhotos
                         photos={[
@@ -71,14 +80,15 @@ export default function TempleNavigation({ temple }) {
                                 (festival) => festival.festivalImages
                             ),
                         ]}
+                        templeId={temple._id}
                     />
                 )}
                 {activeNavItem === "Gods" && (
-                    <TempleGods gods={temple.godsAndGoddesses} />
+                    <TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} />
                 )}
-                {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} />}
+                {activeNavItem === "Pujaris" && <TemplePujaris pujaris={temple.pujaris} templeId={temple._id} />}
                 {activeNavItem === "Managment" && (
-                    <TempleManagement management={temple.management} />
+                    <TempleManagement management={temple.management} templeId={temple._id} />
                 )}
             </div>
         </div>

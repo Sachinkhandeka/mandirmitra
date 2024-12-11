@@ -1,45 +1,104 @@
 import { Carousel } from "flowbite-react";
 import EmptyState from "../../EmptyState";
+import { FaRegShareSquare } from "react-icons/fa";
+import EntityLikeButton from "../EntityLikeButton";
+import Alert from "../../Alert";
+import { useState } from "react";
 
-export default function TempleFestivals({ festivals }) {
+export default function TempleFestivals({ festivals, templeId }) {
+    const [alert, setAlert] = useState({ type: "", message: "" });
+    const [expandedIndex, setExpandedIndex] = useState(null); // Track expanded festival description
+
+    const toggleExpanded = (index) => {
+        setExpandedIndex(expandedIndex === index ? null : index);
+    };
+
     return (
-        <div className="w-full p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div className="w-full p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+            {/* Alert */}
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
+
+            {/* Festivals Section */}
             {festivals && festivals.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {festivals.map((fest, indx) => (
-                        <div key={indx} className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden">
-                            <div className="p-6">
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                                    {fest.festivalName}
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                        <div
+                            key={indx}
+                            className="flex flex-col bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
+                        >
+                            {/* Festival Header */}
+                            <h3 className="px-6 py-3 text-lg font-semibold">
+                                {fest.festivalName}
+                            </h3>
+
+                            {/* Image Carousel */}
+                            <div className="relative h-56">
+                                {fest.festivalImages && fest.festivalImages.length > 0 ? (
+                                    <Carousel slide={false} className="rounded-lg overflow-hidden">
+                                        {fest.festivalImages.map((url, indx) => (
+                                            <img
+                                                src={url}
+                                                alt={`temple_festival_image_${indx}`}
+                                                key={indx}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ))}
+                                    </Carousel>
+                                ) : (
+                                    <div className="h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500">
+                                        No Images Available
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Festival Description */}
+                            <div className="px-6 py-4">
+                                <p
+                                    className={`text-sm text-gray-700 dark:text-gray-300 ${
+                                        expandedIndex === indx ? "" : "line-clamp-3"
+                                    }`}
+                                >
                                     {fest.festivalImportance}
                                 </p>
-                                <div className="relative h-64 sm:h-72 lg:h-80 xl:h-96 my-4">
-                                    {fest.festivalImages && fest.festivalImages.length > 0 && (
-                                        <>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                                Festival Images
-                                            </h3>
-                                            <Carousel slide={false} className="rounded-lg overflow-hidden">
-                                                {fest.festivalImages.map((url, indx) => (
-                                                    <img
-                                                        src={url}
-                                                        alt={`temple_festival_image_${indx}`}
-                                                        key={indx}
-                                                        className="w-full h-60 object-fill rounded-lg"
-                                                    />
-                                                ))}
-                                            </Carousel>
-                                        </>
-                                    )}
-                                </div>
+                                {fest.festivalImportance.length > 150 && (
+                                    <button
+                                        onClick={() => toggleExpanded(indx)}
+                                        className="text-indigo-500 hover:text-indigo-700 text-sm mt-2"
+                                    >
+                                        {expandedIndex === indx ? "Show Less" : "Show More"}
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex justify-between items-center px-4 py-3 bg-gray-100 dark:bg-gray-700">
+                                {/* Like Button */}
+                                <EntityLikeButton
+                                    templeId={templeId}
+                                    entityType={"festivals"}
+                                    entityId={fest._id}
+                                    setAlert={setAlert}
+                                    initialLikes={fest.likes}
+                                />
+
+                                {/* Share Button */}
+                                <button
+                                    onClick={() => {}}
+                                    className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 hover:text-indigo-500"
+                                >
+                                    <FaRegShareSquare className="text-xl" />
+                                    <span className="text-sm">Share</span>
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <EmptyState message={'Festivals not available yet for this temple!'} />
+                <EmptyState message={"Festivals not available yet for this temple!"} />
             )}
         </div>
     );

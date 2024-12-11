@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import EmptyState from "../../EmptyState";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
 
 export default function TemplePhotos({ photos }) {
-    const [likedPhotos, setLikedPhotos] = useState([]);
-    const [selectedPhoto, setSelectedPhoto] = useState(null);
+    const [likedPhotos, setLikedPhotos] = useState([]); // Tracks liked photos (by index)
+    const [selectedPhoto, setSelectedPhoto] = useState(null); // Tracks currently selected photo for the modal
 
-    // Toggle like for a photo
+    // Toggle like-dislike functionality
     const toggleLike = (index) => {
         setLikedPhotos((prev) =>
             prev.includes(index)
-                ? prev.filter((i) => i !== index) // Unlike
-                : [...prev, index] // Like
+                ? prev.filter((i) => i !== index) // If already liked, remove it (dislike)
+                : [...prev, index] // Otherwise, add it (like)
         );
     };
 
@@ -36,25 +36,39 @@ export default function TemplePhotos({ photos }) {
                                 onClick={() => setSelectedPhoto(photo)} // Open Modal
                             />
 
-                            {/* Heart Icon */}
-                            <div
-                                className={`absolute top-2 right-2 text-2xl cursor-pointer 
-                                    ${likedPhotos.includes(index) ? "text-red-700" : "text-gray-400"}`}
+                            {/* Like-Dislike Button */}
+                            <button
+                                className="absolute top-2 right-2 flex items-center gap-1"
                                 onClick={(e) => {
                                     e.stopPropagation(); // Prevent modal opening
-                                    toggleLike(index);
+                                    toggleLike(index); // Toggle like/dislike for the photo
                                 }}
                             >
-                               {likedPhotos.includes(index) ? (
-                                    <FaHeart
-                                        className="text-orange-500 hover:text-orange-600 transition-transform duration-200 transform hover:scale-110"
-                                    />
-                                ) : (
-                                    <FaRegHeart
-                                        className="text-gray-300 hover:text-orange-500 transition-transform duration-200 transform hover:scale-110"
-                                    />
-                                )}
-                            </div>
+                                <span
+                                    className={`p-2 rounded-full ${
+                                        likedPhotos.includes(index)
+                                            ? "bg-red-100 dark:bg-red-900 text-red-500 dark:text-red-400"
+                                            : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
+                                    } transition-all duration-300`}
+                                >
+                                    {likedPhotos.includes(index) ? (
+                                        <IoMdHeart className="text-lg transition-transform duration-300 ease-out transform scale-125" />
+                                    ) : (
+                                        <IoMdHeartEmpty className="text-lg transition-transform duration-300 ease-in-out" />
+                                    )}
+                                </span>
+
+                                {/* Like Count */}
+                                <span
+                                    className={`text-sm transition-transform duration-300 ${
+                                        likedPhotos.includes(index)
+                                            ? "text-red-700 dark:text-red-900 font-semibold"
+                                            : ""
+                                    }`}
+                                >
+                                    {likedPhotos.includes(index) ? "Liked" : "Like"}
+                                </span>
+                            </button>
                         </div>
                     ))}
                 </div>

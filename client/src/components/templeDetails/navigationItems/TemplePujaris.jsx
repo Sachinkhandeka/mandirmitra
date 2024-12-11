@@ -1,8 +1,17 @@
+import { useState } from "react";
 import EmptyState from "../../EmptyState";
+import Alert from "../../Alert";
+import EntityLikeButton from "../EntityLikeButton";
 
-export default function TemplePujaris({ pujaris }) {
+export default function TemplePujaris({ pujaris, templeId }) {
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
+                {alert && alert.message && (
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                )}
+            </div>
             {pujaris && pujaris.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {pujaris.map((pujari, index) => (
@@ -25,6 +34,18 @@ export default function TemplePujaris({ pujaris }) {
                                 <p className="text-sm text-gray-600 dark:text-gray-300">
                                     Contact: {pujari.contactInfo}
                                 </p>
+                            </div>
+                            <div className="flex justify-between items-center px-4 py-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                                <div className="flex items-center gap-4">
+                                    {/* Likes */}
+                                    <EntityLikeButton 
+                                        templeId={templeId} 
+                                        entityType={"pujaris"} 
+                                        entityId={pujari._id} 
+                                        setAlert={setAlert}
+                                        initialLikes={pujari.likes} 
+                                    />
+                                </div>           
                             </div>
                         </div>
                     ))}

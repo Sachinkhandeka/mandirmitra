@@ -116,17 +116,17 @@ export default function App() {
                   } ><PrivateRoute /></Suspense>
                 }
             >
-            <Route 
-                path="/dashboard"
-                element={
-                  <Suspense fallback={
-                    <div className="flex justify-center items-center min-h-screen gap-4" >
-                      <Spinner size={"xl"} />
-                      <div>Loading ...</div>
-                    </div>
-                  } ><Dashboard /></Suspense>
-                }
-            />
+              <Route 
+                  path="/dashboard"
+                  element={
+                    <Suspense fallback={
+                      <div className="flex justify-center items-center min-h-screen gap-4" >
+                        <Spinner size={"xl"} />
+                        <div>Loading ...</div>
+                      </div>
+                    } ><Dashboard /></Suspense>
+                  }
+              />
             </Route>
             {/* Fallback Route */}
             <Route path="*" element={<Navigate to="/" />} />
