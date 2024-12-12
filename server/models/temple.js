@@ -14,7 +14,7 @@ const  templeSchema = new mongoose.Schema({
     },
     image : {
         type : String,
-        default : 'https://png.pngtree.com/png-vector/20230207/ourmid/pngtree-om-logo-design-with-flower-mandala-png-image_6590267.png'
+        default : 'https://firebasestorage.googleapis.com/v0/b/mandirmitra-bd32e.appspot.com/o/DALL%C2%B7E%202024-12-12%2012.53.27%20-%20A%20classic%20and%20elegant%20placeholder%20image%20for%20Hindu%20temples%2C%20featuring%20traditional%20elements%20like%20a%20temple%20silhouette%20with%20domes%20and%20spires%2C%20intricate%20fl.webp?alt=media&token=94f77320-25ee-4149-8913-6daf5c03930f'
     },
     godsAndGoddesses: [
         {

@@ -40,7 +40,7 @@ export default function CommentModal({ post, isOpen, onClose }) {
 
             if (data) {
                 // Update post comments with the latest comments from the server
-                post.comments = data.post.comments;
+                post.comments = data.post.comments || [];
                 setNewComment(""); // Clear the input field
                 setAlert({ type: "success", message: "Comment added successfully!" });
             }
