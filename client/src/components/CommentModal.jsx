@@ -72,7 +72,7 @@ export default function CommentModal({ post, isOpen, onClose }) {
                                 <div className="flex items-center gap-2 mb-1">
                                     <Avatar
                                         rounded
-                                        placeholderInitials={currUser?.displayName[0] || ""}
+                                        placeholderInitials={comment.user?.displayName[0] || ""}
                                         img={comment.user?.photoURL}
                                         alt={comment.user?.displayName || "Anonymous"}
                                         size="sm"
