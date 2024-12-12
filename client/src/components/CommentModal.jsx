@@ -77,14 +77,16 @@ export default function CommentModal({ post, isOpen, onClose }) {
                                         alt={comment.user?.displayName || "Anonymous"}
                                         size="sm"
                                     />
-                                    <span className="text-xs font-semibold italic text-gray-800 dark:text-white">
-                                        {comment.user?.displayName || "Anonymous"}
-                                    </span>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {new Date(comment.createdAt).toLocaleDateString("en-IN",{ day : "numeric", month : "short", year : "numeric"})}
-                                        <span className="mx-2">•</span>
-                                        {new Date(comment.createdAt).toLocaleTimeString("en-IN", { hour : "numeric", minute : "2-digit" })}
-                                    </span>
+                                    <div className="flex flex-col" >
+                                        <span className="text-sm font-semibold italic text-gray-800 dark:text-white">
+                                            {comment.user?.displayName || "Anonymous"}
+                                        </span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {new Date(comment.createdAt).toLocaleDateString("en-IN",{ day : "numeric", month : "short", year : "numeric"})}
+                                            <span className="ml-2">•</span>
+                                            {new Date(comment.createdAt).toLocaleTimeString("en-IN", { hour : "numeric", minute : "2-digit" })}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p className="text-sm">
                                     {comment.comment}
