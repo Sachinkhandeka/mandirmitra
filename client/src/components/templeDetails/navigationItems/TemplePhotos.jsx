@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import EmptyState from "../../EmptyState";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
 
 export default function TemplePhotos({ photos }) {
     const [likedPhotos, setLikedPhotos] = useState([]); // Tracks liked photos (by index)
-    const [selectedPhoto, setSelectedPhoto] = useState(null); // Tracks currently selected photo for the modal
+    const [selectedPhoto, setSelectedPhoto] = useState(null); 
+    const [gridSpans, setGridSpans] = useState([]); // Tracks grid spans for each photo
+
+    useEffect(() => {
+        const spans = photos.map(() => Math.floor(Math.random() * 2) + 2); // Random span between 2 and 3
+        setGridSpans(spans);
+    }, [photos]);
 
     // Toggle like-dislike functionality
     const toggleLike = (index) => {
@@ -25,7 +31,7 @@ export default function TemplePhotos({ photos }) {
                             key={index}
                             className="relative overflow-hidden group"
                             style={{
-                                gridRowEnd: `span ${Math.floor(Math.random() * 2) + 2}`, // Dynamic grid row span
+                                gridRowEnd: `span ${gridSpans}`, // Dynamic grid row span
                             }}
                         >
                             {/* Image */}

@@ -100,7 +100,7 @@ export default function SmartSearch({ setSmartSearchBar }) {
 
                 {/* Suggestions list */}
                 {suggestions.length > 0 && (
-                    <ul className="bg-white dark:bg-gray-700 mt-2 shadow-md rounded-md p-2">
+                    <ul className="bg-white dark:bg-gray-700 mt-2 shadow-md rounded-md p-2 max-h-screen overflow-y-scroll scrollbar-hidden">
                         <SuggestionCard suggestions={suggestions} userInput={userInput} setSmartSearchBar={setSmartSearchBar} cache={cache} />
                     </ul>
                 )}
