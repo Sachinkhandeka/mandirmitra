@@ -8,6 +8,7 @@ const Expense = require("../models/expenseSchema");
 const InventoryItem = require("../models/inventorySchema");
 const ExpressError = require("../utils/ExpressError");
 const Devotee = require("../models/devotee");
+const transporter = require("../utils/nodeMailer");
 
 //create temple route handler
 module.exports.addController = async (req, res) => {
@@ -247,6 +248,33 @@ module.exports.anuyayi = async (req , res)=> {
     }else {
         temple.anuyayi.push(devoteeId);
         await temple.save();
+
+        const mailOptions = {
+            from : process.env.SMTP_SENDER_EMAIL,
+            to : devotee.email,
+            subject : "",
+            html : 
+            `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h2 style="color: #007bff;">You are now following ${temple.name}!</h2>
+                    <p>Dear ${devotee.displayName},</p>
+                    <p>
+                        Thank you for following <strong>${temple.name}</strong> on MandirMitra. 
+                        Stay connected with all the latest posts, events, and updates from the temple.
+                    </p>
+                    <p>
+                        Explore the temple's history, photos, and stories to deepen your connection with the divine.
+                    </p>
+                    <p>
+                        If you have any questions, feel free to contact us at 
+                        <a href='${process.env.SMTP_SENDER_EMAIL}'>support@mandirmitra.com</a>.
+                    </p>
+                    <p style="margin-top: 20px;">Warm regards,</p>
+                    <p><strong>MandirMitra Team</strong></p>
+                </div>
+            `
+        }
+        await transporter.sendMail(mailOptions);
     }
     await temple.populate("anuyayi", "displayName photoURL");
     return res.status(200).json({

@@ -63,7 +63,7 @@ export default function TempleFestivals({ festivals, templeId }) {
                         type={alert.type}
                         message={alert.message}
                         autoDismiss
-                        onClose={() => setAlert(null)}
+                        onClose={() => setAlert({ type: "", message: "" })}
                     />
                 )}
             </div>

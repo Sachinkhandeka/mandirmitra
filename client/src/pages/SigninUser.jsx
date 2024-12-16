@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import { MdOutlineMobileFriendly, MdOutlineAdminPanelSettings } from "react-icons/md";
 import { Button, Label, TextInput, Spinner } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { signinStart, signinSuccess, signinFailure, resetError } from "../redux/user/userSlice";
@@ -57,7 +58,7 @@ export default function SigninUser({ setShowComponent }) {
     };
 
     return (
-        <section className="flex flex-col gap-4 w-full md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 pt-1 p-10">
+        <section className="flex flex-col gap-4 w-full md:py-6 bg-white md:min-h-40 p-10 md:p-0">
             <Helmet>
                 <title>User Sign In - mandirmitra</title>
                 <meta name="description" content="Sign in as a user created by the Super Admin to access your specific functionalities and manage your activities through mandirmitra." />
@@ -109,21 +110,31 @@ export default function SigninUser({ setShowComponent }) {
                         {loading ? <Spinner /> : 'Login'}
                     </Button>
                 </form>
+                <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-2'>
+                    <Link to="/forgot-password">Forgot password?</Link>
+                </div>
             </div>
             <div className='flex items-center justify-center gap-2 mt-2 border-t border-t-gray-500 relative' >
                 <span className=' absolute top-[-15px] px-4 bg-white text-black' >or</span>
             </div>
-            <div className='flex items-center gap-2 text-sm text-black'>
-                Login with OTP ?
-                <span className='text-blue-500 hover:underline'>
-                    <Link to="#" onClick={() => setShowComponent('phoneInput')}>Click here</Link>
-                </span>
-            </div>
-            <div className='flex items-center gap-2 text-sm text-black'>
-                Login with admin email?
-                <span className='text-blue-500 hover:underline'>
-                    <Link to="#" onClick={() => setShowComponent('signinSuperAdmin')}>Click here</Link>
-                </span>
+            <div className="flex flex-col md:flex-row gap-4 px-2 text-xs">
+                {/* Login with OTP Button */}
+                <button 
+                    onClick={() => setShowComponent('phoneInput')} 
+                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-indigo-500 text-white rounded-md shadow-lg hover:bg-indigo-600 transition-colors duration-300 focus:outline-none"
+                >
+                    <MdOutlineMobileFriendly size={22} />
+                    <span>Login with OTP</span>
+                </button>
+
+                {/* Login with Admin Email Button */}
+                <button 
+                    onClick={() => setShowComponent('signinSuperAdmin')} 
+                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-lg hover:bg-green-600 transition-colors duration-300 focus:outline-none"
+                >
+                    <MdOutlineAdminPanelSettings size={26} />
+                    <span>Login with admin email</span>
+                </button>
             </div>
         </section>
     );

@@ -44,7 +44,7 @@ export default function TempleGods({ gods, templeId }) {
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
-                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />
+                    <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert({ type: "", message: "" })} />
                 )}
             </div>
             {gods && gods.length > 0 ? (

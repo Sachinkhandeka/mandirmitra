@@ -14,6 +14,8 @@ const Dashboard = React.lazy(() => import("./pages/Dashboard"));
 const LandingPage = React.lazy(() => import("./components/landingpage/LandingPage"));
 const PhoneOtpForm = React.lazy(() => import("./pages/PhoneOtpForm"));
 const PrivateRoute = React.lazy(() => import("./components/PrivateRoute"));
+const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -110,6 +112,22 @@ export default function App() {
                         element={
                             <SuspenseWrapper>
                                 <Devotees />
+                            </SuspenseWrapper>
+                        }
+                    />
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            <SuspenseWrapper>
+                                <ForgotPassword />
+                            </SuspenseWrapper>
+                        }
+                    />
+                    <Route
+                        path="/reset-password/:token"
+                        element={
+                            <SuspenseWrapper>
+                                <ResetPassword />
                             </SuspenseWrapper>
                         }
                     />

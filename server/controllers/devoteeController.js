@@ -3,6 +3,7 @@ const SuperAdmin = require("../models/superAdmin");
 const Devotee = require("../models/devotee");
 const ExpressError = require("../utils/ExpressError");
 const jwt = require("jsonwebtoken");
+const transporter = require("../utils/nodeMailer");
 
 const generateAccessAndRefreshToken = async(devoteeId)=> {
     try {
@@ -102,6 +103,43 @@ module.exports.devoteeCreateController = async (req, res) => {
 
     const registeredDevotee = await Devotee.findById(newDevotee._id).select("-password -refreshToken");
 
+    const mailOptions = {
+        from : process.env.SMTP_SENDER_EMAIL,
+        to : registeredDevotee.email,
+        subject : "Welcome to MandirMitra: Explore Temples and Engage with Devotion",
+        html : `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <h2 style="color: #007bff;">Welcome to MandirMitra, ${registeredDevotee.displayName}!</h2>
+                <p>Dear ${registeredDevotee.displayName},</p>
+                <p>
+                    We are delighted to welcome you to <strong>MandirMitra</strong>, your gateway to discovering the spiritual and cultural richness of temples around you.
+                </p>
+                <p>As a registered devotee on MandirMitra, here are some exciting features you can explore:</p>
+                <ul>
+                    <li><strong>Temple Listings:</strong> Browse through all the registered temples, learn about their history, deities, and rituals.</li>
+                    <li><strong>Anu(Follow) Temples:</strong> Anu(follow) your favorite temples and stay connected with them to get updates</li>
+                    <li><strong>Engage with Posts:</strong> Like and comment on posts to connect with other devotees and the temple community.</li>
+                    <li><strong>Explore Media:</strong> View photos and galleries of your favorite temples.</li>
+                    <li><strong>Temple Management:</strong> Learn about the people who manage the temple and their roles.</li>
+                    <li><strong>Know the Priests:</strong> Discover the Pujaris, their roles, and their stories.</li>
+                </ul>
+                <p>
+                    We’re thrilled to have you on this spiritual journey. Start exploring today and immerse yourself in devotion!
+                </p>
+                <blockquote style="border-left: 4px solid #007bff; padding-left: 10px; color: #555;">
+                    "Temples are not just places of worship, they are sanctuaries where the soul finds peace and devotion flourishes."
+                </blockquote>
+                <p>
+                    If you have any questions or need assistance, please contact us at 
+                    <a href='${process.env.SMTP_SENDER_EMAIL}'>support@mandirmitra.com</a>.
+                </p>
+                <p style="margin-top: 20px;">Warm regards,</p>
+                <p><strong>MandirMitra Team</strong></p>
+            </div>
+        `
+    }
+    await transporter.sendMail(mailOptions);
+
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(newDevotee._id);
     const options = {
         httpOnly : true,
@@ -183,6 +221,37 @@ module.exports.updatePasswordController = async (req, res, next) => {
 
         // Save the updated devotee profile
         await existingDevotee.save();
+
+        const mailOptions = {
+            from : process.env.SMTP_SENDER_EMAIL,
+            to : existingDevotee.email,
+            subject : "Your MandirMitra Password Has Been Updated",
+            html : `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h2 style="color: #007bff;">Your Password Has Been Updated</h2>
+                    <p>Dear ${existingDevotee.displayName},</p>
+                    <p>
+                        We wanted to inform you that the password for your <strong>MandirMitra</strong> account has recently been updated.
+                    </p>
+                    <p>
+                        If you made this change, no further action is needed. However, if you did not authorize this update, please take the following steps immediately:
+                    </p>
+                    <ol>
+                        <li>Reset your password using the <strong>“Forgot Password”</strong> option on the login page.</li>
+                        <li>Contact our support team at <a href='${process.env.SMTP_SENDER_EMAIL}'>support@mandirmitra.com</a> for assistance.</li>
+                    </ol>
+                    <p>
+                        <strong>Security Tip:</strong> Always use a strong and unique password that you do not reuse across different websites.
+                    </p>
+                    <p>
+                        If you have any concerns, feel free to reach out to us. We are here to help!
+                    </p>
+                    <p style="margin-top: 20px;">Warm regards,</p>
+                    <p><strong>MandirMitra Support Team</strong></p>
+                </div>
+            `
+        }
+        await transporter.sendMail(mailOptions);
 
         // Send a success message
         res.status(200).json({ message: "Password updated successfully!" });

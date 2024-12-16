@@ -3,6 +3,7 @@ const Temple  = require("../models/temple");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
+const transporter = require("../utils/nodeMailer");
 
 const generateAccessAndRefreshToken = async (userId, userType) => {
     try {
@@ -113,6 +114,31 @@ module.exports.createController = async (req, res) => {
     superAdmin.refreshToken = refreshToken;
     await superAdmin.save();
 
+    //sending welcome email
+    const mailOptions = {
+        from : process.env.SMTP_SENDER_EMAIL,
+        to : superAdmin.email,
+        subject: "Welcome to MandirMitra - Your Temple's Digital & Social Partner!",
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #FF5722;">Welcome to MandirMitra, ${superAdmin.username}!</h2>
+                <p>Namaste 🙏,</p>
+                <p>We are thrilled to have you onboard as the Super Admin of <strong>${temple.name}</strong>.</p>
+                <p>MandirMitra is your one-stop platform for efficient temple management and community engagement. Here's what you can achieve:</p>
+                <ul>
+                    <li>Seamlessly manage donations, events, and inventories</li>
+                    <li>Create and share beautiful PDF invitations and receipts</li>
+                    <li>Connect with devotees and strengthen your temple community</li>
+                    <li>Utilize analytics and insights for better decision-making</li>
+                </ul>
+                <p>Our platform is designed to simplify your responsibilities while fostering a vibrant social network for your temple community.</p>
+                <p>To get started, log in to your account and explore all the tools and features we have crafted to support your mission.</p>
+                <p>Warm regards,</p>
+                <p><strong>The MandirMitra Team</strong></p>
+            </div>
+        `
+    }
+    await transporter.sendMail(mailOptions);
     // Omit sensitive data
     const { password: pass, refreshToken: rt, ...rest } = superAdmin._doc;
 
@@ -225,6 +251,31 @@ module.exports.googleController = async (req, res) => {
     });
 
     await superAdmin.save();
+    //sending welcome email
+    const mailOptions = {
+        from : process.env.SMTP_SENDER_EMAIL,
+        to : superAdmin.email,
+        subject: "Welcome to MandirMitra - Your Temple's Digital & Social Partner!",
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #FF5722;">Welcome to MandirMitra, ${superAdmin.username}!</h2>
+                <p>Namaste 🙏,</p>
+                <p>We are thrilled to have you onboard as the Super Admin of <strong>${temple.name}</strong>.</p>
+                <p>MandirMitra is your one-stop platform for efficient temple management and community engagement. Here's what you can achieve:</p>
+                <ul>
+                    <li>Seamlessly manage donations, events, and inventories</li>
+                    <li>Create and share beautiful PDF invitations and receipts</li>
+                    <li>Connect with devotees and strengthen your temple community</li>
+                    <li>Utilize analytics and insights for better decision-making</li>
+                </ul>
+                <p>Our platform is designed to simplify your responsibilities while fostering a vibrant social network for your temple community.</p>
+                <p>To get started, log in to your account and explore all the tools and features we have crafted to support your mission.</p>
+                <p>Warm regards,</p>
+                <p><strong>The MandirMitra Team</strong></p>
+            </div>
+        `
+    }
+    await transporter.sendMail(mailOptions);
 
     // Generate tokens
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(superAdmin._id, "Admin");
@@ -244,8 +295,6 @@ module.exports.googleController = async (req, res) => {
         });
 };
 
-
-//edit superAdmin rooute handler
 // Edit SuperAdmin route handler
 module.exports.editController = async (req, res) => {
     const user = req.user; // Logged-in user
@@ -263,15 +312,40 @@ module.exports.editController = async (req, res) => {
         throw new ExpressError(404, "SuperAdmin not found.");
     }
 
+    let isPasswordChanged = false;
+
     // Update fields only if provided in the request and different from existing values
     if (username && username !== isSuperAdmin.username) isSuperAdmin.username = username;
     if (email && email !== isSuperAdmin.email) isSuperAdmin.email = email;
     if (phoneNumber && phoneNumber !== isSuperAdmin.phoneNumber) isSuperAdmin.phoneNumber = phoneNumber;
-    if (password) isSuperAdmin.password = password; 
+    if (password) {
+        isSuperAdmin.password = password;
+        isPasswordChanged = true;
+    }
     if (profilePicture && profilePicture !== isSuperAdmin.profilePicture) isSuperAdmin.profilePicture = profilePicture;
 
     await isSuperAdmin.save();
 
+    // Send email if password was changed
+    if (isPasswordChanged) {
+        const mailOptions = {
+            from: process.env.SMTP_SENDER_EMAIL,
+            to: isSuperAdmin.email,
+            subject: "Password Changed Successfully",
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2 style="color: #FF5722;">Password Updated</h2>
+                    <p>Namaste ${isSuperAdmin.username},</p>
+                    <p>We wanted to let you know that the password for your account associated with <strong>${isSuperAdmin.email}</strong> has been successfully updated.</p>
+                    <p>If you did not request this change, please contact our support team immediately at <a href="${process.env.SMTP_SENDER_EMAIL}">${process.env.SMTP_SENDER_EMAIL}</a>.</p>
+                    <p>Warm regards,</p>
+                    <p><strong>The MandirMitra Team</strong></p>
+                </div>
+            `
+        };
+        await transporter.sendMail(mailOptions);
+    }
+    console.log("message  sent");
     const { password: pass, refreshToken, ...rest } = isSuperAdmin._doc;
     res.status(200).json({ currUser: rest });
 };

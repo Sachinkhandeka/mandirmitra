@@ -54,7 +54,7 @@ export default function SignupSuperAdmin({ setShowComponent }) {
     }
 
     return (
-        <div className="relative flex flex-col gap-4 w-full md:max-w-md md:py-6 bg-white md:min-h-40 rounded-lg md:border md:border-blue-500 pt-1 p-10 text-black">
+        <div className="flex flex-col gap-4 w-full md:py-6 bg-white md:min-h-40 rounded-lg text-black p-10 md:p-0">
             <Helmet>
                 <title>Add Temple - mandirmitra</title>
                 <meta name="description" content="Add a new temple to mandirmitra. Provide the temple's name and location to get started." />

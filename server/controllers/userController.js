@@ -1,6 +1,7 @@
 const User = require("../models/userSchema");
 const ExpressError = require("../utils/ExpressError");
 const jwt = require("jsonwebtoken");
+const transporter = require("../utils/nodeMailer");
 
 const generateAccessAndRefreshToken = async(userId)=> {
     try {
@@ -96,6 +97,44 @@ module.exports.createController = async(req ,res)=> {
 
     try {
         await newUser.save();
+
+        const mailOptions = {
+            from : process.env.SMTP_SENDER_EMAIL,
+            to : newUser.email,
+            subject: "Welcome to MandirMitra: Your Journey with the Temple Begins Here!",
+            html: 
+                `
+                    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #007bff;">Welcome to MandirMitra, ${newUser.username}!</h2>
+                        <p>Dear ${newUser.username || 'Guest'},</p>
+                        <p>
+                            We are delighted to have you join the MandirMitra platform, the premier solution for temple management. You have been onboarded by ${user.username}, and we are confident that your contributions will be instrumental in fulfilling the temple's mission.
+                        </p>
+                        <p>
+                            As part of the MandirMitra team, you are entrusted with responsibilities that support the temple’s operations and help serve the community of devotees with devotion and efficiency.
+                        </p>
+                        <blockquote style="border-left: 4px solid #007bff; padding-left: 10px; color: #555;">
+                            "Serving the temple is not just a duty, but a privilege to connect with the divine and uplift the community."
+                        </blockquote>
+                        <p>
+                            <strong>Here’s how to get started:</strong>
+                        </p>
+                        <ul>
+                            <li>Log in to the MandirMitra platform with the credentials shared during your onboarding.</li>
+                            <li>Explore your assigned roles and permissions to familiarize yourself with your responsibilities.</li>
+                            <li>If you encounter any challenges, feel free to reach out to your superAdmin(${user.phoneNumber}) or contact us for support.</li>
+                        </ul>
+                        <p>
+                            We are excited to have you onboard, and we look forward to working with you to strengthen the temple’s mission. Let us together serve with dedication and devotion.
+                        </p>
+                        <p style="margin-top: 20px;">Warm regards,</p>
+                        <p><strong>MandirMitra Support Team</strong></p>
+                        <p style="font-size: 0.9em; color: #999;">[MandirMitra Platform]</p>
+                    </div>
+                `
+        }
+
+        await transporter.sendMail(mailOptions);
         res.status(200).json("New user created successfully.");
     } catch (error) {
         if (error.code === 11000) {
@@ -158,6 +197,8 @@ module.exports.editController = async (req, res) => {
 
     // Prepare fields to be updated
     const updateObj = {};
+    let isPasswordUpdated = false;
+
     if (formData.username) {
         updateObj.username = formData.username;
     }
@@ -176,6 +217,7 @@ module.exports.editController = async (req, res) => {
         }
         // Assign password directly; pre-save middleware will handle hashing
         updateObj.password = formData.password;
+        isPasswordUpdated = true;
     }
     if (formData.roles) {
         updateObj.roles = formData.roles;
@@ -193,6 +235,41 @@ module.exports.editController = async (req, res) => {
             model: "Permission",
         },
     });
+
+    // If password was updated, send email notification
+    if (isPasswordUpdated) {
+        const mailOptions = {
+            from : process.env.SMTP_SENDER_EMAIL,
+            to: updatedUser.email,
+            subject: "Your MandirMitra Account Password Has Been Updated",
+            html: 
+            `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h2 style="color: #007bff;">Your Password Has Been Updated</h2>
+                    <p>Dear ${updatedUser.username},</p>
+                    <p>
+                        We wanted to inform you that the password for your <strong>MandirMitra</strong> account has recently been updated.
+                    </p>
+                    <p>
+                        If you made this change, no further action is needed. However, if you did not authorize this update, please take the following steps immediately:
+                    </p>
+                    <ol>
+                        <li>Reset your password using the <strong>“Forgot Password”</strong> option on the login page.</li>
+                        <li>Contact our support team at <a href=${process.env.SMTP_SENDER_EMAIL}>support@mandirmitra.com</a> for assistance.</li>
+                    </ol>
+                    <p>
+                        <strong>Security Tip:</strong> Always use a strong and unique password that you do not reuse across different websites.
+                    </p>
+                    <p>
+                        If you have any concerns, feel free to reach out to us. We are here to help!
+                    </p>
+                    <p style="margin-top: 20px;">Warm regards,</p>
+                    <p><strong>MandirMitra Support Team</strong></p>
+                </div>
+            `
+        }
+        await transporter.sendMail(mailOptions);
+    }
 
     res.status(200).json({ updatedUser });
 };

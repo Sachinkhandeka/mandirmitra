@@ -3,6 +3,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Button, Spinner } from 'flowbite-react';
 import OtpInput from '../components/OtpInput';
+import { MdMarkEmailRead, MdOutlineAdminPanelSettings } from "react-icons/md";
 import { app } from '../firebase';
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
@@ -209,20 +210,30 @@ export default function PhoneOtpForm() {
                                 </Button>
                             </div>
                         </form>
+                        <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-8'>
+                            <Link to="/forgot-password">Forgot password?</Link>
+                        </div>
                         <div className='flex items-center justify-center gap-2 mt-2 border-t border-t-gray-500 relative mx-6' >
                             <span className='absolute top-[-15px] px-4 bg-white text-black' >or</span>
                         </div>
-                        <div className='flex items-center gap-2 text-sm text-black px-8'>
-                            Login with user email?
-                            <span className='text-blue-500 hover:underline'>
-                                <Link to="#" onClick={() => setShowComponent('signin')}>Click here</Link>
-                            </span>
-                        </div>
-                        <div className='flex items-center gap-2 text-sm text-black px-8'>
-                            Login with admin email?
-                            <span className='text-blue-500 hover:underline'>
-                                <Link to="#" onClick={() => setShowComponent('signinSuperAdmin')}>Click here</Link>
-                            </span>
+                        <div className="flex gap-4 flex-col md:flex-row px-8 text-xs">
+                            {/* Login with User Email Button */}
+                            <button 
+                                onClick={() => setShowComponent('signin')} 
+                                className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-blue-500 text-white rounded-md shadow-lg hover:bg-blue-600 transition-colors duration-300 focus:outline-none"
+                            >
+                                <MdMarkEmailRead size={26} />
+                                <span>Login with user email</span>
+                            </button>
+
+                            {/* Login with Admin Email Button */}
+                            <button 
+                                onClick={() => setShowComponent('signinSuperAdmin')} 
+                                className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-lg hover:bg-green-600 transition-colors duration-300 focus:outline-none"
+                            >
+                                <MdOutlineAdminPanelSettings size={30} />
+                                <span>Login with admin email</span>
+                            </button>
                         </div>
                     </>
                 )}
@@ -253,7 +264,7 @@ export default function PhoneOtpForm() {
                 )}
                 {showComponent === 'signinSuperAdmin' && (
                     <Suspense fallback={<div className='flex items-center justify-center' ><Spinner color="purple" aria-label="Loading spinner example" /></div>}>
-                        <SigninSuperAdmin />
+                        <SigninSuperAdmin setShowComponent={setShowComponent} />
                     </Suspense>
                 )}
             </div>

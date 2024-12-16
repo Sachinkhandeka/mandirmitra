@@ -2,14 +2,14 @@ import React, { useState, Suspense } from "react";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import "../css/PhoneInputCostom.css";
-import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import Alert from '../components/Alert';
 import OtpInput from "../components/OtpInput";
 import { app } from '../firebase';
 import { RecaptchaVerifier, getAuth, signInWithPhoneNumber } from 'firebase/auth';
 import { signinSuccess, signinFailure } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import CreateDevotee from "./CreateDevotee";
 import brand from "../assets/brand.jpg";
@@ -204,6 +204,9 @@ export default function Devotees() {
                             </Button>
                         </div>
                     </form>
+                    <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-2'>
+                        <Link to="/forgot-password">Forgot password?</Link>
+                     </div>
                 </div>
             )}
             {showComponent === "otpInput" && (
