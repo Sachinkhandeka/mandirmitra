@@ -99,7 +99,7 @@ export default function SignupSuperAdmin({ setShowComponent }) {
                         placeholder="Enter the temple's name"
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-500 transition duration-200"
+                        className="w-full bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition duration-200"
                     />
                 </div>
 
@@ -118,14 +118,14 @@ export default function SignupSuperAdmin({ setShowComponent }) {
                         placeholder="e.g., Bhuj, Kutch, Gujarat"
                         onChange={handleChange}
                         required
-                        className="w-full bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-500 transition duration-200"
+                        className="w-full bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition duration-200"
                     />
                 </div>
 
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-blue-500 text-white rounded-md shadow-lg hover:bg-blue-600 transition-colors duration-300 focus:outline-none"
+                    className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-green-500 text-white rounded-md shadow-lg hover:bg-green-600 transition-colors duration-300 focus:outline-none"
                     disabled={loading}
                 >
                     {loading ? (
