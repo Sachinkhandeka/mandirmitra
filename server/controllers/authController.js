@@ -65,7 +65,7 @@ module.exports.forgotPasswordController = async (req, res) => {
                 <h2 style="color: #FF5722;">MandirMitra Password Reset</h2>
                 <p>Dear ${ model === 'Devotee' ? user.displayName : user.username || "User" },</p>
                 <p>We received a request to reset the password for your MandirMitra account. You can reset your password using the link below. This link will expire in 15 minutes:</p>
-                <a href="${resetURL}" style="display: inline-block; margin: 10px 0; padding: 10px 15px; background-color: #FF5722; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                <a href="${resetURL}" style="display: inline-block; cursor: pointer; margin: 10px 0; padding: 10px 15px; background-color: #FF5722; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
                 <p>If the above button doesn't work, copy and paste the following URL into your browser:</p>
                 <p><a href="${resetURL}">${resetURL}</a></p>
                 <p>If you did not request this, please ignore this email. Your password will remain unchanged.</p>

@@ -101,7 +101,7 @@ export default function TempleHeader() {
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSmartSearchBar(!smartSearchBar)}>
                         { smartSearchBar ? <MdOutlineCancel size={28} /> :  <IoMdSearch size={28} aria-label="search-temples" /> }
                     </span>
-                    { !currUser && (
+                    {(!currUser || !currUser.displayName || currUser.username) && (
                         <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
                             <Tooltip content="Register Mandir">
                                 <Link to={"/login"} >
