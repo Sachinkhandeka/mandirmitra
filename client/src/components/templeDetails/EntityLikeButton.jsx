@@ -12,7 +12,7 @@ export default function EntityLikeButton({ templeId, entityType, entityId, setAl
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (initialLikes && initialLikes.length > 0) {
+        if (currUser && initialLikes && initialLikes.length > 0) {
             setLiked(initialLikes.includes(currUser._id));
         }
     }, [initialLikes, currUser]);

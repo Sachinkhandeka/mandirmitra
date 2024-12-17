@@ -2,9 +2,11 @@ import { Avatar, Dropdown, Tooltip, Spinner } from "flowbite-react";
 import { useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { GiShintoShrine } from "react-icons/gi";
-import { FaCloudMoon, FaCloudSun, FaUserPlus } from "react-icons/fa";
+import { FaRegUserCircle } from "react-icons/fa";
+import { TiWeatherPartlySunny } from "react-icons/ti";
+import { LuCloudMoon } from "react-icons/lu";
 import { GoPencil, GoSignOut } from "react-icons/go";
-import { MdOutlineCancel } from "react-icons/md";
+import { HiXMark } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../redux/theme/themeSlice";
 import SmartSearch from "./SmartSearch";
@@ -99,7 +101,7 @@ export default function TempleHeader() {
                 </Link>
                 <div className="flex gap-4 flex-row items-center">
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSmartSearchBar(!smartSearchBar)}>
-                        { smartSearchBar ? <MdOutlineCancel size={28} /> :  <IoMdSearch size={28} aria-label="search-temples" /> }
+                        { smartSearchBar ? <HiXMark size={28} /> :  <IoMdSearch size={28} aria-label="search-temples" /> }
                     </span>
                     {(!currUser || !currUser.displayName || currUser.username) && (
                         <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
@@ -112,7 +114,7 @@ export default function TempleHeader() {
                     ) }
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => dispatch(toggleTheme())}>
                         <Tooltip content="Toggle Theme">
-                            {theme === "light" ? <FaCloudMoon size={28} /> : <FaCloudSun size={28} />}
+                            {theme === "light" ? <LuCloudMoon size={30} /> : <TiWeatherPartlySunny size={28} />}
                         </Tooltip>
                     </span>
                     <span className="cursor-pointer">
@@ -157,7 +159,7 @@ export default function TempleHeader() {
                             </Dropdown>
                         ) : (
                             <Link to={"/devotees"} className="p-2 rounded-md hover:bg-blue-200 dark:hover:bg-gray-600 font-medium flex items-center gap-3">
-                                <FaUserPlus size={28} aria-label="login-signup" />
+                                <FaRegUserCircle size={28} aria-label="login-signup" />
                                 <span className="hidden md:block text-xs" aria-label="login-signup" >Login / Signup</span>
                             </Link>
                         ) }
