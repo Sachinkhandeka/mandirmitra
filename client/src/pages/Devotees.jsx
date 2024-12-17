@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import CreateDevotee from "./CreateDevotee";
 import brand from "../assets/brand.jpg";
+import { IoHomeOutline } from "react-icons/io5";
 
 export default function Devotees() {
     const dispatch = useDispatch();
@@ -204,9 +205,16 @@ export default function Devotees() {
                             </Button>
                         </div>
                     </form>
-                    <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-2'>
+                    <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline pl-8 md:pl-2'>
                         <Link to="/forgot-password">Forgot password?</Link>
-                     </div>
+                    </div>
+                    <Link 
+                        to={"/"}
+                        className="text-gray-500 hover:text-black cursor-pointer underline flex items-center gap-1 pl-8 md:pl-2"
+                    >
+                        <IoHomeOutline /> 
+                        <span>Home</span>
+                    </Link>
                 </div>
             )}
             {showComponent === "otpInput" && (

@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { signinSuccess, signinFailure } from '../redux/user/userSlice';
 import Alert from '../components/Alert';
+import { IoHomeOutline } from 'react-icons/io5';
 
 const SignupSuperAdmin = React.lazy(() => import("./SignupSuperAdmin"));
 const SigninUser = React.lazy(() => import("./SigninUser"));
@@ -210,9 +211,16 @@ export default function PhoneOtpForm() {
                                 </Button>
                             </div>
                         </form>
-                        <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-8'>
+                        <div className='flex items-center gap-2 text-sm text-gray-600 hover:text-blue-500 hover:underline px-8 md:px-2'>
                             <Link to="/forgot-password">Forgot password?</Link>
                         </div>
+                        <Link 
+                            to={"/"}
+                            className="text-gray-500 hover:text-black cursor-pointer underline flex items-center gap-1 px-8 md:px-2"
+                        >
+                            <IoHomeOutline /> 
+                            <span>Home</span>
+                        </Link>
                         <div className='flex items-center justify-center gap-2 mt-2 border-t border-t-gray-500 relative mx-6' >
                             <span className='absolute top-[-15px] px-4 bg-white text-black' >or</span>
                         </div>
