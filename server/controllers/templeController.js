@@ -260,7 +260,8 @@ module.exports.anuyayi = async (req , res)=> {
                     <p>Dear ${devotee.displayName},</p>
                     <p>
                         Thank you for following <strong>${temple.name}</strong> on MandirMitra. 
-                        Stay connected with all the latest posts, events, and updates from the temple.
+                        Stay connected with all the latest posts, videos, photos, festivals, events and managment and 
+                        other updates from the temple.
                     </p>
                     <p>
                         Explore the temple's history, photos, and stories to deepen your connection with the divine.
