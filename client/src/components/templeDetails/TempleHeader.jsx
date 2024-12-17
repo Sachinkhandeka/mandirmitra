@@ -1,6 +1,6 @@
 import { Avatar, Dropdown, Tooltip, Spinner } from "flowbite-react";
 import { useRef, useState } from "react";
-import { IoMdSearch } from "react-icons/io";
+import { CiSearch } from "react-icons/ci";
 import { GiShintoShrine } from "react-icons/gi";
 import { FaRegUserCircle } from "react-icons/fa";
 import { TiWeatherPartlySunny } from "react-icons/ti";
@@ -101,7 +101,7 @@ export default function TempleHeader() {
                 </Link>
                 <div className="flex gap-4 flex-row items-center">
                     <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => setSmartSearchBar(!smartSearchBar)}>
-                        { smartSearchBar ? <HiXMark size={28} /> :  <IoMdSearch size={28} aria-label="search-temples" /> }
+                        { smartSearchBar ? <HiXMark size={28} className="text-red-500 dark:text-red-400" /> :  <CiSearch size={28} aria-label="search-temples" /> }
                     </span>
                     {(!currUser || !currUser.displayName || currUser.username) && (
                         <span className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer">
