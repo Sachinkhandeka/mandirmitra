@@ -31,7 +31,7 @@ export default function SuggestionCard({ suggestions, userInput, setSmartSearchB
                 {cachedSuggestions.length > 0 && cachedSuggestions.map((suggestion, index) => (
                     <li key={index} className="group">
                         <Link 
-                            to={`/temple/${suggestion._id}`} 
+                            to={`/temple/${suggestion._id}/posts`} 
                             onClick={() => setSmartSearchBar(false)}
                             className="block p-1 bg-white dark:bg-gray-800 hover:bg-blue-100 hover:dark:bg-gray-600 rounded-lg">
                             

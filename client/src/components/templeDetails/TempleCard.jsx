@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function TempleCard({ temple }) {
     return (
-    <Link to={`/temple/${temple._id}`}>
+    <Link to={`/temple/${temple._id}/posts`}>
         <div className="max-w-sm w-full mx-auto md:mx-3 h-96 overflow-hidden">
             {/* Thumbnail (Image) */}
             <div className="relative w-full h-44">
