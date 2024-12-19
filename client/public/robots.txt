@@ -1,0 +1,18 @@
+# robots.txt for MandirMitra (https://www.mandirmitra.co.in)
+
+# Allow all search engines to crawl the public pages
+User-agent: *
+
+# Disallow admin, user, and private sections
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /login
+Disallow: /devotees
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Allow specific pages
+Allow: /
+
+# Specify the location of the sitemap
+Sitemap: https://www.mandirmitra.co.in/sitemap.xml
