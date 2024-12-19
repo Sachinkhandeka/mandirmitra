@@ -29,6 +29,7 @@ const assetRoute = require("./routes/asset");
 const devoteeRoute = require("./routes/devotee");
 const postRoute = require("./routes/post");
 const authRoute = require("./routes/auth");
+const sitemapRoute = require("./routes/sitemap");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -47,7 +48,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(cookieParser());
 
-//routes 
+//routes
+app.use("/", sitemapRoute ); 
 app.use( "/api/temple", templeRoute );
 app.use( "/api/superadmin", superAdminRoute );
 app.use( "/api/user", userRoute );

@@ -82,7 +82,7 @@ function PostCard({ post, setAlert }) {
                 await navigator.share({
                     title: post.title,
                     text: post.content,
-                    url: window.location.href, // Share the current page URL, or replace with a specific post URL
+                    url: window.location.href, 
                 });
                 setAlert({ type: "success", message: "Post shared successfully!" });
             } catch (error) {
