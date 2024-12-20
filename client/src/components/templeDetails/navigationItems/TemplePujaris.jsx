@@ -2,11 +2,33 @@ import { useState } from "react";
 import EmptyState from "../../EmptyState";
 import Alert from "../../Alert";
 import EntityLikeButton from "../EntityLikeButton";
+import { Helmet } from "react-helmet-async";
 
-export default function TemplePujaris({ pujaris, templeId }) {
+export default function TemplePujaris({ pujaris, templeId, templeName }) {
     const [ alert, setAlert ] = useState({ type : "", message : "" });
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <Helmet>
+                <title>{`${templeName} - Temple Pujaris | MandirMitra`}</title>
+                <meta
+                    name="description"
+                    content="Meet the dedicated Pujaris of this temple. Explore their expertise, experience, and contact details."
+                />
+                <meta
+                    name="keywords"
+                    content="temple pujari, temple priests, MandirMitra, temple services"
+                />
+                <meta
+                    property="og:title"
+                    content={`${templeName} - Temple Pujaris | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content="Meet the dedicated Pujaris of this temple. Explore their expertise, experience, and contact details."
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
                     <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />

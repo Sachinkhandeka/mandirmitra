@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import EmptyState from "../../EmptyState";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import { Helmet } from "react-helmet-async";
 
-export default function TemplePhotos({ photos }) {
+export default function TemplePhotos({ photos, templeName }) {
     const [likedPhotos, setLikedPhotos] = useState([]); // Tracks liked photos (by index)
     const [selectedPhoto, setSelectedPhoto] = useState(null); 
     const [gridSpans, setGridSpans] = useState([]); // Tracks grid spans for each photo
@@ -24,6 +25,27 @@ export default function TemplePhotos({ photos }) {
 
     return (
         <section className="p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
+             <Helmet>
+                <title>{`${templeName} - Temple Photos | MandirMitra`}</title>
+                <meta
+                    name="description"
+                    content="Explore the gallery of temple photos, capturing the essence and beauty of this divine space."
+                />
+                <meta
+                    name="keywords"
+                    content="temple photos, temple gallery, MandirMitra, temple images"
+                />
+                <meta
+                    property="og:title"
+                    content={`${templeName} - Temple Photos | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content="Explore the gallery of temple photos, capturing the essence and beauty of this divine space."
+                />
+                <meta property="og:image" content={photos[0] || ""} />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
             {photos && photos.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
                     {photos.map((photo, index) => (

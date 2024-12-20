@@ -7,8 +7,9 @@ import LikeButton from "../LikeButton";
 import Alert from "../../Alert";
 import CommentModal from "../../CommentModal";
 import { FaRegShareSquare } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
-export default function TemplePosts({ templeId }) {
+export default function TemplePosts({ templeId, templeName }) {
     const [posts, setPosts] = useState([]);
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [loading, setLoading] = useState(false);
@@ -39,6 +40,26 @@ export default function TemplePosts({ templeId }) {
 
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <Helmet>
+                <title>{`${templeName} - Posts and Updates | MandirMitra`}</title>
+                <meta
+                    name="description"
+                    content="Stay updated with the latest posts and happenings of this temple. Explore events, updates, and more."
+                />
+                <meta
+                    name="keywords"
+                    content="temple posts, temple updates, temple news, MandirMitra"
+                />
+                <meta
+                    property="og:title"
+                    content={`${templeName} - Posts and Updates | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content="Stay updated with the latest posts and happenings of this temple."
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
             {/* Alert Message */}
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (

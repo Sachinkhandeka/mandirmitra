@@ -65,8 +65,8 @@ export default function TempleNavigation({ temple }) {
             <div className="p-3">
                 <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
-                        <Route path="posts" element={<TemplePosts templeId={temple._id} />} />
-                        <Route path="videos" element={<TempleVideos videos={temple.videos} templeId={temple._id} />} />
+                        <Route path="posts" element={<TemplePosts templeId={temple._id} templeName={temple.name} />} />
+                        <Route path="videos" element={<TempleVideos videos={temple.videos} templeId={temple._id} templeName={temple.name} />} />
                         <Route path="photos" element={
                             <TemplePhotos
                                 photos={[
@@ -76,13 +76,14 @@ export default function TempleNavigation({ temple }) {
                                     ),
                                 ]}
                                 templeId={temple._id}
+                                templeName={temple.name}
                             />
                         } />
-                        <Route path="festivals" element={<TempleFestivals festivals={temple.festivals} templeId={temple._id} />} />
-                        <Route path="gods" element={<TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} />} />
-                        <Route path="pujaris" element={<TemplePujaris pujaris={temple.pujaris} templeId={temple._id} />} />
-                        <Route path="managment" element={<TempleManagement management={temple.management} templeId={temple._id} />} />
-                        <Route path="about" element={<TempleAbout description={temple.description} images={temple.historyImages} />} />
+                        <Route path="festivals" element={<TempleFestivals festivals={temple.festivals} templeId={temple._id} templeName={temple.name} />} />
+                        <Route path="gods" element={<TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} templeName={temple.name} />} />
+                        <Route path="pujaris" element={<TemplePujaris pujaris={temple.pujaris} templeId={temple._id} templeName={temple.name} />} />
+                        <Route path="managment" element={<TempleManagement management={temple.management} templeId={temple._id} templeName={temple.name} />} />
+                        <Route path="about" element={<TempleAbout description={temple.description} images={temple.historyImages} templeName={temple.name} />} />
                     </Routes>
                 </Suspense>
             </div>

@@ -1,20 +1,54 @@
 import EmptyState from "../../EmptyState";
+import { Helmet } from "react-helmet-async";
 
-export default function TempleAbout({ description, images }) {
+export default function TempleAbout({ description, images, templeName }) {
     return (
-        <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            {/* Helmet for SEO */}
+            <Helmet>
+                <title>About {templeName} | MandirMitra</title>
+                <meta
+                    name="description"
+                    content={`Explore the history, significance, and unique features of ${templeName}.`}
+                />
+                <meta
+                    name="keywords"
+                    content={`${templeName}, temple history, temple images, temple description`}
+                />
+                <meta
+                    property="og:title"
+                    content={`About ${templeName} | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content={`Explore the history, significance, and unique features of ${templeName}.`}
+                />
+                <meta
+                    property="og:image"
+                    content={
+                        images?.[0] ||
+                        "https://www.mandirmitra.co.in/images/default-temple.jpg"
+                    }
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
             {description ? (
                 <>
                     {/* Temple Description */}
-                    <p className="text-xl leading-relaxed text-gray-800 dark:text-gray-300">
-                        {description}
-                    </p>
+                    <section className="mb-8">
+                        <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+                            About the Temple
+                        </h2>
+                        <p className="text-lg leading-loose text-gray-700 dark:text-gray-300 indent-8">
+                            {description}
+                        </p>
+                    </section>
 
                     {/* Images Section */}
-                    <div className="my-8">
+                    <section className="my-8">
                         {images && images.length > 0 ? (
                             <>
-                                <h3 className="text-2xl font-semibold my-4 text-gray-900 dark:text-white">
+                                <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
                                     Related Images
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
@@ -31,8 +65,8 @@ export default function TempleAbout({ description, images }) {
                                                 alt={`temple_history_image_${indx}`}
                                                 className="h-full w-full object-cover rounded-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105 shadow-lg group-hover:shadow-2xl"
                                             />
-                                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                                <span className="text-white text-lg font-bold">
+                                            <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                <span className="text-white text-lg font-semibold">
                                                     Temple History
                                                 </span>
                                             </div>
@@ -43,7 +77,7 @@ export default function TempleAbout({ description, images }) {
                         ) : (
                             <EmptyState message={"No related images available!"} />
                         )}
-                    </div>
+                    </section>
                 </>
             ) : (
                 <EmptyState message={"Description not available yet!"} />

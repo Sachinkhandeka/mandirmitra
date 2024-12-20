@@ -2,11 +2,37 @@ import EmptyState from "../../EmptyState";
 import Alert from "../../Alert";
 import EntityLikeButton from "../EntityLikeButton";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
-export default function TempleManagement({ management, templeId }) {
+export default function TempleManagement({ management, templeId, templeName }) {
     const [ alert, setAlert ] = useState({ type : "", message : "" });
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <Helmet>
+                <title>{ templeName } - Management | MandirMitra</title>
+                <meta 
+                    name="description" 
+                    content="Meet the people who manage and maintain the temple. Learn about their roles and responsibilities." 
+                />
+                <meta 
+                    name="keywords" 
+                    content="temple management, temple team, temple committee, Hindu temple leaders"
+                />
+                <meta 
+                    property="og:title" 
+                    content={`${ templeName } - Management | MandirMitra`} 
+                />
+                <meta 
+                    property="og:description" 
+                    content="Meet the people who manage and maintain the temple. Learn about their roles and responsibilities."
+                />
+                <meta 
+                    property="og:image" 
+                    content={management?.[0]?.profile}
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
                     <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert(null)} />

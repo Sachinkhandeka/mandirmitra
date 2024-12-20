@@ -3,8 +3,9 @@ import EmptyState from "../../EmptyState";
 import { FaRegShareSquare } from "react-icons/fa";
 import Alert from "../../Alert";
 import EntityLikeButton from "../EntityLikeButton";
+import { Helmet } from "react-helmet-async";
 
-export default function TempleVideos({ videos, templeId }) {
+export default function TempleVideos({ videos, templeId, templeName }) {
     const [expandedTitleIndex, setExpandedTitleIndex] = useState(null); 
     const [expandedDescIndex, setExpandedDescIndex] = useState(null);
     const [alert, setAlert] = useState({ type : "", message : "" });
@@ -50,6 +51,27 @@ export default function TempleVideos({ videos, templeId }) {
     }
     return (
         <section className="py-6 px-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <Helmet>
+                <title>{`${templeName} - Temple Videos | MandirMitra`}</title>
+                <meta
+                    name="description"
+                    content="Watch the latest videos from this temple, including spiritual discourses, rituals, and celebrations."
+                />
+                <meta
+                    name="keywords"
+                    content="temple videos, spiritual videos, temple celebrations, MandirMitra"
+                />
+                <meta
+                    property="og:title"
+                    content={`${templeName} - Temple Videos | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content="Watch the latest videos from this temple, including spiritual discourses, rituals, and celebrations."
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
                     <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert({ type: "", message: "" })} />

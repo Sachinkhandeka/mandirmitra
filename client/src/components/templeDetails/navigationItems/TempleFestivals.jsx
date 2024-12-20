@@ -4,8 +4,9 @@ import { FaRegShareSquare } from "react-icons/fa";
 import EntityLikeButton from "../EntityLikeButton";
 import Alert from "../../Alert";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
-export default function TempleFestivals({ festivals, templeId }) {
+export default function TempleFestivals({ festivals, templeId, templeName }) {
     const [alert, setAlert] = useState({ type: "", message: "" });
     const [expandedIndex, setExpandedIndex] = useState(null); // Track expanded festival description
 
@@ -56,6 +57,27 @@ export default function TempleFestivals({ festivals, templeId }) {
 
     return (
         <div className="w-full p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+            {/* Helmet for SEO */}
+            <Helmet>
+                <title>{templeName} - Festivals | MandirMitra</title>
+                <meta
+                    name="description"
+                    content={`Discover the festivals celebrated at ${templeName}. Explore their importance, rituals, and celebrations.`}
+                />
+                <meta
+                    name="keywords"
+                    content={`temple festivals, ${templeName} celebrations, Hindu rituals`}
+                />
+                <meta
+                    property="og:title"
+                    content={`${templeName} - Festivals | MandirMitra`}
+                />
+                <meta
+                    property="og:description"
+                    content={`Discover the festivals celebrated at ${templeName}.`}
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
             {/* Alert */}
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (

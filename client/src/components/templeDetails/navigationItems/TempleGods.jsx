@@ -5,8 +5,9 @@ import { FaRegShareSquare } from "react-icons/fa";
 import { FiMessageSquare } from "react-icons/fi";
 import Alert from "../../Alert";
 import EntityLikeButton from "../EntityLikeButton";
+import { Helmet } from "react-helmet-async";
 
-export default function TempleGods({ gods, templeId }) {
+export default function TempleGods({ gods, templeId, templeName }) {
     const [ showMore, setShowMore ] = useState({});
     const [ alert, setAlert ] = useState({ type : "", message : "" });
 
@@ -42,6 +43,30 @@ export default function TempleGods({ gods, templeId }) {
     }
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+            <Helmet>
+                <title>{ templeName } - Gods and Goddesses | MandirMitra</title>
+                <meta 
+                    name="description" 
+                    content="Explore the deities of this temple, their significance, and their stories. Learn more about the gods and goddesses worshipped here."
+                />
+                <meta 
+                    name="keywords" 
+                    content="temple gods, deities, Hindu gods and goddesses, MandirMitra temple"
+                />
+                <meta 
+                    property="og:title" 
+                    content={`${ templeName } - Gods and Goddesses | MandirMitra`} 
+                />
+                <meta 
+                    property="og:description" 
+                    content="Explore the deities of this temple, their significance, and their stories."
+                />
+                <meta 
+                    property="og:image"  
+                />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <div className="fixed top-14 right-4 z-50 w-[70%] max-w-sm">
                 {alert && alert.message && (
                     <Alert type={alert.type} message={alert.message} autoDismiss onClose={() => setAlert({ type: "", message: "" })} />
