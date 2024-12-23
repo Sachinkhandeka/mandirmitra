@@ -56,7 +56,7 @@ export default function TempleFestivals({ festivals, templeId, templeName }) {
     };
 
     return (
-        <div className="w-full p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+        <div className="w-full p-1 bg-gray-50 dark:bg-gray-900 min-h-screen">
             {/* Helmet for SEO */}
             <Helmet>
                 <title>{templeName} - Festivals | MandirMitra</title>
