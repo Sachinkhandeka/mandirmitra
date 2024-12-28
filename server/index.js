@@ -30,6 +30,7 @@ const devoteeRoute = require("./routes/devotee");
 const postRoute = require("./routes/post");
 const authRoute = require("./routes/auth");
 const sitemapRoute = require("./routes/sitemap");
+const storyRoute = require("./routes/story");
 
 main().then(()=> {
     console.log("connection to mongo successfull!");
@@ -67,6 +68,7 @@ app.use( "/api/asset", assetRoute );
 app.use( "/api/devotee", devoteeRoute );
 app.use( "/api/post", postRoute );
 app.use( "/api/auth", authRoute );
+app.use( "/api/story", storyRoute );
 
 
 //static folder for client side pages 

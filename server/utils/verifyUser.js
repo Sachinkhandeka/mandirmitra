@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const ExpressError = require("./ExpressError");
 const SuperAdmin = require("../models/superAdmin");
 const User = require("../models/userSchema");
+const Devotee = require("../models/devotee");
 
 module.exports.verifyToken = async (req, res, next) => {
     const token = req.cookies.access_token;

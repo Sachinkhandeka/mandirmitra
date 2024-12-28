@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const Devotee = require("../models/devotee");
-const ExpressError = require("./ExpressError");
 
 module.exports.verifyDevoteeToken = async( req, res, next )=> {
     const token = req.cookies.access_token ; 

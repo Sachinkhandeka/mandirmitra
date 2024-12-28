@@ -258,6 +258,15 @@ const postSchemaValidation = Joi.object({
         ).error(new Error('Comments must be an array of valid objects')),
 });
 
+const storySchemaValidation = Joi.object({
+    content: Joi.string().required().trim().max(1000)
+        .error(new Error("Content is required and must be at most 1000 characters")),
+    translation: Joi.string().trim().max(2000).allow("")
+        .error(new Error("Translation must be at most 1000 characters")),
+    date: Joi.date().default(() => new Date()).error(new Error("Invalid date format")),
+    isHighlighted: Joi.boolean().default(false).error(new Error("isHighlighted must be a boolean value")),
+});
+
 module.exports = {
     daanSchema,
     permissionSchema,
@@ -278,4 +287,5 @@ module.exports = {
     tenantSchema,
     assetSchema,
     postSchemaValidation,
+    storySchemaValidation,
 }
