@@ -1,3 +1,5 @@
+import plugin from 'flowbite/plugin';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -9,7 +11,7 @@ export default {
     extend: {},
   },
   plugins: [
-    require("flowbite/plugin"),
+    plugin,
     function ({ addUtilities }) {
       const newUtilities = {
         '.scrollbar-hidden::-webkit-scrollbar': {
@@ -25,5 +27,3 @@ export default {
     },
   ],
 };
-
-

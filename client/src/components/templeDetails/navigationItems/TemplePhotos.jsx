@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EmptyState from "../../EmptyState";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
