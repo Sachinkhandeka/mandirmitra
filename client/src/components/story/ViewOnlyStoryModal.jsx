@@ -52,7 +52,7 @@ export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50">
             <div
-                className={`bg-gradient-to-r h-full ${
+                className={`px-6 bg-gradient-to-r h-full ${
                     currentStory.isHighlighted ? "from-yellow-300 to-orange-400" : "from-gray-100 to-gray-200"
                 } relative max-w-3xl h-screen w-full text-center flex flex-col items-center justify-center`}
             >
@@ -62,7 +62,7 @@ export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
                 >
                     ✕
                 </button>
-                <div className="text-6xl font-serif text-red-700 mt-4">
+                <div className="text-4xl md:text-6xl font-serif text-red-700 mt-4">
                     <FaQuoteLeft className="inline-block mr-2 mb-10" />
                     {currentStory?.content || "No Title"}
                     <FaQuoteRight className="inline-block ml-2 mt-8" />
