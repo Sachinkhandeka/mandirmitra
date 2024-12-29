@@ -42,6 +42,9 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
     },[temple._id]);
 
     const handleStoryModal = ()=> {
+        if( 0 === stories.length) {
+            return setAlert({ type : "warning", message : "Please login to start seeing stories of temples" }) ;
+        }
         if(!currUser || !currUser.displayName) {
             return setAlert({ type : "warning", message : "Please login to start seeing stories of temples" });
         }
@@ -53,7 +56,7 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
             {/* Temple Image */}
             <div 
                 className={`flex-shrink-0 w-full md:w-1/3 cursor-pointer rounded-lg p-1 
-                ${ isStoriesViewed ? 'border-2 border-gray-400'  : 'border-2 border-orange-500'}`}
+                ${ stories.length > 0 ?  isStoriesViewed ? 'border-2 border-gray-400'  : 'border-2 border-orange-500' : '' }`}
             >
                 <img
                     src={temple.image}
