@@ -96,13 +96,15 @@ module.exports.addStoryView = async (req, res) => {
     ).populate({
         path: "viewedBy",
         select: "displayName", // Include only the `displayName` field
-    });;
+    });
 
     if (!story) throw new ExpressError(404, "Story not found");
+    const viewsCount = story.viewedBy.length ; 
 
     res.status(200).json({
         message: "Story view recorded successfully",
         story,
+        viewsCount
     });
 };
 

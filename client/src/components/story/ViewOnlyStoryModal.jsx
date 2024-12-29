@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
     const { currUser } = useSelector((state) => state.user);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [viewsCount, setViewsCount] = useState(currentStory?.viewedBy.length || 0);
     const currentStory = stories[currentIndex];
     const viewedSet = new Set(); // Track viewed stories in the session
 
@@ -38,6 +39,7 @@ export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
             if (!response.ok) {
                 console.error("Failed to record view:", await response.json());
             }
+            setViewsCount(data.viewsCount);
         } catch (error) {
             console.error("Error recording view:", error.message);
         }
@@ -79,7 +81,7 @@ export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
                     {currentStory?.viewedBy !== undefined && (
                         <span className="flex items-center gap-1">
                             <IoEyeOutline className="text-lg" size={20} />
-                            {currentStory.viewedBy.length} Views
+                            {viewsCount} Views
                         </span>
                     )}
                 </div>

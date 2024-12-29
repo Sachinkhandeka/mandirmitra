@@ -108,7 +108,8 @@ export default function TempleGods({ gods, templeId, templeName }) {
                                             entityType={"godsAndGoddesses"} 
                                             entityId={god._id} 
                                             setAlert={setAlert}
-                                            templeId={templeId} 
+                                            templeId={templeId}
+                                            initialLikes={god.likes} 
                                         />
                                     </div>
                                     {/* Share */}
