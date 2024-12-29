@@ -100,7 +100,8 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
 
                 {/* Follow/Unfollow Button */}
                 <button
-                    className="px-6 py-2 my-3 md:max-w-40 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md flex items-center justify-center gap-2"
+                    className={`px-6 py-2 my-3 md:max-w-40 font-semibold rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors
+                        ${isAnuyayi ? "bg-gray-400 text-white hover:bg-gray-500" : "bg-orange-500 text-white hover:bg-orange-600"}`}
                     onClick={onFollowToggle}
                     disabled={loading}
                 >
