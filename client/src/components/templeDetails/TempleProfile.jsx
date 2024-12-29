@@ -1,18 +1,65 @@
 import { Spinner } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaRegCalendarAlt } from "react-icons/fa";
 import ShowAnuyayi from "./ShowAnuyayi";
+import { useSelector } from "react-redux";
+import ViewOnlyStoryModal from "../story/ViewOnlyStoryModal";
 
-export default function TempleProfileSection({ temple, isAnuyayi, loading, onFollowToggle }) {
+export default function TempleProfileSection({ temple, isAnuyayi, loading, onFollowToggle, setAlert }) {
     const [showAnuyayi, setShowAnuyayi] = useState(false);
+    const [stories, setStories] = useState([]);
+    const [storyModal, setStoryModal] = useState(false);
+    const { currUser } = useSelector( state => state.user );
+    const isStoriesViewed = stories?.some((story) => 
+        story.viewedBy.some((viewer) => viewer._id === currUser._id) 
+    );
+    
+      const getStories = async ()=> {
+        setAlert({ type : "", message : "" });
+          try {
+            const response = await fetch(
+                `/api/story/${temple._id}`,
+                {
+                    method : "GET"
+                }
+            );
+            const data = await response.json();
+    
+            if(!response.ok) {
+              setAlert({ type : "error", message : data.message });
+            }
+            if(data.stories) {
+              setStories(data.stories);
+            }
+          }catch(error) {
+            setAlert({ type : "error", message : error.message });
+          }
+        }
+        useEffect(()=> {
+            if(stories.length === 0 && temple._id ) {
+                getStories();
+            }
+    },[temple._id]);
+
+    const handleStoryModal = ()=> {
+        if(!currUser || !currUser.displayName) {
+            return setAlert({ type : "warning", message : "Please login to start seeing stories of temples" });
+        }
+        setStoryModal(true);
+    }
+
     return (
         <div className="flex flex-col md:flex-row items-start gap-6 p-6">
             {/* Temple Image */}
-            <div className="flex-shrink-0 w-full md:w-1/3">
+            <div 
+                className={`flex-shrink-0 w-full md:w-1/3 cursor-pointer rounded-lg p-1 
+                ${ isStoriesViewed ? 'border-2 border-gray-400'  : 'border-2 border-orange-500'}`}
+            >
                 <img
                     src={temple.image}
                     alt={temple.name}
-                    className="w-full h-auto max-h-[300px] object-fill rounded-lg"
+                    className="cursor-pointer w-full h-auto max-h-[300px] object-fill rounded-lg"
+                    onClick={handleStoryModal}
                 />
             </div>
 
@@ -68,6 +115,12 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
                     anuyayiList={temple.anuyayi}
                     showAnuyayi={showAnuyayi}
                     setShowAnuyayi={setShowAnuyayi}
+                />
+            )}
+            {storyModal && (
+                <ViewOnlyStoryModal
+                    stories={stories} 
+                    setStoryModal={setStoryModal}
                 />
             )}
         </div>

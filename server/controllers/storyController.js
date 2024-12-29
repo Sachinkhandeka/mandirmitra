@@ -37,7 +37,10 @@ module.exports.editStory = async (req, res) => {
             isHighlighted : storyData.isHighlighted
         },
         { new: true, runValidators: true }
-    );
+    ).populate({
+        path: "viewedBy",
+        select: "displayName", // Include only the `displayName` field
+    });;
 
     if (!updatedStory) throw new ExpressError(404, "Story not found");
 
@@ -51,7 +54,10 @@ module.exports.deleteStory = async (req, res) => {
     const { storyId } = req.params; // Story ID from params
 
     // Find and delete the story
-    const deletedStory = await Story.findByIdAndDelete(storyId);
+    const deletedStory = await Story.findByIdAndDelete(storyId).populate({
+        path: "viewedBy",
+        select: "displayName", // Include only the `displayName` field
+    });;
     if (!deletedStory) throw new ExpressError(404, "Story not found");
 
     res.status(200).json({
@@ -68,7 +74,10 @@ module.exports.getStories = async (req, res) => {
     if (!temple) throw new ExpressError(404, "Temple not found");
 
     // Fetch stories for the given temple
-    const stories = await Story.find({ createdBy : templeId }).populate("viewedBy");
+    const stories = await Story.find({ createdBy : templeId }).populate({
+        path: "viewedBy",
+        select: "displayName", // Include only the `displayName` field
+    });
 
     res.status(200).json({
         message: "Stories fetched successfully",
@@ -84,7 +93,10 @@ module.exports.addStoryView = async (req, res) => {
         storyId,
         { $addToSet: { viewedBy: devoteeId } }, // Ensures no duplicate entries
         { new: true }
-    );
+    ).populate({
+        path: "viewedBy",
+        select: "displayName", // Include only the `displayName` field
+    });;
 
     if (!story) throw new ExpressError(404, "Story not found");
 

@@ -126,6 +126,7 @@ export default function TempleDescription({ temple, setTemple }) {
                     onFollowToggle={() =>
                         isAnuyayi ? setOpenConfirmModal(true) : handleAnuyayi()
                     }
+                    setAlert={setAlert}
                 />
 
                 {/* Navigation and Content */}

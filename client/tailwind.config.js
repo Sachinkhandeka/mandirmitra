@@ -20,7 +20,7 @@ export default {
         '.scrollbar-hidden': {
           '-ms-overflow-style': 'none', /* for Internet Explorer, Edge */
           'scrollbar-width': 'none', /* for Firefox */
-        },
+        },     
       };
 
       addUtilities(newUtilities, ['responsive', 'hover']);
