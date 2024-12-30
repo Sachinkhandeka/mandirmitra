@@ -46,7 +46,7 @@ export default function ViewOnlyStoryModal({ stories, setStoryModal }) {
     };
 
     useEffect(() => {
-        if (currentStory && currUser) {
+        if (currentStory && currUser && currentIndex) {
             handleViewedBy();
         }
     }, [currentIndex, currentStory, currUser]);
