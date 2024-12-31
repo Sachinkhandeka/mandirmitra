@@ -1,6 +1,16 @@
 import React, { useState, Suspense } from "react";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 
+// skeleton components
+import TempleAboutSkeleton from "../../skeletons/TempleAboutSkeleton";
+import TemplePostsSkeleton from "../../skeletons/TemplePostsSkeleton";
+import TempleFestivalsSkeleton from "../../skeletons/TempleFestivalsSkeleton";
+import TempleVideosSkeleton from "../../skeletons/TempleVideosSkeleton";
+import TemplePhotosSkeleton from "../../skeletons/TemplePhotosSkeleton";
+import TempleGodSkeleton from "../../skeletons/TempleGodsSkeleton";
+import TemplePujarisSkeleton from "../../skeletons/TemplePujarisSkeleton";
+import TempleManagementSkeleton from "../../skeletons/TempleManagmentSkeleton";
+
 // Lazy loading components
 const TempleAbout = React.lazy(() => import("./TempleAbout"));
 const TemplePosts = React.lazy(() => import("./TemplePosts"));
@@ -65,25 +75,56 @@ export default function TempleNavigation({ temple }) {
             <div className="p-3">
                 <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
-                        <Route path="posts" element={<TemplePosts templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="videos" element={<TempleVideos videos={temple.videos} templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="photos" element={
-                            <TemplePhotos
-                                photos={[
-                                    ...temple.historyImages,
-                                    ...temple.festivals.flatMap(
-                                    (festival) => festival.festivalImages
-                                    ),
-                                ]}
-                                templeId={temple._id}
-                                templeName={temple.name}
-                            />
+                        <Route path="posts" element={
+                            <Suspense fallback={<TemplePostsSkeleton />}>
+                                <TemplePosts templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
                         } />
-                        <Route path="festivals" element={<TempleFestivals festivals={temple.festivals} templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="gods" element={<TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="pujaris" element={<TemplePujaris pujaris={temple.pujaris} templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="managment" element={<TempleManagement management={temple.management} templeId={temple._id} templeName={temple.name} />} />
-                        <Route path="about" element={<TempleAbout description={temple.description} images={temple.historyImages} templeName={temple.name} />} />
+                        <Route path="videos" element={
+                            <Suspense fallback={<TempleVideosSkeleton />}>
+                                <TempleVideos videos={temple.videos} templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
+                        } />
+                        <Route path="photos" element={
+                            <Suspense fallback={<TemplePhotosSkeleton />}>
+                                <TemplePhotos
+                                    photos={[
+                                        ...temple.historyImages,
+                                        ...temple.festivals.flatMap(
+                                        (festival) => festival.festivalImages
+                                        ),
+                                    ]}
+                                    templeId={temple._id}
+                                    templeName={temple.name}
+                                />
+                            </Suspense>
+                        } />
+                        <Route path="festivals" element={
+                            <Suspense fallback={<TempleFestivalsSkeleton />}>
+                                <TempleFestivals festivals={temple.festivals} templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
+                        } />
+                        <Route path="gods" element={
+                            <Suspense fallback={<TempleGodSkeleton />}>
+                                <TempleGods gods={temple.godsAndGoddesses} templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
+                        } />
+                        <Route path="pujaris" element={
+                            <Suspense fallback={<TemplePujarisSkeleton />}>
+                                <TemplePujaris pujaris={temple.pujaris} templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
+                        } />
+                        <Route path="managment" element={
+                            <Suspense fallback={<TempleManagementSkeleton />} >
+                                <TempleManagement management={temple.management} templeId={temple._id} templeName={temple.name} />
+                            </Suspense>
+                            } />
+                        <Route path="about" element={
+                            <Suspense fallback={<TempleAboutSkeleton />}>
+                                <TempleAbout description={temple.description} images={temple.historyImages} templeName={temple.name} /> 
+                            </Suspense>
+                        }
+                        />
                     </Routes>
                 </Suspense>
             </div>

@@ -2,23 +2,30 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux";
 import TempleCard from "./TempleCard";
 import { Helmet } from "react-helmet-async"
+import TempleCardSkeleton from "../skeletons/TempleCardSkeleton";
 
 export default function TempleContent() {
     const { currUser } = useSelector( state => state.user );
     const [ temples, setTemples ] = useState([]);
     const [ alert, setAlert ] = useState({ type : "", message  : "" });
+    const [ loading, setLoading ] = useState(false);
 
     const  getTemples = async()=> {
+        setAlert({ type  : "", message : "" });
+        setLoading(true);
         try {
             const  response = await fetch('/api/temple/all');
             const data = await response.json();
 
             if(!response.ok) {
                 setAlert({ type : "error", message : data.message });
+                return setLoading(false);
             }
             setTemples(data.temples);
+            setLoading(false);
         }catch(err) {
             setAlert({ type : "error", message : err.message });
+            setLoading(false);
         }
     }
 
@@ -56,10 +63,14 @@ export default function TempleContent() {
                     })}
                 </script>
             </Helmet>
-            <section aria-labelledby="temple-listing"  className="my-4 p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" >
-                { temples && temples.length > 0 && temples.map(temple => (
-                    <TempleCard temple={temple} key={temple._id} />
-                )) }
+            <section aria-labelledby="temple-listing"  className="my-4 min-h-screen p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" >
+                {loading
+                    ? Array(8)
+                        .fill(0)
+                        .map((_, index) => <TempleCardSkeleton key={index} />)
+                    : temples && temples.length > 0
+                    ? temples.map((temple) => <TempleCard temple={temple} key={temple._id} />)
+                    : <p className="text-center col-span-full text-gray-500">No temples found.</p>}
             </section>
         </>
     );

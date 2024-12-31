@@ -4,22 +4,29 @@ import { useEffect, useState } from "react";
 import TempleDescription from "./TempleDescription";
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitterX  } from "react-icons/bs";
 import { Footer } from "flowbite-react";
+import TempleDetailsSkeleton from "../skeletons/TempleDetailsSkeleton";
 
 export default function TempleDetail() {
     const { id } = useParams();
     const [ temple, setTemple ] = useState(null);
-    const [ alert, ssetAlert ] = useState({ type : "", message : "" });
+    const [ alert, setAlert ] = useState({ type : "", message : "" });
+    const [ loading, setLoading ] = useState(false);
 
     const fetchTemple = async()=> {
+        setAlert({ type : "", message : "" });
+        setLoading(true);
         try {
             const response = await fetch(`/api/temple/${id}`);
             const data = await response.json();
             if(!response.ok) {
-                return ssetAlert({ type : "error", message : data.message });
+                setLoading(false);
+                return setAlert({ type : "error", message : data.message });
             }
+            setLoading(false);
             setTemple(data.temple);
         }catch(err){
-            ssetAlert({ type : "error", message : err.message });
+            setLoading(false);
+            setAlert({ type : "error", message : err.message });
         }
     }
     
@@ -29,7 +36,13 @@ export default function TempleDetail() {
     return (
         <section className="min-h-screen text-black" >
             <TempleHeader />
-            { temple && <TempleDescription temple={temple} setTemple={setTemple} /> }
+            { loading ? (
+                // Show Skeleton while loading
+                <TempleDetailsSkeleton />
+            ) : temple && (
+                // Show TempleDescription only when `temple` is available
+                <TempleDescription temple={temple} setTemple={setTemple} />
+            )}
             <Footer container>
                 <Footer.Copyright href="/" by="mandirmitra™" year={2024} className="my-4" />
                 <div className="mt-4 flex gap-2 space-x-6 sm:mt-0 sm:justify-center">

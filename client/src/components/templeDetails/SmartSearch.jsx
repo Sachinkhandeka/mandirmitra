@@ -3,6 +3,7 @@ import { Button } from "flowbite-react";
 import { MdOutlineClear } from "react-icons/md";
 import _ from "lodash";
 import SuggestionCard from "./SuggestionCard";
+import SuggestionCardSkeleton from "../skeletons/SuggestionCardSkeleton";
 
 export default function SmartSearch({ setSmartSearchBar }) {
     const [userInput, setUserInput] = useState("");
@@ -92,18 +93,19 @@ export default function SmartSearch({ setSmartSearchBar }) {
                     </Button>
                 </form>
 
-                {/* Loading state */}
-                {loading && <p className="text-gray-500 animate-pulse">Loading suggestions...</p>}
-
                 {/* Error handling */}
                 {error && <p className="text-red-500">{error}</p>}
 
                 {/* Suggestions list */}
-                {suggestions.length > 0 && (
-                    <ul className="bg-white dark:bg-gray-700 mt-2 shadow-md rounded-md p-2 max-h-screen overflow-y-scroll scrollbar-hidden">
+                <ul className="bg-white dark:bg-gray-700 mt-2 shadow-md rounded-md p-2 h-72 overflow-y-scroll scrollbar-hidden">
+                    { loading ? (
+                        <SuggestionCardSkeleton />
+                    ) : suggestions.length > 0 ? (
                         <SuggestionCard suggestions={suggestions} userInput={userInput} setSmartSearchBar={setSmartSearchBar} cache={cache} />
-                    </ul>
-                )}
+                    ) : (
+                        <h3 className="md:text-xl text-black dark:text-white text-center">Your favorite temples will appear here...</h3>
+                    )}
+                </ul>
             </div>
         </section>
     );

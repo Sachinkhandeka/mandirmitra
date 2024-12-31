@@ -8,6 +8,7 @@ import Alert from "../Alert";
 import { fetchWithAuth, refreshDevoteeAccessToken } from "../../utilityFunx";
 import TempleNavigation from "./navigationItems/TempleNavigation";
 import TempleProfile from "./TempleProfile";
+import TempleDetailsSkeleton from "../skeletons/TempleDetailsSkeleton";
 
 export default function TempleDescription({ temple, setTemple }) {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function TempleDescription({ temple, setTemple }) {
     const [loading, setLoading] = useState(false);
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
-    const isAnuyayi = temple.anuyayi.some((anuyayi) => anuyayi._id === currUser?._id);
+    const isAnuyayi = temple?.anuyayi.some((anuyayi) => anuyayi._id === currUser?._id);
 
     const handleAnuyayi = async () => {
         setAlert({ type: "", message: "" });
@@ -119,20 +120,23 @@ export default function TempleDescription({ temple, setTemple }) {
                     )}
                 </div>
                 {/* Profile Section */}
-                <TempleProfile
-                    temple={temple}
-                    isAnuyayi={isAnuyayi}
-                    loading={loading}
-                    onFollowToggle={() =>
-                        isAnuyayi ? setOpenConfirmModal(true) : handleAnuyayi()
-                    }
-                    setAlert={setAlert}
-                />
+                {  temple && temple._id ? (
+                    <TempleProfile
+                        temple={temple}
+                        isAnuyayi={isAnuyayi}
+                        loading={loading}
+                        onFollowToggle={() =>
+                            isAnuyayi ? setOpenConfirmModal(true) : handleAnuyayi()
+                        }
+                        setAlert={setAlert}
+                    />
+                ) : (
+                    <TempleDetailsSkeleton />
+                ) }
 
                 {/* Navigation and Content */}
                 <TempleNavigation temple={temple} />
             </section>
-
         </>
     );
 }
