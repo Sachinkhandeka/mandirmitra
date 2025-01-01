@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 
 export default function TempleAbout({ description, images, templeName }) {
     return (
-        <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <div className="mt-4 p-4 min-h-screen">
             {/* Helmet for SEO */}
             <Helmet>
                 <title>About {templeName} | MandirMitra</title>

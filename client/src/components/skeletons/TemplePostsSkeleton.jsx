@@ -3,7 +3,7 @@ export default function TemplePostsSkeleton() {
     const skeletonPosts = Array.from({ length: 6 });
 
     return (
-        <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-1 my-4 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {skeletonPosts.map((_, index) => (
                     <div

@@ -72,7 +72,7 @@ export default function TempleNavigation({ temple }) {
             </div>
 
             {/* Render Active Component Based on Route */}
-            <div className="p-3">
+            <div className="md:p-2">
                 <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
                         <Route path="posts" element={

@@ -42,7 +42,7 @@ export default function TempleGods({ gods, templeId, templeName }) {
 
     }
     return (
-        <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-1 min-h-screen">
             <Helmet>
                 <title>{ templeName } - Gods and Goddesses | MandirMitra</title>
                 <meta 

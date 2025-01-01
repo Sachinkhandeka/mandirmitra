@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet-async";
 export default function TempleManagement({ management, templeId, templeName }) {
     const [ alert, setAlert ] = useState({ type : "", message : "" });
     return (
-        <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-1 min-h-screen">
             <Helmet>
                 <title>{ templeName } - Management | MandirMitra</title>
                 <meta 

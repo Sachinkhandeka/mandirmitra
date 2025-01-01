@@ -24,7 +24,7 @@ export default function TemplePhotos({ photos, templeName }) {
     };
 
     return (
-        <section className="p-2 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="p-1 min-h-screen">
              <Helmet>
                 <title>{`${templeName} - Temple Photos | MandirMitra`}</title>
                 <meta

@@ -50,7 +50,7 @@ export default function TempleVideos({ videos, templeId, templeName }) {
         }
     }
     return (
-        <section className="py-6 px-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
+        <section className="py-6 px-1 min-h-screen">
             <Helmet>
                 <title>{`${templeName} - Temple Videos | MandirMitra`}</title>
                 <meta
