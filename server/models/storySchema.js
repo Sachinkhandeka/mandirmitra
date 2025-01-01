@@ -15,7 +15,12 @@ const storySchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId, 
             ref: "Devotee"
         }
-    ] 
+    ],
+    expiresAt: { 
+        type: Date,
+        default: () => Date.now() + 24 * 60 * 60 * 1000, // 24 hours from creation
+        index: { expires: '1s' } // TTL index (deletes when expiresAt is reached)
+    }
 });
 
 const Story = mongoose.model("Story", storySchema);
