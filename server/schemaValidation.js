@@ -82,8 +82,20 @@ const templeGods = Joi.object({
             name: Joi.string().required().error(new Error('Username is required')),
             description: Joi.string().required().error(new Error('Short description is required')),
             image: Joi.string().uri().optional(),
-        })
-    ).optional(),
+            likes: Joi.array()
+                .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+                .error(new Error('Likes must be an array of valid Devotee IDs')).optional(),
+            comments: Joi.array()
+                .items(
+                    Joi.object({
+                        user: Joi.string().required().error(new Error('User ID is required for comments')),
+                        comment: Joi.string().required().max(500)
+                            .error(new Error('Comment is required and must be at most 500 characters')),
+                        createdAt: Joi.date().error(new Error('Invalid date format')),
+                    })
+                ).error(new Error('Comments must be an array of valid objects')),
+                })
+            ).optional(),
 }).optional().options({ abortEarly : false });
 
 const TempleFestivals = Joi.object({
@@ -94,8 +106,20 @@ const TempleFestivals = Joi.object({
             festivalName: Joi.string().required().error(new Error('Festival name is required')),
             festivalImportance: Joi.string().optional(),
             festivalImages: Joi.array().items(Joi.string().uri()).optional(),
-        })
-    ).optional(),
+            likes: Joi.array()
+                .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+                .error(new Error('Likes must be an array of valid Devotee IDs')).optional(),
+            comments: Joi.array()
+                .items(
+                    Joi.object({
+                        user: Joi.string().required().error(new Error('User ID is required for comments')),
+                        comment: Joi.string().required().max(500)
+                            .error(new Error('Comment is required and must be at most 500 characters')),
+                        createdAt: Joi.date().error(new Error('Invalid date format')),
+                    })
+                ).error(new Error('Comments must be an array of valid objects')),
+                })
+            ).optional(),
 }).optional().options({ abortEarly : false });
 
 const templeVideos = Joi.object({
@@ -105,9 +129,21 @@ const templeVideos = Joi.object({
             _id: Joi.string().optional(),
             title: Joi.string().required().error(new Error('Video title is required')),
             description: Joi.string().required().error(new Error('Video description is required')),
-            url: Joi.string().pattern(/^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+$/).required().error(new Error('Video URL must be a valid YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)'))
-        })
-    ).optional(),
+            url: Joi.string().pattern(/^https:\/\/www\.youtube\.com\/embed\/[a-zA-Z0-9_-]+$/).required().error(new Error('Video URL must be a valid YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)')),
+            likes: Joi.array()
+                .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+                .error(new Error('Likes must be an array of valid Devotee IDs')).optional(),
+            comments: Joi.array()
+                .items(
+                    Joi.object({
+                        user: Joi.string().required().error(new Error('User ID is required for comments')),
+                        comment: Joi.string().required().max(500)
+                            .error(new Error('Comment is required and must be at most 500 characters')),
+                        createdAt: Joi.date().error(new Error('Invalid date format')),
+                    })
+                ).error(new Error('Comments must be an array of valid objects')),
+                })
+            ).optional(),
 }).optional().options({ abortEarly : false });
 
 const templePujaris = Joi.object({
@@ -121,8 +157,20 @@ const templePujaris = Joi.object({
             designation: Joi.string().optional(),
             specialization: Joi.string().optional(),
             contactInfo: Joi.string().pattern(/^\d{10}$/).optional().error(new Error('Contact info must be a valid 10-digit number')),
-        })
-    ).optional(),
+            likes: Joi.array()
+                .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+                .error(new Error('Likes must be an array of valid Devotee IDs')).optional(),
+            comments: Joi.array()
+                .items(
+                    Joi.object({
+                        user: Joi.string().required().error(new Error('User ID is required for comments')),
+                        comment: Joi.string().required().max(500)
+                            .error(new Error('Comment is required and must be at most 500 characters')),
+                        createdAt: Joi.date().error(new Error('Invalid date format')),
+                    })
+                ).error(new Error('Comments must be an array of valid objects')),
+                })
+            ).optional(),
 }).optional().options({ abortEarly : false });
 
 const templeManagment = Joi.object({
@@ -133,8 +181,20 @@ const templeManagment = Joi.object({
             name: Joi.string().required().error(new Error('Person name is required')),
             role: Joi.string().required().error(new Error('Person role is required')),
             profile: Joi.string().uri().optional(),
-        })
-    ).optional(),
+            likes: Joi.array()
+                .items(Joi.string().error(new Error('Each like must be a valid Devotee ID')))
+                .error(new Error('Likes must be an array of valid Devotee IDs')).optional(),
+            comments: Joi.array()
+                .items(
+                    Joi.object({
+                        user: Joi.string().required().error(new Error('User ID is required for comments')),
+                        comment: Joi.string().required().max(500)
+                            .error(new Error('Comment is required and must be at most 500 characters')),
+                        createdAt: Joi.date().error(new Error('Invalid date format')),
+                    })
+                ).error(new Error('Comments must be an array of valid objects')),
+                })
+            ).optional(),
 }).optional().options({ abortEarly : false });
 
 
