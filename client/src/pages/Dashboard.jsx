@@ -1,8 +1,7 @@
 import { Helmet } from "react-helmet-async";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
-import { Spinner } from "flowbite-react";
 
 const Home = React.lazy(()=> import("../components/Home"));
 const DashProfile = React.lazy(()=> import("../components/dash/DashProfile"));
@@ -26,6 +25,7 @@ import FooterComp from "../components/FooterComp";
 import About from "../components/About";
 import PrivacyPolicy from "../components/ProvacyPolicy";
 import Terms from "../components/Terms";
+import SuspenseWrapper from "../components/SuspenseWrapper";
 
 export default function Dashboard() {
     const location = useLocation();
@@ -138,133 +138,43 @@ export default function Dashboard() {
                         <DashSidebarIcons />
                     </div>
                 )}
-                <div className={`${showSidebar ? '' : 'ml-12'} flex-1 overflow-x-auto relative z-0 p-3 h-full min-h-screen`}>
+                <div className={`${showSidebar ? '' : 'ml-12'} flex-1 overflow-x-auto relative z-0 p-1 h-full min-h-screen`}>
                     {/* Home Page ... */}
-                    {isHomePage && !tab && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><Home /></Suspense>}
+                    {isHomePage && !tab && <SuspenseWrapper><Home /></SuspenseWrapper>}
                     {/* profile ... */}
-                    {tab === "profile" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashProfile /></Suspense>}
+                    {tab === "profile" && <SuspenseWrapper><DashProfile /></SuspenseWrapper>}
                     {/* analytics ... */}
-                    {tab === "analytics" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><Home /></Suspense>}
+                    {tab === "analytics" && <SuspenseWrapper><Home /></SuspenseWrapper>}
                     {/* Donations ... */}
-                    {tab === "daans" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashDonations /></Suspense>}
+                    {tab === "daans" && <SuspenseWrapper><DashDonations /></SuspenseWrapper>}
                     {/* Expenses */}
-                    {tab === "expenses" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashExpenses /></Suspense>}
+                    {tab === "expenses" && <SuspenseWrapper><DashExpenses /></SuspenseWrapper>}
                     {/* Inventories */}
-                    {tab === "inventories" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashInventories /></Suspense>}
+                    {tab === "inventories" && <SuspenseWrapper><DashInventories /></SuspenseWrapper>}
                     {/* events */}
-                    {tab === "events" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashEvents /></Suspense>}
+                    {tab === "events" && <SuspenseWrapper><DashEvents /></SuspenseWrapper>}
                     {/* assets */}
-                    {tab === "assets" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashAssets /></Suspense>}
+                    {tab === "assets" && <SuspenseWrapper><DashAssets /></SuspenseWrapper>}
                     {/* tenants */}
-                    {tab === "tenants" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashTenants /></Suspense>}
+                    {tab === "tenants" && <SuspenseWrapper><DashTenants /></SuspenseWrapper>}
                     {/* seva */}
-                    {tab === "seva" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashSeva /></Suspense>}
+                    {tab === "seva" && <SuspenseWrapper><DashSeva /></SuspenseWrapper>}
                     {/* address */}
-                    {tab === "address" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashAddress /></Suspense>}
+                    {tab === "address" && <SuspenseWrapper><DashAddress /></SuspenseWrapper>}
                     {/* temple insights */}
-                    {tab === "templeinsights" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashTempleInsights /></Suspense>}
+                    {tab === "templeinsights" && <SuspenseWrapper><DashTempleInsights /></SuspenseWrapper>}
                     {/* users */}
-                    {tab === "users" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashUsers /></Suspense>}
+                    {tab === "users" && <SuspenseWrapper><DashUsers /></SuspenseWrapper>}
                     {/* roles */}
-                    {tab === "roles" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashRoles /></Suspense>}
+                    {tab === "roles" && <SuspenseWrapper><DashRoles /></SuspenseWrapper>}
                     {/* permissions */}
-                    {tab === "permissions" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><DashPermissions /></Suspense>}
+                    {tab === "permissions" && <SuspenseWrapper><DashPermissions /></SuspenseWrapper>}
                     {/* About */}
-                    {tab === "about" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><About /></Suspense>}
+                    {tab === "about" && <SuspenseWrapper><About /></SuspenseWrapper>}
                     {/* Privacy Policy  */}
-                    {tab === "privacy" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><PrivacyPolicy /></Suspense>}
+                    {tab === "privacy" && <SuspenseWrapper><PrivacyPolicy /></SuspenseWrapper>}
                     {/* Terms  & conditions */}
-                    {tab === "terms" && <Suspense fallback={
-                        <div className="flex justify-center items-center min-h-screen gap-4">
-                            <Spinner size={"xl"} />
-                            <div>Loading ...</div>
-                        </div>
-                    }><Terms /></Suspense>}
+                    {tab === "terms" && <SuspenseWrapper><Terms /></SuspenseWrapper>}
                     {/* Footer */}
                     <FooterComp />
                 </div>

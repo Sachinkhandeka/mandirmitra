@@ -1,8 +1,9 @@
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import SuspenseWrapper from "./components/SuspenseWrapper";
 
 // Lazy-loaded components
 const DevoteeProfile = React.lazy(() => import("./components/templeDetails/DevoteeProfile"));
@@ -15,22 +16,6 @@ const PhoneOtpForm = React.lazy(() => import("./pages/PhoneOtpForm"));
 const PrivateRoute = React.lazy(() => import("./components/PrivateRoute"));
 const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
-
-// Loading fallback component
-const LoadingFallback = () => (
-    <div className="flex justify-center items-center flex-col min-h-screen gap-4">
-        <div className="relative flex items-center" >
-            <div className="p-4 rounded-full border-4 border-t-0 border-r-0 border-orange-500 animate-spin" ></div>
-            <div className="p-4 rounded-full border-4 border-b-0 border-l-0 border-orange-500 animate-spin" ></div>
-        </div>
-        <p className="text-gray-500 animate-bounce my-2" >Loading...</p>
-    </div>
-);
-
-// Suspense wrapper
-const SuspenseWrapper = ({ children }) => (
-    <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
-);
 
 export default function App() {
     useEffect(() => {
