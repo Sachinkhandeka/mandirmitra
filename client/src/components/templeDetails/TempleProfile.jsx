@@ -81,7 +81,7 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg"></div>
                 {/* Temple Name and Decorative Touch */}
                 <div className="z-10 text-center flex items-center justify-center flex-col">
-                    <h1 className="bg-white text-sm md:text-3xl lg:text-5xl font-bold text-transparent bg-clip-text drop-shadow-md">
+                    <h1 className="bg-white p-1 text-sm md:text-3xl lg:text-5xl font-bold text-transparent bg-clip-text drop-shadow-md">
                         {temple.name}
                     </h1>
                     {temple.alternateName && (
@@ -97,7 +97,7 @@ export default function TempleProfileSection({ temple, isAnuyayi, loading, onFol
                     className={`flex-shrink-0 w-full md:w-1/3 cursor-pointer rounded-lg p-1 ${borderClass()}`}
                 >
                     <img
-                            src={temple.image}
+                        src={temple.image}
                         alt={temple.name}
                         className="cursor-pointer w-full h-auto max-h-[300px] object-fill rounded-lg"
                         onClick={handleStoryModal}
