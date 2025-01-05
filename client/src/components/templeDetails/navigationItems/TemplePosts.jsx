@@ -8,6 +8,7 @@ import Alert from "../../Alert";
 import CommentModal from "../../CommentModal";
 import { FaRegShareSquare } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
+import moment from "moment";
 
 export default function TemplePosts({ templeId, templeName }) {
     const [posts, setPosts] = useState([]);
@@ -121,16 +122,24 @@ function PostCard({ post, setAlert }) {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden relative">
             {/* Post content */}
             <div className="flex justify-between items-center px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-3">
-                    <Avatar
-                        img={post.temple.image}
-                        rounded
-                        size="md"
-                        alt="Temple Image"
-                    />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {post.temple.name || "Unknown Temple"}
-                    </span>
+                <div className="flex items-center justify-between gap-3">
+                    <div  className=" flex items-center gap-2" >
+                        <Avatar
+                            img={post.temple.image}
+                            rounded
+                            size="md"
+                            alt="Temple Image"
+                        />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {post.temple.name || "Unknown Temple"}
+                        </span>
+                        { post.createdAt && moment(post.createdAt).isValid() && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <span className="mx-2">•</span>
+                                <span>{ moment(post.createdAt).fromNow() }</span>
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
             {/* Image Carousel */}
