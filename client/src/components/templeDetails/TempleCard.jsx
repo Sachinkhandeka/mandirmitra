@@ -38,11 +38,10 @@ export default function TempleCard({ temple }) {
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mt-2 mb-4">
-                        {temple.description
-                            ? `${temple.description.slice(0, 80)}...`
-                            : "No description available."
-                        }
+                    <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mt-2 mb-4" dangerouslySetInnerHTML={{__html: temple.description
+                        ? `${temple.description.slice(0, 80)}...`
+                        : "No description available."
+                    }}>
                     </p>
                 </div>
             </div>

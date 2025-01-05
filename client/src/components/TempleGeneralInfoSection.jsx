@@ -1,28 +1,29 @@
-import { Avatar, Button, FileInput, Label, Modal, Textarea, TextInput, Spinner } from "flowbite-react";
+import { Avatar, Button, FileInput, Label, Modal, TextInput, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken, refreshToken, uploadImages } from "../utilityFunx";
 import { useNavigate } from "react-router-dom";
 
 export default function TempleGeneralInfoSection({ temple, setAlert }) {
     const navigate = useNavigate();
-    const [showModal, setShowModal] = useState(false); 
+    const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false); 
-    const [uploadingText, setUploadingText] = useState(""); 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadingText, setUploadingText] = useState("");
     const [uploadProgress, setUploadProgress] = useState(null);
-    const [imgFiles, setImgFiles] = useState([]); // New images to upload (File objects)
-    const [imagePreviews, setImagePreviews] = useState([]); // For previewing selected images
+    const [imgFiles, setImgFiles] = useState([]); 
+    const [imagePreviews, setImagePreviews] = useState([]);
     const [generalInfo, setGeneralInfo] = useState({
         templeName: "",
         alternateName: "",
         address: "",
         founded: 0,
         history: "",
-        historyImages: [], // Only stores Firebase URLs
+        historyImages: [],
     });
 
-    // Load initial data from `temple` prop into state
     useEffect(() => {
         if (temple) {
             setGeneralInfo({
@@ -31,9 +32,9 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 address: temple.location || "",
                 founded: temple.foundedYear || 0,
                 history: temple.description || "",
-                historyImages: temple.historyImages || [], // Preload existing Firebase image URLs
+                historyImages: temple.historyImages || [],
             });
-            setImagePreviews(temple.historyImages || []); // Use existing URLs for preview
+            setImagePreviews(temple.historyImages || []);
         }
     }, [temple]);
 
@@ -42,11 +43,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
 
         if (id === "historyImages" && files.length > 0) {
             const fileArray = Array.from(files);
-
-            // Map File objects to imgFiles state for upload
             setImgFiles(prevFiles => [...prevFiles, ...fileArray]);
-
-            // Generate previews for the new images selected
             const newImagePreviews = fileArray.map(file => URL.createObjectURL(file));
             setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]);
         } else {
@@ -54,15 +51,16 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
         }
     };
 
+    const handleHistoryChange = (value) => {
+        setGeneralInfo({ ...generalInfo, history: value });
+    };
+
     const handleImgRemoval = (index) => {
-        // Remove image from both preview and imgFiles (if it's a new image)
         setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
 
         if (index >= temple.historyImages.length) {
-            // Remove the corresponding new file from imgFiles
             setImgFiles(prevFiles => prevFiles.filter((_, i) => i !== index - temple.historyImages.length));
         } else {
-            // Remove from Firebase URLs (existing ones)
             setGeneralInfo(prevInfo => ({
                 ...prevInfo,
                 historyImages: prevInfo.historyImages.filter((_, i) => i !== index),
@@ -81,29 +79,26 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
         setUploadingText("Saving...");
 
         try {
-            let downloadURLs = [...generalInfo.historyImages]; // Keep existing Firebase URLs
+            let downloadURLs = [...generalInfo.historyImages];
 
-            // Check if there are new images to upload
             if (imgFiles.length > 0) {
                 setUploadingText("Uploading...");
                 await refreshToken();
-
-                // Upload only the new images
                 const newUploadURLs = await uploadImages(imgFiles, setUploadProgress, setIsSubmitting, setAlert);
-                downloadURLs = [...downloadURLs, ...newUploadURLs]; // Add new Firebase URLs to existing ones
+                downloadURLs = [...downloadURLs, ...newUploadURLs];
             }
 
-            // Prepare updated information for the backend
             const updatedInfo = {
                 name: generalInfo.templeName,
                 alternateName: generalInfo.alternateName,
                 location: generalInfo.address,
                 description: generalInfo.history,
                 foundedYear: generalInfo.founded,
-                historyImages: downloadURLs, // Only save Firebase URLs here
+                historyImages: downloadURLs,
             };
+
             const data = await fetchWithAuth(
-                `/api/temple/edit/${temple._id}/genInfo`, 
+                `/api/temple/edit/${temple._id}/genInfo`,
                 {
                     method: "PUT",
                     headers: { "content-type": "application/json" },
@@ -115,7 +110,8 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 setAlert,
                 navigate
             );
-            if(data) {
+
+            if (data) {
                 setAlert({ type: "success", message: "Information saved successfully!" });
             }
         } catch (error) {
@@ -175,18 +171,17 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                             onChange={handleOnChange}
                         />
                     </div>
-                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2">
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mb-4">
                         <Label htmlFor="history">History</Label>
-                        <Textarea
-                            name="history"
-                            id="history"
-                            placeholder="Add complete history about the temple..."
-                            rows={6}
+                        <ReactQuill
+                            theme="snow"
                             value={generalInfo.history}
-                            onChange={handleOnChange}
+                            onChange={handleHistoryChange}
+                            placeholder="Add complete history about the temple..."
+                            className="bg-white dark:bg-slate-700 mb-6"
                         />
                     </div>
-                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2">
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mt-4">
                         <Label htmlFor="historyImages">Related Images</Label>
                         <FileInput
                             name="historyImages"
@@ -205,7 +200,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                             {imagePreviews.map((img, index) => (
                                 <div className="relative group" key={index}>
                                     <Avatar
-                                        img={img} // Directly use the URL for images (Firebase URLs or blob)
+                                        img={img}
                                         size="lg"
                                         stacked
                                         onClick={() => handleOpenModal(img)}
