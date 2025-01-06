@@ -103,9 +103,18 @@ function PostCard({ post, setAlert }) {
             try {
                 await navigator.share({
                     title: post.title,
-                    text: post.content,
+                    text: truncatedContent,
                     url: window.location.href, 
                 });
+
+                // Fetch and attach the first image if it exists
+                if (post.images?.length > 0) {
+                    const res = await fetch(post.images[0]);
+                    const imageBlob = await res.blob();
+                    shareData.files = [new File([imageBlob], "image.jpg", { type: "image/jpeg" })];
+                }
+
+                await navigator.share(shareData);
                 setAlert({ type: "success", message: "Post shared successfully!" });
             } catch (error) {
                 setAlert({ type: "error", message: "Failed to share the post!" });
@@ -135,7 +144,7 @@ function PostCard({ post, setAlert }) {
                         </span>
                         { post.createdAt && moment(post.createdAt).isValid() && (
                             <p className="text-xs text-gray-500 dark:text-gray-400">
-                                <span className="mx-2">•</span>
+                                <span className="mr-1">•</span>
                                 <span>{ moment(post.createdAt).fromNow() }</span>
                             </p>
                         )}
