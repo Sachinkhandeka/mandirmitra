@@ -125,13 +125,12 @@ export default function TempleFestivals({ festivals, templeId, templeName }) {
 
                             {/* Festival Description */}
                             <div className="px-6 py-4">
-                                <p
+                                <div
                                     className={`text-sm text-gray-700 dark:text-gray-300 ${
                                         expandedIndex === indx ? "" : "line-clamp-3"
                                     }`}
-                                >
-                                    {fest.festivalImportance}
-                                </p>
+                                    dangerouslySetInnerHTML={{ __html: fest.festivalImportance }}
+                                ></div>
                                 {fest.festivalImportance.length > 150 && (
                                     <button
                                         onClick={() => toggleExpanded(indx)}

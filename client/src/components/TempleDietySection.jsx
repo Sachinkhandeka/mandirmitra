@@ -1,100 +1,98 @@
-import { Avatar, Button, FileInput, Label, Modal, TextInput, Textarea, Spinner } from "flowbite-react";
+import { Avatar, Button, FileInput, Label, Modal, TextInput, Spinner } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { refreshToken, uploadImages } from "../utilityFunx";
 import DietyList from "./DietyList";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 export default function TempleDietySection({ temple, setTemple, setAlert }) {
     const navigate = useNavigate();
-    const [selectedImage, setSelectedImage] = useState(null); 
+    const [selectedImage, setSelectedImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); 
-    const [uploadingText, setUploadingText] = useState(""); 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadingText, setUploadingText] = useState("");
     const [uploadProgress, setUploadProgress] = useState(null);
-    const [dietyImageFile, setDietyImageFile] = useState(null); 
+    const [dietyImageFile, setDietyImageFile] = useState(null);
     const [dietyImagePreview, setDietyImagePreview] = useState(null);
     const [dietyInfo, setDietyInfo] = useState({
         dietyName: "",
-        description: "",
-        dietyImage: "", 
+        description: "", // Will use ReactQuill here
+        dietyImage: "",
     });
 
-    // Load initial data if the temple prop has deity data
     useEffect(() => {
         if (temple) {
             setDietyInfo({
                 dietyName: "",
                 description: "",
-                dietyImage: "", // Reset form fields for adding a new deity
+                dietyImage: "",
             });
-            setDietyImagePreview(null); // Clear image preview when loading initial data
+            setDietyImagePreview(null);
         }
     }, [temple]);
 
-    // Handle form input changes
     const handleOnChange = (e) => {
         const { id, value, files } = e.target;
         if (id === "dietyImage" && files.length > 0) {
-            const file = files[0]; // Single file for diety image
-            setDietyImageFile(file); // Set file for Firebase upload
-            setDietyImagePreview(URL.createObjectURL(file)); // Preview the selected image
+            const file = files[0];
+            setDietyImageFile(file);
+            setDietyImagePreview(URL.createObjectURL(file));
         } else {
-            setDietyInfo({ ...dietyInfo, [id]: value }); // Update deity info (name, description)
+            setDietyInfo({ ...dietyInfo, [id]: value });
         }
     };
 
-    // Remove the selected deity image
-    const handleImgRemoval = () => {
-        setDietyImageFile(null); // Remove the file for Firebase upload
-        setDietyImagePreview(null); // Remove image preview
-        setDietyInfo({ ...dietyInfo, dietyImage: "" }); // Remove Firebase URL from deity info
+    const handleDescriptionChange = (value) => {
+        setDietyInfo({ ...dietyInfo, description: value }); // Update deity description
     };
 
-    // Open modal to preview image
+    const handleImgRemoval = () => {
+        setDietyImageFile(null);
+        setDietyImagePreview(null);
+        setDietyInfo({ ...dietyInfo, dietyImage: "" });
+    };
+
     const handleOpenModal = (image) => {
         setSelectedImage(image);
         setShowModal(true);
     };
 
-    // Handle form submission to save deity info
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setUploadingText("Saving...");
 
         try {
-            let dietyImageUrl = dietyInfo.dietyImage; // Keep existing image URL if no new image is selected
+            let dietyImageUrl = dietyInfo.dietyImage;
 
-            // Upload the new image to Firebase, if selected
             if (dietyImageFile) {
                 setUploadingText("Uploading Image...");
-                await refreshToken(); // Refresh token before making authenticated requests
+                await refreshToken();
 
                 const uploadResult = await uploadImages(
-                    [dietyImageFile], 
-                    setUploadProgress, 
-                    setIsSubmitting, 
-                    setAlert 
+                    [dietyImageFile],
+                    setUploadProgress,
+                    setIsSubmitting,
+                    setAlert
                 );
-                dietyImageUrl = uploadResult[0]; 
+                dietyImageUrl = uploadResult[0];
             }
 
-            // Prepare updated deity info for the backend
             const newDiety = {
                 name: dietyInfo.dietyName,
-                description: dietyInfo.description,
+                description: dietyInfo.description, // Rich text from ReactQuill
                 image: dietyImageUrl,
             };
 
-            // Append new deity to the existing list of deities
             const updatedDieties = {
-                godsAndGoddesses : [...temple.godsAndGoddesses, newDiety]
+                godsAndGoddesses: [...temple.godsAndGoddesses, newDiety],
             };
-            // Backend API call to update the deities in the temple
+
             const data = await fetchWithAuth(
-                `/api/temple/edit/${temple._id}/gods`, 
+                `/api/temple/edit/${temple._id}/gods`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -106,7 +104,7 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                 setAlert,
                 navigate
             );
-            if(data) {
+            if (data) {
                 setTemple(data.temple);
                 setAlert({ type: "success", message: "Deity added successfully!" });
             }
@@ -121,7 +119,6 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
     return (
         <section className="p-4 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
             <h3 className="text-xl font-bold mb-4">Deity/God Worshipped</h3>
-            {/* Form for adding a new deity */}
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div className="flex flex-col gap-2">
@@ -145,16 +142,14 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                             onChange={handleOnChange}
                         />
                     </div>
-                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2">
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mb-6">
                         <Label htmlFor="description">Description</Label>
-                        <Textarea
-                            name="description"
-                            id="description"
-                            placeholder="Describe the god..."
-                            rows={6}
+                        <ReactQuill
+                            theme="snow"
                             value={dietyInfo.description}
-                            onChange={handleOnChange}
-                            required
+                            onChange={handleDescriptionChange}
+                            className="bg-white dark:bg-slate-700 mb-6"
+                            placeholder="Describe the god..."
                         />
                     </div>
                 </div>
@@ -163,10 +158,10 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                         <h2 className="text-xl font-bold my-4">Selected Image</h2>
                         <div className="relative inline-block">
                             <Avatar
-                                img={dietyImagePreview} // Preview the selected image
+                                img={dietyImagePreview}
                                 size="lg"
                                 stacked
-                                onClick={() => handleOpenModal(dietyImagePreview)} // Show full image in modal
+                                onClick={() => handleOpenModal(dietyImagePreview)}
                                 className="cursor-pointer"
                             />
                             <button
@@ -189,12 +184,9 @@ export default function TempleDietySection({ temple, setTemple, setAlert }) {
                     )}
                 </Button>
             </form>
-            {/* Display list of deities */}
             {temple.godsAndGoddesses && temple.godsAndGoddesses.length > 0 && (
                 <DietyList temple={temple} setTemple={setTemple} setAlert={setAlert} />
             )}
-
-            {/* Modal to show full-width image */}
             <Modal show={showModal} onClose={() => setShowModal(false)}>
                 <Modal.Header>Image Preview</Modal.Header>
                 <Modal.Body>

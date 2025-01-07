@@ -98,9 +98,10 @@ export default function TempleGods({ gods, templeId, templeName }) {
                                         { showMore[index] ? <IoIosArrowUp /> : <IoIosArrowDown /> }
                                     </span>
                                 </div>
-                                <p className="text-sm text-gray-600 dark:text-gray-300">
-                                    { showMore[index] ? god.description : `${god.description.slice(0,100)}...`}
-                                </p>
+                                <div
+                                    className="leading-loose"
+                                    dangerouslySetInnerHTML={{ __html: showMore[index] ? god.description : `${god.description.slice(0,200)}...`}}
+                                ></div>
                                 <div className="flex justify-between items-center px-4 py-2 mt-2 border-t border-gray-200 dark:border-gray-700">
                                     <div className="flex items-center gap-4">
                                         {/* Likes */}

@@ -95,13 +95,13 @@ export default function FestivalList({ temple, setTemple, setAlert }) {
                             </h1>
 
                             {/* Festival Description */}
-                            <p
+                            <div
                                 className={`text-gray-600 dark:text-gray-300 mt-2 text-xs transition-all duration-300 overflow-hidden ${
                                     isExpanded[festivalIndex] ? "" : "line-clamp-3"
                                 }`}
+                                dangerouslySetInnerHTML={{ __html:festival.festivalImportance}}
                             >
-                                {festival.festivalImportance}
-                            </p>
+                            </div>
 
                             {/* Show More/Show Less */}
                             {festival.festivalImportance &&

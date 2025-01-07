@@ -5,6 +5,8 @@ import { refreshToken ,uploadImages } from "../utilityFunx"; // Firebase image u
 import FestivalList from "./FestivalList";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function TempleFestivalsSection({ temple, setTemple, setAlert }) {
     const navigate = useNavigate();
@@ -141,17 +143,16 @@ export default function TempleFestivalsSection({ temple, setTemple, setAlert }) 
                             onChange={handleImageSelection}
                         />
                     </div>
-                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2">
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mb-6">
                         <Label htmlFor="festivalImportance">Festival Importance</Label>
-                        <Textarea
-                            name="festivalImportance"
-                            id="festivalImportance"
-                            placeholder="Add importance of the festival..."
-                            rows={6}
+                        <ReactQuill
+                            theme="snow"
                             value={festivals.festivalImportance}
-                            onChange={(e) =>
-                                setFestivals({ ...festivals, festivalImportance: e.target.value })
+                            onChange={(value) =>
+                                setFestivals({ ...festivals, festivalImportance: value })
                             }
+                            className="bg-white dark:bg-slate-700 mb-6"
+                            placeholder="Add the importance of the festival..."
                         />
                     </div>
                 </div>

@@ -71,13 +71,13 @@ export default function DietyList({ temple, setTemple, setAlert }) {
                             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">{diety.name}</h1>
 
                             {/* Deity Description */}
-                            <p
+                            <div
                                 className={`text-gray-600 dark:text-gray-300 mt-2 text-xs transition-all duration-300 overflow-hidden ${
                                     isExpanded ? "" : "line-clamp-3"
                                 }`}
+                                dangerouslySetInnerHTML={{ __html: diety.description}}
                             >
-                                {diety.description}
-                            </p>
+                            </div>
 
                             {/* Show More/Show Less */}
                             {diety.description && diety.description.length > 100 && (
