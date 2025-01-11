@@ -166,7 +166,7 @@ export default function TempleVideosSection({ temple, setTemple, setAlert }) {
 
             {/* Horizontal scrollable video cards */}
             {temple.videos && temple.videos.length > 0 && (
-                <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hidden pb-4">
+                <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4">
                     {temple.videos.map((video, index) => {
                         const isTitleExpanded = expandedTitleIndex === index;
                         const isDescExpanded = expandedDescIndex === index;

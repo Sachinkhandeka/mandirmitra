@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Spinner, Dropdown, Tooltip } from "flowbite-react";
+import { Dropdown, Tooltip } from "flowbite-react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaShareSquare, FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -7,6 +7,7 @@ import PostImageCarousel from "./PostImageCarousel";
 import EditPost from "./edit/EditPost";
 import DeletePost from "./delete/DeletePost";
 import { FiHeart, FiMessageSquare } from "react-icons/fi";
+import LoadingFallback from "./LoadingFallback";
 
 export default function PostList({ templeId, setAlert, fetchPosts, setFetchPosts }) {
     const [posts, setPosts] = useState([]);
@@ -58,7 +59,7 @@ export default function PostList({ templeId, setAlert, fetchPosts, setFetchPosts
     if (loading) {
         return (
             <div className="flex justify-center my-10">
-                <Spinner color="blue" size="xl" aria-label="Loading posts" />
+                <LoadingFallback />
             </div>
         );
     }
@@ -67,7 +68,7 @@ export default function PostList({ templeId, setAlert, fetchPosts, setFetchPosts
         <section className="p-1 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md">
             <h2 className="p-4 text-xl font-bold mb-4">Temple Posts ({postCount || 0})</h2>
 
-            <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hidden pb-4">
+            <div className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4">
                 {posts.map((post) => (
                     <div
                         key={post._id}

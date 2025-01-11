@@ -106,15 +106,6 @@ function PostCard({ post, setAlert }) {
                     text: truncatedContent,
                     url: window.location.href, 
                 });
-
-                // Fetch and attach the first image if it exists
-                if (post.images?.length > 0) {
-                    const res = await fetch(post.images[0]);
-                    const imageBlob = await res.blob();
-                    shareData.files = [new File([imageBlob], "image.jpg", { type: "image/jpeg" })];
-                }
-
-                await navigator.share(shareData);
                 setAlert({ type: "success", message: "Post shared successfully!" });
             } catch (error) {
                 setAlert({ type: "error", message: "Failed to share the post!" });
