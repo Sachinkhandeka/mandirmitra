@@ -16,6 +16,9 @@ const  templeSchema = new mongoose.Schema({
         type : String,
         default : 'https://firebasestorage.googleapis.com/v0/b/mandirmitra-bd32e.appspot.com/o/DALL%C2%B7E%202024-12-24%2011.10.00%20-%20A%20refined%20and%20spiritual%20background%20image%20for%20MandirMitra%2C%20showcasing%20only%20Hindu%20temple%20architecture%2C%20including%20intricate%20designs%20of%20domes%2C%20spires%2C%20and.webp?alt=media&token=75f261c0-2d9d-464e-8629-f20ede914ef8'
     },
+    hoverPreviewVideo : {
+        type : String,
+    },
     godsAndGoddesses: [
         {
             name: {

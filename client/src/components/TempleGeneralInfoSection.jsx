@@ -13,8 +13,9 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadingText, setUploadingText] = useState("");
     const [uploadProgress, setUploadProgress] = useState(null);
-    const [imgFiles, setImgFiles] = useState([]); 
+    const [imgFiles, setImgFiles] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
+    const [hoverPreviewVideo, setHoverPreviewVideo] = useState(null); // State for the thumbnail video
     const [generalInfo, setGeneralInfo] = useState({
         templeName: "",
         alternateName: "",
@@ -22,6 +23,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
         founded: 0,
         history: "",
         historyImages: [],
+        hoverPreviewVideo: "", // For storing the thumbnail video URL
     });
 
     useEffect(() => {
@@ -33,8 +35,10 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 founded: temple.foundedYear || 0,
                 history: temple.description || "",
                 historyImages: temple.historyImages || [],
+                hoverPreviewVideo: temple.hoverPreviewVideo || "", // Load video if it exists
             });
             setImagePreviews(temple.historyImages || []);
+            setHoverPreviewVideo(temple.hoverPreviewVideo || null);
         }
     }, [temple]);
 
@@ -46,31 +50,20 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
             setImgFiles(prevFiles => [...prevFiles, ...fileArray]);
             const newImagePreviews = fileArray.map(file => URL.createObjectURL(file));
             setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]);
+        } else if (id === "hoverPreviewVideo" && files.length > 0) {
+            const file = files[0];
+            const videoPreview = URL.createObjectURL(file);
+            setHoverPreviewVideo(videoPreview);
+            setImgFiles([file]); // Store the video file for upload
         } else {
             setGeneralInfo({ ...generalInfo, [id]: value });
         }
     };
 
-    const handleHistoryChange = (value) => {
-        setGeneralInfo({ ...generalInfo, history: value });
-    };
-
-    const handleImgRemoval = (index) => {
-        setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
-
-        if (index >= temple.historyImages.length) {
-            setImgFiles(prevFiles => prevFiles.filter((_, i) => i !== index - temple.historyImages.length));
-        } else {
-            setGeneralInfo(prevInfo => ({
-                ...prevInfo,
-                historyImages: prevInfo.historyImages.filter((_, i) => i !== index),
-            }));
-        }
-    };
-
-    const handleOpenModal = (image) => {
-        setSelectedImage(image);
-        setShowModal(true);
+    const handleVideoRemoval = () => {
+        setHoverPreviewVideo(null);
+        setGeneralInfo({ ...generalInfo, hoverPreviewVideo: "" });
+        setImgFiles([]); // Reset video file
     };
 
     const handleSubmit = async (e) => {
@@ -80,12 +73,20 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
 
         try {
             let downloadURLs = [...generalInfo.historyImages];
+            let videoURL = generalInfo.hoverPreviewVideo;
 
             if (imgFiles.length > 0) {
                 setUploadingText("Uploading...");
                 await refreshToken();
-                const newUploadURLs = await uploadImages(imgFiles, setUploadProgress, setIsSubmitting, setAlert);
-                downloadURLs = [...downloadURLs, ...newUploadURLs];
+
+                // Separate logic for images and video uploads
+                if (hoverPreviewVideo) {
+                    const [videoUploadURL] = await uploadImages([imgFiles[0]], setUploadProgress, setIsSubmitting, setAlert);
+                    videoURL = videoUploadURL;
+                } else {
+                    const imageUploadURLs = await uploadImages(imgFiles, setUploadProgress, setIsSubmitting, setAlert);
+                    downloadURLs = [...downloadURLs, ...imageUploadURLs];
+                }
             }
 
             const updatedInfo = {
@@ -95,6 +96,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                 description: generalInfo.history,
                 foundedYear: generalInfo.founded,
                 historyImages: downloadURLs,
+                hoverPreviewVideo: videoURL,
             };
 
             const data = await fetchWithAuth(
@@ -124,14 +126,15 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
 
     return (
         <section className="p-4 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
-            <h3 className="text-xl font-bold mb-4">General information</h3>
+            <h3 className="text-xl font-bold mb-4">General Information</h3>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    {/* Temple Name and Alternate Name */}
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="templeName">Temple Name</Label>
                         <TextInput
                             type="text"
-                            placeholder="temple name"
+                            placeholder="Temple Name"
                             name="templeName"
                             id="templeName"
                             value={generalInfo.templeName}
@@ -142,18 +145,57 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                         <Label htmlFor="alternateName">Alternate Name</Label>
                         <TextInput
                             type="text"
-                            placeholder="alternate name"
+                            placeholder="Alternate Name"
                             name="alternateName"
                             id="alternateName"
                             value={generalInfo.alternateName}
                             onChange={handleOnChange}
                         />
                     </div>
+
+                    {/* Thumbnail Video */}
+                    <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mt-4">
+                        <Label htmlFor="hoverPreviewVideo">Add Thumbnail Video</Label>
+                        <FileInput
+                            name="hoverPreviewVideo"
+                            id="hoverPreviewVideo"
+                            accept="video/mp4, video/webm"
+                            onChange={handleOnChange}
+                        />
+                        <div className="text-xs text-gray-500" >
+                            <p>
+                                *The thumbnail video provides a captivating and concise visual introduction to the temple, highlighting its significance, history, and uniqueness.
+                            </p>
+
+                        </div>
+                        {hoverPreviewVideo && (
+                            <div className="relative max-w-md h-60 mt-4">
+                                <video
+                                    src={hoverPreviewVideo}
+                                    className="w-full h-full rounded-md"
+                                    controls
+                                    autoPlay
+                                    muted
+                                    loop
+                                    onMouseOver={(e) => e.target.play()}
+                                    onMouseOut={(e) => e.target.pause()}
+                                />
+                                <button
+                                    className="absolute top-2 right-2 bg-white p-1 text-black dark:bg-gray-600 dark:text-white rounded-full shadow-md"
+                                    onClick={handleVideoRemoval}
+                                >
+                                    <FiX size={16} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Address and Founded Year */}
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="address">Address</Label>
                         <TextInput
                             type="text"
-                            placeholder="temple address"
+                            placeholder="Temple Address"
                             name="address"
                             id="address"
                             value={generalInfo.address}
@@ -164,23 +206,27 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                         <Label htmlFor="founded">Founded Year</Label>
                         <TextInput
                             type="number"
-                            placeholder="eg. 1998"
+                            placeholder="e.g. 1998"
                             name="founded"
                             id="founded"
                             value={generalInfo.founded}
                             onChange={handleOnChange}
                         />
                     </div>
+
+                    {/* History */}
                     <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mb-4">
                         <Label htmlFor="history">History</Label>
                         <ReactQuill
                             theme="snow"
                             value={generalInfo.history}
-                            onChange={handleHistoryChange}
+                            onChange={value => setGeneralInfo({ ...generalInfo, history: value })}
                             placeholder="Add complete history about the temple..."
                             className="bg-white dark:bg-slate-700 mb-6"
                         />
                     </div>
+
+                    {/* Related Images */}
                     <div className="flex flex-col gap-2 col-span-1 lg:col-span-2 mt-4">
                         <Label htmlFor="historyImages">Related Images</Label>
                         <FileInput
@@ -193,6 +239,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                     </div>
                 </div>
 
+                {/* Image Previews */}
                 {imagePreviews.length !== 0 && (
                     <>
                         <h2 className="text-xl font-bold my-4">Selected Images</h2>
@@ -203,7 +250,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                                         img={img}
                                         size="lg"
                                         stacked
-                                        onClick={() => handleOpenModal(img)}
+                                        onClick={() => setSelectedImage(img)}
                                         className="cursor-pointer"
                                     />
                                     <button
@@ -218,6 +265,7 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                     </>
                 )}
 
+                {/* Save Button */}
                 <Button color={"blue"} type="submit" className="my-6">
                     {isSubmitting ? (
                         <>
@@ -229,13 +277,6 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
                     )}
                 </Button>
             </form>
-
-            <Modal show={showModal} onClose={() => setShowModal(false)}>
-                <Modal.Header>Image Preview</Modal.Header>
-                <Modal.Body>
-                    {selectedImage && <img src={selectedImage} alt="Selected Img" className="w-full" />}
-                </Modal.Body>
-            </Modal>
         </section>
     );
 }

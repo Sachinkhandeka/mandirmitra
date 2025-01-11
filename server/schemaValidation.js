@@ -72,6 +72,7 @@ const templeGenInfo = Joi.object({
     description: Joi.string().optional(),
     foundedYear: Joi.number().integer().optional(),
     historyImages: Joi.array().items(Joi.string().uri()).optional(),
+    hoverPreviewVideo : Joi.string().uri().optional().allow(''),
 }).required().options({ abortEarly: false });
 
 const templeGods = Joi.object({

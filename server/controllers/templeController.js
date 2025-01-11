@@ -122,7 +122,7 @@ module.exports.editController = async (req, res) => {
 
     // Map the `type` parameter to the specific fields in the `Temple` model
     const templeFields = {
-        genInfo: ["name", "alternateName", "location", "image", "foundedYear", "description", "historyImages"],
+        genInfo: ["name", "alternateName", "location", "image", "foundedYear", "description", "historyImages", "hoverPreviewVideo"],
         gods: "godsAndGoddesses",
         festivals: "festivals",
         pujaris: "pujaris",
