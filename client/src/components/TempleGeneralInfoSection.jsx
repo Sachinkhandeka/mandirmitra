@@ -60,6 +60,8 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
             }
 
             const updatedInfo = {
+                name : temple.name,
+                location : temple.location,
                 description: generalInfo.history,
                 historyImages: downloadURLs,
             };
