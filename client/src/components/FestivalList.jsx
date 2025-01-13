@@ -51,7 +51,7 @@ export default function FestivalList({ temple, setTemple, setAlert }) {
     return (
         <>
             <h2 className="text-xl font-bold my-4">Festival List</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {temple.festivals.map((festival, festivalIndex) => (
                     <div
                         key={festivalIndex}

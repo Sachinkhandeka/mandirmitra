@@ -97,12 +97,12 @@ function PostCard({ post, setAlert }) {
     const truncatedContent = post.content.length > MAX_CONTENT_LENGTH
         ? `${post.content.slice(0, MAX_CONTENT_LENGTH)}...`
         : post.content;
-
+    const postTitle = post.title;
     const handleShare = async () => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: post.title,
+                    title: postTitle,
                     text: truncatedContent,
                     url: window.location.href, 
                 });
