@@ -3,10 +3,13 @@ import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import ImageModal from "./ImageModal";
 
 export default function PujariList({ temple, setTemple, setAlert }) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ selectedImg, setSelectedImg ] = useState("");
 
     // Remove a Pujari from the list
     const handleRemovePujari = async (index) => {
@@ -39,15 +42,20 @@ export default function PujariList({ temple, setTemple, setAlert }) {
         }
     };
 
+    const handleShowImgModal = (img)=> {
+        setSelectedImg(img);
+        setShowModal(true);
+    }
+
     return (
         <>
             <h2 className="text-xl font-bold my-4">Pujari List</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {temple.pujaris.map((pujari, indx) => (
                     <div key={indx} className="bg-white dark:bg-gray-700 shadow-md rounded-lg overflow-hidden">
                         <div className="relative">
                             {/* Pujari Image */}
-                            <img src={pujari.profile} className="w-full h-40 object-cover" alt="Pujari Image" />
+                            <img src={pujari.profile} className="w-full h-40 object-cover cursor-pointer" alt="Pujari Image" onClick={()=> handleShowImgModal(pujari.profile)} />
 
                             {/* Remove button */}
                             <button
@@ -96,6 +104,9 @@ export default function PujariList({ temple, setTemple, setAlert }) {
                     </div>
                 ))}
             </div>
+            {
+                showModal && <ImageModal isOpen={showModal} onClose={()=> setShowModal(false)} url={selectedImg} />
+            }
         </>
     );
 }

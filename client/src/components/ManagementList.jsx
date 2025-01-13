@@ -3,10 +3,13 @@ import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth, refreshSuperAdminOrUserAccessToken } from "../utilityFunx";
+import ImageModal from "./ImageModal";
 
 export default function ManagementList({ temple, setTemple, setAlert }) {
     const navigate = useNavigate();
     const [ loading, setLoading ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ selectedImg, setSelectedImg ] = useState("");
 
     const handleRemoveManagement = async (index) => {
         const updatedManagement = {
@@ -39,14 +42,19 @@ export default function ManagementList({ temple, setTemple, setAlert }) {
         }
     };
 
+    const handleShowImgModal = (img)=> {
+        setSelectedImg(img);
+        setShowModal(true);
+    }
+
     return (
         <>
             <h2 className="text-xl font-bold my-4">Management Members</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {temple.management.map((member, index) => (
                     <div key={index} className="bg-white dark:bg-gray-700 shadow-md rounded-lg overflow-hidden">
                         <div className="relative">
-                            <img src={member.profile} className="w-full h-40 object-cover" alt="Member Image" />
+                            <img src={member.profile} className="w-full h-40 object-cover cursor-pointer" alt="Member Image" onClick={()=> handleShowImgModal(member.profile)} />
 
                             <button
                                 className="absolute top-2 right-2 bg-white text-black p-1 dark:bg-gray-600 dark:text-white rounded-full opacity-75 hover:opacity-100"
@@ -67,6 +75,9 @@ export default function ManagementList({ temple, setTemple, setAlert }) {
                     </div>
                 ))}
             </div>
+            {
+                showModal && <ImageModal isOpen={showModal} onClose={()=> setShowModal(false)} url={selectedImg} />
+            }
         </>
     );
 }
