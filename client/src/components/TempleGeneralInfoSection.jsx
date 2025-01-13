@@ -95,7 +95,6 @@ export default function TempleGeneralInfoSection({ temple, setAlert }) {
     }
     return (
         <section className="p-4 shadow-md rounded-md bg-white dark:bg-slate-800 mb-2">
-            <h3 className="text-xl font-bold mb-4">General Information</h3>
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     {/* History */}
