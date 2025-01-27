@@ -21,11 +21,11 @@ export default function SuggestionCardSkeleton () {
                         <div className="flex items-center mt-4">
                             <p className="h-1 w-full flex gap-1 items-center mx-2">
                                 <FaMapMarkerAlt className="text-md w-6 h-6 text-gray-400 dark:text-gray-800 " />
-                                <p className="h-1 w-full rounded-lg bg-gray-400 dark:bg-gray-800 mx-2"></p>
+                                <span className="h-1 w-full rounded-lg bg-gray-400 dark:bg-gray-800 mx-2"></span>
                             </p>                             
                             <p className="ml-2 h-1 w-full flex gap-1 items-center">
                                 <FaRegCalendarAlt className="text-md w-6 h-6 text-gray-400 dark:text-gray-800" />
-                                <p className="h-1 w-full rounded-lg bg-gray-400 dark:bg-gray-800 mx-2"></p>
+                                <span className="h-1 w-full rounded-lg bg-gray-400 dark:bg-gray-800 mx-2"></span>
                             </p>
                         </div>
                     </div>

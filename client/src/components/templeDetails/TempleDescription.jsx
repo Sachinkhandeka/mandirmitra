@@ -62,15 +62,15 @@ export default function TempleDescription({ temple, setTemple }) {
                 <title>{temple.name} - Temple Details | MandirMitra</title>
                 <meta
                     name="description"
-                    content={`Learn about ${temple.name}, founded in ${temple.foundedYear}. Discover festivals, gods worshiped, priests, and more.`}
+                    content={`Learn about Learn about ${temple.name}, located in ${temple.location}. Discover its history, rituals, and nearby temples with MandirMitra. ${temple.name}, founded in ${temple.foundedYear}. Discover festivals, gods worshiped, priests, and more.`}
                 />
                 <meta
                     name="keywords"
-                    content={`temple, ${temple.name}, ${temple.location}, temple festivals, temple priests, temple management`}
+                    content={`temples in ${temple.location}, ${temple.name}, famous temples in ${temple.location}, Hindu temple history, temple, ${temple.name}, ${temple.location}, temple festivals, temple priests, temple management`}
                 />
                 <meta
                     property="og:title"
-                    content={`${temple.name} - Temple Details | MandirMitra`}
+                    content={`${temple.name} - Explore Temples in ${temple.location}`}
                 />
                 <meta
                     property="og:description"

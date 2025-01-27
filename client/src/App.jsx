@@ -36,7 +36,14 @@ export default function App() {
                 />
                 <meta
                     name="keywords"
-                    content="temple management software, temple donation management, temple event management, online donation platform for temples, mandir mitra, mandir management app, temple accounting software"
+                    content="famous temples in India, temples near me, top 10 Hindu temples to visit in India, 
+                    ancient temples in India, historical temples in India, Hindu temples with architectural significance, 
+                    Shiva temples in India, Vishnu temples in India, famous South Indian temples, North Indian pilgrimage destinations, 
+                    Char Dham Yatra guide, best time to visit Kedarnath, list of Jyotirlinga temples in India, 
+                    festivals celebrated in Hindu temples, Hindu temple rituals explained, spiritual travel destinations in India, 
+                    how to plan a temple tour in India, Hindu temples for meditation, top religious places for family trips, 
+                    virtual darshan of famous temples, temple management software, temple donation management, temple event management, 
+                    online donation platform for temples, mandir mitra, mandir management app, temple accounting software"
                 />
                 <meta name="author" content="MandirMitra Team" />
                 <meta

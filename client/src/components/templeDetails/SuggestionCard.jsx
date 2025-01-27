@@ -61,7 +61,7 @@ export default function SuggestionCard({ suggestions, userInput, setSmartSearchB
                                     {/* Location & Founded Year */}
                                     <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 mt-1">
                                         {suggestion.location && (
-                                            <p className="truncate flex gap-1 items-center">
+                                            <p className="truncate flex gap-1 items-center max-w-[10rem]">
                                                 <FaMapMarkerAlt /> 
                                                 {highlightMatch(suggestion.location, userInput)}
                                             </p>

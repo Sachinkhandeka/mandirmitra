@@ -27,7 +27,7 @@ export default function SmartSearch({ setSmartSearchBar }) {
                 setLoading(true);
                 setError(null);
 
-                // Simulate an API call (replace this with your real API call)
+                // Simulate an API call 
                 const response = await fetch(`/api/temple/all?search=${input}`);
                 const data = await response.json();
 
