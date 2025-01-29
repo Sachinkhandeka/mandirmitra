@@ -36,22 +36,19 @@ export default function TemplePosts({ templeId, templeName }) {
     return (
         <section className="p-1 bg-gray-100 dark:bg-gray-900 min-h-screen">
             <Helmet>
-                <title>{`${templeName} - Posts and Updates | MandirMitra`}</title>
+                <title>{`${templeName} - News & Updates | MandirMitra`}</title> 
                 <meta
                     name="description"
-                    content="Stay updated with the latest posts and happenings of this temple. Explore events, updates, and more."
+                    content={`Stay connected with ${templeName}! Explore the latest news, events, announcements, and inspiring stories from this temple. Follow for updates, engage with the community, and stay informed about upcoming activities.`}
                 />
                 <meta
                     name="keywords"
-                    content="temple posts, temple updates, temple news, MandirMitra"
+                    content={`${templeName} news, ${templeName} updates, ${templeName} events, ${templeName} announcements, ${templeName} blog, temple news, temple updates, temple events, temple blog, hindu temple news, indian temples, temple community, spiritual news`}
                 />
-                <meta
-                    property="og:title"
-                    content={`${templeName} - Posts and Updates | MandirMitra`}
-                />
+                <meta property="og:title" content={`${templeName} - News & Updates | MandirMitra`} />
                 <meta
                     property="og:description"
-                    content="Stay updated with the latest posts and happenings of this temple."
+                    content={`Stay connected with ${templeName}! Explore the latest news, events, announcements, and inspiring stories from this temple. Follow for updates, engage with the community, and stay informed about upcoming activities.`}
                 />
                 <meta property="og:url" content={window.location.href} />
             </Helmet>

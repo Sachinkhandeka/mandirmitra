@@ -25,23 +25,23 @@ export default function TemplePhotos({ photos, templeName }) {
 
     return (
         <section className="p-1 min-h-screen">
-             <Helmet>
-                <title>{`${templeName} - Temple Photos | MandirMitra`}</title>
+            <Helmet>
+                <title>{`${templeName} - Image Gallery | MandirMitra`}</title>
                 <meta
                     name="description"
-                    content="Explore the gallery of temple photos, capturing the essence and beauty of this divine space."
+                    content={`Immerse yourself in the beauty and grandeur of ${templeName} through our captivating image gallery. Explore stunning photos showcasing the temple's architecture, sculptures, and serene ambiance.`}
                 />
                 <meta
                     name="keywords"
-                    content="temple photos, temple gallery, MandirMitra, temple images"
+                    content={`${templeName} images, ${templeName} photos, ${templeName} gallery, temple pictures, temple photography, hindu temple images, indian temple photography, temple architecture photos, religious photography, spiritual photography`}
                 />
                 <meta
                     property="og:title"
-                    content={`${templeName} - Temple Photos | MandirMitra`}
+                    content={`${templeName} - Image Gallery | MandirMitra`}
                 />
                 <meta
                     property="og:description"
-                    content="Explore the gallery of temple photos, capturing the essence and beauty of this divine space."
+                    content={`Immerse yourself in the beauty and grandeur of ${templeName} through our captivating image gallery. Explore stunning photos showcasing the temple's architecture, sculptures, and serene ambiance.`}
                 />
                 <meta property="og:image" content={photos[0] || ""} />
                 <meta property="og:url" content={window.location.href} />

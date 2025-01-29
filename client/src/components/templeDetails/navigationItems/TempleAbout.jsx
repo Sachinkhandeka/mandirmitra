@@ -6,22 +6,22 @@ export default function TempleAbout({ description, images, templeName }) {
         <div className="mt-4 p-4 min-h-screen">
             {/* Helmet for SEO */}
             <Helmet>
-                <title>About {templeName} | MandirMitra</title>
+                <title>Explore {templeName}: History, Significance & More | MandirMitra</title>
                 <meta
                     name="description"
-                    content={`Explore the history, significance, and unique features of ${templeName}.`}
+                    content={`Uncover the rich history, significance, and unique architectural features of ${templeName} on MandirMitra. Learn about its legends, festivals, and find captivating images.`}
                 />
                 <meta
                     name="keywords"
-                    content={`${templeName}, temple history, temple images, temple description`}
+                    content={`${templeName}, ${templeName} history, ${templeName} significance, ${templeName} architecture, ${templeName} legends, ${templeName} festivals, hindu temples in india, ancient temples india`}
                 />
                 <meta
                     property="og:title"
-                    content={`About ${templeName} | MandirMitra`}
+                    content={`Explore ${templeName}: History, Significance & More | MandirMitra`}
                 />
                 <meta
                     property="og:description"
-                    content={`Explore the history, significance, and unique features of ${templeName}.`}
+                    content={`Uncover the rich history, significance, and unique architectural features of ${templeName} on MandirMitra. Learn about its legends, festivals, and find captivating images.`}
                 />
                 <meta
                     property="og:image"

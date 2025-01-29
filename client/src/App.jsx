@@ -29,30 +29,20 @@ export default function App() {
         <>
             {/* Helmet for meta tags */}
             <Helmet>
-                <title>MandirMitra: Streamline Temple Management</title>
+                <title>MandirMitra: Explore India's Rich Temple History</title> 
                 <meta
                     name="description"
-                    content="MandirMitra - The all-in-one temple management solution. Simplify donations, expenses, events, and gain data-driven insights. Empower your temple and connect with your devotees."
+                    content="Discover the fascinating history of India's temples on MandirMitra. Explore ancient temples, learn about their legends, and connect with the spiritual heritage of India. Find temples near you, read about their history and architecture, and plan your next pilgrimage."
                 />
                 <meta
                     name="keywords"
-                    content="famous temples in India, temples near me, top 10 Hindu temples to visit in India, 
-                    ancient temples in India, historical temples in India, Hindu temples with architectural significance, 
-                    Shiva temples in India, Vishnu temples in India, famous South Indian temples, North Indian pilgrimage destinations, 
-                    Char Dham Yatra guide, best time to visit Kedarnath, list of Jyotirlinga temples in India, 
-                    festivals celebrated in Hindu temples, Hindu temple rituals explained, spiritual travel destinations in India, 
-                    how to plan a temple tour in India, Hindu temples for meditation, top religious places for family trips, 
-                    virtual darshan of famous temples, temple management software, temple donation management, temple event management, 
-                    online donation platform for temples, mandir mitra, mandir management app, temple accounting software"
+                    content="historical temples in india, ancient temples of india, indian temple architecture, temple history, legends of indian temples, explore indian temples, temple tourism, pilgrimage sites in india, hindu temples, buddhist temples, jain temples, south indian temples, north indian temples, temple architecture styles, historical places in india, cultural heritage of india, indian mythology, spirituality"
                 />
                 <meta name="author" content="MandirMitra Team" />
-                <meta
-                    property="og:title"
-                    content="MandirMitra: Streamline Temple Management"
-                />
+                <meta property="og:title" content="MandirMitra: Explore India's Rich Temple History" />
                 <meta
                     property="og:description"
-                    content="MandirMitra - The all-in-one temple management solution. Simplify donations, expenses, events, and gain data-driven insights. Empower your temple and connect with your devotees."
+                    content="Discover the fascinating history of India's temples on MandirMitra. Explore ancient temples, learn about their legends, and connect with the spiritual heritage of India. Find temples near you, read about their history and architecture, and plan your next pilgrimage."
                 />
                 <meta property="og:url" content="https://www.mandirmitra.co.in/" />
             </Helmet>

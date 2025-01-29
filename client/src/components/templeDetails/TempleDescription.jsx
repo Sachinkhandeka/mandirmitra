@@ -59,22 +59,22 @@ export default function TempleDescription({ temple, setTemple }) {
         <>
             {/* Helmet for SEO */}
             <Helmet>
-                <title>{temple.name} - Temple Details | MandirMitra</title>
+                <title>{temple.name} - Temple Details & History | MandirMitra</title>
                 <meta
                     name="description"
-                    content={`Learn about Learn about ${temple.name}, located in ${temple.location}. Discover its history, rituals, and nearby temples with MandirMitra. ${temple.name}, founded in ${temple.foundedYear}. Discover festivals, gods worshiped, priests, and more.`}
+                    content={`Discover ${temple.name} in ${temple.location}, one of the best spiritual places to visit. Learn about its history, priests, festival celebrations, and ancient rituals at MandirMitra.`}
                 />
                 <meta
                     name="keywords"
-                    content={`temples in ${temple.location}, ${temple.name}, famous temples in ${temple.location}, Hindu temple history, temple, ${temple.name}, ${temple.location}, temple festivals, temple priests, temple management`}
+                    content={`Hindu temples in ${temple.location}, famous temples near me, best temples in ${temple.location}, ${temple.name} history, spiritual places in ${temple.location}, temple festival calendar ${temple.location}, temple darshan timings, ancient Hindu temples, temple priests, rituals at ${temple.name}`}
                 />
                 <meta
                     property="og:title"
-                    content={`${temple.name} - Explore Temples in ${temple.location}`}
+                    content={`Visit ${temple.name} - One of the Best Temples in ${temple.location}`}
                 />
                 <meta
                     property="og:description"
-                    content={`Learn about ${temple.name}, founded in ${temple.foundedYear}. Discover festivals, gods, priests, and more.`}
+                    content={`Explore the history, rituals, priests, and festivals at ${temple.name} in ${temple.location}. Plan your visit now with MandirMitra.`}
                 />
                 <meta
                     property="og:image"

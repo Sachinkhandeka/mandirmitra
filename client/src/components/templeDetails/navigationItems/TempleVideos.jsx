@@ -52,22 +52,22 @@ export default function TempleVideos({ videos, templeId, templeName }) {
     return (
         <section className="py-6 px-1 min-h-screen">
             <Helmet>
-                <title>{`${templeName} - Temple Videos | MandirMitra`}</title>
+                <title>{`${templeName} - Watch Temple Videos | MandirMitra`}</title>
                 <meta
                     name="description"
-                    content="Watch the latest videos from this temple, including spiritual discourses, rituals, and celebrations."
+                    content={`Experience the divine with ${templeName}'s video collection. Watch captivating videos of rituals, celebrations, spiritual discourses, and more. Immerse yourself in the spiritual ambiance of this sacred place.`}
                 />
                 <meta
                     name="keywords"
-                    content="temple videos, spiritual videos, temple celebrations, MandirMitra"
+                    content={`${templeName} videos, ${templeName} youtube, temple videos online, spiritual videos, temple rituals, temple celebrations, hindu temple videos, indian temple videos, religious videos, devotional videos, youtube videos, online videos`}
                 />
                 <meta
                     property="og:title"
-                    content={`${templeName} - Temple Videos | MandirMitra`}
+                    content={`${templeName} - Watch Temple Videos | MandirMitra`}
                 />
                 <meta
                     property="og:description"
-                    content="Watch the latest videos from this temple, including spiritual discourses, rituals, and celebrations."
+                    content={`Experience the divine with ${templeName}'s video collection. Watch captivating videos of rituals, celebrations, spiritual discourses, and more. Immerse yourself in the spiritual ambiance of this sacred place.`}
                 />
                 <meta property="og:url" content={window.location.href} />
             </Helmet>
