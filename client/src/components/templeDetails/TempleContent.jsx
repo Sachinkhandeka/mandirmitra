@@ -52,7 +52,7 @@ export default function TempleContent() {
                     online donation platform for temples, mandir mitra, mandir management app, temple accounting software"
                 />
                 <meta property="og:title" content="Explore Temples | MandirMitra" />
-                <meta property="og:description" content="Discover and connect with temples through MandirMitra. View details, events, and more." />
+                <meta property="og:description" content="Discover a wide range of temples with MandirMitra. Connect with your favorite temples, view temple details, and learn about history, festivals, pujaris, managment, events and services." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content="https://www.mandirmitra.co.in/" />
                 <meta property="og:image" content="https://www.mandirmitra.co.in/images/temple-banner.jpg" />
